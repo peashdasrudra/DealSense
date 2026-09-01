@@ -134,8 +134,8 @@ export const CaseStudy: React.FC = () => {
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-          gap: 14,
+          gridTemplateColumns: "repeat(auto-fit, minmax(210px, 1fr))",
+          gap: 16,
           marginBottom: "var(--sp-6)",
         }}
       >
@@ -146,15 +146,24 @@ export const CaseStudy: React.FC = () => {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 + idx * 0.05 }}
-            style={{ borderTopColor: idx === 0 ? "#ff5c35" : idx === 1 ? "var(--risk-healthy)" : "var(--hs-primary)" }}
+            style={{
+              padding: "22px 24px",
+              minHeight: 140,
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+              borderTopColor: idx === 0 ? "#ff5c35" : idx === 1 ? "var(--risk-healthy)" : "var(--hs-primary)",
+            }}
           >
-            <div className="kpi-value" style={{ fontSize: "28px", color: "var(--hs-primary)" }}>
-              {b.metric}
+            <div>
+              <div className="kpi-value" style={{ fontSize: "28px", color: "var(--hs-primary)", lineHeight: 1.15, marginBottom: 4 }}>
+                {b.metric}
+              </div>
+              <div style={{ fontSize: "13px", fontWeight: 700, color: "var(--hs-text)" }}>
+                {b.label}
+              </div>
             </div>
-            <div style={{ fontSize: "12.5px", fontWeight: 700, color: "var(--hs-text)", marginTop: 2 }}>
-              {b.label}
-            </div>
-            <div style={{ fontSize: "11.5px", color: "var(--hs-text-muted)", marginTop: 4, lineHeight: 1.4 }}>
+            <div style={{ fontSize: "12px", color: "var(--hs-text-muted)", marginTop: 10, lineHeight: 1.5 }}>
               {b.desc}
             </div>
           </motion.div>
@@ -176,30 +185,30 @@ export const CaseStudy: React.FC = () => {
           </span>
         </div>
         <div className="card-body">
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 16 }}>
-            <div style={{ padding: "14px", background: "var(--hs-surface)", borderRadius: "var(--radius-sm)", border: "1px solid var(--hs-border-dark)" }}>
-              <div style={{ fontWeight: 700, fontSize: "13px", color: "var(--danger)", marginBottom: 4 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 18 }}>
+            <div style={{ padding: "20px 22px", background: "var(--hs-surface)", borderRadius: "var(--radius-md)", border: "1px solid var(--hs-border-dark)", display: "flex", flexDirection: "column", gap: 8 }}>
+              <div style={{ fontWeight: 700, fontSize: "14px", color: "var(--danger)" }}>
                 1. Ghosting Economic Buyers
               </div>
-              <div style={{ fontSize: "12px", color: "var(--hs-text-muted)", lineHeight: 1.5 }}>
+              <div style={{ fontSize: "12.5px", color: "var(--hs-text)", lineHeight: 1.6 }}>
                 Reps mark deals as "90% Commit", but CFOs and technical evaluators haven't engaged in 18+ days. Standard CRMs multiply stage probability blindly.
               </div>
             </div>
 
-            <div style={{ padding: "14px", background: "var(--hs-surface)", borderRadius: "var(--radius-sm)", border: "1px solid var(--hs-border-dark)" }}>
-              <div style={{ fontWeight: 700, fontSize: "13px", color: "var(--warning)", marginBottom: 4 }}>
+            <div style={{ padding: "20px 22px", background: "var(--hs-surface)", borderRadius: "var(--radius-md)", border: "1px solid var(--hs-border-dark)", display: "flex", flexDirection: "column", gap: 8 }}>
+              <div style={{ fontWeight: 700, fontSize: "14px", color: "var(--warning)" }}>
                 2. CRM Hygiene Decay
               </div>
-              <div style={{ fontSize: "12px", color: "var(--hs-text-muted)", lineHeight: 1.5 }}>
+              <div style={{ fontSize: "12.5px", color: "var(--hs-text)", lineHeight: 1.6 }}>
                 Overdue close dates from past calendar quarters linger unnoticed, corrupting executive forecasts and board reporting.
               </div>
             </div>
 
-            <div style={{ padding: "14px", background: "var(--hs-surface)", borderRadius: "var(--radius-sm)", border: "1px solid var(--hs-border-dark)" }}>
-              <div style={{ fontWeight: 700, fontSize: "13px", color: "var(--hs-primary)", marginBottom: 4 }}>
+            <div style={{ padding: "20px 22px", background: "var(--hs-surface)", borderRadius: "var(--radius-md)", border: "1px solid var(--hs-border-dark)", display: "flex", flexDirection: "column", gap: 8 }}>
+              <div style={{ fontWeight: 700, fontSize: "14px", color: "var(--hs-primary)" }}>
                 3. High Human Rep Overhead
               </div>
-              <div style={{ fontSize: "12px", color: "var(--hs-text-muted)", lineHeight: 1.5 }}>
+              <div style={{ fontSize: "12.5px", color: "var(--hs-text)", lineHeight: 1.6 }}>
                 Sales reps spend 6+ hours weekly manually updating HubSpot fields, formatting mutual action plans, and hunting down missing stakeholder emails.
               </div>
             </div>
@@ -223,24 +232,24 @@ export const CaseStudy: React.FC = () => {
           <span className="badge badge-outline">Clean 4-Layer Architecture</span>
         </div>
         <div className="card-body">
-          <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
             {ARCH_LAYERS.map((layer) => (
               <div
                 key={layer.tier}
                 style={{
-                  padding: "16px",
-                  borderRadius: "var(--radius-sm)",
+                  padding: "20px 24px",
+                  borderRadius: "var(--radius-md)",
                   border: "1px solid var(--hs-border-dark)",
                   background: "#ffffff",
                   display: "flex",
-                  gap: 16,
+                  gap: 20,
                   alignItems: "flex-start",
                 }}
               >
                 <div
                   style={{
-                    width: 36,
-                    height: 36,
+                    width: 40,
+                    height: 40,
                     borderRadius: "var(--radius-sm)",
                     background: "var(--hs-surface)",
                     border: "1px solid var(--hs-border-dark)",
@@ -250,7 +259,7 @@ export const CaseStudy: React.FC = () => {
                     fontFamily: "var(--font-mono)",
                     fontWeight: 700,
                     color: "var(--hs-primary)",
-                    fontSize: "13px",
+                    fontSize: "13.5px",
                     flexShrink: 0,
                   }}
                 >
@@ -258,22 +267,22 @@ export const CaseStudy: React.FC = () => {
                 </div>
 
                 <div style={{ flex: 1 }}>
-                  <div style={{ fontWeight: 700, fontSize: "14px", color: "var(--hs-primary)" }}>
+                  <div style={{ fontWeight: 700, fontSize: "15px", color: "var(--hs-primary)", marginBottom: 6 }}>
                     {layer.title}
                   </div>
-                  <div style={{ fontSize: "12.5px", color: "var(--hs-text)", marginTop: 4, lineHeight: 1.5 }}>
+                  <div style={{ fontSize: "13px", color: "var(--hs-text)", lineHeight: 1.6, marginBottom: 12 }}>
                     {layer.desc}
                   </div>
-                  <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginTop: 8 }}>
+                  <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
                     {layer.tags.map((tag) => (
                       <span
                         key={tag}
                         style={{
-                          fontSize: "11px",
+                          fontSize: "11.5px",
                           fontFamily: "var(--font-mono)",
                           background: "var(--hs-surface)",
-                          padding: "2px 8px",
-                          borderRadius: "var(--radius-sm)",
+                          padding: "3px 10px",
+                          borderRadius: "var(--radius-pill)",
                           border: "1px solid var(--hs-border-dark)",
                           color: "var(--hs-text-muted)",
                         }}
