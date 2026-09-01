@@ -59,7 +59,7 @@ export const DealDrawer: React.FC<DealDrawerProps> = ({
   onClose,
   onActionTrigger,
 }) => {
-  const [activeTab, setActiveTab] = useState<"signals" | "meddicc" | "stakeholders" | "copilot">("signals");
+  const [activeTab, setActiveTab] = useState<"signals" | "meddicc" | "stakeholders" | "map" | "battlecards" | "copilot">("signals");
   const [copilotQuery, setCopilotQuery] = useState("");
   const [copilotChat, setCopilotChat] = useState<Array<{ sender: "user" | "ai"; text: string }>>([
     {
@@ -98,8 +98,8 @@ export const DealDrawer: React.FC<DealDrawerProps> = ({
   };
 
   const handleExecuteAction = (actionTitle: string) => {
-    onActionTrigger?.(actionTitle, deal.name);
-    setActionSuccessMsg(`✓ ${actionTitle} executed & synced with HubSpot CRM`);
+    if (onActionTrigger) onActionTrigger(actionTitle, deal.name);
+    setActionSuccessMsg(`✓ Executed "${actionTitle}" — Written back to HubSpot CRM`);
     setTimeout(() => setActionSuccessMsg(null), 3000);
   };
 
@@ -134,7 +134,7 @@ export const DealDrawer: React.FC<DealDrawerProps> = ({
               right: 0,
               bottom: 0,
               width: "100%",
-              maxWidth: "min(680px, 100vw)",
+              maxWidth: "min(740px, 100vw)",
               background: "#ffffff",
               boxShadow: "-8px 0 32px rgba(18, 69, 72, 0.2)",
               zIndex: 210,
@@ -212,15 +212,17 @@ export const DealDrawer: React.FC<DealDrawerProps> = ({
                 borderBottom: "1px solid var(--hs-border-dark)",
                 background: "#ffffff",
                 padding: "0 16px",
-                gap: 16,
+                gap: 12,
                 overflowX: "auto",
                 whiteSpace: "nowrap",
               }}
             >
               {[
-                { id: "signals", label: "Telemetry & Signals", icon: "📊" },
-                { id: "meddicc", label: "MEDDICC Audit", icon: "🎯" },
-                { id: "stakeholders", label: "Stakeholder Map", icon: "👥" },
+                { id: "signals", label: "Signals", icon: "📊" },
+                { id: "meddicc", label: "MEDDICC", icon: "🎯" },
+                { id: "stakeholders", label: "Stakeholders", icon: "👥" },
+                { id: "map", label: "Mutual Action Plan", icon: "🗺️" },
+                { id: "battlecards", label: "Battlecards", icon: "⚔️" },
                 { id: "copilot", label: "AI Copilot", icon: "🤖" },
               ].map((tab) => {
                 const isActive = activeTab === tab.id;
@@ -235,12 +237,13 @@ export const DealDrawer: React.FC<DealDrawerProps> = ({
                       borderBottom: `3px solid ${isActive ? "var(--hs-primary)" : "transparent"}`,
                       color: isActive ? "var(--hs-primary)" : "var(--hs-text-muted)",
                       fontWeight: isActive ? 700 : 500,
-                      fontSize: "13.5px",
+                      fontSize: "13px",
                       cursor: "pointer",
                       display: "flex",
                       alignItems: "center",
-                      gap: 6,
+                      gap: 4,
                       transition: "all 0.15s",
+                      flexShrink: 0,
                     }}
                   >
                     <span>{tab.icon}</span>
@@ -477,7 +480,88 @@ export const DealDrawer: React.FC<DealDrawerProps> = ({
                 </div>
               )}
 
-              {/* TAB 4: AI DEAL COPILOT */}
+              {/* TAB 4: MUTUAL ACTION PLAN */}
+              {activeTab === "map" && (
+                <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 14px", background: "var(--hs-surface)", borderRadius: "var(--radius-sm)", border: "1px solid var(--hs-border-dark)" }}>
+                    <div>
+                      <div style={{ fontWeight: 700, fontSize: "13px", color: "var(--hs-primary)" }}>Buyer-Seller Mutual Action Plan</div>
+                      <div style={{ fontSize: "11.5px", color: "var(--hs-text-muted)" }}>Target Close: Sep 30, 2026 · 45% Completed</div>
+                    </div>
+                    <button className="btn btn-primary btn-sm" onClick={() => handleExecuteAction("Share MAP Link with Buyer")}>
+                      🔗 Share with {deal.client}
+                    </button>
+                  </div>
+
+                  <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                    {[
+                      { step: "01", title: "Architecture Discovery & Sizing", owner: `${deal.owner} & Lead Architect`, due: "Aug 15", status: "✓ Done" },
+                      { step: "02", title: "Security & SOC2 Review", owner: "Security Team", due: "Sep 02", status: "⏳ In Review" },
+                      { step: "03", title: "CFO Business Case & ROI Alignment", owner: "Richard Vance (CFO)", due: "Sep 12", status: "⚠ Missing" },
+                      { step: "04", title: "Master Service Agreement (MSA)", owner: "Procurement Lead", due: "Sep 22", status: "○ Pending" },
+                      { step: "05", title: "Final PO & Countersign", owner: `${deal.owner} & Exec Sponsor`, due: "Sep 30", status: "○ Pending" },
+                    ].map((ms) => (
+                      <div
+                        key={ms.step}
+                        style={{
+                          padding: "10px 14px",
+                          borderRadius: "var(--radius-sm)",
+                          border: "1px solid var(--hs-border-dark)",
+                          background: "#ffffff",
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                        }}
+                      >
+                        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                          <span style={{ fontFamily: "var(--font-mono)", fontSize: "11px", fontWeight: 700, color: "var(--hs-text-muted)" }}>{ms.step}</span>
+                          <div>
+                            <div style={{ fontWeight: 600, fontSize: "12.5px", color: "var(--hs-text)" }}>{ms.title}</div>
+                            <div style={{ fontSize: "11px", color: "var(--hs-text-muted)" }}>Owner: {ms.owner} · Due: {ms.due}</div>
+                          </div>
+                        </div>
+                        <span className="badge" style={{ background: ms.status.includes("Done") ? "var(--risk-healthy-bg)" : ms.status.includes("Missing") ? "var(--risk-critical-bg)" : "var(--hs-surface)", color: ms.status.includes("Done") ? "var(--risk-healthy)" : ms.status.includes("Missing") ? "var(--danger)" : "var(--hs-text)", fontSize: "10.5px" }}>
+                          {ms.status}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* TAB 5: COMPETITIVE BATTLECARDS */}
+              {activeTab === "battlecards" && (
+                <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                  <div style={{ padding: "10px 12px", background: "var(--hs-surface)", borderRadius: "var(--radius-sm)", border: "1px solid var(--hs-border-dark)" }}>
+                    <div style={{ fontWeight: 700, fontSize: "12.5px", color: "var(--hs-primary)", marginBottom: 4 }}>
+                      ⚔️ Detected Competitor: Gong.io / Clari
+                    </div>
+                    <div style={{ fontSize: "11.5px", color: "var(--hs-text-muted)" }}>
+                      Buyer asked about automated call transcript integration and Salesforce parity.
+                    </div>
+                  </div>
+
+                  <div style={{ padding: "12px", borderRadius: "var(--radius-sm)", border: "1px solid var(--hs-border-dark)", background: "#ffffff" }}>
+                    <div style={{ fontWeight: 700, fontSize: "12px", color: "#ff5c35", marginBottom: 6 }}>
+                      💣 Landmine Question to Ask Buyer
+                    </div>
+                    <div style={{ fontSize: "12px", color: "var(--hs-text)", fontStyle: "italic", lineHeight: 1.4 }}>
+                      "Does your current tool automatically remediate overdue deal close dates and missing MEDDICC criteria directly in HubSpot, or does your team spend hours doing that manually every Friday?"
+                    </div>
+                  </div>
+
+                  <div style={{ padding: "12px", borderRadius: "var(--radius-sm)", border: "1px solid var(--hs-border-dark)", background: "#ffffff" }}>
+                    <div style={{ fontWeight: 700, fontSize: "12px", color: "var(--hs-primary)", marginBottom: 6 }}>
+                      💬 Word-for-Word Objection Response
+                    </div>
+                    <div style={{ fontSize: "12px", color: "var(--hs-text)", lineHeight: 1.4 }}>
+                      "Gong is fantastic for call recording playback, but it doesn't execute deterministic HubSpot write-backs or multi-model Monte Carlo forecasting. DealSense sits on top of HubSpot to fix data quality and save at-risk pipeline automatically."
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* TAB 6: AI DEAL COPILOT */}
               {activeTab === "copilot" && (
                 <div style={{ display: "flex", flexDirection: "column", height: "100%", minHeight: "420px" }}>
                   <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 12, overflowY: "auto", marginBottom: 16 }}>

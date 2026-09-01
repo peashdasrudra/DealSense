@@ -20,21 +20,25 @@ import { RiskHeatmap } from "./pages/RiskHeatmap";
 import { ClientHealth } from "./pages/ClientHealth";
 import { AuditLog } from "./pages/AuditLog";
 import { Settings } from "./pages/Settings";
+import { MutualActionPlan } from "./pages/MutualActionPlan";
+import { CompetitiveIntelligence } from "./pages/CompetitiveIntelligence";
 import { DealDrawer, DealData } from "./components/DealDrawer";
 
 // ── Page Title Mapping ───────────────────────────────────────────────────────
 
 const PAGE_TITLES: Record<string, { title: string; breadcrumb: string }> = {
   "/": { title: "Pipeline Overview", breadcrumb: "Overview" },
-  "/forecast": { title: "Revenue Forecast", breadcrumb: "Forecast" },
-  "/deals": { title: "Deal Inspector", breadcrumb: "Deals" },
-  "/actions": { title: "Action Queue", breadcrumb: "Actions" },
-  "/heatmap": { title: "Risk Heatmap", breadcrumb: "Heatmap" },
-  "/hygiene": { title: "CRM Hygiene", breadcrumb: "Hygiene" },
-  "/reps": { title: "Rep Coaching", breadcrumb: "Coaching" },
-  "/clients": { title: "Client Health", breadcrumb: "Clients" },
-  "/audit": { title: "Audit Trail", breadcrumb: "Audit" },
-  "/settings": { title: "Settings", breadcrumb: "Settings" },
+  "/forecast": { title: "Revenue Forecast & Simulation", breadcrumb: "Forecast" },
+  "/deals": { title: "Deal Inspector & Dossiers", breadcrumb: "Deals" },
+  "/heatmap": { title: "Pipeline Risk Heatmap", breadcrumb: "Heatmap" },
+  "/actions": { title: "Action Approval Queue", breadcrumb: "Actions" },
+  "/map": { title: "Mutual Action Plans", breadcrumb: "MAP" },
+  "/battlecards": { title: "Competitive Battlecards", breadcrumb: "Battlecards" },
+  "/hygiene": { title: "CRM Hygiene & Auto-Remediation", breadcrumb: "Hygiene" },
+  "/reps": { title: "Rep Coaching & Velocity", breadcrumb: "Coaching" },
+  "/clients": { title: "Client Health Scorecards", breadcrumb: "Clients" },
+  "/audit": { title: "Audit & Compliance Trail", breadcrumb: "Audit" },
+  "/settings": { title: "Settings & Scoring Weights", breadcrumb: "Settings" },
 };
 
 const SEARCHABLE_DEALS = [
@@ -105,10 +109,12 @@ export const App: React.FC = () => {
                 <Route path="/" element={<PortfolioOverview />} />
                 <Route path="/forecast" element={<RevenueForecast />} />
                 <Route path="/deals" element={<DealExplorer />} />
+                <Route path="/heatmap" element={<RiskHeatmap />} />
                 <Route path="/actions" element={<ActionQueue />} />
+                <Route path="/map" element={<MutualActionPlan />} />
+                <Route path="/battlecards" element={<CompetitiveIntelligence />} />
                 <Route path="/hygiene" element={<CrmHygiene />} />
                 <Route path="/reps" element={<RepPerformance />} />
-                <Route path="/heatmap" element={<RiskHeatmap />} />
                 <Route path="/clients" element={<ClientHealth />} />
                 <Route path="/audit" element={<AuditLog />} />
                 <Route path="/settings" element={<Settings />} />

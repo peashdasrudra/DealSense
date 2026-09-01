@@ -1,6 +1,6 @@
 /**
  * DealSense Dashboard — Authentic HubSpot Enterprise Sidebar.
- * Displays HubSpot Connected Account Profile, Portal ID, and Instant Navigation.
+ * Complete RevOps Suite with Categorized Navigation.
  */
 
 import React from "react";
@@ -15,13 +15,44 @@ interface NavItem {
   badge?: number | string;
 }
 
-const PRIMARY_NAV: NavItem[] = [
-  { id: "overview", label: "Pipeline Overview", icon: "📊", path: "/" },
-  { id: "deals", label: "Deal Inspector", icon: "🎯", path: "/deals" },
-  { id: "actions", label: "Action Queue", icon: "⚡", path: "/actions", badge: 5 },
-  { id: "hygiene", label: "CRM Hygiene", icon: "🧹", path: "/hygiene", badge: 6 },
-  { id: "audit", label: "Audit Trail", icon: "📋", path: "/audit" },
-  { id: "settings", label: "Settings", icon: "⚙️", path: "/settings" },
+interface NavSection {
+  title: string;
+  items: NavItem[];
+}
+
+const NAV_SECTIONS: NavSection[] = [
+  {
+    title: "Revenue Intelligence",
+    items: [
+      { id: "overview", label: "Pipeline Overview", icon: "📊", path: "/" },
+      { id: "forecast", label: "Revenue Forecast", icon: "🔮", path: "/forecast" },
+      { id: "deals", label: "Deal Inspector", icon: "🎯", path: "/deals" },
+      { id: "heatmap", label: "Risk Heatmap", icon: "🔥", path: "/heatmap" },
+    ],
+  },
+  {
+    title: "Execution & Actions",
+    items: [
+      { id: "actions", label: "Action Queue", icon: "⚡", path: "/actions", badge: 5 },
+      { id: "map", label: "Mutual Action Plans", icon: "🗺️", path: "/map" },
+      { id: "battlecards", label: "Battlecards & Objections", icon: "⚔️", path: "/battlecards" },
+    ],
+  },
+  {
+    title: "RevOps Operations",
+    items: [
+      { id: "hygiene", label: "CRM Hygiene", icon: "🧹", path: "/hygiene", badge: 6 },
+      { id: "reps", label: "Rep Coaching", icon: "👥", path: "/reps" },
+      { id: "clients", label: "Client Health", icon: "🏢", path: "/clients" },
+    ],
+  },
+  {
+    title: "Governance & System",
+    items: [
+      { id: "audit", label: "Audit Trail", icon: "📋", path: "/audit" },
+      { id: "settings", label: "Settings", icon: "⚙️", path: "/settings" },
+    ],
+  },
 ];
 
 interface SidebarProps {
@@ -75,7 +106,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ onClose }) => {
         )}
       </div>
 
-      {/* ── HubSpot Connected Account Card (Top of Sidebar) ─────────── */}
+      {/* ── HubSpot Connected Account Card ───────────────────────────── */}
       <div style={{ padding: "0 14px 10px" }}>
         <div
           style={{
@@ -90,11 +121,11 @@ export const Sidebar: React.FC<SidebarProps> = ({ onClose }) => {
             <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
               <span style={{ width: 7, height: 7, borderRadius: "50%", background: "var(--risk-healthy)", display: "inline-block" }} />
               <span style={{ fontSize: "11px", fontWeight: 700, color: "#ff5c35", textTransform: "uppercase" }}>
-                HubSpot Connected
+                HubSpot Live
               </span>
             </div>
             <span style={{ fontSize: "10px", color: "var(--hs-text-muted)", fontFamily: "var(--font-mono)" }}>
-              ID: 48921820
+              #48921820
             </span>
           </div>
 
@@ -102,53 +133,68 @@ export const Sidebar: React.FC<SidebarProps> = ({ onClose }) => {
             AiXpert Labs Workspace
           </div>
           <div style={{ fontSize: "11px", color: "var(--hs-text-muted)", marginTop: 2 }}>
-            Diamond Partner · 20 Deals Monitored
+            Diamond Partner · 20 Deals Synced
           </div>
         </div>
       </div>
 
-      {/* ── Navigation Links ─────────────────────────────────────────── */}
-      <div className="sidebar-nav" style={{ flex: 1, padding: "4px 10px" }}>
-        <div className="sidebar-section-label" style={{ paddingLeft: 10, fontSize: "10px", color: "var(--hs-text-muted)", fontWeight: 700 }}>
-          Navigation
-        </div>
-        {PRIMARY_NAV.map((item) => {
-          const active = isActive(item.path);
-          return (
+      {/* ── Categorized Navigation Links ─────────────────────────────── */}
+      <div className="sidebar-nav" style={{ flex: 1, padding: "4px 10px", overflowY: "auto" }}>
+        {NAV_SECTIONS.map((section, sIdx) => (
+          <div key={section.title} style={{ marginBottom: sIdx === NAV_SECTIONS.length - 1 ? 4 : 14 }}>
             <div
-              key={item.id}
-              className={`sidebar-link ${active ? "active" : ""}`}
-              onClick={() => handleNav(item.path)}
+              className="sidebar-section-label"
+              style={{
+                paddingLeft: 10,
+                fontSize: "10px",
+                color: "var(--hs-text-muted)",
+                fontWeight: 700,
+                textTransform: "uppercase",
+                letterSpacing: "0.06em",
+                marginBottom: 4,
+              }}
             >
-              <span style={{ fontSize: "16px", lineHeight: 1 }}>{item.icon}</span>
-              <span style={{ flex: 1, fontWeight: active ? 600 : 500 }}>{item.label}</span>
-              {item.badge && (
-                <span
-                  style={{
-                    background: active ? "rgba(255,255,255,0.2)" : "var(--hs-surface-hover)",
-                    color: active ? "#ffffff" : "var(--hs-text-muted)",
-                    padding: "1px 6px",
-                    borderRadius: "var(--radius-pill)",
-                    fontSize: "11px",
-                    fontWeight: 700,
-                  }}
-                >
-                  {item.badge}
-                </span>
-              )}
+              {section.title}
             </div>
-          );
-        })}
+            {section.items.map((item) => {
+              const active = isActive(item.path);
+              return (
+                <div
+                  key={item.id}
+                  className={`sidebar-link ${active ? "active" : ""}`}
+                  onClick={() => handleNav(item.path)}
+                >
+                  <span style={{ fontSize: "15px", lineHeight: 1 }}>{item.icon}</span>
+                  <span style={{ flex: 1, fontWeight: active ? 700 : 500, fontSize: "13px" }}>{item.label}</span>
+                  {item.badge && (
+                    <span
+                      style={{
+                        background: active ? "rgba(255,255,255,0.2)" : "var(--hs-surface-hover)",
+                        color: active ? "#ffffff" : "var(--hs-text-muted)",
+                        padding: "1px 6px",
+                        borderRadius: "var(--radius-pill)",
+                        fontSize: "11px",
+                        fontWeight: 700,
+                      }}
+                    >
+                      {item.badge}
+                    </span>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        ))}
       </div>
 
       {/* ── Footer ───────────────────────────────────────────────────── */}
-      <div style={{ padding: "12px 14px", borderTop: "1px solid var(--hs-border-dark)", background: "var(--hs-surface)" }}>
+      <div style={{ padding: "10px 14px", borderTop: "1px solid var(--hs-border-dark)", background: "var(--hs-surface)" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <div style={{ fontSize: "11.5px", color: "var(--hs-text-muted)" }}>
-            AES-256 Webhook Active
+          <div style={{ fontSize: "11px", color: "var(--hs-text-muted)" }}>
+            AES-256 Webhooks
           </div>
           <span className="badge" style={{ background: "var(--risk-healthy-bg)", color: "var(--risk-healthy)", fontSize: "9.5px" }}>
-            ● Live
+            ● Verified
           </span>
         </div>
       </div>
