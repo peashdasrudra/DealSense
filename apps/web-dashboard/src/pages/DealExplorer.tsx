@@ -191,7 +191,35 @@ export const DealExplorer: React.FC = () => {
   }, [deals, search, selectedBand]);
 
   return (
-    <div>
+    <div style={{ display: "flex", flexDirection: "column", gap: "var(--sp-6)" }}>
+      {/* ── Header Card ───────────────────────────────────────────────── */}
+      <div
+        className="card"
+        style={{
+          background: "linear-gradient(135deg, #124548 0%, #062b2e 100%)",
+          color: "#ffffff",
+          padding: "26px 30px",
+          border: "none",
+        }}
+      >
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 16 }}>
+          <div>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
+              <span className="badge" style={{ background: "rgba(0, 164, 189, 0.25)", color: "#7de2ea", border: "1px solid #00a4bd", fontWeight: 700 }}>
+                ● REVOPS PIPELINE TELEMETRY
+              </span>
+              <span style={{ fontSize: "12px", color: "#a5c2c4" }}>Deal Dossiers & MEDDICC</span>
+            </div>
+            <h2 style={{ fontSize: "24px", fontWeight: 800, color: "#ffffff", margin: "4px 0 6px" }}>
+              Deal Inspector & Pipeline Intelligence
+            </h2>
+            <p style={{ fontSize: "13.5px", color: "#d9e8e8", margin: 0, maxWidth: 680 }}>
+              Deep dive into individual deal dossiers. Review automated MEDDICC scoring, surface hidden risk factors, and trigger executive interventions.
+            </p>
+          </div>
+        </div>
+      </div>
+
       {/* ── Filters Bar ──────────────────────────────────────────────── */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "var(--sp-4)", flexWrap: "wrap", gap: 10 }}>
         <div style={{ display: "flex", gap: 6, alignItems: "center", flexWrap: "wrap", flex: 1, minWidth: 0 }}>

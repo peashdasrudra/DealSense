@@ -89,7 +89,6 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 
 export const PortfolioOverview: React.FC = () => {
   const [deals, setDeals] = useState<any[]>(SAMPLE_DEALS);
-  const [isLive, setIsLive] = useState(false);
   const [selectedDrawerDeal, setSelectedDrawerDeal] = useState<DealData | null>(null);
 
   useEffect(() => {
@@ -97,7 +96,6 @@ export const PortfolioOverview: React.FC = () => {
       .then((data) => {
         if (data && data.length > 0) {
           setDeals(data);
-          setIsLive(true);
         }
       })
       .catch((err) => {
@@ -144,47 +142,61 @@ export const PortfolioOverview: React.FC = () => {
 
   return (
     <div>
-      {/* ── HubSpot CRM Live Connection Banner ─────────────────────────── */}
-      <div
+      {/* ── DealSense Onboarding Banner ─────────────────────────── */}
+      <motion.div
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
         style={{
-          background: "#ffffff",
-          border: "1px solid var(--hs-border-dark)",
+          background: "linear-gradient(135deg, #124548 0%, #062b2e 100%)",
           borderRadius: "var(--radius-md)",
-          padding: "10px 16px",
+          padding: "24px 30px",
           marginBottom: "var(--sp-4)",
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
           flexWrap: "wrap",
-          gap: 10,
-          boxShadow: "var(--shadow-sm)",
+          gap: 16,
+          boxShadow: "0 8px 30px rgba(18, 69, 72, 0.25)",
+          color: "#fff",
+          position: "relative",
+          overflow: "hidden",
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-            <span style={{ width: 8, height: 8, borderRadius: "50%", background: isLive ? "var(--risk-healthy)" : "#ff5c35", display: "inline-block" }} />
-            <span style={{ fontSize: "12.5px", fontWeight: 700, color: "#ff5c35" }}>
-              {isLive ? "HubSpot CRM Live Sync" : "HubSpot CRM Live (Portal 48921820)"}
-            </span>
+        <div style={{ position: "absolute", top: -80, right: -80, width: 250, height: 250, borderRadius: "50%", background: "radial-gradient(circle, rgba(255,92,53,0.15) 0%, transparent 70%)", pointerEvents: "none" }} />
+        
+        <div style={{ flex: 1, minWidth: 280 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
+            <span style={{ background: "rgba(5,150,105,0.25)", color: "#6ee7b7", border: "1px solid rgba(5,150,105,0.4)", padding: "4px 10px", borderRadius: "var(--radius-pill)", fontSize: "10.5px", fontWeight: 700 }}>● Live Webhook Synced</span>
+            <span style={{ fontSize: "11.5px", color: "rgba(255,255,255,0.7)" }}>HubSpot Portal #48921820</span>
           </div>
-          <span style={{ fontSize: "12px", color: "var(--hs-text-muted)" }}>
-            Portal: <strong>#48921820</strong> · Webhook Ingestion: <strong>Active (0.2s latency)</strong>
-          </span>
+          <h2 style={{ fontSize: "22px", fontWeight: 800, margin: "0 0 6px", letterSpacing: "-0.02em" }}>Welcome to DealSense Intelligence</h2>
+          <p style={{ fontSize: "13.5px", color: "rgba(255,255,255,0.85)", margin: 0, maxWidth: 580, lineHeight: 1.5 }}>
+            You're viewing a live interactive demo of the DealSense Revenue Operations engine. Navigate through the 15+ modules using the sidebar to explore predictive deal scoring, pipeline waterfalls, and autonomous CRM hygiene.
+          </p>
         </div>
 
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
           <button
-            className="btn btn-secondary btn-sm"
             onClick={handleForceSync}
-            style={{ fontSize: "11px", padding: "3px 10px", height: "26px" }}
+            style={{
+              padding: "10px 16px", background: "rgba(255,255,255,0.1)", color: "#fff", fontSize: "13px", fontWeight: 700,
+              border: "1px solid rgba(255,255,255,0.2)", borderRadius: "var(--radius-sm)", cursor: "pointer", transition: "all 0.2s ease"
+            }}
           >
-            ↻ Sync CRM
+            ↻ Force Sync
           </button>
-          <span className="badge badge-outline" style={{ fontSize: "10.5px" }}>
-            {deals.length} deals synced
-          </span>
+          <a
+            href="/case-study"
+            style={{
+              padding: "10px 20px", background: "#ff5c35", color: "#fff", fontSize: "13.5px", fontWeight: 800,
+              border: "none", borderRadius: "var(--radius-sm)", cursor: "pointer", boxShadow: "0 4px 14px rgba(255,92,53,0.3)",
+              textDecoration: "none", display: "inline-block"
+            }}
+          >
+            Read Case Study →
+          </a>
         </div>
-      </div>
+      </motion.div>
 
       {syncStatusMsg && (
         <motion.div
