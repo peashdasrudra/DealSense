@@ -12,6 +12,9 @@ import { PortfolioOverview } from "./pages/PortfolioOverview";
 import { ClientHealth } from "./pages/ClientHealth";
 import { ActionQueue } from "./pages/ActionQueue";
 import { RiskHeatmap } from "./pages/RiskHeatmap";
+import { DealExplorer } from "./pages/DealExplorer";
+import { AuditLog } from "./pages/AuditLog";
+import { Settings } from "./pages/Settings";
 
 // ── Page Title Mapping ───────────────────────────────────────────────────────
 
@@ -22,20 +25,8 @@ const PAGE_TITLES: Record<string, { title: string; breadcrumb: string }> = {
   "/actions": { title: "Action Queue", breadcrumb: "Dashboard / Actions" },
   "/heatmap": { title: "Risk Heatmap", breadcrumb: "Dashboard / Heatmap" },
   "/audit": { title: "Audit Log", breadcrumb: "System / Audit" },
-  "/settings": { title: "Settings", breadcrumb: "System / Settings" },
+  "/settings": { title: "Settings & Calibration", breadcrumb: "System / Settings" },
 };
-
-const PlaceholderPage: React.FC<{ icon: string; title: string; description: string }> = ({
-  icon,
-  title,
-  description,
-}) => (
-  <div style={{ textAlign: "center", padding: "64px 24px", color: "var(--hs-text-muted)" }}>
-    <div style={{ fontSize: 48, marginBottom: 16 }}>{icon}</div>
-    <h2 style={{ color: "var(--hs-text)", marginBottom: 8 }}>{title}</h2>
-    <p>{description}</p>
-  </div>
-);
 
 export const App: React.FC = () => {
   const location = useLocation();
@@ -144,18 +135,9 @@ export const App: React.FC = () => {
                 <Route path="/clients" element={<ClientHealth />} />
                 <Route path="/actions" element={<ActionQueue />} />
                 <Route path="/heatmap" element={<RiskHeatmap />} />
-                <Route
-                  path="/deals"
-                  element={<PlaceholderPage icon="🎯" title="Deal Explorer" description="Search, filter, and drill into individual deal intelligence." />}
-                />
-                <Route
-                  path="/audit"
-                  element={<PlaceholderPage icon="📋" title="Audit Log" description="Full audit trail of all actions, approvals, and write-backs." />}
-                />
-                <Route
-                  path="/settings"
-                  element={<PlaceholderPage icon="⚙️" title="Settings" description="Configure scoring weights, RBAC roles, and HubSpot connection." />}
-                />
+                <Route path="/deals" element={<DealExplorer />} />
+                <Route path="/audit" element={<AuditLog />} />
+                <Route path="/settings" element={<Settings />} />
               </Routes>
             </motion.div>
           </AnimatePresence>
