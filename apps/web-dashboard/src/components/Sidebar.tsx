@@ -29,6 +29,7 @@ const NAV_SECTIONS: NavSection[] = [
       { id: "overview", label: "Pipeline Overview", icon: "📊", path: "/" },
       { id: "forecast", label: "Revenue Forecast", icon: "🔮", path: "/forecast", isKeyFeature: true },
       { id: "deals", label: "Deal Inspector", icon: "🎯", path: "/deals" },
+      { id: "warroom", label: "Deal War Room (QBR)", icon: "🛡️", path: "/war-room", badge: "LIVE", badgeColor: "#ff5c35", isKeyFeature: true },
       { id: "heatmap", label: "Risk Heatmap", icon: "🔥", path: "/heatmap" },
     ],
   },
@@ -43,6 +44,7 @@ const NAV_SECTIONS: NavSection[] = [
   {
     title: "RevOps Automation",
     items: [
+      { id: "playbooks", label: "Autonomous Playbooks", icon: "🤖", path: "/playbooks", badge: "4 ACTIVE", badgeColor: "var(--risk-healthy)", isKeyFeature: true },
       { id: "hygiene", label: "CRM Hygiene", icon: "🧹", path: "/hygiene", badge: "6 AT RISK", badgeColor: "var(--warning)", isKeyFeature: true },
       { id: "reps", label: "Rep Coaching", icon: "👥", path: "/reps" },
       { id: "clients", label: "Client Health", icon: "🏢", path: "/clients" },

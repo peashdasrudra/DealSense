@@ -24,6 +24,8 @@ import { Settings } from "./pages/Settings";
 import { MutualActionPlan } from "./pages/MutualActionPlan";
 import { CompetitiveIntelligence } from "./pages/CompetitiveIntelligence";
 import { CaseStudy } from "./pages/CaseStudy";
+import { DealWarRoom } from "./pages/DealWarRoom";
+import { RevOpsPlaybooks } from "./pages/RevOpsPlaybooks";
 import { DealDrawer, DealData } from "./components/DealDrawer";
 
 // ── Page Title Mapping ───────────────────────────────────────────────────────
@@ -32,10 +34,12 @@ const PAGE_TITLES: Record<string, { title: string; breadcrumb: string }> = {
   "/": { title: "Pipeline Overview", breadcrumb: "Overview" },
   "/forecast": { title: "Revenue Forecast & Simulation", breadcrumb: "Forecast" },
   "/deals": { title: "Deal Inspector & Dossiers", breadcrumb: "Deals" },
+  "/war-room": { title: "Deal War Room (QBR)", breadcrumb: "War Room" },
   "/heatmap": { title: "Pipeline Risk Heatmap", breadcrumb: "Heatmap" },
   "/actions": { title: "Action Approval Queue", breadcrumb: "Actions" },
   "/map": { title: "Mutual Action Plans (MAP)", breadcrumb: "MAP" },
   "/battlecards": { title: "Competitive Battlecards & Objections", breadcrumb: "Battlecards" },
+  "/playbooks": { title: "Autonomous RevOps Playbooks", breadcrumb: "Playbooks" },
   "/hygiene": { title: "CRM Hygiene & Remediation", breadcrumb: "Hygiene" },
   "/reps": { title: "Rep Risk Profiles & Coaching", breadcrumb: "Reps" },
   "/clients": { title: "Client Health Scorecards", breadcrumb: "Clients" },
@@ -140,10 +144,12 @@ export const App: React.FC = () => {
                 <Route path="/" element={<PortfolioOverview />} />
                 <Route path="/forecast" element={<RevenueForecast />} />
                 <Route path="/deals" element={<DealExplorer />} />
+                <Route path="/war-room" element={<DealWarRoom />} />
                 <Route path="/heatmap" element={<RiskHeatmap />} />
                 <Route path="/actions" element={<ActionQueue />} />
                 <Route path="/map" element={<MutualActionPlan />} />
                 <Route path="/battlecards" element={<CompetitiveIntelligence />} />
+                <Route path="/playbooks" element={<RevOpsPlaybooks />} />
                 <Route path="/hygiene" element={<CrmHygiene />} />
                 <Route path="/reps" element={<RepPerformance />} />
                 <Route path="/clients" element={<ClientHealth />} />
