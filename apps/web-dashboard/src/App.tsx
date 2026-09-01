@@ -10,7 +10,6 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Sidebar } from "./components/Sidebar";
 import { TopBar } from "./components/TopBar";
 import { MobileBottomNav } from "./components/MobileBottomNav";
-import { LoadingScreen } from "./components/LoadingScreen";
 import { PortfolioOverview } from "./pages/PortfolioOverview";
 import { RevenueForecast } from "./pages/RevenueForecast";
 import { DealExplorer } from "./pages/DealExplorer";
@@ -69,7 +68,6 @@ export const App: React.FC = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedDeal, setSelectedDeal] = useState<DealData | null>(null);
-  const [isNavigatingHome, setIsNavigatingHome] = useState(false);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -117,18 +115,13 @@ export const App: React.FC = () => {
   };
 
   const handleNavigateHome = () => {
-    setIsNavigatingHome(true);
     navigate("/");
     setSidebarOpen(false);
   };
 
   return (
     <div className="layout">
-      {/* ── Global Animated Loading Screen Overlay ───────────────────── */}
-      <LoadingScreen
-        isLoading={isNavigatingHome}
-        onFinish={() => setIsNavigatingHome(false)}
-      />
+      {/* Loading Screen Overlay removed per user request */}
 
       {/* Mobile Sidebar Backdrop */}
       {sidebarOpen && (

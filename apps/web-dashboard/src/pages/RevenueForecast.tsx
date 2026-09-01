@@ -85,13 +85,33 @@ export const RevenueForecast: React.FC = () => {
 
   return (
     <div>
-      {/* ── Status Banner ─────────────────────────────────────────────── */}
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "var(--sp-4)" }}>
-        <div style={{ fontSize: "13px", color: "var(--hs-text-muted)", display: "flex", alignItems: "center", gap: 8 }}>
-          <span style={{ width: 8, height: 8, borderRadius: "50%", background: "var(--risk-healthy)", display: "inline-block" }} />
-          <span>Multi-Model AI Revenue Forecasting (Current Quarter)</span>
+      {/* ── Enterprise Header ─────────────────────────────────────────── */}
+      <div
+        className="card"
+        style={{
+          background: "linear-gradient(135deg, #124548 0%, #062b2e 100%)",
+          color: "#ffffff",
+          padding: "20px 24px",
+          border: "none",
+          marginBottom: "var(--sp-5)",
+        }}
+      >
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 12 }}>
+          <div>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
+              <span className="badge" style={{ background: "rgba(0, 164, 189, 0.25)", color: "#7de2ea", border: "1px solid rgba(0, 164, 189, 0.4)", fontWeight: 700, padding: "2px 8px", fontSize: "9.5px", letterSpacing: "0.05em" }}>
+                ● REVOPS PIPELINE TELEMETRY
+              </span>
+              <span style={{ fontSize: "11.5px", color: "#a5c2c4", fontWeight: 500 }}>Revenue Forecast</span>
+            </div>
+            <h2 style={{ fontSize: "20px", fontWeight: 800, color: "#ffffff", margin: "0 0 4px", letterSpacing: "-0.01em" }}>
+              Multi-Model AI Revenue Forecasting
+            </h2>
+            <p style={{ fontSize: "13px", color: "#d9e8e8", margin: 0, maxWidth: 680, lineHeight: 1.5 }}>
+              Compare rep-committed forecasts against manager stage-weighted and AI-adjusted projections. Detect pipeline risks before they impact the quarter.
+            </p>
+          </div>
         </div>
-        <span className="badge badge-outline">{deals.length} Active Forecast Deals</span>
       </div>
 
       {/* ── Forecast Comparison KPI Bar ───────────────────────────────── */}

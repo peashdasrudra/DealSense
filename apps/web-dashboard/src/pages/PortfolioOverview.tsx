@@ -141,62 +141,105 @@ export const PortfolioOverview: React.FC = () => {
   };
 
   return (
-    <div>
-      {/* ── DealSense Onboarding Banner ─────────────────────────── */}
-      <motion.div
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        style={{
-          background: "linear-gradient(135deg, #124548 0%, #062b2e 100%)",
-          borderRadius: "var(--radius-md)",
-          padding: "24px 30px",
-          marginBottom: "var(--sp-4)",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          flexWrap: "wrap",
-          gap: 16,
-          boxShadow: "0 8px 30px rgba(18, 69, 72, 0.25)",
-          color: "#fff",
-          position: "relative",
-          overflow: "hidden",
-        }}
-      >
-        <div style={{ position: "absolute", top: -80, right: -80, width: 250, height: 250, borderRadius: "50%", background: "radial-gradient(circle, rgba(255,92,53,0.15) 0%, transparent 70%)", pointerEvents: "none" }} />
+    <div style={{ display: "flex", flexDirection: "column", gap: "var(--sp-6)" }}>
+      {/* ── Top Row: Onboarding + Health Trend ─────────────────────── */}
+      <div className="grid-2" style={{ alignItems: "stretch" }}>
         
-        <div style={{ flex: 1, minWidth: 280 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
-            <span style={{ background: "rgba(5,150,105,0.25)", color: "#6ee7b7", border: "1px solid rgba(5,150,105,0.4)", padding: "4px 10px", borderRadius: "var(--radius-pill)", fontSize: "10.5px", fontWeight: 700 }}>● Live Webhook Synced</span>
-            <span style={{ fontSize: "11.5px", color: "rgba(255,255,255,0.7)" }}>HubSpot Portal #48921820</span>
+        {/* DealSense Onboarding Banner */}
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          style={{
+            background: "linear-gradient(135deg, #124548 0%, #062b2e 100%)",
+            borderRadius: "var(--radius-md)",
+            padding: "24px",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+            boxShadow: "0 8px 30px rgba(18, 69, 72, 0.25)",
+            color: "#fff",
+            position: "relative",
+            overflow: "hidden",
+            height: "100%",
+          }}
+        >
+          <div style={{ position: "absolute", top: -80, right: -80, width: 250, height: 250, borderRadius: "50%", background: "radial-gradient(circle, rgba(255,92,53,0.15) 0%, transparent 70%)", pointerEvents: "none" }} />
+          
+          <div>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
+              <span style={{ background: "rgba(5,150,105,0.25)", color: "#6ee7b7", border: "1px solid rgba(5,150,105,0.4)", padding: "4px 10px", borderRadius: "var(--radius-pill)", fontSize: "10px", fontWeight: 700, textTransform: "uppercase" }}>● Webhook Synced</span>
+              <span style={{ fontSize: "11px", color: "rgba(255,255,255,0.7)" }}>Portal #48921820</span>
+            </div>
+            <h2 style={{ fontSize: "20px", fontWeight: 800, margin: "0 0 8px", letterSpacing: "-0.02em" }}>Welcome to DealSense Intelligence</h2>
+            <p style={{ fontSize: "13px", color: "rgba(255,255,255,0.8)", margin: 0, lineHeight: 1.5 }}>
+              You're viewing a live interactive demo of the DealSense Revenue Operations engine. Navigate through the modules to explore predictive deal scoring, pipeline waterfalls, and autonomous CRM hygiene.
+            </p>
           </div>
-          <h2 style={{ fontSize: "22px", fontWeight: 800, margin: "0 0 6px", letterSpacing: "-0.02em" }}>Welcome to DealSense Intelligence</h2>
-          <p style={{ fontSize: "13.5px", color: "rgba(255,255,255,0.85)", margin: 0, maxWidth: 580, lineHeight: 1.5 }}>
-            You're viewing a live interactive demo of the DealSense Revenue Operations engine. Navigate through the 15+ modules using the sidebar to explore predictive deal scoring, pipeline waterfalls, and autonomous CRM hygiene.
-          </p>
-        </div>
 
-        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <button
-            onClick={handleForceSync}
-            style={{
-              padding: "10px 16px", background: "rgba(255,255,255,0.1)", color: "#fff", fontSize: "13px", fontWeight: 700,
-              border: "1px solid rgba(255,255,255,0.2)", borderRadius: "var(--radius-sm)", cursor: "pointer", transition: "all 0.2s ease"
-            }}
-          >
-            ↻ Force Sync
-          </button>
-          <a
-            href="/case-study"
-            style={{
-              padding: "10px 20px", background: "#ff5c35", color: "#fff", fontSize: "13.5px", fontWeight: 800,
-              border: "none", borderRadius: "var(--radius-sm)", cursor: "pointer", boxShadow: "0 4px 14px rgba(255,92,53,0.3)",
-              textDecoration: "none", display: "inline-block"
-            }}
-          >
-            Read Case Study →
-          </a>
-        </div>
-      </motion.div>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 24, flexWrap: "wrap" }}>
+            <button
+              onClick={handleForceSync}
+              style={{
+                padding: "8px 14px", background: "rgba(255,255,255,0.1)", color: "#fff", fontSize: "12.5px", fontWeight: 700,
+                border: "1px solid rgba(255,255,255,0.2)", borderRadius: "var(--radius-sm)", cursor: "pointer", transition: "all 0.2s ease"
+              }}
+            >
+              ↻ Force Sync
+            </button>
+            <a
+              href="/case-study"
+              style={{
+                padding: "8px 18px", background: "#ff5c35", color: "#fff", fontSize: "12.5px", fontWeight: 800,
+                border: "none", borderRadius: "var(--radius-sm)", cursor: "pointer", boxShadow: "0 4px 14px rgba(255,92,53,0.3)",
+                textDecoration: "none", display: "inline-block"
+              }}
+            >
+              Read Case Study →
+            </a>
+          </div>
+        </motion.div>
+
+        {/* Health Score Trend */}
+        <motion.div
+          className="card"
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2, duration: 0.3 }}
+          style={{ height: "100%", margin: 0 }}
+        >
+          <div className="card-header" style={{ paddingBottom: 0 }}>
+            <div>
+              <div className="card-title">Health Score Trend</div>
+              <div className="card-subtitle">Average deal health across portfolio</div>
+            </div>
+          </div>
+          <div className="card-body" style={{ height: "calc(100% - 60px)", padding: "10px 20px" }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={TREND_DATA} margin={{ top: 5, right: 10, left: -20, bottom: 0 }}>
+                <defs>
+                  <linearGradient id="scoreGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="var(--hs-primary)" stopOpacity={0.15} />
+                    <stop offset="100%" stopColor="var(--hs-primary)" stopOpacity={0} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--hs-border-dark)" />
+                <XAxis dataKey="date" tick={{ fontSize: 11, fill: "var(--hs-text-muted)" }} axisLine={false} tickLine={false} />
+                <YAxis domain={[40, 100]} tick={{ fontSize: 11, fill: "var(--hs-text-muted)" }} axisLine={false} tickLine={false} />
+                <Tooltip content={<CustomTooltip />} />
+                <Area
+                  type="monotone"
+                  dataKey="score"
+                  stroke="var(--hs-primary)"
+                  strokeWidth={2}
+                  fill="url(#scoreGrad)"
+                  dot={{ fill: "var(--hs-primary)", strokeWidth: 0, r: 4 }}
+                  activeDot={{ r: 6, strokeWidth: 2, stroke: "var(--hs-background)", fill: "var(--hs-primary)" }}
+                />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+        </motion.div>
+      </div>
 
       {syncStatusMsg && (
         <motion.div
@@ -209,7 +252,6 @@ export const PortfolioOverview: React.FC = () => {
             borderRadius: "var(--radius-sm)",
             fontSize: "12px",
             fontWeight: 600,
-            marginBottom: "var(--sp-4)",
             border: "1px solid var(--risk-healthy-border)",
           }}
         >
@@ -249,50 +291,8 @@ export const PortfolioOverview: React.FC = () => {
         ))}
       </div>
 
-      {/* ── Charts Row ───────────────────────────────────────────────── */}
+      {/* ── Risk Distribution Row ──────────────────────────────────────── */}
       <div className="grid-2" style={{ marginBottom: "var(--sp-6)" }}>
-        {/* Health Score Trend */}
-        <motion.div
-          className="card"
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 0.3 }}
-        >
-          <div className="card-header">
-            <div>
-              <div className="card-title">Health Score Trend</div>
-              <div className="card-subtitle">Average deal health across portfolio</div>
-            </div>
-          </div>
-          <div className="card-body">
-            <div style={{ height: 260 }}>
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={TREND_DATA} margin={{ top: 5, right: 10, left: -20, bottom: 0 }}>
-                  <defs>
-                    <linearGradient id="scoreGrad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="var(--hs-primary)" stopOpacity={0.15} />
-                      <stop offset="100%" stopColor="var(--hs-primary)" stopOpacity={0} />
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--hs-border-dark)" />
-                  <XAxis dataKey="date" tick={{ fontSize: 11, fill: "var(--hs-text-muted)" }} axisLine={false} tickLine={false} />
-                  <YAxis domain={[40, 100]} tick={{ fontSize: 11, fill: "var(--hs-text-muted)" }} axisLine={false} tickLine={false} />
-                  <Tooltip content={<CustomTooltip />} />
-                  <Area
-                    type="monotone"
-                    dataKey="score"
-                    stroke="var(--hs-primary)"
-                    strokeWidth={2}
-                    fill="url(#scoreGrad)"
-                    dot={{ fill: "var(--hs-primary)", strokeWidth: 0, r: 4 }}
-                    activeDot={{ r: 6, strokeWidth: 2, stroke: "var(--hs-background)", fill: "var(--hs-primary)" }}
-                  />
-                </AreaChart>
-              </ResponsiveContainer>
-            </div>
-          </div>
-        </motion.div>
-
         {/* Risk Distribution */}
         <motion.div
           className="card"
@@ -349,6 +349,16 @@ export const PortfolioOverview: React.FC = () => {
             </div>
           </div>
         </motion.div>
+        
+        {/* Placeholder or Action Summary can go here if needed, but we'll leave it empty for now. 
+            Because it's a grid-2, the Risk Distribution will take 50% width and not look stretched. */}
+        <div style={{ display: "flex", flexDirection: "column", gap: "var(--sp-4)" }}>
+          <motion.div className="card" style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", padding: "var(--sp-6)", textAlign: "center" }}>
+            <span style={{ fontSize: 32, marginBottom: 8 }}>⚡</span>
+            <h3 style={{ fontSize: 16, fontWeight: 700, margin: "0 0 4px" }}>System Health Optimal</h3>
+            <p style={{ fontSize: 13, color: "var(--hs-text-muted)", margin: 0, maxWidth: 240 }}>No critical system alerts. 48 deals synced successfully with real-time webhook ingestion.</p>
+          </motion.div>
+        </div>
       </div>
 
       {/* ── At-Risk Deals Section (Adaptive Desktop Table + Mobile Cards) ── */}

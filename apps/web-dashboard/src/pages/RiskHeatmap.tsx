@@ -95,34 +95,36 @@ export const RiskHeatmap: React.FC = () => {
     : [];
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "var(--sp-6)" }}>
-      {/* ── Header Card ───────────────────────────────────────────────── */}
+  <div>
+      {/* ── Enterprise Header ─────────────────────────────────────────── */}
       <div
         className="card"
         style={{
           background: "linear-gradient(135deg, #124548 0%, #062b2e 100%)",
           color: "#ffffff",
-          padding: "26px 30px",
+          padding: "20px 24px",
           border: "none",
+          marginBottom: "var(--sp-5)",
         }}
       >
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 16 }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 12 }}>
           <div>
             <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
-              <span className="badge" style={{ background: "rgba(0, 164, 189, 0.25)", color: "#7de2ea", border: "1px solid #00a4bd", fontWeight: 700 }}>
+              <span className="badge" style={{ background: "rgba(0, 164, 189, 0.25)", color: "#7de2ea", border: "1px solid rgba(0, 164, 189, 0.4)", fontWeight: 700, padding: "2px 8px", fontSize: "9.5px", letterSpacing: "0.05em" }}>
                 ● REVOPS PIPELINE TELEMETRY
               </span>
-              <span style={{ fontSize: "12px", color: "#a5c2c4" }}>Stage vs Severity Matrix</span>
+              <span style={{ fontSize: "11.5px", color: "#a5c2c4", fontWeight: 500 }}>Stage vs Severity Matrix</span>
             </div>
-            <h2 style={{ fontSize: "24px", fontWeight: 800, color: "#ffffff", margin: "4px 0 6px" }}>
+            <h2 style={{ fontSize: "20px", fontWeight: 800, color: "#ffffff", margin: "0 0 4px", letterSpacing: "-0.01em" }}>
               Pipeline Risk Heatmap
             </h2>
-            <p style={{ fontSize: "13.5px", color: "#d9e8e8", margin: 0, maxWidth: 680 }}>
+            <p style={{ fontSize: "13px", color: "#d9e8e8", margin: 0, maxWidth: 680, lineHeight: 1.5 }}>
               Visualize deal concentration across risk severity and pipeline stages. Identify critical choke points where high-value deals are rotting.
             </p>
           </div>
         </div>
       </div>
+
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "var(--sp-4)" }}>
         <div style={{ fontSize: "13px", color: "var(--hs-text-muted)", display: "flex", alignItems: "center", gap: 8 }}>
           <span style={{ width: 8, height: 8, borderRadius: "50%", background: isLive ? "var(--success)" : "var(--hs-primary)", display: "inline-block" }} />

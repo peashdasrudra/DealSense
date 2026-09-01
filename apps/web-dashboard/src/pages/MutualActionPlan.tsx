@@ -109,13 +109,40 @@ export const MutualActionPlan: React.FC = () => {
   };
 
   return (
-    <div>
+  <div>
+      {/* ── Enterprise Header ─────────────────────────────────────────── */}
+      <div
+        className="card"
+        style={{
+          background: "linear-gradient(135deg, #124548 0%, #062b2e 100%)",
+          color: "#ffffff",
+          padding: "20px 24px",
+          border: "none",
+          marginBottom: "var(--sp-5)",
+        }}
+      >
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 12 }}>
+          <div>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
+              <span className="badge" style={{ background: "rgba(0, 164, 189, 0.25)", color: "#7de2ea", border: "1px solid rgba(0, 164, 189, 0.4)", fontWeight: 700, padding: "2px 8px", fontSize: "9.5px", letterSpacing: "0.05em" }}>
+                ● REVOPS PIPELINE TELEMETRY
+              </span>
+              <span style={{ fontSize: "11.5px", color: "#a5c2c4", fontWeight: 500 }}>Client Onboarding & Alignment</span>
+            </div>
+            <h2 style={{ fontSize: "20px", fontWeight: 800, color: "#ffffff", margin: "0 0 4px", letterSpacing: "-0.01em" }}>
+              Mutual Action Plans (MAPs)
+            </h2>
+            <p style={{ fontSize: "13px", color: "#d9e8e8", margin: 0, maxWidth: 680, lineHeight: 1.5 }}>
+              Collaborative buyer-seller playbooks. Sync milestones with HubSpot tasks, track execution speed, and eliminate late-stage legal delays.
+            </p>
+          </div>
+        </div>
+      </div>
+
       {/* ── Top Header & Deal Selector ───────────────────────────────── */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "var(--sp-4)", flexWrap: "wrap", gap: 10 }}>
         <div>
-          <div style={{ fontSize: "13px", color: "var(--hs-text-muted)" }}>
-            Buyer-Seller Shared Mutual Action Plans (Auto-Synced with HubSpot)
-          </div>
+          
         </div>
         <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
           <select

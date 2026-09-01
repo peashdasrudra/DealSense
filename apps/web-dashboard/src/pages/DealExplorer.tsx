@@ -191,29 +191,30 @@ export const DealExplorer: React.FC = () => {
   }, [deals, search, selectedBand]);
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "var(--sp-6)" }}>
-      {/* ── Header Card ───────────────────────────────────────────────── */}
+  <div>
+      {/* ── Enterprise Header ─────────────────────────────────────────── */}
       <div
         className="card"
         style={{
           background: "linear-gradient(135deg, #124548 0%, #062b2e 100%)",
           color: "#ffffff",
-          padding: "26px 30px",
+          padding: "20px 24px",
           border: "none",
+          marginBottom: "var(--sp-5)",
         }}
       >
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 16 }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 12 }}>
           <div>
             <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
-              <span className="badge" style={{ background: "rgba(0, 164, 189, 0.25)", color: "#7de2ea", border: "1px solid #00a4bd", fontWeight: 700 }}>
+              <span className="badge" style={{ background: "rgba(0, 164, 189, 0.25)", color: "#7de2ea", border: "1px solid rgba(0, 164, 189, 0.4)", fontWeight: 700, padding: "2px 8px", fontSize: "9.5px", letterSpacing: "0.05em" }}>
                 ● REVOPS PIPELINE TELEMETRY
               </span>
-              <span style={{ fontSize: "12px", color: "#a5c2c4" }}>Deal Dossiers & MEDDICC</span>
+              <span style={{ fontSize: "11.5px", color: "#a5c2c4", fontWeight: 500 }}>Deal Dossiers & MEDDICC</span>
             </div>
-            <h2 style={{ fontSize: "24px", fontWeight: 800, color: "#ffffff", margin: "4px 0 6px" }}>
+            <h2 style={{ fontSize: "20px", fontWeight: 800, color: "#ffffff", margin: "0 0 4px", letterSpacing: "-0.01em" }}>
               Deal Inspector & Pipeline Intelligence
             </h2>
-            <p style={{ fontSize: "13.5px", color: "#d9e8e8", margin: 0, maxWidth: 680 }}>
+            <p style={{ fontSize: "13px", color: "#d9e8e8", margin: 0, maxWidth: 680, lineHeight: 1.5 }}>
               Deep dive into individual deal dossiers. Review automated MEDDICC scoring, surface hidden risk factors, and trigger executive interventions.
             </p>
           </div>
