@@ -134,7 +134,7 @@ export const DealDrawer: React.FC<DealDrawerProps> = ({
               right: 0,
               bottom: 0,
               width: "100%",
-              maxWidth: "680px",
+              maxWidth: "min(680px, 100vw)",
               background: "#ffffff",
               boxShadow: "-8px 0 32px rgba(18, 69, 72, 0.2)",
               zIndex: 210,
@@ -145,16 +145,17 @@ export const DealDrawer: React.FC<DealDrawerProps> = ({
             {/* Header */}
             <div
               style={{
-                padding: "20px 24px",
+                padding: "16px 20px",
                 borderBottom: "1px solid var(--hs-border-dark)",
                 background: "var(--hs-surface)",
                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "flex-start",
+                gap: 10,
               }}
             >
               <div>
-                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4, flexWrap: "wrap" }}>
                   <span className="badge badge-outline" style={{ fontSize: "11px", fontWeight: 700 }}>
                     {deal.stage}
                   </span>
@@ -169,10 +170,10 @@ export const DealDrawer: React.FC<DealDrawerProps> = ({
                     Owner: {deal.owner}
                   </span>
                 </div>
-                <h2 style={{ fontSize: "20px", fontWeight: 700, color: "var(--hs-primary)", margin: 0, lineHeight: 1.3 }}>
+                <h2 style={{ fontSize: "18px", fontWeight: 700, color: "var(--hs-primary)", margin: 0, lineHeight: 1.3 }}>
                   {deal.name}
                 </h2>
-                <div style={{ fontSize: "13px", color: "var(--hs-text-muted)", marginTop: 2 }}>
+                <div style={{ fontSize: "12.5px", color: "var(--hs-text-muted)", marginTop: 2 }}>
                   Account: <strong>{deal.client}</strong> · Pipeline Value: <strong>${(deal.value / 1000).toFixed(0)}K</strong>
                 </div>
               </div>
@@ -180,7 +181,7 @@ export const DealDrawer: React.FC<DealDrawerProps> = ({
               <button
                 onClick={onClose}
                 className="btn btn-secondary btn-sm"
-                style={{ borderRadius: "50%", width: 32, height: 32, padding: 0, fontSize: "16px" }}
+                style={{ borderRadius: "50%", width: 32, height: 32, padding: 0, fontSize: "16px", flexShrink: 0 }}
               >
                 ✕
               </button>
@@ -194,7 +195,7 @@ export const DealDrawer: React.FC<DealDrawerProps> = ({
                 style={{
                   background: "var(--risk-healthy-bg)",
                   color: "var(--risk-healthy)",
-                  padding: "8px 24px",
+                  padding: "8px 20px",
                   fontSize: "12.5px",
                   fontWeight: 600,
                   borderBottom: "1px solid var(--risk-healthy-border)",
@@ -210,8 +211,10 @@ export const DealDrawer: React.FC<DealDrawerProps> = ({
                 display: "flex",
                 borderBottom: "1px solid var(--hs-border-dark)",
                 background: "#ffffff",
-                padding: "0 24px",
-                gap: 20,
+                padding: "0 16px",
+                gap: 16,
+                overflowX: "auto",
+                whiteSpace: "nowrap",
               }}
             >
               {[

@@ -100,27 +100,18 @@ export const App: React.FC = () => {
           <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
             {/* Quick Search Bar */}
             <div
+              className="header-search-pill"
               onClick={() => setIsSearchOpen(true)}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 8,
-                background: "var(--hs-surface)",
-                border: "1px solid var(--hs-border-dark)",
-                borderRadius: "var(--radius-sm)",
-                padding: "6px 14px",
-                cursor: "pointer",
-                transition: "all 0.15s",
-              }}
             >
               <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke="var(--hs-text-muted)" strokeWidth={2}>
                 <circle cx={11} cy={11} r={8} />
                 <line x1={21} y1={21} x2={16.65} y2={16.65} />
               </svg>
-              <span style={{ fontSize: "13px", color: "var(--hs-text-muted)" }}>
+              <span className="search-text-label" style={{ fontSize: "13px", color: "var(--hs-text-muted)" }}>
                 Search pipeline, deals, reps...
               </span>
               <span
+                className="search-kbd-shortcut"
                 style={{
                   fontSize: "10.5px",
                   background: "#ffffff",

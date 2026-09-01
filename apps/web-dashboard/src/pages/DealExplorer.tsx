@@ -226,9 +226,9 @@ export const DealExplorer: React.FC = () => {
       </div>
 
       {/* ── Master-Detail Grid ───────────────────────────────────────── */}
-      <div style={{ display: "grid", gridTemplateColumns: "380px 1fr", gap: "var(--sp-6)" }}>
+      <div className="deal-explorer-grid">
         {/* Deal List Panel */}
-        <div className="card" style={{ height: "calc(100vh - 210px)", display: "flex", flexDirection: "column" }}>
+        <div className="card" style={{ maxHeight: "calc(100vh - 180px)", minHeight: "360px", display: "flex", flexDirection: "column" }}>
           <div className="card-header">
             <div className="card-title">Deal Intelligence Roster</div>
           </div>
@@ -294,7 +294,7 @@ export const DealExplorer: React.FC = () => {
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
             className="card"
-            style={{ height: "calc(100vh - 210px)", overflowY: "auto" }}
+            style={{ minHeight: "420px", overflowY: "auto" }}
           >
             <div className="card-header" style={{ background: "var(--hs-surface)" }}>
               <div>
