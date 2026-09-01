@@ -211,6 +211,7 @@ export const CaseStudy: React.FC = () => {
   const [selectedPkg, setSelectedPkg] = useState<string>("micro_audit");
   const [orderModalOpen, setOrderModalOpen] = useState(false);
   const [activeArchTab, setActiveArchTab] = useState<string>("webhooks");
+  const [whiteLabelBrand, setWhiteLabelBrand] = useState<"default" | "agency">("agency");
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
   
   // Interactive Agency Arbitrage Calculator State
@@ -240,6 +241,13 @@ export const CaseStudy: React.FC = () => {
     navigator.clipboard.writeText("peashdasrudra@gmail.com");
     setCopiedEmail(true);
     setTimeout(() => setCopiedEmail(false), 2500);
+  };
+
+  const handleScrollToPricing = () => {
+    const el = document.getElementById("pricing-plans");
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth" });
+    }
   };
 
   const handleOpenOrder = (pkgId: string) => {
@@ -322,35 +330,60 @@ export const CaseStudy: React.FC = () => {
           A turnkey, deterministic B2B revenue operations engine built natively for HubSpot CRM. Designed for <strong>HubSpot Agency Partners & RevOps Leaders</strong> to deploy for clients, eliminate the $1.2M pipeline leak, and charge $2,500–$5,000/month recurring service retainers with zero engineering overhead.
         </p>
 
-        {/* Primary Action Row */}
+        {/* ── Cohesive, High-Impact Action Button Layout ─────────────── */}
         <div style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
+          {/* Top Highlighted Primary CTA */}
+          <button
+            className="btn btn-primary"
+            onClick={() => navigate("/")}
+            style={{
+              padding: "13px 28px",
+              fontSize: "14.5px",
+              fontWeight: 800,
+              background: "linear-gradient(135deg, #124548 0%, #042729 100%)",
+              color: "#ffffff",
+              boxShadow: "0 6px 20px rgba(18, 69, 72, 0.35)",
+              border: "none",
+              display: "flex",
+              alignItems: "center",
+              gap: 8,
+            }}
+          >
+            🚀 Launch Live Web Dashboard
+          </button>
+
+          {/* Pricing & White-Label Anchor CTA */}
+          <button
+            className="btn btn-secondary"
+            onClick={handleScrollToPricing}
+            style={{
+              padding: "13px 22px",
+              fontSize: "14px",
+              fontWeight: 700,
+              color: "var(--hs-primary)",
+              border: "1.5px solid var(--hs-primary)",
+              background: "#ffffff",
+            }}
+          >
+            🏷️ See Pricing & White-Label Plans
+          </button>
+
+          {/* $99 Pilot Risk-Free Wedge CTA */}
           <button
             className="btn btn-primary"
             onClick={() => handleOpenOrder("micro_audit")}
             style={{
-              padding: "13px 26px",
-              fontSize: "14.5px",
+              padding: "13px 22px",
+              fontSize: "14px",
               fontWeight: 700,
               background: "#ff5c35",
               boxShadow: "0 4px 14px rgba(255, 92, 53, 0.35)",
             }}
           >
-            ⚡ Start $99 Risk-Free HubSpot Audit
+            ⚡ Start $99 Pilot Audit
           </button>
-          <button
-            className="btn btn-secondary"
-            onClick={() => handleOpenOrder("agency_single")}
-            style={{ padding: "13px 22px", fontSize: "14px", fontWeight: 700, color: "var(--hs-primary)", border: "1.5px solid var(--hs-primary)" }}
-          >
-            🏢 Order $490 Agency Client Deployment
-          </button>
-          <button
-            className="btn btn-secondary"
-            onClick={() => navigate("/")}
-            style={{ padding: "13px 20px", fontSize: "13.5px" }}
-          >
-            🚀 Launch Live Dashboard
-          </button>
+
+          {/* Founder Direct Email */}
           <button
             className="btn btn-secondary"
             onClick={handleCopyEmail}
@@ -406,12 +439,155 @@ export const CaseStudy: React.FC = () => {
         ))}
       </div>
 
-      {/* ── What DealSense Solves: Before vs After HubSpot Deep-Dive ─── */}
+      {/* ── Agency White-Label Transformation Hub (Brand Simulator) ───── */}
       <motion.div
         className="card"
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.15 }}
+        style={{
+          background: "linear-gradient(135deg, #124548 0%, #062b2e 100%)",
+          color: "#ffffff",
+          padding: "32px 36px",
+          marginBottom: "var(--sp-6)",
+          border: "none",
+        }}
+      >
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 20, marginBottom: 20 }}>
+          <div>
+            <div style={{ fontSize: "12px", textTransform: "uppercase", letterSpacing: "0.08em", color: "#ff7a59", fontWeight: 700 }}>
+              HubSpot Solutions Partner Multi-Tenant Suite
+            </div>
+            <h3 style={{ fontSize: "22px", fontWeight: 800, color: "#ffffff", margin: "4px 0 0" }}>
+              White-Label DealSense Under Your Agency Brand & Domain
+            </h3>
+          </div>
+
+          {/* Interactive Live Brand Switcher Toggle */}
+          <div style={{ display: "flex", background: "rgba(255, 255, 255, 0.1)", padding: 4, borderRadius: "var(--radius-pill)" }}>
+            <button
+              onClick={() => setWhiteLabelBrand("agency")}
+              style={{
+                padding: "6px 14px",
+                borderRadius: "var(--radius-pill)",
+                border: "none",
+                background: whiteLabelBrand === "agency" ? "#ff5c35" : "transparent",
+                color: "#ffffff",
+                fontSize: "12px",
+                fontWeight: 700,
+                cursor: "pointer",
+                transition: "all 0.15s ease",
+              }}
+            >
+              🏢 Your Agency Brand (Live Preview)
+            </button>
+            <button
+              onClick={() => setWhiteLabelBrand("default")}
+              style={{
+                padding: "6px 14px",
+                borderRadius: "var(--radius-pill)",
+                border: "none",
+                background: whiteLabelBrand === "default" ? "rgba(255,255,255,0.2)" : "transparent",
+                color: "#ffffff",
+                fontSize: "12px",
+                fontWeight: 600,
+                cursor: "pointer",
+                transition: "all 0.15s ease",
+              }}
+            >
+              Default DealSense View
+            </button>
+          </div>
+        </div>
+
+        {/* Live Mock White-Label Header */}
+        <div
+          style={{
+            padding: "16px 20px",
+            background: "rgba(255, 255, 255, 0.08)",
+            borderRadius: "var(--radius-md)",
+            border: "1px solid rgba(255, 255, 255, 0.15)",
+            marginBottom: 20,
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            flexWrap: "wrap",
+            gap: 12,
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            <div
+              style={{
+                width: 38,
+                height: 38,
+                borderRadius: "8px",
+                background: whiteLabelBrand === "agency" ? "#ff5c35" : "#124548",
+                color: "#ffffff",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontWeight: 800,
+                fontSize: "15px",
+                border: "1px solid rgba(255,255,255,0.3)",
+              }}
+            >
+              {whiteLabelBrand === "agency" ? "AR" : "DS"}
+            </div>
+            <div>
+              <div style={{ fontSize: "15px", fontWeight: 800, color: "#ffffff" }}>
+                {whiteLabelBrand === "agency" ? "Apex RevOps · Autonomous Revenue Suite" : "DealSense · Revenue Intelligence"}
+              </div>
+              <div style={{ fontSize: "11px", color: "#a5c2c4", fontFamily: "var(--font-mono)" }}>
+                {whiteLabelBrand === "agency" ? "https://revops.youragency.com" : "https://dealsense.io"}
+              </div>
+            </div>
+          </div>
+
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <span className="badge" style={{ background: "rgba(0, 164, 189, 0.25)", color: "#7de2ea", border: "1px solid #00a4bd" }}>
+              {whiteLabelBrand === "agency" ? "Client: TechCorp Global (Portal #19284711)" : "HubSpot Connected (Portal #48921820)"}
+            </span>
+            <span className="badge" style={{ background: "var(--risk-healthy-bg)", color: "var(--risk-healthy)", fontWeight: 700 }}>
+              $3,500/mo Active Retainer
+            </span>
+          </div>
+        </div>
+
+        {/* 4 Pillars of the Agency Retainer Machine */}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(230px, 1fr))", gap: 16 }}>
+          {[
+            { icon: "🏷️", title: "Your Custom Domain & Brand", desc: "Your logo, brand colors, and custom sub-domain with 0 DealSense footprints." },
+            { icon: "📦", title: "60-Second Client Ingestion", desc: "Simply authenticate your client's HubSpot portal with 1-click OAuth." },
+            { icon: "💵", title: "Charge $2.5K–$5K/mo Retainers", desc: "Package autonomous deal scoring & playbooks as your premium offering." },
+            { icon: "🛡️", title: "Complete Source Code Ownership", desc: "100% intellectual property ownership with 60-day engineering SLA." },
+          ].map((item, i) => (
+            <div
+              key={i}
+              style={{
+                padding: "16px 18px",
+                background: "rgba(255, 255, 255, 0.05)",
+                borderRadius: "var(--radius-sm)",
+                border: "1px solid rgba(255, 255, 255, 0.1)",
+              }}
+            >
+              <div style={{ fontSize: "20px", marginBottom: 6 }}>{item.icon}</div>
+              <div style={{ fontWeight: 700, fontSize: "13px", color: "#ffffff", marginBottom: 4 }}>
+                {item.title}
+              </div>
+              <div style={{ fontSize: "11.5px", color: "#d9e8e8", lineHeight: 1.5 }}>
+                {item.desc}
+              </div>
+            </div>
+          ))}
+        </div>
+      </motion.div>
+
+      {/* ── What DealSense Solves: Before vs After HubSpot Deep-Dive ─── */}
+      <motion.div
+        className="card"
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2 }}
         style={{ marginBottom: "var(--sp-6)" }}
       >
         <div className="card-header">
@@ -477,7 +653,7 @@ export const CaseStudy: React.FC = () => {
         className="card"
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2 }}
+        transition={{ delay: 0.25 }}
         style={{ marginBottom: "var(--sp-6)" }}
       >
         <div className="card-header">
@@ -561,7 +737,7 @@ export const CaseStudy: React.FC = () => {
         className="card"
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.25 }}
+        transition={{ delay: 0.3 }}
         style={{
           background: "linear-gradient(135deg, #124548 0%, #082d30 100%)",
           color: "#ffffff",
@@ -660,7 +836,7 @@ export const CaseStudy: React.FC = () => {
         className="card"
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.3 }}
+        transition={{ delay: 0.35 }}
         style={{ marginBottom: "var(--sp-6)" }}
       >
         <div className="card-header">
@@ -703,16 +879,17 @@ export const CaseStudy: React.FC = () => {
 
       {/* ── Transparent Deployment Packages & Order Tiers ────────────── */}
       <motion.div
+        id="pricing-plans"
         className="card"
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.35 }}
-        style={{ marginBottom: "var(--sp-6)" }}
+        transition={{ delay: 0.4 }}
+        style={{ marginBottom: "var(--sp-6)", scrollMarginTop: "80px" }}
       >
         <div className="card-header">
           <div>
             <div className="card-title">Transparent Fixed-Price Deployment Packages</div>
-            <div className="card-subtitle">Ultra-low pricing to maximize your agency margin delta and immediate client close rate</div>
+            <div className="card-subtitle">High margin delta to maximize your agency profitability and client close rate</div>
           </div>
           <span className="badge" style={{ background: "var(--risk-healthy-bg)", color: "var(--risk-healthy)", fontWeight: 700 }}>
             🛡️ 100% Money-Back ROI Guarantee
@@ -822,7 +999,7 @@ export const CaseStudy: React.FC = () => {
         className="card"
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.4 }}
+        transition={{ delay: 0.45 }}
         style={{ marginBottom: "var(--sp-6)" }}
       >
         <div className="card-header">
@@ -886,7 +1063,7 @@ export const CaseStudy: React.FC = () => {
         className="card"
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.45 }}
+        transition={{ delay: 0.5 }}
         style={{
           background: "linear-gradient(135deg, #124548 0%, #042729 100%)",
           color: "#ffffff",
