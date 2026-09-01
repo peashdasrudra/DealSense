@@ -119,19 +119,28 @@ export const App: React.FC = () => {
   };
 
   return (
-    <div className="app-shell">
-      {isNavigatingHome && (
-        <LoadingScreen isLoading={isNavigatingHome} onFinish={() => setIsNavigatingHome(false)} />
-      )}
-
-      <TopBar
-        title={pageMeta.title}
-        breadcrumb={pageMeta.breadcrumb}
-        onOpenSidebar={() => setSidebarOpen(true)}
-        onOpenSearch={() => setIsSearchOpen(true)}
-        onNavigateHome={handleNavigateHome}
+    <div className="layout">
+      {/* ── Global Animated Loading Screen Overlay ───────────────────── */}
+      <LoadingScreen
+        isLoading={isNavigatingHome}
+        onFinish={() => setIsNavigatingHome(false)}
       />
 
+      {/* Mobile Sidebar Backdrop */}
+      {sidebarOpen && (
+        <div
+          style={{
+            position: "fixed",
+            inset: 0,
+            background: "rgba(18, 69, 72, 0.45)",
+            backdropFilter: "blur(4px)",
+            zIndex: 110,
+          }}
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
+      {/* Sidebar Container */}
       <div className={`sidebar ${sidebarOpen ? "open" : ""}`}>
         <Sidebar 
           onClose={() => setSidebarOpen(false)}
@@ -139,7 +148,16 @@ export const App: React.FC = () => {
         />
       </div>
 
-      <main className="main-viewport">
+      {/* Main Content */}
+      <main className="main-content">
+        <TopBar
+          breadcrumb={pageMeta.breadcrumb}
+          title={pageMeta.title}
+          onOpenSidebar={() => setSidebarOpen(true)}
+          onOpenSearch={() => setIsSearchOpen(true)}
+          onNavigateHome={handleNavigateHome}
+        />
+
         <div className="page-content">
           <AnimatePresence mode="wait">
             <motion.div
