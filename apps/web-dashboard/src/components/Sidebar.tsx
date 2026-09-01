@@ -1,10 +1,6 @@
-/**
- * DealSense Dashboard — Sidebar Navigation Component.
- * Official HubSpot Canvas Design System Edition with Full RevOps Suite.
- */
-
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { DealSenseLogo } from "./DealSenseLogo";
 
 interface NavItem {
   id: string;
@@ -55,15 +51,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ onClose }) => {
     <>
       {/* ── Brand ────────────────────────────────────────────────────── */}
       <div className="sidebar-brand">
-        <div className="sidebar-logo">DS</div>
-        <div>
-          <div style={{ fontWeight: 700, color: "var(--hs-primary)", lineHeight: 1.2, fontSize: "15px" }}>
-            DealSense
-          </div>
-          <div style={{ fontSize: "11px", color: "var(--hs-text-muted)", fontWeight: 500 }}>
-            RevOps Command Center
-          </div>
-        </div>
+        <DealSenseLogo size="md" tagline="RevOps Command Center" />
       </div>
 
       {/* ── Nav Links ────────────────────────────────────────────────── */}

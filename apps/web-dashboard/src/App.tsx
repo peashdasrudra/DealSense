@@ -8,6 +8,8 @@ import { Routes, Route, useLocation } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 
 import { Sidebar } from "./components/Sidebar";
+import { TopBar } from "./components/TopBar";
+import { MobileBottomNav } from "./components/MobileBottomNav";
 import { PortfolioOverview } from "./pages/PortfolioOverview";
 import { RevenueForecast } from "./pages/RevenueForecast";
 import { DealExplorer } from "./pages/DealExplorer";
@@ -83,69 +85,12 @@ export const App: React.FC = () => {
 
       {/* Main Content */}
       <main className="main-content">
-        <header className="main-header">
-          <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-            <button
-              className="mobile-nav-toggle"
-              onClick={() => setSidebarOpen(true)}
-            >
-              ☰
-            </button>
-            <div>
-              <div className="main-header-breadcrumb">{pageInfo.breadcrumb}</div>
-              <h1 className="main-header-title">{pageInfo.title}</h1>
-            </div>
-          </div>
-
-          <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-            {/* Quick Search Bar */}
-            <div
-              className="header-search-pill"
-              onClick={() => setIsSearchOpen(true)}
-            >
-              <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke="var(--hs-text-muted)" strokeWidth={2}>
-                <circle cx={11} cy={11} r={8} />
-                <line x1={21} y1={21} x2={16.65} y2={16.65} />
-              </svg>
-              <span className="search-text-label" style={{ fontSize: "13px", color: "var(--hs-text-muted)" }}>
-                Search pipeline, deals, reps...
-              </span>
-              <span
-                className="search-kbd-shortcut"
-                style={{
-                  fontSize: "10.5px",
-                  background: "#ffffff",
-                  border: "1px solid var(--hs-border-dark)",
-                  padding: "1px 5px",
-                  borderRadius: "4px",
-                  color: "var(--hs-text-muted)",
-                  fontFamily: "var(--font-mono)",
-                }}
-              >
-                /
-              </span>
-            </div>
-
-            {/* Profile Avatar */}
-            <div
-              style={{
-                width: 36,
-                height: 36,
-                borderRadius: "50%",
-                background: "var(--hs-primary)",
-                color: "var(--hs-on-primary)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontWeight: 700,
-                fontSize: "13px",
-                cursor: "pointer",
-              }}
-            >
-              AX
-            </div>
-          </div>
-        </header>
+        <TopBar
+          breadcrumb={pageInfo.breadcrumb}
+          title={pageInfo.title}
+          onOpenSidebar={() => setSidebarOpen(true)}
+          onOpenSearch={() => setIsSearchOpen(true)}
+        />
 
         <div className="page-content">
           <AnimatePresence mode="wait">
@@ -288,6 +233,9 @@ export const App: React.FC = () => {
         isOpen={!!selectedDrawerDeal}
         onClose={() => setSelectedDrawerDeal(null)}
       />
+
+      {/* ── Mobile Bottom Navigation Bar ──────────────────────────────── */}
+      <MobileBottomNav onOpenMenu={() => setSidebarOpen(true)} />
     </div>
   );
 };
