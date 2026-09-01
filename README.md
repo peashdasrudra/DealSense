@@ -247,7 +247,7 @@ DealSense/
 **Peash Das Rudra** — *Senior AI & Systems Architect*
 - ✉️ Direct Founder Email: [peashdasrudra@gmail.com](mailto:peashdasrudra@gmail.com)
 - 📂 GitHub Repository: [github.com/peashdasrudra/DealSense](https://github.com/peashdasrudra/DealSense)
-- 🌐 Live Application: [web-dashboard-azure-ten.vercel.app](https://web-dashboard-azure-ten.vercel.app)
+- 🌐 Live Application: [admin-dashboard-dealsense.vercel.app](https://admin-dashboard-dealsense.vercel.app)
 
 ---
 
