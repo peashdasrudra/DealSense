@@ -12,13 +12,23 @@
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16%2B%20%7C%20pgvector-336791?style=for-the-badge&logo=postgresql)](https://github.com/pgvector/pgvector)
 [![React](https://img.shields.io/badge/React-18.3-61DAFB?style=for-the-badge&logo=react)](https://reactjs.org)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.5-3178C6?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org)
+[![Vercel Deployed](https://img.shields.io/badge/Vercel-Live%20Deploy-000000?style=for-the-badge&logo=vercel)](https://web-dashboard-azure-ten.vercel.app)
 [![License](https://img.shields.io/badge/License-Proprietary-red?style=for-the-badge)](#license)
 
-[Features](#-key-features) • [Architecture](#-system-architecture) • [Scoring Engine](#-deterministic-scoring-engine) • [Quick Start](#-quick-start) • [HubSpot Extension](#-hubspot-ui-extension) • [ADRs](#-architectural-decision-records)
+[Live Demos](#-live-deployments) • [Features](#-key-features) • [Architecture](#-system-architecture) • [Scoring Engine](#-deterministic-scoring-engine) • [Quick Start](#-quick-start) • [HubSpot Design System](#-hubspot-canvas-design-system) • [ADRs](#-architectural-decision-records)
 
 ---
 
 </div>
+
+## 🌐 Live Deployments
+
+| Application | Description | Live URL |
+| :--- | :--- | :--- |
+| **Agency Command Center** | Macro-level RevOps portfolio intelligence & risk heatmap | [web-dashboard-azure-ten.vercel.app](https://web-dashboard-azure-ten.vercel.app) |
+| **HubSpot Sidebar Card** | Native HubSpot UI Extension for deal records | [hubspot-extension-dealsense.vercel.app](https://hubspot-extension-dealsense.vercel.app) |
+
+---
 
 ## 💡 Why DealSense?
 
@@ -28,7 +38,7 @@ Most "AI CRM" tools simply dump LLM wrappers on deal properties, generating vagu
 - **Deterministic Math Before LLMs**: Health scores are derived from **7 measurable telemetry signals** (stage aging, engagement decay, stakeholder gaps, commitment slip), giving consistent and explainable scores without hallucinations.
 - **Evidence-Grounded Intelligence**: Every risk flag and MEDDICC dimension directly quotes verbatim evidence (call notes, email threads, timestamped interactions) with strict abstention when evidence is lacking.
 - **Controlled Autonomy & Approval Gates**: 4 distinct action tiers ensure AI never blindly mutates CRM data without human authorization and audit trails.
-- **Native Where Reps Work**: Operates directly inside the HubSpot Deal Sidebar (React UI Extension) and an Agency Command Center dashboard.
+- **HubSpot Native Canvas Design**: Designed according to official HubSpot UX guidelines with `#124548` teal accents, warm surfaces, and executive editorial serif headings.
 
 ---
 
@@ -105,6 +115,15 @@ All recommended next-best actions are governed by strict execution tiers:
 
 ---
 
+## 🎨 HubSpot Canvas Design System
+
+The DealSense frontend implements the official **HubSpot Canvas Design System** ([docs/hubspot-DESIGN.md](docs/hubspot-DESIGN.md)):
+- **Palette**: `#124548` (HubSpot Dark Teal), `#042729` (Deep Accent), `#ffffff` (Canvas), `#fcfcfa` (Warm Surface), and `#e5e0d3` (Borders).
+- **Typography**: Editorial Serif Display (`Playfair Display`) paired with `Plus Jakarta Sans` body typography.
+- **8px Baseline Grid**: Strict spacing increments avoiding cognitive clutter in all-day RevOps workflows.
+
+---
+
 ## 🧮 Deterministic Scoring Engine
 
 The scoring engine (`packages/scoring`) runs a 100% deterministic mathematical evaluation across 7 core signals:
@@ -145,6 +164,7 @@ DealSense/
 │   └── terraform/              # Cloud Infrastructure-as-Code definitions
 ├── docs/
 │   ├── adr/                    # Architecture Decision Records (ADRs 001–005)
+│   ├── hubspot-DESIGN.md       # Official HubSpot Canvas Design System Specification
 │   └── threat-model/           # Security & Threat modeling specifications
 └── .github/workflows/          # Automated CI/CD pipelines
 ```
@@ -187,23 +207,6 @@ python -m pytest -v apps/api/src/tests
 # Run Scoring Engine Determinism Suite (5 tests)
 python -m pytest -v packages/scoring/tests
 ```
-
----
-
-## 💻 Frontend Applications
-
-### 🔹 HubSpot Deal Sidebar Card (`apps/hubspot-extension`)
-An embedded React interface built with HubSpot UI Extensions that displays:
-- **Radial Health Gauge**: Real-time score with risk level badge and delta indicators.
-- **MEDDICC Radar**: Breakdown of all 7 pillars with verifiable evidence excerpts.
-- **Ranked Risk Warnings**: Direct citations linking back to emails and meeting notes.
-- **Action Approval Cards**: One-click execution or approval gates for RevOps write-backs.
-
-### 🔹 Agency Command Center (`apps/web-dashboard`)
-A modern web application tailored for RevOps consultants and agency leadership:
-- **Portfolio Overview**: Cross-client revenue pipeline health and aggregate risk distribution.
-- **Risk Heatmap**: Multi-dimensional matrix mapping deal velocity against deal value.
-- **Action & Approval Queue**: Centralized review queue for pending Tier 2/3/4 write-backs with instant rollback support.
 
 ---
 
