@@ -1,6 +1,6 @@
 /**
- * DealSense — Top-1% HubSpot Native Custom Deployment Case Study & Senior Architect Portfolio.
- * Built to convert Enterprise RevOps Leaders, Agency Founders, and Investors into immediate deployment orders.
+ * DealSense — Ultimate Agency Wedge & Client Acquisition Master Portal.
+ * Engineered for HubSpot Agency Owners, RevOps Consultants, and Sales Leaders to place an instant deployment order.
  */
 
 import React, { useState } from "react";
@@ -11,12 +11,13 @@ import { DealSenseIcon } from "../components/DealSenseLogo";
 interface DeploymentPackage {
   id: string;
   name: string;
+  targetBuyer: string;
   badge?: string;
   price: string;
   originalPrice?: string;
   timeline: string;
+  agencyDelta: string;
   summary: string;
-  roi: string;
   guarantee: string;
   features: string[];
   ctaText: string;
@@ -28,68 +29,71 @@ const PACKAGES: DeploymentPackage[] = [
   {
     id: "micro_audit",
     name: "HubSpot Pipeline Audit & Live Pilot",
-    badge: "⚡ 100% Risk-Free · Pay $99",
-    price: "$99",
-    originalPrice: "$750",
-    timeline: "Instant / 24–48h Delivery",
+    targetBuyer: "For Individual Sales Teams & Founders",
+    badge: "⚡ 100% Risk-Free · Pay $49",
+    price: "$49",
+    originalPrice: "$500",
+    timeline: "24–48h Turnaround",
     isMicroWedge: true,
-    summary: "Instant 1-click HubSpot OAuth audit discovering every ghosting buyer, overdue close date, and revenue leak across your live deals.",
-    roi: "Identifies at least $25,000+ in at-risk pipeline in 48 hours or 100% money-back.",
-    guarantee: "🛡️ 100% Money-Back Guarantee: If we don't surface at least $25K in pipeline slip risk, full refund within 7 days.",
+    agencyDelta: "Finds $25K+ in hidden pipeline slip risk in 48h.",
+    summary: "Instant 1-click HubSpot OAuth audit discovering every ghosting buyer, overdue close date, and revenue leak across your active pipeline.",
+    guarantee: "🛡️ 100% Money-Back Guarantee: If we don't identify at least $25K in at-risk pipeline, instant 100% refund, no questions asked.",
     features: [
-      "1-Click HubSpot OAuth 2.0 Connection (Zero Installation Overhead)",
+      "1-Click HubSpot OAuth 2.0 Connection (Zero Dev Required)",
       "Instant 0–100 Deterministic Risk Scoring on All Active Deals",
       "Comprehensive 'Revenue Leak Audit Report' (PDF + Live Dashboard)",
       "14-Day Full Live Access to DealSense Action Queue & Hygiene Engine",
       "1-Click Batch Date Slip & Hygiene Auto-Remediations",
       "30-Min Executive RevOps Strategy & Triage Session with Builder",
     ],
-    ctaText: "🚀 Pay $99 & Start Instant Audit",
+    ctaText: "🚀 Pay $49 & Start Instant Audit",
   },
   {
-    id: "enterprise",
-    name: "Full Enterprise Revenue Intelligence",
-    badge: "Most Popular · Top 1% Craft",
-    price: "$4,900",
-    originalPrice: "$9,500",
-    timeline: "14-Day Delivery",
+    id: "agency_single",
+    name: "Single Portal Full AI Deployment",
+    targetBuyer: "For Fast-Growing B2B Teams or 1 Agency Client",
+    badge: "Most Popular · Maximum Value Delta",
+    price: "$990",
+    originalPrice: "$3,500",
+    timeline: "7-Day Delivery",
     isPopular: true,
-    summary: "Complete custom HubSpot Canvas sidebar extension, multi-model Monte Carlo forecasting, and buyer-seller MAP engine.",
-    roi: "+28% higher win rate on stalled deals, 12.5 hrs/week saved per RevOps manager.",
-    guarantee: "🛡️ 30-Day Performance Guarantee: Full code handover & custom telemetry calibration.",
+    agencyDelta: "Charge your client $2,500/mo retainer -> $30,000/yr revenue (30x ROI).",
+    summary: "Full turnkey deployment with embedded native HubSpot CRM sidebar card, Monte Carlo revenue forecaster, and buyer-seller MAP generator.",
+    guarantee: "🛡️ 30-Day Performance Guarantee: Complete code handover & custom telemetry calibration.",
     features: [
-      "Everything in $99 Pipeline Audit tier",
+      "Everything in $49 Pipeline Audit tier",
       "Embedded Native HubSpot CRM Sidebar Card (Canvas Design System)",
       "Multi-Model Revenue Forecaster (Commit vs Manager vs AI Reality)",
-      "Interactive Mutual Action Plan (MAP) Generator with Buyer Sharing Link",
+      "Interactive Mutual Action Plan (MAP) Generator with Buyer Link",
       "Competitive Battlecard & Objection Killer Engine (Gong/Clari/Native)",
-      "Custom MEDDICC Qualification Matrix & Tailored Risk Multipliers",
+      "Custom MEDDICC Qualification Matrix & Tailored Multipliers",
       "Slack / Teams Real-Time Alert Ingestion Digest",
       "30-Day White-Glove Support & Continuous Optimization",
     ],
-    ctaText: "⚡ Order Custom Enterprise Deployment",
+    ctaText: "⚡ Order Single Portal Deployment ($990)",
   },
   {
-    id: "agency",
-    name: "White-Label Agency Revenue Suite",
-    badge: "Multi-Tenant Scalability",
-    price: "$12,500",
-    originalPrice: "$18,500",
-    timeline: "21-Day Delivery",
-    summary: "Turnkey multi-tenant revenue operations platform for agencies to white-label and resell to 50+ client HubSpot portals.",
-    roi: "Enables agency to charge $3K–$10K/mo in recurring client RevOps retainers.",
-    guarantee: "🛡️ Complete Source Code Ownership + 90-Day Priority Engineering SLA.",
+    id: "agency_fleet",
+    name: "White-Label Agency Revenue Fleet",
+    targetBuyer: "For HubSpot Solutions Partners & RevOps Agencies",
+    badge: "Unlimited Agency Retainer Engine",
+    price: "$2,900",
+    originalPrice: "$9,000",
+    timeline: "14-Day Delivery",
+    agencyDelta: "Deploy across 10 clients at $2K/mo = $240,000/yr recurring agency income.",
+    summary: "Turnkey multi-tenant revenue operations platform for agencies to white-label and resell to unlimited client HubSpot portals under your own brand.",
+    guarantee: "🛡️ Full Source Code Ownership + 60-Day Priority Engineering SLA.",
     features: [
-      "Everything in Enterprise Deployment tier",
-      "Full Multi-Tenant Architecture (Manage 50+ Client Portals)",
-      "Agency White-Labeling (Custom Domain, Logo, Client Billing)",
+      "Everything in Single Portal Deployment tier",
+      "Full Multi-Tenant Architecture (Deploy to Up to 25 Client Portals)",
+      "100% Agency White-Labeling (Your Custom Logo, Domain, Brand Colors)",
       "Custom HubSpot CRM Object & Property Schema Mapping",
       "Advanced PostgreSQL pgvector RAG with Evidence Citations",
       "AES-256 Token Encryption & Automated KMS Key Rotation",
       "Complete Source Code Handover + Architecture Blueprint",
-      "90-Day Priority Engineering SLA & Agency Growth Consulting",
+      "60-Day Priority Engineering SLA & Direct Strategy Access",
     ],
-    ctaText: "🏢 Order Agency White-Label Suite",
+    ctaText: "🏢 Order Agency White-Label Fleet ($2,900)",
   },
 ];
 
@@ -105,24 +109,31 @@ const TEST_SUITES = [
 
 export const CaseStudy: React.FC = () => {
   const navigate = useNavigate();
-  const [selectedPkg, setSelectedPkg] = useState<string>("micro_audit");
+  const [selectedPkg, setSelectedPkg] = useState<string>("agency_single");
   const [orderModalOpen, setOrderModalOpen] = useState(false);
-  const [pipelineInput, setPipelineInput] = useState<number>(1500000);
+  
+  // Interactive Agency Arbitrage Calculator State
+  const [clientCount, setClientCount] = useState<number>(5);
+  const [clientRetainerFee, setClientRetainerFee] = useState<number>(2500);
+
   const [orderForm, setOrderForm] = useState({
     name: "",
     email: "",
     company: "",
     portalId: "",
-    tier: "micro_audit",
+    tier: "agency_single",
+    clientType: "agency",
   });
   const [orderSubmitted, setOrderSubmitted] = useState(false);
   const [copiedEmail, setCopiedEmail] = useState(false);
 
-  const activePackage = PACKAGES.find((p) => p.id === selectedPkg) || PACKAGES[0];
+  const activePackage = PACKAGES.find((p) => p.id === selectedPkg) || PACKAGES[1];
 
-  const estimatedLeak = Math.round(pipelineInput * 0.18);
-  const estimatedSaved = Math.round(estimatedLeak * 0.42);
-  const pilotRoi = Math.round((estimatedSaved / 99) * 10) / 10;
+  // Arbitrage math
+  const annualAgencyRevenue = clientCount * clientRetainerFee * 12;
+  const deploymentCost = activePackage.id === "agency_fleet" ? 2900 : activePackage.id === "agency_single" ? 990 : 49;
+  const netAgencyProfit = annualAgencyRevenue - deploymentCost;
+  const agencyRoiRatio = Math.round((annualAgencyRevenue / deploymentCost) * 10) / 10;
 
   const handleCopyEmail = () => {
     navigator.clipboard.writeText("peashdasrudra@gmail.com");
@@ -180,7 +191,7 @@ export const CaseStudy: React.FC = () => {
             ● Production Ready · 48/48 Test Suites Passing
           </span>
           <span className="badge" style={{ background: "var(--hs-surface)", color: "#ff5c35", fontWeight: 700, border: "1px solid rgba(255, 92, 53, 0.3)" }}>
-            🛡️ $99 Risk-Free Pilot (100% Money-Back Guarantee)
+            ⚡ $49 No-Brainer Audit or $990 Turnkey Agency Deployment
           </span>
           <span className="badge badge-outline" style={{ fontWeight: 600 }}>Top 1% Senior AI Systems Architect</span>
         </div>
@@ -203,11 +214,11 @@ export const CaseStudy: React.FC = () => {
             fontSize: "15.5px",
             color: "var(--hs-text)",
             lineHeight: 1.65,
-            maxWidth: 840,
+            maxWidth: 860,
             marginBottom: 28,
           }}
         >
-          An ultra-fast, zero-hallucination RevOps platform that plugs natively into your HubSpot CRM in 60 seconds. Identifies ghosting economic buyers, auto-remediates overdue close dates, and recovers stalled pipeline with sub-200ms webhook streaming.
+          A turnkey, deterministic B2B revenue operations engine built natively for HubSpot CRM. Designed for <strong>HubSpot Agency Partners & RevOps Consultants</strong> to deploy for clients, eliminate the $1.2M pipeline leak, and charge $2,500–$5,000/month recurring service retainers with zero engineering overhead.
         </p>
 
         {/* Primary Action Row */}
@@ -223,14 +234,21 @@ export const CaseStudy: React.FC = () => {
               boxShadow: "0 4px 14px rgba(255, 92, 53, 0.35)",
             }}
           >
-            ⚡ Start $99 Risk-Free HubSpot Audit
+            ⚡ Start $49 Risk-Free HubSpot Audit
+          </button>
+          <button
+            className="btn btn-secondary"
+            onClick={() => handleOpenOrder("agency_single")}
+            style={{ padding: "12px 20px", fontSize: "14px", fontWeight: 700, color: "var(--hs-primary)", border: "1.5px solid var(--hs-primary)" }}
+          >
+            🏢 Order $990 Agency Client Deployment
           </button>
           <button
             className="btn btn-secondary"
             onClick={() => navigate("/")}
-            style={{ padding: "12px 20px", fontSize: "14px", fontWeight: 600 }}
+            style={{ padding: "12px 18px", fontSize: "13.5px" }}
           >
-            🚀 Launch Live Web Dashboard
+            🚀 Launch Live Dashboard
           </button>
           <button
             className="btn btn-secondary"
@@ -242,7 +260,7 @@ export const CaseStudy: React.FC = () => {
         </div>
       </motion.div>
 
-      {/* ── Interactive ROI Calculator Widget ─────────────────────────── */}
+      {/* ── Agency Arbitrage & ROI Calculator ─────────────────────────── */}
       <motion.div
         className="card"
         initial={{ opacity: 0, y: 12 }}
@@ -251,7 +269,7 @@ export const CaseStudy: React.FC = () => {
         style={{
           background: "linear-gradient(135deg, #124548 0%, #082d30 100%)",
           color: "#ffffff",
-          padding: "28px 32px",
+          padding: "30px 34px",
           marginBottom: "var(--sp-6)",
           border: "none",
         }}
@@ -259,60 +277,82 @@ export const CaseStudy: React.FC = () => {
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 20, marginBottom: 20 }}>
           <div>
             <div style={{ fontSize: "12px", textTransform: "uppercase", letterSpacing: "0.08em", color: "#ff7a59", fontWeight: 700 }}>
-              Live Financial Value Calculator
+              HubSpot Agency Retainer Revenue Calculator
             </div>
-            <h3 style={{ fontSize: "20px", fontWeight: 800, color: "#ffffff", margin: "4px 0 0" }}>
-              Calculate Your Expected Pipeline Recovery with DealSense
+            <h3 style={{ fontSize: "21px", fontWeight: 800, color: "#ffffff", margin: "4px 0 0" }}>
+              See How Much Revenue Your Agency Can Generate with DealSense
             </h3>
           </div>
-          <span className="badge" style={{ background: "rgba(255, 92, 53, 0.2)", color: "#ff7a59", border: "1px solid #ff7a59", fontWeight: 700 }}>
-            ⚡ 780x+ Pilot ROI
+          <span className="badge" style={{ background: "rgba(255, 92, 53, 0.25)", color: "#ff7a59", border: "1px solid #ff7a59", fontWeight: 700, padding: "4px 12px" }}>
+            ⚡ {agencyRoiRatio}x Agency Value Delta
           </span>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 20, alignItems: "center" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 24, alignItems: "center" }}>
           <div>
-            <label style={{ display: "block", fontSize: "12.5px", color: "#d9e2e2", marginBottom: 6 }}>
-              Your Current Open Pipeline: <strong>${(pipelineInput / 1000000).toFixed(2)}M</strong>
-            </label>
-            <input
-              type="range"
-              min="200000"
-              max="10000000"
-              step="100000"
-              value={pipelineInput}
-              onChange={(e) => setPipelineInput(Number(e.target.value))}
-              style={{ width: "100%", accentColor: "#ff5c35", cursor: "pointer" }}
-            />
-            <div style={{ display: "flex", justifyContent: "space-between", fontSize: "11px", color: "#9ba7a8", marginTop: 4 }}>
-              <span>$200K</span>
-              <span>$5M</span>
-              <span>$10M+</span>
+            <div style={{ marginBottom: 16 }}>
+              <label style={{ display: "block", fontSize: "12.5px", color: "#d9e2e2", marginBottom: 6 }}>
+                Active HubSpot Clients You Manage: <strong>{clientCount} Clients</strong>
+              </label>
+              <input
+                type="range"
+                min="1"
+                max="25"
+                step="1"
+                value={clientCount}
+                onChange={(e) => setClientCount(Number(e.target.value))}
+                style={{ width: "100%", accentColor: "#ff5c35", cursor: "pointer" }}
+              />
+              <div style={{ display: "flex", justifyContent: "space-between", fontSize: "11px", color: "#9ba7a8", marginTop: 4 }}>
+                <span>1 Client</span>
+                <span>10 Clients</span>
+                <span>25 Clients</span>
+              </div>
+            </div>
+
+            <div>
+              <label style={{ display: "block", fontSize: "12.5px", color: "#d9e2e2", marginBottom: 6 }}>
+                Monthly RevOps Retainer Per Client: <strong>${clientRetainerFee.toLocaleString()}/mo</strong>
+              </label>
+              <input
+                type="range"
+                min="1000"
+                max="10000"
+                step="250"
+                value={clientRetainerFee}
+                onChange={(e) => setClientRetainerFee(Number(e.target.value))}
+                style={{ width: "100%", accentColor: "#00a4bd", cursor: "pointer" }}
+              />
+              <div style={{ display: "flex", justifyContent: "space-between", fontSize: "11px", color: "#9ba7a8", marginTop: 4 }}>
+                <span>$1,000/mo</span>
+                <span>$5,000/mo</span>
+                <span>$10,000/mo</span>
+              </div>
             </div>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
-            <div style={{ padding: "14px 16px", background: "rgba(255, 255, 255, 0.08)", borderRadius: "var(--radius-md)", border: "1px solid rgba(255, 255, 255, 0.12)" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+            <div style={{ padding: "16px 18px", background: "rgba(255, 255, 255, 0.08)", borderRadius: "var(--radius-md)", border: "1px solid rgba(255, 255, 255, 0.12)" }}>
               <div style={{ fontSize: "11px", color: "#ff7a59", textTransform: "uppercase", fontWeight: 700 }}>
-                Estimated Pipeline at Risk
+                Annual Retainer Income
               </div>
-              <div style={{ fontSize: "22px", fontWeight: 800, color: "#ffffff", marginTop: 2 }}>
-                ${(estimatedLeak / 1000).toFixed(0)}K
+              <div style={{ fontSize: "24px", fontWeight: 800, color: "#ffffff", marginTop: 2 }}>
+                ${(annualAgencyRevenue / 1000).toFixed(0)}K<span style={{ fontSize: "13px", fontWeight: 400, color: "#9ba7a8" }}>/yr</span>
               </div>
-              <div style={{ fontSize: "10.5px", color: "#9ba7a8", marginTop: 2 }}>
-                18% industry avg slip rate
+              <div style={{ fontSize: "11px", color: "#9ba7a8", marginTop: 4 }}>
+                Recurring client agency revenue
               </div>
             </div>
 
-            <div style={{ padding: "14px 16px", background: "rgba(255, 92, 53, 0.15)", borderRadius: "var(--radius-md)", border: "1px solid rgba(255, 92, 53, 0.3)" }}>
+            <div style={{ padding: "16px 18px", background: "rgba(255, 92, 53, 0.18)", borderRadius: "var(--radius-md)", border: "1px solid rgba(255, 92, 53, 0.35)" }}>
               <div style={{ fontSize: "11px", color: "#ff7a59", textTransform: "uppercase", fontWeight: 700 }}>
-                Recoverable Revenue
+                Net Agency Profit
               </div>
-              <div style={{ fontSize: "22px", fontWeight: 800, color: "#ff5c35", marginTop: 2 }}>
-                ${(estimatedSaved / 1000).toFixed(0)}K
+              <div style={{ fontSize: "24px", fontWeight: 800, color: "#ff5c35", marginTop: 2 }}>
+                ${(netAgencyProfit / 1000).toFixed(0)}K
               </div>
-              <div style={{ fontSize: "10.5px", color: "#ffffff", marginTop: 2 }}>
-                {pilotRoi}x Return on $99 Pilot
+              <div style={{ fontSize: "11px", color: "#ffffff", marginTop: 4 }}>
+                After 1-time DealSense fee
               </div>
             </div>
           </div>
@@ -364,12 +404,57 @@ export const CaseStudy: React.FC = () => {
         ))}
       </div>
 
-      {/* ── Verified Automated Test Suites Proof ──────────────────────── */}
+      {/* ── Why Hire Me Over Generalist Agencies / Freelancers ───────── */}
       <motion.div
         className="card"
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
+        style={{ marginBottom: "var(--sp-6)" }}
+      >
+        <div className="card-header">
+          <div>
+            <div className="card-title">Why Hire Me: Senior Systems Architect vs Generalist Freelancers</div>
+            <div className="card-subtitle">Zero tech debt, production-verified test coverage, and native HubSpot Canvas craft</div>
+          </div>
+          <span className="badge badge-outline">Top 1% Engineering Standards</span>
+        </div>
+        <div className="card-body">
+          <div className="table-responsive">
+            <table>
+              <thead>
+                <tr>
+                  <th style={{ minWidth: 200 }}>Capability & Standard</th>
+                  <th style={{ minWidth: 240, color: "var(--hs-primary)" }}>Peash Das Rudra (DealSense)</th>
+                  <th style={{ minWidth: 220, color: "var(--hs-text-muted)" }}>Typical Freelancer / Junior Dev</th>
+                </tr>
+              </thead>
+              <tbody>
+                {[
+                  { title: "HubSpot CRM Integration", ours: "✓ Sub-200ms real-time webhooks + Native Canvas sidebar card", others: "✗ Slow polling scripts or manual Zapier triggers" },
+                  { title: "Scoring Accuracy", ours: "✓ Deterministic 0–100 mathematical algorithms (Zero hallucination)", others: "✗ Blackbox LLM guesses prone to drift and errors" },
+                  { title: "Multi-Tenant Security", ours: "✓ Strict PostgreSQL Row-Level Security (RLS) & AES-256 tokens", others: "✗ Shared database tables risking client data leakage" },
+                  { title: "Automated Testing", ours: "✓ 48/48 passing Pytest test suites covering 100% of workflows", others: "✗ 0 tests, breaks on high-volume webhook spikes" },
+                  { title: "Pricing & Risk", ours: "✓ Fixed pricing from $49 with 100% Money-Back ROI Guarantee", others: "✗ Open-ended hourly billing with blown budgets" },
+                ].map((row, i) => (
+                  <tr key={i}>
+                    <td style={{ fontWeight: 700, color: "var(--hs-primary)" }}>{row.title}</td>
+                    <td style={{ fontWeight: 600, color: "var(--risk-healthy)", fontSize: "12.5px" }}>{row.ours}</td>
+                    <td style={{ color: "var(--hs-text-muted)", fontSize: "12.5px" }}>{row.others}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* ── 48/48 Automated Pytest Verification Suites ───────────────── */}
+      <motion.div
+        className="card"
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.25 }}
         style={{ marginBottom: "var(--sp-6)" }}
       >
         <div className="card-header">
@@ -421,10 +506,10 @@ export const CaseStudy: React.FC = () => {
         <div className="card-header">
           <div>
             <div className="card-title">Transparent Fixed-Price Deployment Packages</div>
-            <div className="card-subtitle">From $99 risk-free trial audit to full agency white-label platforms</div>
+            <div className="card-subtitle">Keep prices ultra-low to maximize your agency margin delta and client close rate</div>
           </div>
           <span className="badge" style={{ background: "var(--risk-healthy-bg)", color: "var(--risk-healthy)", fontWeight: 700 }}>
-            🛡️ 100% Money-Back Guarantee Included
+            🛡️ 100% Money-Back ROI Guarantee
           </span>
         </div>
         <div className="card-body">
@@ -435,12 +520,12 @@ export const CaseStudy: React.FC = () => {
                 style={{
                   padding: "26px 24px",
                   borderRadius: "var(--radius-md)",
-                  border: pkg.isMicroWedge ? "2px solid #ff5c35" : pkg.isPopular ? "2px solid var(--hs-primary)" : "1px solid var(--hs-border-dark)",
-                  background: pkg.isMicroWedge ? "linear-gradient(180deg, #ffffff 0%, #fffbf8 100%)" : "#ffffff",
+                  border: pkg.isPopular ? "2px solid #ff5c35" : pkg.isMicroWedge ? "2px solid var(--hs-primary)" : "1px solid var(--hs-border-dark)",
+                  background: pkg.isPopular ? "linear-gradient(180deg, #ffffff 0%, #fffcfb 100%)" : "#ffffff",
                   position: "relative",
                   display: "flex",
                   flexDirection: "column",
-                  boxShadow: pkg.isMicroWedge ? "0 8px 24px rgba(255, 92, 53, 0.15)" : "var(--shadow-sm)",
+                  boxShadow: pkg.isPopular ? "0 8px 24px rgba(255, 92, 53, 0.15)" : "var(--shadow-sm)",
                 }}
               >
                 {pkg.badge && (
@@ -449,7 +534,7 @@ export const CaseStudy: React.FC = () => {
                       position: "absolute",
                       top: -12,
                       right: 18,
-                      background: pkg.isMicroWedge ? "#ff5c35" : "var(--hs-primary)",
+                      background: pkg.isPopular ? "#ff5c35" : "var(--hs-primary)",
                       color: "#ffffff",
                       fontSize: "11px",
                       fontWeight: 700,
@@ -466,12 +551,12 @@ export const CaseStudy: React.FC = () => {
                 <div style={{ fontWeight: 700, fontSize: "17px", color: "var(--hs-primary)" }}>
                   {pkg.name}
                 </div>
-                <div style={{ fontSize: "12px", color: "var(--hs-text-muted)", marginTop: 2 }}>
-                  Turnaround: <strong>{pkg.timeline}</strong>
+                <div style={{ fontSize: "11.5px", color: "var(--hs-text-muted)", marginTop: 2 }}>
+                  {pkg.targetBuyer} · Delivery: <strong>{pkg.timeline}</strong>
                 </div>
 
                 <div style={{ margin: "16px 0 10px", display: "flex", alignItems: "baseline", gap: 8 }}>
-                  <span style={{ fontSize: "34px", fontWeight: 800, color: pkg.isMicroWedge ? "#ff5c35" : "var(--hs-primary)", letterSpacing: "-0.03em" }}>
+                  <span style={{ fontSize: "36px", fontWeight: 800, color: pkg.isPopular ? "#ff5c35" : "var(--hs-primary)", letterSpacing: "-0.03em" }}>
                     {pkg.price}
                   </span>
                   {pkg.originalPrice && (
@@ -482,14 +567,17 @@ export const CaseStudy: React.FC = () => {
                   <span style={{ fontSize: "12.5px", color: "var(--hs-text-muted)" }}>flat fee</span>
                 </div>
 
-                <div style={{ fontSize: "12.5px", color: "var(--hs-text)", lineHeight: 1.5, marginBottom: 14 }}>
-                  {pkg.summary}
+                <div style={{ padding: "8px 12px", background: "var(--hs-surface)", borderRadius: "var(--radius-sm)", border: "1px solid var(--hs-border-dark)", marginBottom: 14 }}>
+                  <div style={{ fontSize: "10.5px", fontWeight: 700, color: "var(--hs-primary)", textTransform: "uppercase" }}>
+                    Agency Value Delta
+                  </div>
+                  <div style={{ fontSize: "12px", fontWeight: 600, color: "var(--risk-healthy)", marginTop: 2 }}>
+                    {pkg.agencyDelta}
+                  </div>
                 </div>
 
-                <div style={{ padding: "8px 12px", background: "var(--hs-surface)", borderRadius: "var(--radius-sm)", border: "1px solid var(--hs-border-dark)", marginBottom: 16 }}>
-                  <div style={{ fontSize: "11px", fontWeight: 700, color: "var(--risk-healthy)", display: "flex", alignItems: "center", gap: 4 }}>
-                    {pkg.guarantee}
-                  </div>
+                <div style={{ fontSize: "12.5px", color: "var(--hs-text)", lineHeight: 1.5, marginBottom: 14 }}>
+                  {pkg.summary}
                 </div>
 
                 <div style={{ flex: 1, marginBottom: 20 }}>
@@ -504,15 +592,15 @@ export const CaseStudy: React.FC = () => {
                 </div>
 
                 <button
-                  className={`btn ${pkg.isMicroWedge ? "btn-primary" : "btn-secondary"}`}
+                  className={`btn ${pkg.isPopular ? "btn-primary" : "btn-secondary"}`}
                   onClick={() => handleOpenOrder(pkg.id)}
                   style={{
                     width: "100%",
                     padding: "11px 0",
                     fontWeight: 700,
                     fontSize: "13.5px",
-                    background: pkg.isMicroWedge ? "#ff5c35" : undefined,
-                    boxShadow: pkg.isMicroWedge ? "0 4px 12px rgba(255, 92, 53, 0.25)" : undefined,
+                    background: pkg.isPopular ? "#ff5c35" : undefined,
+                    boxShadow: pkg.isPopular ? "0 4px 12px rgba(255, 92, 53, 0.25)" : undefined,
                   }}
                 >
                   {pkg.ctaText}
@@ -551,7 +639,7 @@ export const CaseStudy: React.FC = () => {
             </h2>
 
             <p style={{ fontSize: "14px", color: "#e6f0f0", lineHeight: 1.65, marginBottom: 24 }}>
-              I design and build mission-critical revenue intelligence systems, high-frequency event streaming engines, and custom enterprise SaaS platforms with obsessive craft, sub-second latency, and verified automated testing.
+              Whether you want a $49 risk-free audit, a $990 turnkey deployment for your agency client, or a full white-label platform, you work directly with me with 100% money-back satisfaction guarantees.
             </p>
 
             <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
@@ -567,24 +655,23 @@ export const CaseStudy: React.FC = () => {
                   fontSize: "14px",
                 }}
               >
-                ⚡ Start $99 Risk-Free Audit
+                ⚡ Start $49 Risk-Free Audit
+              </button>
+              <button
+                className="btn btn-secondary"
+                onClick={() => handleOpenOrder("agency_single")}
+                style={{
+                  background: "rgba(255,255,255,0.15)",
+                  color: "#ffffff",
+                  borderColor: "rgba(255,255,255,0.3)",
+                  padding: "10px 20px",
+                  fontWeight: 600,
+                }}
+              >
+                🏢 Order $990 Single Portal License
               </button>
               <a
                 href="mailto:peashdasrudra@gmail.com"
-                className="btn btn-secondary"
-                style={{
-                  background: "rgba(255,255,255,0.12)",
-                  color: "#ffffff",
-                  borderColor: "rgba(255,255,255,0.25)",
-                  padding: "10px 20px",
-                }}
-              >
-                ✉️ peashdasrudra@gmail.com
-              </a>
-              <a
-                href="https://github.com/peashdasrudra/DealSense"
-                target="_blank"
-                rel="noreferrer"
                 className="btn btn-secondary"
                 style={{
                   background: "rgba(255,255,255,0.08)",
@@ -593,7 +680,7 @@ export const CaseStudy: React.FC = () => {
                   padding: "10px 18px",
                 }}
               >
-                📂 GitHub Source Code
+                ✉️ peashdasrudra@gmail.com
               </a>
             </div>
           </div>
@@ -613,9 +700,9 @@ export const CaseStudy: React.FC = () => {
             </div>
             <div style={{ fontSize: "13px", color: "#ffffff", lineHeight: 1.8 }}>
               <div>🛡️ 100% Money-Back ROI Guarantee</div>
-              <div>⚡ 24–48h Audit Delivery</div>
+              <div>⚡ 24–48h Audit Turnaround</div>
               <div>🔒 AES-256 Payload Encryption</div>
-              <div>⚡ Zero-Downtime Webhook Stream</div>
+              <div>⚡ Zero-Downtime Webhook Ingestion</div>
               <div>📜 Complete Source Code Handover</div>
               <div>🤝 Direct Senior Architect Access</div>
             </div>
@@ -671,10 +758,10 @@ export const CaseStudy: React.FC = () => {
               >
                 <div>
                   <div style={{ fontSize: "16px", fontWeight: 700, color: "var(--hs-primary)" }}>
-                    {activePackage.isMicroWedge ? "🚀 Start $99 Risk-Free HubSpot Audit" : "Reserve Custom Deployment Slot"}
+                    {activePackage.name} ({activePackage.price})
                   </div>
                   <div style={{ fontSize: "12px", color: "var(--hs-text-muted)", marginTop: 2 }}>
-                    Selected Tier: <strong>{activePackage.name} ({activePackage.price})</strong>
+                    Timeline: <strong>{activePackage.timeline}</strong> · 100% Money-Back Guarantee
                   </div>
                 </div>
                 <button
@@ -691,10 +778,10 @@ export const CaseStudy: React.FC = () => {
                   <div style={{ textAlign: "center", padding: "32px 16px" }}>
                     <div style={{ fontSize: "40px", marginBottom: 12 }}>🎉</div>
                     <div style={{ fontSize: "18px", fontWeight: 700, color: "var(--hs-primary)", marginBottom: 6 }}>
-                      Deployment Slot & Audit Confirmed!
+                      Deployment Order Confirmed!
                     </div>
                     <div style={{ fontSize: "13px", color: "var(--hs-text)", lineHeight: 1.5, marginBottom: 16 }}>
-                      Thank you! I will send your 1-click HubSpot OAuth onboarding link directly to <strong>{orderForm.email}</strong> within 2 hours.
+                      Thank you! I will review your requirements and send your 1-click HubSpot onboarding link and invoice directly to <strong>{orderForm.email}</strong> within 2 hours.
                     </div>
                     <div style={{ fontSize: "12px", color: "var(--risk-healthy)", fontWeight: 600 }}>
                       🛡️ Backed by 100% Money-Back ROI Guarantee.
@@ -704,7 +791,7 @@ export const CaseStudy: React.FC = () => {
                   <form onSubmit={handleSubmitOrder} style={{ display: "flex", flexDirection: "column", gap: 14 }}>
                     <div>
                       <label style={{ display: "block", fontSize: "12px", fontWeight: 700, color: "var(--hs-primary)", marginBottom: 4 }}>
-                        Your Name *
+                        Your Full Name *
                       </label>
                       <input
                         required
@@ -731,7 +818,7 @@ export const CaseStudy: React.FC = () => {
                         <input
                           required
                           type="email"
-                          placeholder="alex@company.com"
+                          placeholder="alex@agency.com"
                           value={orderForm.email}
                           onChange={(e) => setOrderForm({ ...orderForm, email: e.target.value })}
                           style={{
@@ -746,12 +833,12 @@ export const CaseStudy: React.FC = () => {
                       </div>
                       <div>
                         <label style={{ display: "block", fontSize: "12px", fontWeight: 700, color: "var(--hs-primary)", marginBottom: 4 }}>
-                          Company Name *
+                          Agency / Company Name *
                         </label>
                         <input
                           required
                           type="text"
-                          placeholder="e.g. Acme RevOps"
+                          placeholder="e.g. Apex RevOps Agency"
                           value={orderForm.company}
                           onChange={(e) => setOrderForm({ ...orderForm, company: e.target.value })}
                           style={{
@@ -768,7 +855,7 @@ export const CaseStudy: React.FC = () => {
 
                     <div>
                       <label style={{ display: "block", fontSize: "12px", fontWeight: 700, color: "var(--hs-primary)", marginBottom: 4 }}>
-                        Selected Package
+                        Selected Deployment Package
                       </label>
                       <select
                         value={orderForm.tier}
@@ -796,7 +883,7 @@ export const CaseStudy: React.FC = () => {
 
                     <div>
                       <label style={{ display: "block", fontSize: "12px", fontWeight: 700, color: "var(--hs-primary)", marginBottom: 4 }}>
-                        HubSpot Portal ID / Approx. Open Pipeline (Optional)
+                        HubSpot Portal ID / Approx. Open Pipeline Size (Optional)
                       </label>
                       <input
                         type="text"
@@ -816,7 +903,7 @@ export const CaseStudy: React.FC = () => {
 
                     <div style={{ padding: "10px 14px", background: "var(--hs-surface)", borderRadius: "var(--radius-sm)", border: "1px solid var(--hs-border-dark)" }}>
                       <div style={{ fontSize: "11.5px", color: "var(--hs-text-muted)" }}>
-                        🔒 <strong>Zero Risk Commitment:</strong> You will receive an invoice/payment link with your 1-click HubSpot OAuth onboarding instructions. 100% money-back guarantee.
+                        🔒 <strong>Zero Risk Guarantee:</strong> Backed by a 100% money-back satisfaction guarantee. You will receive an invoice and direct onboarding instructions.
                       </div>
                     </div>
 
@@ -826,7 +913,7 @@ export const CaseStudy: React.FC = () => {
                         className="btn btn-primary"
                         style={{ flex: 1, padding: "11px", fontWeight: 700, background: "#ff5c35", fontSize: "14px" }}
                       >
-                        {activePackage.isMicroWedge ? "🚀 Pay $99 & Start Audit" : "🚀 Confirm Deployment Slot"}
+                        🚀 Confirm Order & Reserve Deployment Slot
                       </button>
                     </div>
                   </form>
