@@ -127,12 +127,12 @@ export const RevenueForecast: React.FC = () => {
                 transition: "all 0.2s"
               }}
             >
-              Export Report
+              Export Forecast
             </button>
             <button
               style={{
                 padding: "6px 14px",
-                background: "#ff7a59",
+                background: "#ff5c35",
                 color: "#ffffff",
                 border: "none",
                 borderRadius: "3px",
@@ -143,7 +143,7 @@ export const RevenueForecast: React.FC = () => {
                 transition: "all 0.2s"
               }}
             >
-              Create Action
+              Adjust Targets
             </button>
           </div>
         </div>

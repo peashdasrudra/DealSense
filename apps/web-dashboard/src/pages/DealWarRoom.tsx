@@ -190,12 +190,12 @@ export const DealWarRoom: React.FC = () => {
                 transition: "all 0.2s"
               }}
             >
-              Export Report
+              Export Brief
             </button>
             <button
               style={{
                 padding: "6px 14px",
-                background: "#ff7a59",
+                background: "#ff5c35",
                 color: "#ffffff",
                 border: "none",
                 borderRadius: "3px",
@@ -206,50 +206,13 @@ export const DealWarRoom: React.FC = () => {
                 transition: "all 0.2s"
               }}
             >
-              Create Action
+              Create Intervention
             </button>
           </div>
         </div>
       </div>
 
-      {/* ── War Room Header ───────────────────────────────────────────── */}
-      <div
-        className="card"
-        style={{
-          background: "#ffffff",
-          padding: "20px 24px",
-          border: "1px solid var(--hs-border-dark)",
-          borderTop: "3px solid var(--hs-primary)",
-          marginBottom: "var(--sp-5)",
-          boxShadow: "var(--shadow-sm)",
-        }}
-      >
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 16 }}>
-          <div>
-            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
-              <span className="badge" style={{ background: "rgba(255, 92, 53, 0.1)", color: "#ff5c35", border: "1px solid #ff7a59", fontWeight: 700 }}>
-                ● LIVE WAR ROOM ACTIVE
-              </span>
-              <span style={{ fontSize: "12px", color: "var(--hs-text-muted)" }}>HubSpot Portal #48921820</span>
-            </div>
-            <h2 style={{ fontSize: "24px", fontWeight: 800, color: "var(--hs-heading)", margin: "4px 0 6px" }}>
-              Deal War Room & Executive QBR Decision Matrix
-            </h2>
-            <p style={{ fontSize: "13.5px", color: "var(--hs-text)", margin: 0, maxWidth: 680 }}>
-              Live decision hub for closing high-ticket stalled deals this month. Evaluate single-threaded risks, unblock economic buyers, and trigger executive interventions in 1 click.
-            </p>
-          </div>
-
-          <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-            <button
-              className="btn btn-primary"
-              onClick={() => setQbrModalOpen(true)}
-              style={{ background: "#ff5c35", fontWeight: 700, fontSize: "13px", padding: "9px 18px" }}
-            >
-              📄 Export Executive QBR Brief
-            </button>
-          </div>
-        </div>
+      
 
         {/* Action Success Alert Banner */}
         {actionSuccessMsg && (
@@ -270,8 +233,6 @@ export const DealWarRoom: React.FC = () => {
             {actionSuccessMsg}
           </motion.div>
         )}
-      </div>
-
       {/* ── High-Impact KPI Metrics ───────────────────────────────────── */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16 }}>
         <div className="kpi-card" style={{ borderTopColor: "var(--hs-primary)" }}>

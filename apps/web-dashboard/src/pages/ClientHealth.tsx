@@ -181,7 +181,7 @@ export const ClientHealth: React.FC = () => {
             <button
               style={{
                 padding: "6px 14px",
-                background: "#ff7a59",
+                background: "#ff5c35",
                 color: "#ffffff",
                 border: "none",
                 borderRadius: "3px",
@@ -192,7 +192,7 @@ export const ClientHealth: React.FC = () => {
                 transition: "all 0.2s"
               }}
             >
-              Create Action
+              Log Activity
             </button>
           </div>
         </div>

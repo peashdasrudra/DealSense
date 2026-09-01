@@ -90,6 +90,18 @@ export const App: React.FC = () => {
       d.owner.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+
+  useEffect(() => {
+    if (sidebarOpen || isSearchOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [sidebarOpen, isSearchOpen]);
+
   const pageMeta = PAGE_TITLES[location.pathname] || {
     title: "DealSense Intelligence",
     breadcrumb: "Dashboard",
@@ -131,7 +143,7 @@ export const App: React.FC = () => {
             inset: 0,
             background: "rgba(18, 69, 72, 0.45)",
             backdropFilter: "blur(4px)",
-            zIndex: 110,
+            zIndex: 1999,
           }}
           onClick={() => setSidebarOpen(false)}
         />

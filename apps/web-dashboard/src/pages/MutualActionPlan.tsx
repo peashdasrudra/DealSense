@@ -152,12 +152,12 @@ export const MutualActionPlan: React.FC = () => {
                 transition: "all 0.2s"
               }}
             >
-              Export Report
+              Export MAP
             </button>
             <button
               style={{
                 padding: "6px 14px",
-                background: "#ff7a59",
+                background: "#ff5c35",
                 color: "#ffffff",
                 border: "none",
                 borderRadius: "3px",
@@ -168,7 +168,7 @@ export const MutualActionPlan: React.FC = () => {
                 transition: "all 0.2s"
               }}
             >
-              Create Action
+              Add Milestone
             </button>
           </div>
         </div>
