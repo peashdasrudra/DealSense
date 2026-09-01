@@ -3,7 +3,7 @@
  * Official HubSpot Canvas Design System Edition with Quick Search & Drawer Overlays.
  */
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 
@@ -62,58 +62,76 @@ export const App: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [selectedDrawerDeal, setSelectedDrawerDeal] = useState<DealData | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedDeal, setSelectedDeal] = useState<DealData | null>(null);
+  const [isNavigatingHome, setIsNavigatingHome] = useState(false);
 
-  // Animated Loading Screen Trigger
-  const [isAppLoading, setIsAppLoading] = useState(false);
-  const [loadingMessage, setLoadingMessage] = useState<string | undefined>(undefined);
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault();
+        setIsSearchOpen((prev) => !prev);
+      }
+      if (e.key === "Escape") {
+        setIsSearchOpen(false);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
-  const handleNavigateHome = () => {
-    if (location.pathname === "/") {
-      setLoadingMessage("Refreshing HubSpot Real-Time Webhooks...");
-      setIsAppLoading(true);
-    } else {
-      setLoadingMessage("Synchronizing HubSpot Pipeline...");
-      setIsAppLoading(true);
-      navigate("/");
-    }
-  };
-
-  const pageInfo = PAGE_TITLES[location.pathname] || { title: "DealSense", breadcrumb: "Dashboard" };
-
-  const searchResults = SEARCHABLE_DEALS.filter(
+  const filteredSearchDeals = SEARCHABLE_DEALS.filter(
     (d) =>
       d.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       d.client.toLowerCase().includes(searchQuery.toLowerCase()) ||
       d.owner.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  return (
-    <div className="layout">
-      {/* ── Global Animated Loading Screen Overlay ───────────────────── */}
-      <LoadingScreen
-        isLoading={isAppLoading}
-        onFinish={() => setIsAppLoading(false)}
-        message={loadingMessage}
-      />
+  const pageMeta = PAGE_TITLES[location.pathname] || {
+    title: "DealSense Intelligence",
+    breadcrumb: "Dashboard",
+  };
 
-      {/* Mobile Sidebar Overlay */}
-      {sidebarOpen && (
-        <div
-          style={{
-            position: "fixed",
-            inset: 0,
-            background: "rgba(18, 69, 72, 0.45)",
-            backdropFilter: "blur(4px)",
-            zIndex: 110,
-          }}
-          onClick={() => setSidebarOpen(false)}
-        />
+  const handleSelectDealFromSearch = (deal: typeof SEARCHABLE_DEALS[0]) => {
+    setSelectedDeal({
+      id: deal.id,
+      name: deal.name,
+      client: deal.client,
+      score: deal.score,
+      band: deal.band as any,
+      value: deal.value,
+      stage: deal.stage,
+      owner: deal.owner,
+      closeDate: "Dec 15, 2026",
+      daysInStage: 18,
+      risks: ["Economic buyer silent for 14d", "Close date pushed 2x"],
+      recommendation: "Auto-trigger executive alignment sequence to CFO.",
+    });
+    setIsSearchOpen(false);
+    setSearchQuery("");
+  };
+
+  const handleNavigateHome = () => {
+    setIsNavigatingHome(true);
+    navigate("/");
+    setSidebarOpen(false);
+  };
+
+  return (
+    <div className="app-shell">
+      {isNavigatingHome && (
+        <LoadingScreen isLoading={isNavigatingHome} onFinish={() => setIsNavigatingHome(false)} />
       )}
 
-      {/* Sidebar Container */}
+      <TopBar
+        title={pageMeta.title}
+        breadcrumb={pageMeta.breadcrumb}
+        onOpenSidebar={() => setSidebarOpen(true)}
+        onOpenSearch={() => setIsSearchOpen(true)}
+        onNavigateHome={handleNavigateHome}
+      />
+
       <div className={`sidebar ${sidebarOpen ? "open" : ""}`}>
         <Sidebar 
           onClose={() => setSidebarOpen(false)}
@@ -121,16 +139,7 @@ export const App: React.FC = () => {
         />
       </div>
 
-      {/* Main Content */}
-      <main className="main-content">
-        <TopBar
-          breadcrumb={pageInfo.breadcrumb}
-          title={pageInfo.title}
-          onOpenSidebar={() => setSidebarOpen(true)}
-          onOpenSearch={() => setIsSearchOpen(true)}
-          onNavigateHome={handleNavigateHome}
-        />
-
+      <main className="main-viewport">
         <div className="page-content">
           <AnimatePresence mode="wait">
             <motion.div
@@ -163,7 +172,6 @@ export const App: React.FC = () => {
         </div>
       </main>
 
-      {/* ── Global Quick Search Dialog ────────────────────────────────── */}
       <AnimatePresence>
         {isSearchOpen && (
           <>
@@ -228,13 +236,10 @@ export const App: React.FC = () => {
               </div>
 
               <div style={{ maxHeight: "320px", overflowY: "auto", padding: "8px" }}>
-                {searchResults.map((deal) => (
+                {filteredSearchDeals.map((deal) => (
                   <div
                     key={deal.id}
-                    onClick={() => {
-                      setIsSearchOpen(false);
-                      setSelectedDrawerDeal(deal as any);
-                    }}
+                    onClick={() => handleSelectDealFromSearch(deal)}
                     style={{
                       padding: "10px 14px",
                       borderRadius: "var(--radius-sm)",
@@ -261,7 +266,7 @@ export const App: React.FC = () => {
                   </div>
                 ))}
 
-                {searchResults.length === 0 && (
+                {filteredSearchDeals.length === 0 && (
                   <div style={{ textAlign: "center", padding: "24px", color: "var(--hs-text-muted)", fontSize: "13px" }}>
                     No matching pipeline records found.
                   </div>
@@ -274,9 +279,9 @@ export const App: React.FC = () => {
 
       {/* ── Global Deal Inspection Drawer ─────────────────────────────── */}
       <DealDrawer
-        deal={selectedDrawerDeal}
-        isOpen={!!selectedDrawerDeal}
-        onClose={() => setSelectedDrawerDeal(null)}
+        deal={selectedDeal}
+        isOpen={!!selectedDeal}
+        onClose={() => setSelectedDeal(null)}
       />
 
       {/* ── Mobile Bottom Navigation Bar ──────────────────────────────── */}

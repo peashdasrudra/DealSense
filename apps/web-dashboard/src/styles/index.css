@@ -1110,3 +1110,124 @@ tr:hover td {
     gap: 12px !important;
   }
 }
+
+/* ── Modern High-Converting Hero CTA Design ───────────────────────────────── */
+.hero-cta-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 24px;
+}
+
+.hero-actions-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.hero-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 13px 26px;
+  background: linear-gradient(135deg, #124548 0%, #062b2e 100%);
+  color: #ffffff !important;
+  font-size: 15px;
+  font-weight: 800;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 6px 20px rgba(18, 69, 72, 0.35);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  min-height: 48px;
+  text-decoration: none;
+}
+
+.hero-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(18, 69, 72, 0.45);
+  background: linear-gradient(135deg, #0d383b 0%, #021a1c 100%);
+}
+
+.hero-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 13px 22px;
+  background: #ff5c35;
+  color: #ffffff !important;
+  font-size: 14.5px;
+  font-weight: 700;
+  border-radius: var(--radius-sm);
+  border: none;
+  box-shadow: 0 4px 14px rgba(255, 92, 53, 0.35);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-height: 48px;
+  text-decoration: none;
+}
+
+.hero-btn-secondary:hover {
+  background: #e04a25;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(255, 92, 53, 0.45);
+}
+
+.hero-btn-tertiary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 13px 20px;
+  background: #ffffff;
+  color: var(--hs-primary) !important;
+  font-size: 14px;
+  font-weight: 700;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--hs-border-dark);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  min-height: 48px;
+  text-decoration: none;
+}
+
+.hero-btn-tertiary:hover {
+  border-color: var(--hs-primary);
+  background: var(--hs-surface);
+}
+
+.hero-trust-bar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  font-size: 12px;
+  color: var(--hs-text-muted);
+  font-weight: 600;
+}
+
+.hero-trust-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+@media (max-width: 640px) {
+  .hero-actions-row {
+    flex-direction: column !important;
+    width: 100% !important;
+    gap: 10px !important;
+  }
+  .hero-btn-primary, .hero-btn-secondary, .hero-btn-tertiary {
+    width: 100% !important;
+    justify-content: center !important;
+  }
+  .hero-trust-bar {
+    gap: 8px 14px !important;
+    font-size: 11px !important;
+  }
+}
+

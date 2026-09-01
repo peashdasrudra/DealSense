@@ -226,7 +226,6 @@ export const CaseStudy: React.FC = () => {
     tier: "micro_audit",
   });
   const [orderSubmitted, setOrderSubmitted] = useState(false);
-  const [copiedEmail, setCopiedEmail] = useState(false);
 
   const activePackage = PACKAGES.find((p) => p.id === selectedPkg) || PACKAGES[0];
   const activeArch = ARCHITECTURE_LAYERS.find((a) => a.id === activeArchTab) || ARCHITECTURE_LAYERS[0];
@@ -236,12 +235,6 @@ export const CaseStudy: React.FC = () => {
   const deploymentCost = activePackage.id === "agency_fleet" ? 1490 : activePackage.id === "agency_single" ? 490 : 99;
   const netAgencyProfit = annualAgencyRevenue - deploymentCost;
   const agencyRoiRatio = Math.round((annualAgencyRevenue / deploymentCost) * 10) / 10;
-
-  const handleCopyEmail = () => {
-    navigator.clipboard.writeText("peashdasrudra@gmail.com");
-    setCopiedEmail(true);
-    setTimeout(() => setCopiedEmail(false), 2500);
-  };
 
   const handleScrollToPricing = () => {
     const el = document.getElementById("pricing-plans");
@@ -330,67 +323,59 @@ export const CaseStudy: React.FC = () => {
           A turnkey, deterministic B2B revenue operations engine built natively for HubSpot CRM. Designed for <strong>HubSpot Agency Partners & RevOps Leaders</strong> to deploy for clients, eliminate the $1.2M pipeline leak, and charge $2,500–$5,000/month recurring service retainers with zero engineering overhead.
         </p>
 
-        {/* ── Cohesive, High-Impact Action Button Layout ─────────────── */}
-        <div style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
-          {/* Top Highlighted Primary CTA */}
-          <button
-            className="btn btn-primary"
-            onClick={() => navigate("/")}
-            style={{
-              padding: "13px 28px",
-              fontSize: "14.5px",
-              fontWeight: 800,
-              background: "linear-gradient(135deg, #124548 0%, #042729 100%)",
-              color: "#ffffff",
-              boxShadow: "0 6px 20px rgba(18, 69, 72, 0.35)",
-              border: "none",
-              display: "flex",
-              alignItems: "center",
-              gap: 8,
-            }}
-          >
-            🚀 Launch Live Web Dashboard
-          </button>
+        {/* ── High-Converting SaaS Hero CTA & Trust Group ───────────── */}
+        <div className="hero-cta-wrapper">
+          <div className="hero-actions-row">
+            {/* Top Highlighted Primary CTA */}
+            <button
+              className="hero-btn-primary"
+              onClick={() => navigate("/")}
+            >
+              <span>🚀</span>
+              <span>Launch Live Web Dashboard</span>
+            </button>
 
-          {/* Pricing & White-Label Anchor CTA */}
-          <button
-            className="btn btn-secondary"
-            onClick={handleScrollToPricing}
-            style={{
-              padding: "13px 22px",
-              fontSize: "14px",
-              fontWeight: 700,
-              color: "var(--hs-primary)",
-              border: "1.5px solid var(--hs-primary)",
-              background: "#ffffff",
-            }}
-          >
-            🏷️ See Pricing & White-Label Plans
-          </button>
+            {/* $99 Pilot Risk-Free High-Converting Secondary CTA */}
+            <button
+              className="hero-btn-secondary"
+              onClick={() => handleOpenOrder("micro_audit")}
+            >
+              <span>⚡</span>
+              <span>Start $99 Pilot Audit</span>
+            </button>
 
-          {/* $99 Pilot Risk-Free Wedge CTA */}
-          <button
-            className="btn btn-primary"
-            onClick={() => handleOpenOrder("micro_audit")}
-            style={{
-              padding: "13px 22px",
-              fontSize: "14px",
-              fontWeight: 700,
-              background: "#ff5c35",
-              boxShadow: "0 4px 14px rgba(255, 92, 53, 0.35)",
-            }}
-          >
-            ⚡ Start $99 Pilot Audit
-          </button>
+            {/* Pricing & White-Label Anchor Link */}
+            <button
+              className="hero-btn-tertiary"
+              onClick={handleScrollToPricing}
+            >
+              <span>🏷️</span>
+              <span>See White-Label Pricing →</span>
+            </button>
+          </div>
 
-          {/* Founder Direct Email */}
-          <button
-            className="btn btn-secondary"
-            onClick={handleCopyEmail}
-            style={{ padding: "13px 18px", fontSize: "13.5px" }}
-          >
-            {copiedEmail ? "✓ Email Copied!" : "✉️ Direct Founder Email"}
-          </button>
+          {/* Sub-Hero Trust Proof Micro-Bar */}
+          <div className="hero-trust-bar">
+            <div className="hero-trust-item">
+              <span>🔒</span>
+              <span>1-Click HubSpot OAuth (Zero Dev Setup)</span>
+            </div>
+            <span>•</span>
+            <div className="hero-trust-item">
+              <span>🛡️</span>
+              <span>100% Money-Back ROI Guarantee</span>
+            </div>
+            <span>•</span>
+            <div className="hero-trust-item">
+              <span>⚡</span>
+              <span>24–48h Turnaround</span>
+            </div>
+            <span>•</span>
+            <div className="hero-trust-item">
+              <span>📜</span>
+              <span>Full Source Code Ownership</span>
+            </div>
+          </div>
         </div>
       </motion.div>
 
