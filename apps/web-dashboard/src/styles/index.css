@@ -1,12 +1,11 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 /* 
  * ==========================================================================
- * DealSense Web Dashboard — True Mobile-First HubSpot Canvas Design System
+ * DealSense Web Dashboard — Pure Enterprise B2B SaaS Design System
  * 
- * - Full responsive fluid layout from 320px (Mobile) to 1920px+ (Ultra-wide)
- * - Zero overflow / zero horizontal blowout bugs on small screens
- * - Touch-optimized targets (>=40px), fluid clamped typography, responsive drawers
+ * - Typography: Plus Jakarta Sans / Inter modern neo-grotesque sans-serif
+ * - Layout: Strict responsive mobile-first SaaS architecture
  * ==========================================================================
  */
 
@@ -17,7 +16,7 @@
   --hs-primary-subtle: #e6f0f0;    /* Soft Teal tint */
   --hs-on-primary: #ffffff;
   
-  --hs-accent: #ff4800;            /* HubSpot Flame Orange */
+  --hs-accent: #ff5c35;            /* HubSpot Sprocket Flame */
   --hs-accent-subtle: #fff2ed;
   
   --hs-background: #ffffff;        /* Crisp White Canvas */
@@ -67,9 +66,9 @@
   --success: var(--risk-healthy);
   --success-bg: var(--risk-healthy-bg);
 
-  /* Typography */
-  --font-serif: 'Playfair Display', Georgia, serif;
+  /* Modern Enterprise SaaS Typography */
   --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-heading: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-mono: 'JetBrains Mono', Consolas, monospace;
 
   /* Spacing Scale */
@@ -354,20 +353,20 @@ body {
 /* ── Typography ──────────────────────────────────────────────────────────── */
 
 .main-header-title {
-  font-family: var(--font-serif);
-  font-size: 22px;
+  font-family: var(--font-heading);
+  font-size: 20px;
   font-weight: 700;
-  color: var(--hs-primary);
-  letter-spacing: -0.3px;
+  color: var(--hs-text);
+  letter-spacing: -0.025em;
   margin: 0;
-  line-height: 1.2;
+  line-height: 1.25;
 }
 
 .main-header-breadcrumb {
   font-size: 10.5px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.8px;
+  letter-spacing: 0.06em;
   color: var(--hs-text-muted);
   margin-bottom: 2px;
 }
@@ -532,10 +531,11 @@ body {
 }
 
 .kpi-value {
-  font-size: 28px;
+  font-size: 26px;
   font-weight: 700;
-  font-family: var(--font-serif);
-  color: var(--hs-primary);
+  font-family: var(--font-heading);
+  color: var(--hs-text);
+  letter-spacing: -0.03em;
   line-height: 1.15;
 }
 

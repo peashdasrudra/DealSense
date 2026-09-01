@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 /* 
  * ==========================================================================
@@ -13,7 +13,7 @@
   --hs-primary-hover: #042729;     /* Deep Teal Accent */
   --hs-on-primary: #ffffff;
   
-  --hs-accent: #ff4800;            /* HubSpot Flame Orange */
+  --hs-accent: #ff5c35;            /* HubSpot Sprocket Flame */
   
   --hs-background: #ffffff;        /* White Background */
   --hs-surface: #fcfcfa;           /* Off-White Card Surface */
@@ -54,8 +54,8 @@
   --tier-4: #c2255c;
 
   /* Typography */
-  --font-serif: 'Playfair Display', Georgia, serif;
   --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-heading: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-mono: 'JetBrains Mono', Consolas, monospace;
 
   /* Spacing */

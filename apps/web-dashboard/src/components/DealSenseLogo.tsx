@@ -1,6 +1,6 @@
 /**
- * DealSense — Official HubSpot-Inspired Brand Logo Set.
- * Modern geometric revenue nexus emblem connecting pipeline telemetry nodes.
+ * DealSense — Official HubSpot Sprocket-Inspired Logo & Brand Mark.
+ * Exact mathematical HubSpot sprocket geometry with connected telemetry nodes.
  */
 
 import React from "react";
@@ -10,6 +10,7 @@ interface LogoProps {
   showWordmark?: boolean;
   tagline?: string;
   className?: string;
+  theme?: "light" | "dark";
 }
 
 export const DealSenseIcon: React.FC<{ size?: number; className?: string }> = ({
@@ -20,50 +21,53 @@ export const DealSenseIcon: React.FC<{ size?: number; className?: string }> = ({
     <svg
       width={size}
       height={size}
-      viewBox="0 0 40 40"
+      viewBox="0 0 44 44"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={className}
       style={{ flexShrink: 0 }}
     >
-      <defs>
-        <linearGradient id="dsGradientPrimary" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#124548" />
-          <stop offset="100%" stopColor="#042729" />
-        </linearGradient>
-        <linearGradient id="dsGradientAccent" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#ff4800" />
-          <stop offset="100%" stopColor="#d9480f" />
-        </linearGradient>
-        <linearGradient id="dsGradientGlow" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#087f5b" />
-          <stop offset="100%" stopColor="#124548" />
-        </linearGradient>
-      </defs>
+      {/* HubSpot Iconic Sprocket Geometry */}
+      {/* Top Vertical Spoke */}
+      <path
+        d="M22 10V22"
+        stroke="#ff5c35"
+        strokeWidth="3.2"
+        strokeLinecap="round"
+      />
+      {/* Bottom-Right Spoke (120 deg) */}
+      <path
+        d="M22 22L32.5 28.5"
+        stroke="#ff5c35"
+        strokeWidth="3.2"
+        strokeLinecap="round"
+      />
+      {/* Bottom-Left Spoke (240 deg) */}
+      <path
+        d="M22 22L11.5 28.5"
+        stroke="#ff5c35"
+        strokeWidth="3.2"
+        strokeLinecap="round"
+      />
 
-      {/* Rounded Background Badge */}
-      <rect width="40" height="40" rx="10" fill="url(#dsGradientPrimary)" />
+      {/* Central Sprocket Ring */}
+      <circle
+        cx="22"
+        cy="22"
+        r="6.5"
+        fill="#ffffff"
+        stroke="#ff5c35"
+        strokeWidth="3.2"
+      />
 
-      {/* Outer Telemetry Signal Ring */}
-      <circle cx="20" cy="20" r="13" stroke="rgba(255, 255, 255, 0.15)" strokeWidth="1.5" strokeDasharray="3 3" />
+      {/* Top Orbit Node */}
+      <circle cx="22" cy="7.5" r="4.2" fill="#ff5c35" />
 
-      {/* Connecting Signal Pathways (HubSpot Sprocket Inspired) */}
-      <path d="M 20 11 L 20 20 L 28 26" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="M 20 20 L 12 26" stroke="url(#dsGradientAccent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      {/* Bottom-Right Orbit Node */}
+      <circle cx="34.5" cy="29.5" r="4.2" fill="#ff5c35" />
 
-      {/* Intelligence Nodes */}
-      {/* Top Node (Revenue Metrics) */}
-      <circle cx="20" cy="11" r="3" fill="#ffffff" />
-      
-      {/* Right Node (MEDDICC Evidence) */}
-      <circle cx="28" cy="26" r="3" fill="url(#dsGradientGlow)" stroke="#ffffff" strokeWidth="1.2" />
-
-      {/* Left Node (HubSpot Flame Trigger Node) */}
-      <circle cx="12" cy="26" r="3.5" fill="url(#dsGradientAccent)" stroke="#ffffff" strokeWidth="1.2" />
-
-      {/* Center AI Core */}
-      <circle cx="20" cy="20" r="4.5" fill="#ffffff" />
-      <circle cx="20" cy="20" r="2" fill="url(#dsGradientPrimary)" />
+      {/* Bottom-Left Orbit Node */}
+      <circle cx="9.5" cy="29.5" r="4.2" fill="#ff5c35" />
     </svg>
   );
 };
@@ -71,10 +75,10 @@ export const DealSenseIcon: React.FC<{ size?: number; className?: string }> = ({
 export const DealSenseLogo: React.FC<LogoProps> = ({
   size = "md",
   showWordmark = true,
-  tagline = "RevOps Command Center",
+  tagline = "Revenue Intelligence",
   className = "",
 }) => {
-  const iconSize = typeof size === "number" ? size : size === "sm" ? 28 : size === "lg" ? 40 : 34;
+  const iconSize = typeof size === "number" ? size : size === "sm" ? 26 : size === "lg" ? 38 : 32;
 
   return (
     <div
@@ -82,38 +86,38 @@ export const DealSenseLogo: React.FC<LogoProps> = ({
       style={{
         display: "inline-flex",
         alignItems: "center",
-        gap: "10px",
+        gap: "9px",
         textDecoration: "none",
+        userSelect: "none",
       }}
     >
       <DealSenseIcon size={iconSize} />
 
       {showWordmark && (
-        <div style={{ display: "flex", flexDirection: "column", lineHeight: 1.1 }}>
+        <div style={{ display: "flex", flexDirection: "column", lineHeight: 1.15 }}>
           <div
             style={{
               fontFamily: "var(--font-sans)",
               fontSize: size === "sm" ? "15px" : size === "lg" ? "20px" : "17px",
-              fontWeight: 800,
-              color: "var(--hs-primary)",
-              letterSpacing: "-0.4px",
+              fontWeight: 700,
+              letterSpacing: "-0.03em",
               display: "flex",
               alignItems: "center",
             }}
           >
-            <span>Deal</span>
-            <span style={{ color: "var(--hs-accent, #ff4800)" }}>Sense</span>
+            <span style={{ color: "#2d3e50" }}>Deal</span>
+            <span style={{ color: "#ff5c35", fontWeight: 800 }}>Sense</span>
           </div>
 
           {tagline && (
             <div
               style={{
-                fontSize: size === "sm" ? "9.5px" : "10.5px",
+                fontSize: size === "sm" ? "9px" : "10px",
                 color: "var(--hs-text-muted)",
                 fontWeight: 600,
                 textTransform: "uppercase",
-                letterSpacing: "0.6px",
-                marginTop: "2px",
+                letterSpacing: "0.06em",
+                marginTop: "1px",
               }}
             >
               {tagline}
