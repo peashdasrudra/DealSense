@@ -77,9 +77,9 @@ export const App: React.FC = () => {
           style={{
             position: "fixed",
             inset: 0,
-            background: "rgba(18, 69, 72, 0.4)",
-            backdropFilter: "blur(2px)",
-            zIndex: 90,
+            background: "rgba(18, 69, 72, 0.45)",
+            backdropFilter: "blur(4px)",
+            zIndex: 110,
           }}
           onClick={() => setSidebarOpen(false)}
         />

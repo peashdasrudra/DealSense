@@ -100,13 +100,20 @@ export const Sidebar: React.FC<SidebarProps> = ({ onClose }) => {
             onClick={onClose}
             className="sidebar-close-btn"
             style={{
-              background: "none",
-              border: "none",
-              fontSize: "18px",
+              background: "var(--hs-surface)",
+              border: "1px solid var(--hs-border-dark)",
+              width: "32px",
+              height: "32px",
+              borderRadius: "50%",
+              fontSize: "14px",
+              fontWeight: 700,
               cursor: "pointer",
-              color: "var(--hs-text-muted)",
-              padding: "4px",
+              color: "var(--hs-primary)",
               display: "none",
+              alignItems: "center",
+              justifyContent: "center",
+              flexShrink: 0,
+              boxShadow: "var(--shadow-sm)",
             }}
             aria-label="Close Sidebar"
           >
