@@ -150,28 +150,30 @@ export const PortfolioOverview: React.FC = () => {
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           style={{
-            background: "linear-gradient(135deg, #124548 0%, #062b2e 100%)",
+            background: "#ffffff",
             borderRadius: "var(--radius-md)",
-            padding: "24px",
+            padding: "24px 28px",
             display: "flex",
             flexDirection: "column",
             justifyContent: "space-between",
-            boxShadow: "0 8px 30px rgba(18, 69, 72, 0.25)",
-            color: "#fff",
+            border: "1px solid var(--hs-border-dark)",
+            borderTop: "3px solid #ff5c35",
+            boxShadow: "var(--shadow-sm)",
             position: "relative",
             overflow: "hidden",
             height: "100%",
+            minHeight: "320px",
           }}
         >
-          <div style={{ position: "absolute", top: -80, right: -80, width: 250, height: 250, borderRadius: "50%", background: "radial-gradient(circle, rgba(255,92,53,0.15) 0%, transparent 70%)", pointerEvents: "none" }} />
+          <div style={{ position: "absolute", top: -80, right: -80, width: 250, height: 250, borderRadius: "50%", background: "radial-gradient(circle, rgba(255,92,53,0.08) 0%, transparent 70%)", pointerEvents: "none" }} />
           
           <div>
             <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
-              <span style={{ background: "rgba(5,150,105,0.25)", color: "#6ee7b7", border: "1px solid rgba(5,150,105,0.4)", padding: "4px 10px", borderRadius: "var(--radius-pill)", fontSize: "10px", fontWeight: 700, textTransform: "uppercase" }}>● Webhook Synced</span>
-              <span style={{ fontSize: "11px", color: "rgba(255,255,255,0.7)" }}>Portal #48921820</span>
+              <span style={{ background: "rgba(5,150,105,0.1)", color: "var(--risk-healthy)", border: "1px solid rgba(5,150,105,0.25)", padding: "4px 10px", borderRadius: "var(--radius-pill)", fontSize: "10px", fontWeight: 700, textTransform: "uppercase" }}>● Webhook Synced</span>
+              <span style={{ fontSize: "11px", color: "var(--hs-text-muted)" }}>Portal #48921820</span>
             </div>
-            <h2 style={{ fontSize: "20px", fontWeight: 800, margin: "0 0 8px", letterSpacing: "-0.02em" }}>Welcome to DealSense Intelligence</h2>
-            <p style={{ fontSize: "13px", color: "rgba(255,255,255,0.8)", margin: 0, lineHeight: 1.5 }}>
+            <h2 style={{ fontSize: "20px", fontWeight: 800, color: "var(--hs-heading)", margin: "0 0 8px", letterSpacing: "-0.02em" }}>Welcome to DealSense Intelligence</h2>
+            <p style={{ fontSize: "13px", color: "var(--hs-text-muted)", margin: 0, lineHeight: 1.6 }}>
               You're viewing a live interactive demo of the DealSense Revenue Operations engine. Navigate through the modules to explore predictive deal scoring, pipeline waterfalls, and autonomous CRM hygiene.
             </p>
           </div>
@@ -180,8 +182,9 @@ export const PortfolioOverview: React.FC = () => {
             <button
               onClick={handleForceSync}
               style={{
-                padding: "8px 14px", background: "#f8f9fa", color: "var(--hs-text)", fontSize: "12.5px", fontWeight: 700,
-                border: "1px solid var(--hs-border-dark)", borderRadius: "var(--radius-sm)", cursor: "pointer", transition: "all 0.2s ease"
+                padding: "8px 16px", background: "#ffffff", color: "var(--hs-text)", fontSize: "12.5px", fontWeight: 600,
+                border: "1px solid var(--hs-border-dark)", borderRadius: "var(--radius-sm)", cursor: "pointer", transition: "all 0.2s ease",
+                boxShadow: "var(--shadow-sm)"
               }}
             >
               ↻ Force Sync
@@ -189,8 +192,8 @@ export const PortfolioOverview: React.FC = () => {
             <a
               href="/case-study"
               style={{
-                padding: "8px 18px", background: "#ff5c35", color: "#fff", fontSize: "12.5px", fontWeight: 800,
-                border: "none", borderRadius: "var(--radius-sm)", cursor: "pointer", boxShadow: "0 4px 14px rgba(255,92,53,0.3)",
+                padding: "8px 18px", background: "#ff5c35", color: "#fff", fontSize: "12.5px", fontWeight: 700,
+                border: "none", borderRadius: "var(--radius-sm)", cursor: "pointer", boxShadow: "0 2px 6px rgba(255,92,53,0.25)",
                 textDecoration: "none", display: "inline-block"
               }}
             >
