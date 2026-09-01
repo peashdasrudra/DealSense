@@ -1,6 +1,5 @@
 /**
- * DealSense Dashboard — Mobile Bottom Navigation Bar.
- * Provides thumb-friendly quick actions on mobile viewports (<850px).
+ * DealSense Dashboard — Minimalist Mobile Bottom Navigation.
  */
 
 import React from "react";
@@ -16,9 +15,9 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ onOpenMenu }) 
 
   const NAV_TABS = [
     { label: "Overview", icon: "📊", path: "/" },
-    { label: "Forecast", icon: "🔮", path: "/forecast" },
     { label: "Deals", icon: "🎯", path: "/deals" },
     { label: "Actions", icon: "⚡", path: "/actions", badge: "5" },
+    { label: "Hygiene", icon: "🧹", path: "/hygiene", badge: "6" },
   ];
 
   return (
@@ -45,7 +44,7 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ onOpenMenu }) 
               transition: "color 0.15s",
             }}
           >
-            <span style={{ fontSize: "18px", lineHeight: 1 }}>{tab.icon}</span>
+            <span style={{ fontSize: "17px", lineHeight: 1 }}>{tab.icon}</span>
             <span
               style={{
                 fontSize: "10.5px",
@@ -60,8 +59,8 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ onOpenMenu }) 
               <span
                 style={{
                   position: "absolute",
-                  top: 4,
-                  right: "calc(50% - 16px)",
+                  top: 3,
+                  right: "calc(50% - 15px)",
                   background: "var(--danger)",
                   color: "#ffffff",
                   fontSize: "9px",
@@ -95,8 +94,8 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ onOpenMenu }) 
           color: "var(--hs-text-muted)",
         }}
       >
-        <span style={{ fontSize: "18px", lineHeight: 1 }}>☰</span>
-        <span style={{ fontSize: "10.5px", fontWeight: 600, marginTop: "3px" }}>
+        <span style={{ fontSize: "17px", lineHeight: 1 }}>☰</span>
+        <span style={{ fontSize: "10.5px", fontWeight: 500, marginTop: "3px" }}>
           More
         </span>
       </button>

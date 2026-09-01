@@ -304,6 +304,7 @@ export const PortfolioOverview: React.FC = () => {
                 <th>Risk Band</th>
                 <th>Value</th>
                 <th>Owner</th>
+                <th style={{ textAlign: "right", paddingRight: 16 }}>Action</th>
               </tr>
             </thead>
             <tbody>
@@ -318,7 +319,7 @@ export const PortfolioOverview: React.FC = () => {
                     onClick={() => setSelectedDrawerDeal(deal)}
                     style={{ cursor: "pointer" }}
                   >
-                    <td style={{ fontWeight: 600, color: "var(--hs-text)", fontSize: 13 }}>{deal.name}</td>
+                    <td style={{ fontWeight: 600, color: "var(--hs-primary)", fontSize: 13 }}>{deal.name}</td>
                     <td style={{ color: "var(--hs-text-muted)" }}>{deal.client}</td>
                     <td>
                       <span
@@ -341,8 +342,19 @@ export const PortfolioOverview: React.FC = () => {
                         {deal.band}
                       </span>
                     </td>
-                    <td style={{ fontFamily: "var(--font-mono)", fontWeight: 500 }}>${(deal.value / 1000).toFixed(0)}K</td>
+                    <td style={{ fontFamily: "var(--font-mono)", fontWeight: 600 }}>${(deal.value / 1000).toFixed(0)}K</td>
                     <td>{deal.owner}</td>
+                    <td style={{ textAlign: "right", paddingRight: 16 }}>
+                      <button
+                        className="btn btn-secondary btn-sm"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedDrawerDeal(deal);
+                        }}
+                      >
+                        ⚡ Inspect
+                      </button>
+                    </td>
                   </motion.tr>
                 );
               })}

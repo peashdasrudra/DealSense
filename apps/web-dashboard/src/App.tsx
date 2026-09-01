@@ -25,16 +25,16 @@ import { DealDrawer, DealData } from "./components/DealDrawer";
 // ── Page Title Mapping ───────────────────────────────────────────────────────
 
 const PAGE_TITLES: Record<string, { title: string; breadcrumb: string }> = {
-  "/": { title: "Portfolio Overview", breadcrumb: "Revenue Intelligence / Portfolio" },
-  "/forecast": { title: "Revenue Forecast & Simulation", breadcrumb: "Revenue Intelligence / Forecast" },
-  "/deals": { title: "Deal Intelligence Explorer", breadcrumb: "Revenue Intelligence / Deals" },
-  "/actions": { title: "Action & Approval Queue", breadcrumb: "Revenue Intelligence / Actions" },
-  "/heatmap": { title: "Pipeline Risk Heatmap", breadcrumb: "Revenue Intelligence / Heatmap" },
-  "/hygiene": { title: "CRM Hygiene & Auto-Remediation", breadcrumb: "RevOps Operations / Hygiene" },
-  "/reps": { title: "Rep Coaching & Velocity", breadcrumb: "RevOps Operations / Coaching" },
-  "/clients": { title: "Client Health Scorecards", breadcrumb: "RevOps Operations / Clients" },
-  "/audit": { title: "Audit & Governance Trail", breadcrumb: "System / Audit" },
-  "/settings": { title: "Scoring Calibration & Settings", breadcrumb: "System / Settings" },
+  "/": { title: "Pipeline Overview", breadcrumb: "Overview" },
+  "/forecast": { title: "Revenue Forecast", breadcrumb: "Forecast" },
+  "/deals": { title: "Deal Inspector", breadcrumb: "Deals" },
+  "/actions": { title: "Action Queue", breadcrumb: "Actions" },
+  "/heatmap": { title: "Risk Heatmap", breadcrumb: "Heatmap" },
+  "/hygiene": { title: "CRM Hygiene", breadcrumb: "Hygiene" },
+  "/reps": { title: "Rep Coaching", breadcrumb: "Coaching" },
+  "/clients": { title: "Client Health", breadcrumb: "Clients" },
+  "/audit": { title: "Audit Trail", breadcrumb: "Audit" },
+  "/settings": { title: "Settings", breadcrumb: "Settings" },
 };
 
 const SEARCHABLE_DEALS = [
