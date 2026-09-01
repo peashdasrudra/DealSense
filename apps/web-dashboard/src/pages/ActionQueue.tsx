@@ -270,12 +270,12 @@ export const ActionQueue: React.FC = () => {
             <thead>
               <tr>
                 <th style={{ width: 40, paddingLeft: 16 }}></th>
-                <th>Action Recommendation</th>
-                <th>Deal / Account</th>
-                <th>Autonomous Tier</th>
-                <th>Expected Impact</th>
-                <th>Created</th>
-                <th style={{ textAlign: "right", paddingRight: 16 }}>Approval Decision</th>
+                <th style={{ minWidth: 280, maxWidth: 380 }}>Action Recommendation</th>
+                <th style={{ minWidth: 160 }}>Deal / Account</th>
+                <th style={{ minWidth: 110 }}>Autonomous Tier</th>
+                <th style={{ minWidth: 140 }}>Expected Impact</th>
+                <th style={{ minWidth: 90 }}>Created</th>
+                <th style={{ textAlign: "right", paddingRight: 16, minWidth: 170 }}>Approval Decision</th>
               </tr>
             </thead>
             <tbody>
@@ -298,7 +298,7 @@ export const ActionQueue: React.FC = () => {
                       }}
                     >
                       {/* Checkbox */}
-                      <td style={{ paddingLeft: 16 }}>
+                      <td style={{ paddingLeft: 16, width: 40 }}>
                         {action.status === "pending" && (
                           <div
                             onClick={() => toggleSelect(action.id)}
@@ -322,7 +322,7 @@ export const ActionQueue: React.FC = () => {
                       </td>
 
                       {/* Action Info */}
-                      <td>
+                      <td style={{ minWidth: 280, maxWidth: 380, whiteSpace: "normal" }}>
                         <div style={{ display: "flex", alignItems: "flex-start", gap: 10 }}>
                           {action.urgency !== "normal" && (
                             <div
@@ -336,11 +336,11 @@ export const ActionQueue: React.FC = () => {
                               }}
                             />
                           )}
-                          <div>
+                          <div style={{ flex: 1, minWidth: 0 }}>
                             <div style={{ fontWeight: 600, color: "var(--hs-text)", fontSize: "13px" }}>
                               {action.title}
                             </div>
-                            <div style={{ fontSize: "12px", color: "var(--hs-text-muted)", marginTop: 2, maxWidth: 320, lineHeight: 1.4 }}>
+                            <div style={{ fontSize: "12px", color: "var(--hs-text-muted)", marginTop: 3, lineHeight: 1.5 }}>
                               {action.description}
                             </div>
                           </div>
@@ -348,29 +348,29 @@ export const ActionQueue: React.FC = () => {
                       </td>
 
                       {/* Deal/Client */}
-                      <td>
-                        <div style={{ fontWeight: 500, color: "var(--hs-text)", fontSize: "13px" }}>
+                      <td style={{ minWidth: 160, whiteSpace: "nowrap" }}>
+                        <div style={{ fontWeight: 600, color: "var(--hs-primary)", fontSize: "13px" }}>
                           {action.dealName}
                         </div>
-                        <div style={{ fontSize: "12px", color: "var(--hs-text-muted)" }}>
+                        <div style={{ fontSize: "12px", color: "var(--hs-text-muted)", marginTop: 2 }}>
                           {action.clientName}
                         </div>
                       </td>
 
                       {/* Tier */}
-                      <td>
+                      <td style={{ minWidth: 110, whiteSpace: "nowrap" }}>
                         <span className="tier-badge" style={{ background: tier.bg, color: tier.color, border: "none" }}>
                           {tier.icon} {tier.label}
                         </span>
                       </td>
 
                       {/* Impact */}
-                      <td style={{ fontSize: "12px", color: "var(--hs-text-muted)" }}>
+                      <td style={{ minWidth: 140, fontSize: "12.5px", color: "var(--hs-text-muted)" }}>
                         {action.impact}
                       </td>
 
                       {/* Age */}
-                      <td style={{ fontSize: "12px", color: "var(--hs-text-muted)", fontVariantNumeric: "tabular-nums" }}>
+                      <td style={{ minWidth: 90, fontSize: "12px", color: "var(--hs-text-muted)", fontVariantNumeric: "tabular-nums", whiteSpace: "nowrap" }}>
                         {action.createdAt}
                       </td>
 

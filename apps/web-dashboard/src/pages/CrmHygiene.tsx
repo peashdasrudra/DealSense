@@ -317,13 +317,13 @@ export const CrmHygiene: React.FC = () => {
           <table>
             <thead>
               <tr>
-                <th>Deal Name</th>
-                <th>Account</th>
-                <th>Owner</th>
-                <th>Value</th>
-                <th>Hygiene Issue</th>
-                <th>Detected Discrepancy</th>
-                <th style={{ textAlign: "right", paddingRight: 16 }}>Remediation Action</th>
+                <th style={{ minWidth: 160 }}>Deal Name</th>
+                <th style={{ minWidth: 140 }}>Account</th>
+                <th style={{ minWidth: 110 }}>Owner</th>
+                <th style={{ minWidth: 90 }}>Value</th>
+                <th style={{ minWidth: 140 }}>Hygiene Issue</th>
+                <th style={{ minWidth: 240, maxWidth: 360 }}>Detected Discrepancy</th>
+                <th style={{ textAlign: "right", paddingRight: 16, minWidth: 160 }}>Remediation Action</th>
               </tr>
             </thead>
             <tbody>
@@ -353,16 +353,16 @@ export const CrmHygiene: React.FC = () => {
                             owner: issue.owner,
                           })
                         }
-                        style={{ fontWeight: 600, color: "var(--hs-primary)", fontSize: "13.5px" }}
+                        style={{ fontWeight: 600, color: "var(--hs-primary)", fontSize: "13px", minWidth: 160, whiteSpace: "nowrap" }}
                       >
                         {issue.dealName}
                       </td>
-                      <td style={{ color: "var(--hs-text-muted)" }}>{issue.client}</td>
-                      <td>{issue.owner}</td>
-                      <td style={{ fontFamily: "var(--font-mono)", fontWeight: 600 }}>
+                      <td style={{ color: "var(--hs-text-muted)", minWidth: 140, whiteSpace: "nowrap" }}>{issue.client}</td>
+                      <td style={{ minWidth: 110, whiteSpace: "nowrap" }}>{issue.owner}</td>
+                      <td style={{ fontFamily: "var(--font-mono)", fontWeight: 600, minWidth: 90, whiteSpace: "nowrap" }}>
                         ${(issue.value / 1000).toFixed(0)}K
                       </td>
-                      <td>
+                      <td style={{ minWidth: 140, whiteSpace: "nowrap" }}>
                         <span
                           className="badge"
                           style={{ background: badge.bg, color: badge.color, fontWeight: 700 }}
@@ -370,7 +370,7 @@ export const CrmHygiene: React.FC = () => {
                           {issue.issueType}
                         </span>
                       </td>
-                      <td style={{ fontSize: "12.5px", color: "var(--hs-text)", maxWidth: 300 }}>
+                      <td style={{ fontSize: "12.5px", color: "var(--hs-text)", minWidth: 240, maxWidth: 360, whiteSpace: "normal", lineHeight: 1.5 }}>
                         {issue.details}
                       </td>
                       <td style={{ textAlign: "right", paddingRight: 16 }}>
