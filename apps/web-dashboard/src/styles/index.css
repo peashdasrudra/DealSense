@@ -631,6 +631,9 @@ body {
   }
   .mobile-bottom-nav {
     display: flex;
+    align-items: stretch;
+    justify-content: space-around;
+    padding-bottom: max(4px, env(safe-area-inset-bottom));
   }
   .main-header {
     padding: 0 var(--sp-3);

@@ -1,71 +1,201 @@
 /**
- * DealSense Dashboard — Authentic HubSpot Enterprise Sidebar.
- * Highlighting Core RevOps Features and Top-1% Systems Architect Showcase.
+ * DealSense — Premium HubSpot-Grade Enterprise Sidebar Navigation.
+ * 
+ * Design principles matching HubSpot's actual sidebar:
+ * - Clean white background with subtle borders
+ * - Compact nav items with refined hover states
+ * - Active item uses subtle teal background tint (not full dark block)
+ * - Muted uppercase section headers with tight spacing
+ * - SVG icons instead of emoji for professional appearance
+ * - Minimal badge usage — only on high-priority items
+ * - Collapsible sections
+ * - Brand wordmark at top, not a large logo block
  */
 
-import React from "react";
+import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { DealSenseLogo } from "./DealSenseLogo";
+import { DealSenseIcon } from "./DealSenseLogo";
+
+/* ── SVG Icon Components (HubSpot-grade minimal line icons) ──────────── */
+
+const Icon: React.FC<{ d: string; size?: number }> = ({ d, size = 16 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+    <path d={d} />
+  </svg>
+);
+
+/* Reusable path data for each nav icon */
+const ICONS: Record<string, React.ReactNode> = {
+  overview: <Icon d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0h4" />,
+  forecast: (
+    <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+      <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+    </svg>
+  ),
+  waterfall: (
+    <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+      <rect x="3" y="3" width="4" height="18" rx="1" />
+      <rect x="10" y="8" width="4" height="13" rx="1" />
+      <rect x="17" y="13" width="4" height="8" rx="1" />
+    </svg>
+  ),
+  deals: (
+    <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+      <circle cx="11" cy="11" r="8" />
+      <line x1="21" y1="21" x2="16.65" y2="16.65" />
+    </svg>
+  ),
+  warroom: (
+    <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+    </svg>
+  ),
+  stakeholders: (
+    <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+      <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
+      <circle cx="9" cy="7" r="4" />
+      <path d="M23 21v-2a4 4 0 00-3-3.87" />
+      <path d="M16 3.13a4 4 0 010 7.75" />
+    </svg>
+  ),
+  heatmap: (
+    <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+      <rect x="3" y="3" width="7" height="7" rx="1" />
+      <rect x="14" y="3" width="7" height="7" rx="1" />
+      <rect x="3" y="14" width="7" height="7" rx="1" />
+      <rect x="14" y="14" width="7" height="7" rx="1" />
+    </svg>
+  ),
+  actions: (
+    <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+      <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+    </svg>
+  ),
+  map: (
+    <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+      <path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z" />
+    </svg>
+  ),
+  battlecards: (
+    <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+      <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z" />
+      <line x1="4" y1="22" x2="4" y2="15" />
+    </svg>
+  ),
+  playbooks: (
+    <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+      <path d="M12 2L2 7l10 5 10-5-10-5z" />
+      <path d="M2 17l10 5 10-5" />
+      <path d="M2 12l10 5 10-5" />
+    </svg>
+  ),
+  hygiene: (
+    <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+      <path d="M22 11.08V12a10 10 0 11-5.93-9.14" />
+      <polyline points="22 4 12 14.01 9 11.01" />
+    </svg>
+  ),
+  reps: (
+    <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+      <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
+      <circle cx="12" cy="7" r="4" />
+    </svg>
+  ),
+  clients: (
+    <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+      <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+      <polyline points="9 22 9 12 15 12 15 22" />
+    </svg>
+  ),
+  casestudy: (
+    <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+    </svg>
+  ),
+  audit: (
+    <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+      <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+      <polyline points="14 2 14 8 20 8" />
+      <line x1="16" y1="13" x2="8" y2="13" />
+      <line x1="16" y1="17" x2="8" y2="17" />
+    </svg>
+  ),
+  settings: (
+    <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+      <circle cx="12" cy="12" r="3" />
+      <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z" />
+    </svg>
+  ),
+};
+
+/* ── Navigation Structure ──────────────────────────────────────────────── */
 
 interface NavItem {
   id: string;
   label: string;
-  icon: string;
+  iconKey: string;
   path: string;
-  badge?: number | string;
+  badge?: string;
   badgeColor?: string;
-  isKeyFeature?: boolean;
 }
 
 interface NavSection {
   title: string;
   items: NavItem[];
+  defaultOpen?: boolean;
 }
 
 const NAV_SECTIONS: NavSection[] = [
   {
     title: "Revenue Intelligence",
+    defaultOpen: true,
     items: [
-      { id: "overview", label: "Pipeline Overview", icon: "📊", path: "/" },
-      { id: "forecast", label: "Revenue Forecast", icon: "🔮", path: "/forecast", isKeyFeature: true },
-      { id: "waterfall", label: "Pipeline Waterfall", icon: "🌊", path: "/waterfall", badge: "NEW", badgeColor: "#00a4bd", isKeyFeature: true },
-      { id: "deals", label: "Deal Inspector", icon: "🎯", path: "/deals" },
-      { id: "warroom", label: "Deal War Room (QBR)", icon: "🛡️", path: "/war-room", badge: "LIVE", badgeColor: "#ff5c35", isKeyFeature: true },
-      { id: "stakeholders", label: "Stakeholder Matrix", icon: "👥", path: "/stakeholders", isKeyFeature: true },
-      { id: "heatmap", label: "Risk Heatmap", icon: "🔥", path: "/heatmap" },
+      { id: "overview", label: "Pipeline Overview", iconKey: "overview", path: "/" },
+      { id: "forecast", label: "Revenue Forecast", iconKey: "forecast", path: "/forecast" },
+      { id: "waterfall", label: "Pipeline Waterfall", iconKey: "waterfall", path: "/waterfall", badge: "New", badgeColor: "#00a4bd" },
+      { id: "deals", label: "Deal Inspector", iconKey: "deals", path: "/deals" },
+      { id: "warroom", label: "Deal War Room", iconKey: "warroom", path: "/war-room" },
+      { id: "stakeholders", label: "Stakeholder Map", iconKey: "stakeholders", path: "/stakeholders" },
+      { id: "heatmap", label: "Risk Heatmap", iconKey: "heatmap", path: "/heatmap" },
     ],
   },
   {
-    title: "Sales Execution & Actions",
+    title: "Sales Execution",
+    defaultOpen: true,
     items: [
-      { id: "actions", label: "Action Queue", icon: "⚡", path: "/actions", badge: "5 NEW", badgeColor: "#ff5c35", isKeyFeature: true },
-      { id: "map", label: "Mutual Action Plans", icon: "🗺️", path: "/map", isKeyFeature: true },
-      { id: "battlecards", label: "Battlecards & Objections", icon: "⚔️", path: "/battlecards" },
+      { id: "actions", label: "Action Queue", iconKey: "actions", path: "/actions", badge: "5", badgeColor: "#ff5c35" },
+      { id: "map", label: "Mutual Action Plans", iconKey: "map", path: "/map" },
+      { id: "battlecards", label: "Battlecards", iconKey: "battlecards", path: "/battlecards" },
     ],
   },
   {
     title: "RevOps Automation",
+    defaultOpen: true,
     items: [
-      { id: "playbooks", label: "Autonomous Playbooks", icon: "🤖", path: "/playbooks", badge: "4 ACTIVE", badgeColor: "var(--risk-healthy)", isKeyFeature: true },
-      { id: "hygiene", label: "CRM Hygiene", icon: "🧹", path: "/hygiene", badge: "6 AT RISK", badgeColor: "var(--warning)", isKeyFeature: true },
-      { id: "reps", label: "Rep Coaching", icon: "👥", path: "/reps" },
-      { id: "clients", label: "Client Health", icon: "🏢", path: "/clients" },
+      { id: "playbooks", label: "Playbooks", iconKey: "playbooks", path: "/playbooks" },
+      { id: "hygiene", label: "CRM Hygiene", iconKey: "hygiene", path: "/hygiene", badge: "6", badgeColor: "var(--warning)" },
+      { id: "reps", label: "Rep Coaching", iconKey: "reps", path: "/reps" },
+      { id: "clients", label: "Client Health", iconKey: "clients", path: "/clients" },
     ],
   },
   {
-    title: "Architect Portfolio & Hiring",
+    title: "Portfolio",
+    defaultOpen: true,
     items: [
-      { id: "case-study", label: "Case Study & $99 Pilot", icon: "✨", path: "/case-study", badge: "TOP 1%", badgeColor: "#00a4bd", isKeyFeature: true },
+      { id: "case-study", label: "Case Study & Pricing", iconKey: "casestudy", path: "/case-study" },
     ],
   },
   {
-    title: "Governance & Security",
+    title: "Settings",
+    defaultOpen: false,
     items: [
-      { id: "audit", label: "Audit Trail", icon: "📋", path: "/audit" },
-      { id: "settings", label: "Settings", icon: "⚙️", path: "/settings" },
+      { id: "audit", label: "Audit Trail", iconKey: "audit", path: "/audit" },
+      { id: "settings", label: "Settings", iconKey: "settings", path: "/settings" },
     ],
   },
 ];
+
+/* ── Sidebar Component ─────────────────────────────────────────────────── */
 
 interface SidebarProps {
   onClose?: () => void;
@@ -75,6 +205,9 @@ interface SidebarProps {
 export const Sidebar: React.FC<SidebarProps> = ({ onClose, onNavigateHome }) => {
   const location = useLocation();
   const navigate = useNavigate();
+  const [collapsedSections, setCollapsedSections] = useState<Set<string>>(
+    new Set(NAV_SECTIONS.filter((s) => !s.defaultOpen).map((s) => s.title))
+  );
 
   const isActive = (path: string) => {
     if (path === "/") return location.pathname === "/";
@@ -87,49 +220,78 @@ export const Sidebar: React.FC<SidebarProps> = ({ onClose, onNavigateHome }) => 
   };
 
   const handleLogoClick = () => {
-    if (onNavigateHome) {
-      onNavigateHome();
-    } else {
-      handleNav("/");
-    }
+    if (onNavigateHome) onNavigateHome();
+    else handleNav("/");
     if (onClose) onClose();
   };
 
+  const toggleSection = (title: string) => {
+    setCollapsedSections((prev) => {
+      const next = new Set(prev);
+      if (next.has(title)) next.delete(title);
+      else next.add(title);
+      return next;
+    });
+  };
+
   return (
-    <div style={{ display: "flex", flexDirection: "column", height: "100%", background: "#ffffff" }}>
-      {/* ── Brand Header with Mobile Close ───────────────────────────── */}
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        height: "100%",
+        background: "#ffffff",
+        fontFamily: "var(--font-sans)",
+      }}
+    >
+      {/* ── Brand Header ────────────────────────────────────────────── */}
       <div
-        className="sidebar-brand"
         style={{
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          padding: "16px 18px 12px",
+          padding: "14px 16px",
           borderBottom: "1px solid var(--hs-border-dark)",
+          flexShrink: 0,
         }}
       >
-        <div onClick={handleLogoClick} style={{ cursor: "pointer" }} title="DealSense Home">
-          <DealSenseLogo size="md" tagline="Revenue Intelligence" />
+        <div
+          onClick={handleLogoClick}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 8,
+            cursor: "pointer",
+            padding: "2px 4px",
+            borderRadius: "var(--radius-sm)",
+            transition: "background 0.12s",
+          }}
+          title="DealSense Home"
+        >
+          <DealSenseIcon size={22} />
+          <span style={{ fontSize: "14.5px", fontWeight: 700, color: "var(--hs-primary)", letterSpacing: "-0.02em" }}>
+            Deal<span style={{ color: "#ff5c35" }}>Sense</span>
+          </span>
         </div>
+
+        {/* Mobile close button — hidden on desktop via CSS */}
         {onClose && (
           <button
             onClick={onClose}
             className="sidebar-close-btn"
             style={{
-              background: "var(--hs-surface)",
+              background: "none",
               border: "1px solid var(--hs-border-dark)",
-              width: "32px",
-              height: "32px",
-              borderRadius: "50%",
-              fontSize: "14px",
-              fontWeight: 700,
+              width: 28,
+              height: 28,
+              borderRadius: "var(--radius-sm)",
+              fontSize: "12px",
               cursor: "pointer",
-              color: "var(--hs-primary)",
+              color: "var(--hs-text-muted)",
               display: "none",
               alignItems: "center",
               justifyContent: "center",
               flexShrink: 0,
-              boxShadow: "var(--shadow-sm)",
             }}
             aria-label="Close Sidebar"
           >
@@ -138,140 +300,195 @@ export const Sidebar: React.FC<SidebarProps> = ({ onClose, onNavigateHome }) => 
         )}
       </div>
 
-      {/* ── HubSpot Connected Account Profile Card ───────────────────── */}
-      <div style={{ padding: "12px 14px 8px" }}>
-        <div
-          style={{
-            padding: "10px 12px",
-            background: "linear-gradient(135deg, #f9fbfb 0%, #f4f8f8 100%)",
-            border: "1px solid var(--hs-border-dark)",
-            borderRadius: "var(--radius-md)",
-            boxShadow: "var(--shadow-sm)",
-          }}
-        >
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-              <span style={{ width: 7, height: 7, borderRadius: "50%", background: "var(--risk-healthy)", display: "inline-block", boxShadow: "0 0 6px rgba(0, 164, 189, 0.4)" }} />
-              <span style={{ fontSize: "11px", fontWeight: 800, color: "#ff5c35", textTransform: "uppercase", letterSpacing: "0.04em" }}>
-                HubSpot CRM Live
-              </span>
+      {/* ── Workspace Indicator ──────────────────────────────────────── */}
+      <div style={{ padding: "10px 16px", borderBottom: "1px solid var(--hs-border-dark)" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <div
+            style={{
+              width: 28,
+              height: 28,
+              borderRadius: "var(--radius-sm)",
+              background: "linear-gradient(135deg, var(--hs-primary), #0a3537)",
+              color: "#fff",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontSize: "10px",
+              fontWeight: 800,
+              flexShrink: 0,
+            }}
+          >
+            AX
+          </div>
+          <div style={{ minWidth: 0 }}>
+            <div style={{ fontSize: "12px", fontWeight: 600, color: "var(--hs-text)", lineHeight: 1.2, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+              AiXpert Labs
             </div>
-            <span style={{ fontSize: "10px", color: "var(--hs-text-muted)", fontFamily: "var(--font-mono)", fontWeight: 600 }}>
-              #48921820
-            </span>
-          </div>
-
-          <div style={{ fontSize: "12.5px", fontWeight: 700, color: "var(--hs-primary)" }}>
-            AiXpert Labs Workspace
-          </div>
-          <div style={{ fontSize: "11px", color: "var(--hs-text-muted)", marginTop: 2, display: "flex", justifyContent: "space-between" }}>
-            <span>Diamond Partner Tier</span>
-            <span style={{ fontWeight: 600, color: "var(--hs-primary)" }}>20 Deals Synced</span>
+            <div style={{ fontSize: "10.5px", color: "var(--hs-text-muted)", display: "flex", alignItems: "center", gap: 4 }}>
+              <span style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--risk-healthy)", display: "inline-block" }} />
+              HubSpot Connected
+            </div>
           </div>
         </div>
       </div>
 
-      {/* ── Top-1% Builder Portfolio Callout Pill ─────────────────────── */}
-      <div style={{ padding: "0 14px 6px" }}>
-        <div
-          onClick={() => handleNav("/case-study")}
-          style={{
-            padding: "8px 12px",
-            background: "linear-gradient(90deg, #ff5c35 0%, #ff7a59 100%)",
-            color: "#ffffff",
-            borderRadius: "var(--radius-sm)",
-            cursor: "pointer",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            boxShadow: "0 2px 8px rgba(255, 92, 53, 0.25)",
-            transition: "transform 0.15s ease",
-          }}
-        >
-          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-            <span style={{ fontSize: "13px" }}>✨</span>
-            <span style={{ fontSize: "11.5px", fontWeight: 700 }}>Hire Builder · $99 Pilot</span>
-          </div>
-          <span style={{ fontSize: "10px", background: "rgba(255,255,255,0.25)", padding: "1px 6px", borderRadius: "var(--radius-pill)", fontWeight: 800 }}>
-            TOP 1%
-          </span>
-        </div>
-      </div>
+      {/* ── Navigation ──────────────────────────────────────────────── */}
+      <nav style={{ flex: 1, overflowY: "auto", overflowX: "hidden", padding: "8px 0" }}>
+        {NAV_SECTIONS.map((section) => {
+          const isCollapsed = collapsedSections.has(section.title);
 
-      {/* ── Categorized Navigation Links ─────────────────────────────── */}
-      <div className="sidebar-nav" style={{ flex: 1, padding: "4px 10px", overflowY: "auto" }}>
-        {NAV_SECTIONS.map((section, sIdx) => (
-          <div key={section.title} style={{ marginBottom: sIdx === NAV_SECTIONS.length - 1 ? 4 : 12 }}>
-            <div
-              className="sidebar-section-label"
-              style={{
-                paddingLeft: 10,
-                fontSize: "10px",
-                color: "var(--hs-text-muted)",
-                fontWeight: 800,
-                textTransform: "uppercase",
-                letterSpacing: "0.08em",
-                marginBottom: 4,
-                marginTop: 2,
-              }}
-            >
-              {section.title}
-            </div>
-            {section.items.map((item) => {
-              const active = isActive(item.path);
-              return (
-                <div
-                  key={item.id}
-                  className={`sidebar-link ${active ? "active" : ""}`}
-                  onClick={() => handleNav(item.path)}
+          return (
+            <div key={section.title} style={{ marginBottom: 4 }}>
+              {/* Section Header */}
+              <button
+                onClick={() => toggleSection(section.title)}
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  padding: "6px 16px",
+                  background: "none",
+                  border: "none",
+                  cursor: "pointer",
+                  color: "var(--hs-text-muted)",
+                  fontFamily: "var(--font-sans)",
+                }}
+              >
+                <span
                   style={{
-                    position: "relative",
-                    background: active ? "var(--hs-primary)" : undefined,
-                    color: active ? "#ffffff" : "var(--hs-text)",
-                    borderLeft: active ? "3px solid #ff5c35" : "3px solid transparent",
+                    fontSize: "10px",
+                    fontWeight: 700,
+                    textTransform: "uppercase",
+                    letterSpacing: "0.08em",
                   }}
                 >
-                  <span style={{ fontSize: "15px", lineHeight: 1 }}>{item.icon}</span>
-                  <span style={{ flex: 1, fontWeight: active ? 700 : 500, fontSize: "13px" }}>
-                    {item.label}
-                  </span>
-                  {item.badge && (
-                    <span
-                      style={{
-                        background: active ? "rgba(255,255,255,0.2)" : item.badgeColor ? `${item.badgeColor}18` : "var(--hs-surface-hover)",
-                        color: active ? "#ffffff" : item.badgeColor || "var(--hs-text-muted)",
-                        border: active ? "none" : item.badgeColor ? `1px solid ${item.badgeColor}40` : "none",
-                        padding: "1px 7px",
-                        borderRadius: "var(--radius-pill)",
-                        fontSize: "10px",
-                        fontWeight: 800,
-                        letterSpacing: "0.02em",
-                      }}
-                    >
-                      {item.badge}
-                    </span>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        ))}
-      </div>
+                  {section.title}
+                </span>
+                <svg
+                  width={10}
+                  height={10}
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2.5}
+                  style={{
+                    transition: "transform 0.15s ease",
+                    transform: isCollapsed ? "rotate(-90deg)" : "rotate(0deg)",
+                    opacity: 0.5,
+                  }}
+                >
+                  <polyline points="6 9 12 15 18 9" />
+                </svg>
+              </button>
 
-      {/* ── Footer ───────────────────────────────────────────────────── */}
-      <div style={{ padding: "12px 14px", borderTop: "1px solid var(--hs-border-dark)", background: "var(--hs-surface)" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <div>
-            <div style={{ fontSize: "11px", fontWeight: 700, color: "var(--hs-primary)" }}>
-              AES-256 Webhooks
+              {/* Section Items */}
+              {!isCollapsed && (
+                <div style={{ padding: "0 8px 4px" }}>
+                  {section.items.map((item) => {
+                    const active = isActive(item.path);
+                    return (
+                      <button
+                        key={item.id}
+                        onClick={() => handleNav(item.path)}
+                        style={{
+                          width: "100%",
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 10,
+                          padding: "7px 10px",
+                          borderRadius: "var(--radius-sm)",
+                          background: active ? "var(--hs-primary-subtle)" : "transparent",
+                          border: "none",
+                          cursor: "pointer",
+                          color: active ? "var(--hs-primary)" : "var(--hs-text)",
+                          fontFamily: "var(--font-sans)",
+                          fontSize: "13px",
+                          fontWeight: active ? 600 : 450,
+                          textAlign: "left",
+                          transition: "all 0.1s ease",
+                          marginBottom: 1,
+                          position: "relative",
+                        }}
+                        onMouseEnter={(e) => {
+                          if (!active) (e.currentTarget as HTMLElement).style.background = "var(--hs-surface-hover)";
+                        }}
+                        onMouseLeave={(e) => {
+                          if (!active) (e.currentTarget as HTMLElement).style.background = "transparent";
+                        }}
+                      >
+                        {/* Active indicator bar */}
+                        {active && (
+                          <span
+                            style={{
+                              position: "absolute",
+                              left: 0,
+                              top: "50%",
+                              transform: "translateY(-50%)",
+                              width: 3,
+                              height: 16,
+                              borderRadius: "0 2px 2px 0",
+                              background: "var(--hs-primary)",
+                            }}
+                          />
+                        )}
+
+                        <span style={{ color: active ? "var(--hs-primary)" : "var(--hs-text-muted)", transition: "color 0.1s" }}>
+                          {ICONS[item.iconKey] || null}
+                        </span>
+                        <span style={{ flex: 1, lineHeight: 1.2 }}>{item.label}</span>
+
+                        {item.badge && (
+                          <span
+                            style={{
+                              fontSize: "10px",
+                              fontWeight: 700,
+                              padding: "1px 6px",
+                              borderRadius: "var(--radius-pill)",
+                              background: `${item.badgeColor || "var(--hs-text-muted)"}14`,
+                              color: item.badgeColor || "var(--hs-text-muted)",
+                              lineHeight: 1.4,
+                            }}
+                          >
+                            {item.badge}
+                          </span>
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
             </div>
-            <div style={{ fontSize: "10px", color: "var(--hs-text-muted)" }}>
-              HMAC Signature Verified
-            </div>
+          );
+        })}
+      </nav>
+
+      {/* ── Footer ──────────────────────────────────────────────────── */}
+      <div
+        style={{
+          padding: "12px 16px",
+          borderTop: "1px solid var(--hs-border-dark)",
+          flexShrink: 0,
+        }}
+      >
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+          <div style={{ fontSize: "10.5px", color: "var(--hs-text-muted)" }}>
+            <span style={{ fontWeight: 600 }}>v1.0.0</span> · 48/48 tests
           </div>
-          <span className="badge" style={{ background: "var(--risk-healthy-bg)", color: "var(--risk-healthy)", fontSize: "10px", fontWeight: 700 }}>
-            ● Verified
-          </span>
+          <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+            <span
+              style={{
+                width: 6,
+                height: 6,
+                borderRadius: "50%",
+                background: "var(--risk-healthy)",
+                display: "inline-block",
+              }}
+            />
+            <span style={{ fontSize: "10px", fontWeight: 600, color: "var(--risk-healthy)" }}>
+              Healthy
+            </span>
+          </div>
         </div>
       </div>
     </div>
