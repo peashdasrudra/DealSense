@@ -47,6 +47,12 @@ const NAV_SECTIONS: NavSection[] = [
     ],
   },
   {
+    title: "Portfolio & Engineering",
+    items: [
+      { id: "case-study", label: "Executive Case Study", icon: "✨", path: "/case-study", badge: "PORTFOLIO" },
+    ],
+  },
+  {
     title: "Governance & System",
     items: [
       { id: "audit", label: "Audit Trail", icon: "📋", path: "/audit" },

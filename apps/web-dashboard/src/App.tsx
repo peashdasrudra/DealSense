@@ -22,6 +22,7 @@ import { AuditLog } from "./pages/AuditLog";
 import { Settings } from "./pages/Settings";
 import { MutualActionPlan } from "./pages/MutualActionPlan";
 import { CompetitiveIntelligence } from "./pages/CompetitiveIntelligence";
+import { CaseStudy } from "./pages/CaseStudy";
 import { DealDrawer, DealData } from "./components/DealDrawer";
 
 // ── Page Title Mapping ───────────────────────────────────────────────────────
@@ -37,6 +38,8 @@ const PAGE_TITLES: Record<string, { title: string; breadcrumb: string }> = {
   "/hygiene": { title: "CRM Hygiene & Auto-Remediation", breadcrumb: "Hygiene" },
   "/reps": { title: "Rep Coaching & Velocity", breadcrumb: "Coaching" },
   "/clients": { title: "Client Health Scorecards", breadcrumb: "Clients" },
+  "/case-study": { title: "Executive Architecture Case Study", breadcrumb: "Case Study" },
+  "/portfolio": { title: "Executive Architecture Case Study", breadcrumb: "Portfolio" },
   "/audit": { title: "Audit & Compliance Trail", breadcrumb: "Audit" },
   "/settings": { title: "Settings & Scoring Weights", breadcrumb: "Settings" },
 };
@@ -116,6 +119,8 @@ export const App: React.FC = () => {
                 <Route path="/hygiene" element={<CrmHygiene />} />
                 <Route path="/reps" element={<RepPerformance />} />
                 <Route path="/clients" element={<ClientHealth />} />
+                <Route path="/case-study" element={<CaseStudy />} />
+                <Route path="/portfolio" element={<CaseStudy />} />
                 <Route path="/audit" element={<AuditLog />} />
                 <Route path="/settings" element={<Settings />} />
               </Routes>
