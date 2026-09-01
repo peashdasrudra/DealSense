@@ -214,106 +214,113 @@ body {
 
 .title-divider {
   color: var(--hs-border-dark);
-  font-size: 16px;
-  margin: 0 8px;
+  font-size: 14px;
+  margin: 0 6px;
 }
 
 .header-page-title {
   font-size: 14px;
-  font-weight: 600;
-  color: var(--hs-text);
+  font-weight: 700;
+  color: var(--hs-primary);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  margin: 0;
+  line-height: 1.2;
 }
 
-/* ── HubSpot Portal Switcher Pill ────────────────────────────────────────── */
+/* ── Header Icon Buttons & Avatar ────────────────────────────────────────── */
 
-.hubspot-portal-pill {
+.header-avatar-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--hs-primary);
+  color: #ffffff;
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 4px 10px;
-  background: #ffffff;
-  border: 1px solid var(--hs-border-dark);
-  border-radius: var(--radius-pill);
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--hs-primary);
+  justify-content: center;
   cursor: pointer;
+  position: relative;
   box-shadow: var(--shadow-sm);
-  white-space: nowrap;
-  transition: all 0.15s;
+  transition: transform 0.15s ease;
+  user-select: none;
 }
 
-.hubspot-portal-pill:hover {
-  background: var(--hs-surface-hover);
-  border-color: #cfc8b8;
+.header-avatar-btn:hover {
+  transform: scale(1.05);
 }
 
-.portal-live-dot {
-  width: 7px;
-  height: 7px;
+.avatar-initials {
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.avatar-live-indicator {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
   background: var(--risk-healthy);
-  display: inline-block;
-  flex-shrink: 0;
+  border: 1.5px solid #ffffff;
 }
 
-.portal-hubspot-label {
-  color: #ff5c35;
-  font-weight: 700;
-}
-
-.portal-pill-name {
-  color: var(--hs-text);
-  font-family: var(--font-mono);
-  font-size: 11.5px;
-}
-
-.portal-caret {
-  font-size: 9px;
-  color: var(--hs-text-muted);
-}
-
-.portal-dropdown-menu {
+.hubspot-profile-menu {
   position: absolute;
   top: 100%;
   right: 0;
-  margin-top: 6px;
-  width: 270px;
+  margin-top: 8px;
+  width: 290px;
   background: #ffffff;
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-lg);
   border: 1px solid var(--hs-border-dark);
-  padding: 8px;
-  z-index: 150;
+  z-index: 200;
+  overflow: hidden;
 }
 
-.portal-dropdown-header {
-  font-size: 10px;
+.profile-menu-header {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--hs-border-dark);
+  background: #ffffff;
+}
+
+.profile-large-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--hs-primary);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-weight: 700;
-  text-transform: uppercase;
-  color: var(--hs-text-muted);
-  padding: 4px 8px 6px;
+  font-size: 12px;
 }
 
-.portal-dropdown-item {
+.profile-link-btn {
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
   padding: 8px 10px;
+  font-size: 12px;
+  color: var(--hs-text);
   border-radius: var(--radius-sm);
   cursor: pointer;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 4px;
   transition: background 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
-.portal-dropdown-item:hover, .portal-dropdown-item.active {
+.profile-link-btn:hover {
   background: var(--hs-surface-hover);
+  color: var(--hs-primary);
 }
-
-/* ── Header Icon Buttons & Avatar ────────────────────────────────────────── */
 
 .header-search-btn {
   display: flex;
@@ -546,13 +553,18 @@ body {
   }
 }
 
-@media (max-width: 720px) {
-  .topbar-title-section {
+@media (max-width: 640px) {
+  .topbar-brand-text {
     display: none !important;
   }
-}
-
-@media (max-width: 640px) {
+  .title-divider {
+    display: none !important;
+  }
+  .header-page-title {
+    font-size: 13.5px !important;
+    font-weight: 700 !important;
+    color: var(--hs-primary) !important;
+  }
   .desktop-deal-table,
   .desktop-action-table,
   .desktop-hygiene-table,
@@ -575,19 +587,9 @@ body {
   }
   .header-search-btn {
     padding: 5px !important;
-    width: 30px;
-    height: 30px;
+    width: 32px;
+    height: 32px;
     justify-content: center;
-  }
-  .hubspot-portal-pill {
-    padding: 3px 6px !important;
-    font-size: 11px !important;
-  }
-  .portal-hubspot-label {
-    display: none !important;
-  }
-  .topbar-brand-text {
-    display: none !important;
   }
 }
 
