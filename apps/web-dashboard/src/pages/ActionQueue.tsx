@@ -257,14 +257,15 @@ export const ActionQueue: React.FC = () => {
         </div>
       </div>
 
-      {/* ── Action Table ─────────────────────────────────────────────── */}
+      {/* ── Action List Section (Desktop Table + Mobile Cards) ─────────── */}
       <motion.div
         className="card"
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
       >
-        <div className="table-responsive">
+        {/* Desktop & Tablet Responsive Table */}
+        <div className="desktop-action-table table-responsive">
           <table>
             <thead>
               <tr>
@@ -409,6 +410,53 @@ export const ActionQueue: React.FC = () => {
               </AnimatePresence>
             </tbody>
           </table>
+        </div>
+
+        {/* Mobile Action Cards (<640px) */}
+        <div className="mobile-action-cards">
+          {filtered.map((action) => {
+            const tier = TIER_META[action.tier] || TIER_META["tier_3"];
+            const isPending = action.status === "pending";
+
+            return (
+              <div key={action.id} className="mobile-action-card">
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 8, marginBottom: 4 }}>
+                  <div style={{ fontWeight: 700, fontSize: "13.5px", color: "var(--hs-primary)" }}>
+                    {action.title}
+                  </div>
+                  <span className="tier-badge" style={{ background: tier.bg, color: tier.color, border: "none", fontSize: "10px" }}>
+                    {tier.icon} {tier.label}
+                  </span>
+                </div>
+
+                <div style={{ fontSize: "12px", color: "var(--hs-text)", marginBottom: 6 }}>
+                  Deal: <strong>{action.dealName}</strong> · {action.clientName}
+                </div>
+
+                <div style={{ fontSize: "11.5px", color: "var(--hs-text-muted)", lineHeight: 1.4, marginBottom: 10 }}>
+                  {action.description}
+                </div>
+
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingTop: 8, borderTop: "1px solid var(--hs-border-dark)" }}>
+                  <span style={{ fontSize: "11px", color: "var(--hs-text-muted)" }}>Impact: {action.impact}</span>
+                  {isPending ? (
+                    <div style={{ display: "flex", gap: 6 }}>
+                      <button className="btn btn-primary btn-sm" onClick={() => handleApprove(action.id)}>
+                        ✓ Approve
+                      </button>
+                      <button className="btn btn-secondary btn-sm" onClick={() => handleReject(action.id)}>
+                        ✕
+                      </button>
+                    </div>
+                  ) : (
+                    <span className="badge" style={{ background: action.status === "approved" ? "var(--risk-healthy-bg)" : "var(--risk-critical-bg)", color: action.status === "approved" ? "var(--risk-healthy)" : "var(--danger)" }}>
+                      {action.status === "approved" ? "✓ Approved" : "✕ Rejected"}
+                    </span>
+                  )}
+                </div>
+              </div>
+            );
+          })}
         </div>
       </motion.div>
     </div>

@@ -94,13 +94,13 @@ export const AuditLog: React.FC = () => {
 
   return (
     <div>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "var(--sp-4)" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "var(--sp-4)", flexWrap: "wrap", gap: 10 }}>
         <div>
           <div style={{ fontSize: "13px", color: "var(--hs-text-muted)" }}>
             Immutable SOC2 & Enterprise Governance Log
           </div>
         </div>
-        <div style={{ display: "flex", gap: 8 }}>
+        <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
           {["All", "Success", "Reverted", "Blocked"].map((status) => (
             <button
               key={status}
@@ -122,7 +122,9 @@ export const AuditLog: React.FC = () => {
           <div className="card-title">Event & Write-Back Audit Trail</div>
           <span className="badge badge-outline">{filteredLogs.length} verified events</span>
         </div>
-        <div className="table-responsive">
+
+        {/* Desktop Table */}
+        <div className="desktop-audit-table table-responsive">
           <table>
             <thead>
               <tr>
@@ -170,6 +172,37 @@ export const AuditLog: React.FC = () => {
               })}
             </tbody>
           </table>
+        </div>
+
+        {/* Mobile Audit Cards (<640px) */}
+        <div className="mobile-audit-cards">
+          {filteredLogs.map((log) => {
+            const s = STATUS_MAP[log.status];
+            return (
+              <div key={log.id} className="mobile-audit-card">
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 8, marginBottom: 4 }}>
+                  <div style={{ fontWeight: 700, fontSize: "13px", color: "var(--hs-primary)" }}>
+                    {log.actionType}
+                  </div>
+                  <span className="badge" style={{ background: s.bg, color: s.color, fontWeight: 700, fontSize: "10px" }}>
+                    {log.status}
+                  </span>
+                </div>
+
+                <div style={{ fontSize: "12px", color: "var(--hs-text-muted)", marginBottom: 4 }}>
+                  {log.actor} ({log.role}) · <code>{log.targetObject}</code>
+                </div>
+
+                <div style={{ fontSize: "12px", color: "var(--hs-text)", lineHeight: 1.4, marginBottom: 6 }}>
+                  {log.details}
+                </div>
+
+                <div style={{ fontSize: "11px", color: "var(--hs-text-muted)", fontFamily: "var(--font-mono)" }}>
+                  {log.timestamp} · {log.tier}
+                </div>
+              </div>
+            );
+          })}
         </div>
       </motion.div>
     </div>

@@ -298,7 +298,7 @@ export const CrmHygiene: React.FC = () => {
         transition={{ delay: 0.1 }}
       >
         <div className="card-header">
-          <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+          <div style={{ display: "flex", gap: 6, alignItems: "center", flexWrap: "wrap" }}>
             {["All", "Stale Activity", "Overdue Close Date", "Single-Threaded", "Missing Next Step"].map((cat) => (
               <button
                 key={cat}
@@ -312,7 +312,8 @@ export const CrmHygiene: React.FC = () => {
           <span className="badge badge-outline">{filteredIssues.length} issues listed</span>
         </div>
 
-        <div className="table-responsive">
+        {/* Desktop & Tablet Table */}
+        <div className="desktop-hygiene-table table-responsive">
           <table>
             <thead>
               <tr>
@@ -395,6 +396,49 @@ export const CrmHygiene: React.FC = () => {
               </AnimatePresence>
             </tbody>
           </table>
+        </div>
+
+        {/* Mobile Hygiene Cards (<640px) */}
+        <div className="mobile-hygiene-cards">
+          {filteredIssues.map((issue) => {
+            const badge = ISSUE_BADGES[issue.issueType] || { bg: "var(--hs-surface)", color: "var(--hs-text)" };
+            const isResolved = issue.status === "resolved";
+
+            return (
+              <div key={issue.id} className="mobile-hygiene-card">
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 8, marginBottom: 4 }}>
+                  <div style={{ fontWeight: 700, fontSize: "13.5px", color: "var(--hs-primary)" }}>
+                    {issue.dealName}
+                  </div>
+                  <span className="badge" style={{ background: badge.bg, color: badge.color, fontWeight: 700, fontSize: "10px" }}>
+                    {issue.issueType}
+                  </span>
+                </div>
+
+                <div style={{ fontSize: "12px", color: "var(--hs-text-muted)", marginBottom: 4 }}>
+                  Account: <strong>{issue.client}</strong> · ${(issue.value / 1000).toFixed(0)}K · {issue.owner}
+                </div>
+
+                <div style={{ fontSize: "12px", color: "var(--hs-text)", lineHeight: 1.4, marginBottom: 10 }}>
+                  {issue.details}
+                </div>
+
+                {!isResolved ? (
+                  <button
+                    className="btn btn-primary btn-sm"
+                    style={{ width: "100%", justifyContent: "center" }}
+                    onClick={() => handleResolve(issue.id, issue.recommendedAction)}
+                  >
+                    ⚡ Auto-Fix in HubSpot
+                  </button>
+                ) : (
+                  <div style={{ textAlign: "center", padding: "6px", background: "var(--risk-healthy-bg)", color: "var(--risk-healthy)", borderRadius: "var(--radius-sm)", fontSize: "11.5px", fontWeight: 700 }}>
+                    ✓ Remediated in HubSpot
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
       </motion.div>
 

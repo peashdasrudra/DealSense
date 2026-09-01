@@ -430,17 +430,26 @@ body {
   transition: all 0.15s;
 }
 
-/* ── Adaptive Mobile Deal Cards (<640px) ─────────────────────────────────── */
+/* ── Adaptive Mobile Cards (<640px) ──────────────────────────────────────── */
 
-.desktop-deal-table {
+.desktop-deal-table,
+.desktop-action-table,
+.desktop-hygiene-table,
+.desktop-audit-table {
   display: block;
 }
 
-.mobile-deal-cards {
+.mobile-deal-cards,
+.mobile-action-cards,
+.mobile-hygiene-cards,
+.mobile-audit-cards {
   display: none;
 }
 
-.mobile-deal-card {
+.mobile-deal-card,
+.mobile-action-card,
+.mobile-hygiene-card,
+.mobile-audit-card {
   padding: 12px;
   border-radius: var(--radius-sm);
   border: 1px solid var(--hs-border-dark);
@@ -450,7 +459,10 @@ body {
   transition: background 0.15s;
 }
 
-.mobile-deal-card:hover {
+.mobile-deal-card:hover,
+.mobile-action-card:hover,
+.mobile-hygiene-card:hover,
+.mobile-audit-card:hover {
   background: var(--hs-surface-hover);
 }
 
@@ -541,10 +553,16 @@ body {
 }
 
 @media (max-width: 640px) {
-  .desktop-deal-table {
+  .desktop-deal-table,
+  .desktop-action-table,
+  .desktop-hygiene-table,
+  .desktop-audit-table {
     display: none !important;
   }
-  .mobile-deal-cards {
+  .mobile-deal-cards,
+  .mobile-action-cards,
+  .mobile-hygiene-cards,
+  .mobile-audit-cards {
     display: flex !important;
     flex-direction: column;
     padding: 10px;

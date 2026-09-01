@@ -193,8 +193,8 @@ export const DealExplorer: React.FC = () => {
   return (
     <div>
       {/* ── Filters Bar ──────────────────────────────────────────────── */}
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "var(--sp-4)", flexWrap: "wrap", gap: 12 }}>
-        <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "var(--sp-4)", flexWrap: "wrap", gap: 10 }}>
+        <div style={{ display: "flex", gap: 6, alignItems: "center", flexWrap: "wrap", flex: 1, minWidth: 0 }}>
           <input
             type="text"
             placeholder="Search deals or clients..."
@@ -208,7 +208,8 @@ export const DealExplorer: React.FC = () => {
               fontSize: "13px",
               color: "var(--hs-text)",
               outline: "none",
-              width: 240,
+              flex: "1 1 180px",
+              maxWidth: 280,
             }}
           />
           {["All", "Critical", "Moderate", "Healthy"].map((b) => (
@@ -222,7 +223,7 @@ export const DealExplorer: React.FC = () => {
           ))}
         </div>
 
-        <span className="badge badge-outline">{filteredDeals.length} deals mapped</span>
+        <span className="badge badge-outline" style={{ flexShrink: 0 }}>{filteredDeals.length} deals mapped</span>
       </div>
 
       {/* ── Master-Detail Grid ───────────────────────────────────────── */}
@@ -340,7 +341,7 @@ export const DealExplorer: React.FC = () => {
                 <div style={{ fontSize: "13px", fontWeight: 700, color: "var(--hs-primary)", textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 12 }}>
                   MEDDICC Qualification Framework
                 </div>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 10 }}>
                   {Object.entries(activeDeal.meddicc).map(([key, val]) => (
                     <div
                       key={key}

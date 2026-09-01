@@ -565,18 +565,20 @@ export const DealDrawer: React.FC<DealDrawerProps> = ({
             {/* Drawer Footer Actions */}
             <div
               style={{
-                padding: "16px 24px",
+                padding: "12px 18px",
                 borderTop: "1px solid var(--hs-border-dark)",
                 background: "var(--hs-surface)",
                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "center",
+                flexWrap: "wrap",
+                gap: 10,
               }}
             >
-              <div style={{ fontSize: "12px", color: "var(--hs-text-muted)" }}>
+              <div style={{ fontSize: "11.5px", color: "var(--hs-text-muted)" }}>
                 ID: <code>{deal.id}</code> · Tenant: AiXpert Labs
               </div>
-              <div style={{ display: "flex", gap: 10 }}>
+              <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
                 <button
                   className="btn btn-secondary btn-sm"
                   onClick={() => handleExecuteAction("Slip Close Date +14 Days")}

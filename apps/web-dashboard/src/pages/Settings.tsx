@@ -78,8 +78,8 @@ export const Settings: React.FC = () => {
         <div className="card-body">
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
             {Object.entries(weights).map(([key, val]) => (
-              <div key={key} style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <div>
+              <div key={key} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 10 }}>
+                <div style={{ minWidth: 200, flex: 1 }}>
                   <div style={{ fontWeight: 600, fontSize: "13.5px", textTransform: "capitalize" }}>
                     {key.replace(/([A-Z])/g, " $1")}
                   </div>
@@ -97,7 +97,7 @@ export const Settings: React.FC = () => {
                     onChange={(e) =>
                       setWeights((prev) => ({ ...prev, [key]: parseFloat(e.target.value) }))
                     }
-                    style={{ width: 140 }}
+                    style={{ width: 130 }}
                   />
                   <span style={{ fontFamily: "var(--font-mono)", fontWeight: 700, minWidth: 36, textAlign: "right" }}>
                     {val.toFixed(1)}×
@@ -126,8 +126,8 @@ export const Settings: React.FC = () => {
         <div className="card-body">
           <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
             {Object.entries(approvalTiers).map(([key, val]) => (
-              <div key={key} style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <div>
+              <div key={key} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 10 }}>
+                <div style={{ minWidth: 200, flex: 1 }}>
                   <div style={{ fontWeight: 600, fontSize: "13.5px" }}>
                     {key.replace(/([A-Z])/g, " $1")}
                   </div>
@@ -141,7 +141,7 @@ export const Settings: React.FC = () => {
                   onChange={(e) =>
                     setApprovalTiers((prev) => ({ ...prev, [key]: e.target.checked }))
                   }
-                  style={{ width: 18, height: 18, cursor: "pointer" }}
+                  style={{ width: 20, height: 20, cursor: "pointer" }}
                 />
               </div>
             ))}
