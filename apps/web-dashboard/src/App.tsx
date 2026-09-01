@@ -26,6 +26,8 @@ import { CompetitiveIntelligence } from "./pages/CompetitiveIntelligence";
 import { CaseStudy } from "./pages/CaseStudy";
 import { DealWarRoom } from "./pages/DealWarRoom";
 import { RevOpsPlaybooks } from "./pages/RevOpsPlaybooks";
+import { PipelineWaterfall } from "./pages/PipelineWaterfall";
+import { StakeholderMatrix } from "./pages/StakeholderMatrix";
 import { DealDrawer, DealData } from "./components/DealDrawer";
 
 // ── Page Title Mapping ───────────────────────────────────────────────────────
@@ -34,7 +36,9 @@ const PAGE_TITLES: Record<string, { title: string; breadcrumb: string }> = {
   "/": { title: "Pipeline Overview", breadcrumb: "Overview" },
   "/forecast": { title: "Revenue Forecast & Simulation", breadcrumb: "Forecast" },
   "/deals": { title: "Deal Inspector & Dossiers", breadcrumb: "Deals" },
+  "/waterfall": { title: "Pipeline Waterfall & Velocity", breadcrumb: "Waterfall" },
   "/war-room": { title: "Deal War Room (QBR)", breadcrumb: "War Room" },
+  "/stakeholders": { title: "Stakeholder Power Matrix", breadcrumb: "Stakeholders" },
   "/heatmap": { title: "Pipeline Risk Heatmap", breadcrumb: "Heatmap" },
   "/actions": { title: "Action Approval Queue", breadcrumb: "Actions" },
   "/map": { title: "Mutual Action Plans (MAP)", breadcrumb: "MAP" },
@@ -171,7 +175,9 @@ export const App: React.FC = () => {
                 <Route path="/" element={<PortfolioOverview />} />
                 <Route path="/forecast" element={<RevenueForecast />} />
                 <Route path="/deals" element={<DealExplorer />} />
+                <Route path="/waterfall" element={<PipelineWaterfall />} />
                 <Route path="/war-room" element={<DealWarRoom />} />
+                <Route path="/stakeholders" element={<StakeholderMatrix />} />
                 <Route path="/heatmap" element={<RiskHeatmap />} />
                 <Route path="/actions" element={<ActionQueue />} />
                 <Route path="/map" element={<MutualActionPlan />} />

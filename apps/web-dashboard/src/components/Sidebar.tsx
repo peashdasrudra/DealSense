@@ -28,8 +28,10 @@ const NAV_SECTIONS: NavSection[] = [
     items: [
       { id: "overview", label: "Pipeline Overview", icon: "📊", path: "/" },
       { id: "forecast", label: "Revenue Forecast", icon: "🔮", path: "/forecast", isKeyFeature: true },
+      { id: "waterfall", label: "Pipeline Waterfall", icon: "🌊", path: "/waterfall", badge: "NEW", badgeColor: "#00a4bd", isKeyFeature: true },
       { id: "deals", label: "Deal Inspector", icon: "🎯", path: "/deals" },
       { id: "warroom", label: "Deal War Room (QBR)", icon: "🛡️", path: "/war-room", badge: "LIVE", badgeColor: "#ff5c35", isKeyFeature: true },
+      { id: "stakeholders", label: "Stakeholder Matrix", icon: "👥", path: "/stakeholders", isKeyFeature: true },
       { id: "heatmap", label: "Risk Heatmap", icon: "🔥", path: "/heatmap" },
     ],
   },
