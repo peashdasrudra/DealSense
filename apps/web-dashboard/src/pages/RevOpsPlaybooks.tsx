@@ -148,6 +148,40 @@ export const RevOpsPlaybooks: React.FC = () => {
               Set conditional rules that automatically rescue stalled deals, auto-remediate past-due close dates, and multi-thread silent economic buyers without manual sales rep effort.
             </p>
           </div>
+          <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 4 }}>
+            <button
+              style={{
+                padding: "6px 14px",
+                background: "#ffffff",
+                color: "var(--hs-text)",
+                border: "1px solid var(--hs-border-dark)",
+                borderRadius: "3px",
+                fontSize: "12px",
+                fontWeight: 600,
+                cursor: "pointer",
+                boxShadow: "0 1px 2px rgba(0,0,0,0.05)",
+                transition: "all 0.2s"
+              }}
+            >
+              Export Report
+            </button>
+            <button
+              style={{
+                padding: "6px 14px",
+                background: "#ff7a59",
+                color: "#ffffff",
+                border: "none",
+                borderRadius: "3px",
+                fontSize: "12px",
+                fontWeight: 600,
+                cursor: "pointer",
+                boxShadow: "0 1px 2px rgba(0,0,0,0.05)",
+                transition: "all 0.2s"
+              }}
+            >
+              Create Action
+            </button>
+          </div>
 
           <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
             <button
@@ -217,7 +251,7 @@ export const RevOpsPlaybooks: React.FC = () => {
 
         <div className="kpi-card" style={{ borderTopColor: "#00a4bd" }}>
           <div className="kpi-title">Hours Saved / Week</div>
-          <div className="kpi-value" style={{ color: "#00a4bd" }}>14.2 hrs</div>
+          <div className="kpi-value" style={{ color: "#ff7a59" }}>14.2 hrs</div>
           <div className="kpi-subtitle">Per RevOps team member</div>
         </div>
       </div>

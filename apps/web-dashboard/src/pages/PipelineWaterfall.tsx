@@ -120,7 +120,7 @@ export const PipelineWaterfall: React.FC = () => {
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 16 }}>
           <div>
             <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
-              <span className="badge" style={{ background: "rgba(0, 164, 189, 0.1)", color: "#00a4bd", border: "1px solid #00a4bd", fontWeight: 700 }}>
+              <span className="badge" style={{ background: "rgba(255, 122, 89, 0.1)", color: "#ff7a59", border: "1px solid #00a4bd", fontWeight: 700 }}>
                 ● REVOPS PIPELINE TELEMETRY
               </span>
               <span style={{ fontSize: "12px", color: "var(--hs-text-muted)" }}>HubSpot Webhook Stream Ingestion</span>
@@ -131,6 +131,40 @@ export const PipelineWaterfall: React.FC = () => {
             <p style={{ fontSize: "13.5px", color: "var(--hs-text)", margin: 0, maxWidth: 680 }}>
               Track pipeline creation, stage duration decay, and deal slippage across every stage of your sales funnel. Surface exact bottlenecks before they derail quarterly revenue targets.
             </p>
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 4 }}>
+            <button
+              style={{
+                padding: "6px 14px",
+                background: "#ffffff",
+                color: "var(--hs-text)",
+                border: "1px solid var(--hs-border-dark)",
+                borderRadius: "3px",
+                fontSize: "12px",
+                fontWeight: 600,
+                cursor: "pointer",
+                boxShadow: "0 1px 2px rgba(0,0,0,0.05)",
+                transition: "all 0.2s"
+              }}
+            >
+              Export Report
+            </button>
+            <button
+              style={{
+                padding: "6px 14px",
+                background: "#ff7a59",
+                color: "#ffffff",
+                border: "none",
+                borderRadius: "3px",
+                fontSize: "12px",
+                fontWeight: 600,
+                cursor: "pointer",
+                boxShadow: "0 1px 2px rgba(0,0,0,0.05)",
+                transition: "all 0.2s"
+              }}
+            >
+              Create Action
+            </button>
           </div>
 
           <div style={{ display: "flex", gap: 8, background: "rgba(255, 255, 255, 0.1)", padding: 4, borderRadius: "var(--radius-sm)" }}>

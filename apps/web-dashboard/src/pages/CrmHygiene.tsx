@@ -151,7 +151,7 @@ export const CrmHygiene: React.FC = () => {
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 12 }}>
           <div>
             <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
-              <span className="badge" style={{ background: "rgba(0, 164, 189, 0.1)", color: "#00a4bd", border: "1px solid rgba(0, 164, 189, 0.4)", fontWeight: 700, padding: "2px 8px", fontSize: "9.5px", letterSpacing: "0.05em" }}>
+              <span className="badge" style={{ background: "rgba(255, 122, 89, 0.1)", color: "#ff7a59", border: "1px solid rgba(255, 122, 89, 0.3)", fontWeight: 700, padding: "2px 8px", fontSize: "9.5px", letterSpacing: "0.05em" }}>
                 ● REVOPS PIPELINE TELEMETRY
               </span>
               <span style={{ fontSize: "11.5px", color: "var(--hs-text-muted)", fontWeight: 500 }}>Automated Data Remediation</span>
@@ -162,6 +162,40 @@ export const CrmHygiene: React.FC = () => {
             <p style={{ fontSize: "13px", color: "var(--hs-text)", margin: 0, maxWidth: 680, lineHeight: 1.5 }}>
               Detect missing properties, stale close dates, and unassigned deals autonomously. Fix pipeline data integrity issues before they skew your forecast.
             </p>
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 4 }}>
+            <button
+              style={{
+                padding: "6px 14px",
+                background: "#ffffff",
+                color: "var(--hs-text)",
+                border: "1px solid var(--hs-border-dark)",
+                borderRadius: "3px",
+                fontSize: "12px",
+                fontWeight: 600,
+                cursor: "pointer",
+                boxShadow: "0 1px 2px rgba(0,0,0,0.05)",
+                transition: "all 0.2s"
+              }}
+            >
+              Export Report
+            </button>
+            <button
+              style={{
+                padding: "6px 14px",
+                background: "#ff7a59",
+                color: "#ffffff",
+                border: "none",
+                borderRadius: "3px",
+                fontSize: "12px",
+                fontWeight: 600,
+                cursor: "pointer",
+                boxShadow: "0 1px 2px rgba(0,0,0,0.05)",
+                transition: "all 0.2s"
+              }}
+            >
+              Create Action
+            </button>
           </div>
         </div>
       </div>

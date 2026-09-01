@@ -125,7 +125,7 @@ export const StakeholderMatrix: React.FC = () => {
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 12 }}>
           <div>
             <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
-              <span className="badge" style={{ background: "rgba(0, 164, 189, 0.1)", color: "#00a4bd", border: "1px solid rgba(0, 164, 189, 0.4)", fontWeight: 700, padding: "2px 8px", fontSize: "9.5px", letterSpacing: "0.05em" }}>
+              <span className="badge" style={{ background: "rgba(255, 122, 89, 0.1)", color: "#ff7a59", border: "1px solid rgba(255, 122, 89, 0.3)", fontWeight: 700, padding: "2px 8px", fontSize: "9.5px", letterSpacing: "0.05em" }}>
                 ● REVOPS PIPELINE TELEMETRY
               </span>
               <span style={{ fontSize: "11.5px", color: "var(--hs-text-muted)", fontWeight: 500 }}>Buying Committee Fragility</span>
@@ -136,6 +136,40 @@ export const StakeholderMatrix: React.FC = () => {
             <p style={{ fontSize: "13px", color: "var(--hs-text)", margin: 0, maxWidth: 680, lineHeight: 1.5 }}>
               Detect single-threaded fragility. Ensure economic buyers, champions, and legal contacts are engaged before committing deals to the forecast.
             </p>
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 4 }}>
+            <button
+              style={{
+                padding: "6px 14px",
+                background: "#ffffff",
+                color: "var(--hs-text)",
+                border: "1px solid var(--hs-border-dark)",
+                borderRadius: "3px",
+                fontSize: "12px",
+                fontWeight: 600,
+                cursor: "pointer",
+                boxShadow: "0 1px 2px rgba(0,0,0,0.05)",
+                transition: "all 0.2s"
+              }}
+            >
+              Export Report
+            </button>
+            <button
+              style={{
+                padding: "6px 14px",
+                background: "#ff7a59",
+                color: "#ffffff",
+                border: "none",
+                borderRadius: "3px",
+                fontSize: "12px",
+                fontWeight: 600,
+                cursor: "pointer",
+                boxShadow: "0 1px 2px rgba(0,0,0,0.05)",
+                transition: "all 0.2s"
+              }}
+            >
+              Create Action
+            </button>
           </div>
         </div>
       </div>
@@ -236,7 +270,7 @@ export const StakeholderMatrix: React.FC = () => {
 
         <div className="kpi-card" style={{ borderTopColor: "#00a4bd" }}>
           <div className="kpi-title">Avg Stakeholders Engaged</div>
-          <div className="kpi-value" style={{ color: "#00a4bd" }}>2.4 / Deal</div>
+          <div className="kpi-value" style={{ color: "#ff7a59" }}>2.4 / Deal</div>
           <div className="kpi-subtitle">Benchmark is 3.8 for enterprise</div>
         </div>
       </div>
