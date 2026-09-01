@@ -174,23 +174,243 @@ body {
   overflow-x: hidden;
 }
 
-/* ── Header Interactive Search ───────────────────────────────────────────── */
+/* ── Enterprise TopBar Layout ────────────────────────────────────────────── */
 
-.header-search-pill {
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  flex: 1;
+}
+
+.header-right {
   display: flex;
   align-items: center;
   gap: 8px;
-  background: var(--hs-surface);
-  border: 1px solid var(--hs-border-dark);
-  border-radius: var(--radius-sm);
-  padding: 6px 14px;
+  flex-shrink: 0;
+}
+
+.header-brand-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
   cursor: pointer;
+}
+
+.topbar-brand-text {
+  font-size: 15px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+}
+
+.topbar-title-section {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.title-divider {
+  color: var(--hs-border-dark);
+  font-size: 16px;
+  margin: 0 8px;
+}
+
+.header-page-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--hs-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── HubSpot Portal Switcher Pill ────────────────────────────────────────── */
+
+.hubspot-portal-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background: #ffffff;
+  border: 1px solid var(--hs-border-dark);
+  border-radius: var(--radius-pill);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--hs-primary);
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  white-space: nowrap;
   transition: all 0.15s;
 }
 
-.header-search-pill:hover {
+.hubspot-portal-pill:hover {
   background: var(--hs-surface-hover);
   border-color: #cfc8b8;
+}
+
+.portal-live-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--risk-healthy);
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.portal-hubspot-label {
+  color: #ff5c35;
+  font-weight: 700;
+}
+
+.portal-pill-name {
+  color: var(--hs-text);
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+}
+
+.portal-caret {
+  font-size: 9px;
+  color: var(--hs-text-muted);
+}
+
+.portal-dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 6px;
+  width: 270px;
+  background: #ffffff;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--hs-border-dark);
+  padding: 8px;
+  z-index: 150;
+}
+
+.portal-dropdown-header {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--hs-text-muted);
+  padding: 4px 8px 6px;
+}
+
+.portal-dropdown-item {
+  padding: 8px 10px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+  transition: background 0.15s;
+}
+
+.portal-dropdown-item:hover, .portal-dropdown-item.active {
+  background: var(--hs-surface-hover);
+}
+
+/* ── Header Icon Buttons & Avatar ────────────────────────────────────────── */
+
+.header-search-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--hs-surface);
+  border: 1px solid var(--hs-border-dark);
+  border-radius: var(--radius-sm);
+  padding: 5px 10px;
+  cursor: pointer;
+  color: var(--hs-text-muted);
+  font-size: 12px;
+  transition: all 0.15s;
+}
+
+.header-search-btn:hover {
+  background: var(--hs-surface-hover);
+  border-color: #cfc8b8;
+}
+
+.search-kbd-shortcut {
+  font-size: 10px;
+  background: #ffffff;
+  border: 1px solid var(--hs-border-dark);
+  padding: 1px 4px;
+  border-radius: 3px;
+  font-family: var(--font-mono);
+}
+
+.header-icon-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  background: var(--hs-surface);
+  border: 1px solid var(--hs-border-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  color: var(--hs-primary);
+  font-size: 15px;
+  transition: all 0.15s;
+}
+
+.header-icon-btn:hover {
+  background: var(--hs-surface-hover);
+}
+
+.bell-badge-dot {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--danger);
+  border: 1.5px solid #ffffff;
+}
+
+.notifications-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 6px;
+  width: 290px;
+  background: #ffffff;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--hs-border-dark);
+  padding: 10px;
+  z-index: 150;
+}
+
+.notifications-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--hs-border-dark);
+}
+
+.header-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--hs-primary);
+  color: var(--hs-on-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 11.5px;
+  cursor: pointer;
+  flex-shrink: 0;
+  box-shadow: var(--shadow-sm);
 }
 
 /* Mobile Sidebar Toggle */
@@ -199,15 +419,69 @@ body {
   background: var(--hs-surface);
   border: 1px solid var(--hs-border-dark);
   border-radius: var(--radius-sm);
-  font-size: 20px;
+  font-size: 18px;
   cursor: pointer;
   color: var(--hs-primary);
-  width: 38px;
-  height: 38px;
+  width: 34px;
+  height: 34px;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
   transition: all 0.15s;
+}
+
+/* ── Adaptive Mobile Deal Cards (<640px) ─────────────────────────────────── */
+
+.desktop-deal-table {
+  display: block;
+}
+
+.mobile-deal-cards {
+  display: none;
+}
+
+.mobile-deal-card {
+  padding: 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--hs-border-dark);
+  background: var(--hs-surface);
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.mobile-deal-card:hover {
+  background: var(--hs-surface-hover);
+}
+
+.mobile-deal-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.mobile-deal-card-title {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--hs-primary);
+  line-height: 1.3;
+}
+
+.mobile-deal-card-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  color: var(--hs-text-muted);
+  margin: 4px 0 10px;
+  flex-wrap: wrap;
+}
+
+.mobile-deal-inspect-btn {
+  width: 100%;
+  justify-content: center;
 }
 
 /* ── Mobile Bottom Navigation Bar ────────────────────────────────────────── */
@@ -252,11 +526,11 @@ body {
   }
   .main-header {
     padding: 0 var(--sp-3);
-    height: 56px;
+    height: 54px;
   }
   .page-content {
     padding: var(--sp-3);
-    padding-bottom: 72px; /* Prevent mobile bottom nav from overlapping page content */
+    padding-bottom: 72px;
   }
 }
 
@@ -266,19 +540,33 @@ body {
   }
 }
 
+@media (max-width: 640px) {
+  .desktop-deal-table {
+    display: none !important;
+  }
+  .mobile-deal-cards {
+    display: flex !important;
+    flex-direction: column;
+    padding: 10px;
+  }
+}
+
 @media (max-width: 480px) {
   .search-text-label, .search-kbd-shortcut {
     display: none !important;
   }
   .header-search-btn {
-    padding: 6px !important;
-    width: 32px;
-    height: 32px;
+    padding: 5px !important;
+    width: 30px;
+    height: 30px;
     justify-content: center;
   }
   .hubspot-portal-pill {
-    padding: 3px 8px !important;
+    padding: 3px 6px !important;
     font-size: 11px !important;
+  }
+  .portal-hubspot-label {
+    display: none !important;
   }
   .topbar-brand-text {
     display: none !important;

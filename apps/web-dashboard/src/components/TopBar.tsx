@@ -1,6 +1,6 @@
 /**
  * DealSense Dashboard — Authentic HubSpot Enterprise Top Navigation Bar.
- * Visible HubSpot connection status on all devices (mobile + desktop).
+ * 100% Responsive, Zero Horizontal Overflow on Mobile Devices (320px–420px).
  */
 
 import React, { useState } from "react";
@@ -20,7 +20,7 @@ export const TopBar: React.FC<TopBarProps> = ({
 }) => {
   const [notificationOpen, setNotificationOpen] = useState(false);
   const [portalSelectOpen, setPortalSelectOpen] = useState(false);
-  const [selectedPortal, setSelectedPortal] = useState("AiXpert Labs (48921820)");
+  const [selectedPortal, setSelectedPortal] = useState({ name: "AiXpert Labs", id: "48921820", tier: "Diamond Partner", deals: 20 });
 
   const PORTALS = [
     { id: "48921820", name: "AiXpert Labs", tier: "Diamond Partner", deals: 20 },
@@ -31,7 +31,7 @@ export const TopBar: React.FC<TopBarProps> = ({
   return (
     <header className="main-header">
       {/* ── Left: Hamburger Toggle & HubSpot Brand ─────────────────────── */}
-      <div style={{ display: "flex", alignItems: "center", gap: 10, minWidth: 0 }}>
+      <div className="header-left">
         <button
           className="mobile-nav-toggle"
           onClick={onOpenSidebar}
@@ -40,94 +40,58 @@ export const TopBar: React.FC<TopBarProps> = ({
           ☰
         </button>
 
-        {/* Logo and Brand */}
-        <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
-          <DealSenseIcon size={28} />
+        {/* Brand Logo & Name */}
+        <div className="header-brand-wrap" onClick={onOpenSidebar}>
+          <DealSenseIcon size={26} />
           <div className="topbar-brand-text">
-            <span style={{ fontWeight: 700, color: "#2d3e50", fontSize: "15px" }}>Deal</span>
-            <span style={{ fontWeight: 800, color: "#ff5c35", fontSize: "15px" }}>Sense</span>
+            <span style={{ fontWeight: 700, color: "#2d3e50" }}>Deal</span>
+            <span style={{ fontWeight: 800, color: "#ff5c35" }}>Sense</span>
           </div>
         </div>
 
-        {/* Title Divider & Breadcrumb (Desktop) */}
+        {/* Divider & Page Title (Desktop only) */}
         <div className="topbar-title-section">
-          <span style={{ color: "var(--hs-border-dark)", fontSize: "18px", margin: "0 6px" }}>/</span>
-          <span style={{ fontSize: "14px", fontWeight: 600, color: "var(--hs-text)" }}>{title}</span>
+          <span className="title-divider">/</span>
+          <span className="header-page-title">{title}</span>
         </div>
       </div>
 
-      {/* ── Center / Right: Live HubSpot Connection Pill & Actions ────── */}
-      <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
-        {/* HubSpot Portal Pill (Always Visible on Mobile & Desktop) */}
+      {/* ── Right: Live HubSpot Connection Pill & Quick Actions ──────── */}
+      <div className="header-right">
+        {/* HubSpot Portal Pill (Compact on Mobile, Full on Desktop) */}
         <div style={{ position: "relative" }}>
           <button
             onClick={() => setPortalSelectOpen(!portalSelectOpen)}
             className="hubspot-portal-pill"
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 6,
-              padding: "4px 10px",
-              background: "#ffffff",
-              border: "1px solid var(--hs-border-dark)",
-              borderRadius: "var(--radius-pill)",
-              fontSize: "12px",
-              fontWeight: 600,
-              color: "var(--hs-primary)",
-              cursor: "pointer",
-              boxShadow: "var(--shadow-sm)",
-            }}
+            aria-label="Switch HubSpot Portal"
           >
-            <span style={{ width: 7, height: 7, borderRadius: "50%", background: "var(--risk-healthy)", display: "inline-block" }} />
-            <span style={{ color: "#ff5c35", fontWeight: 700 }}>HubSpot:</span>
-            <span className="portal-pill-name">{selectedPortal}</span>
-            <span style={{ fontSize: "9px", color: "var(--hs-text-muted)" }}>▾</span>
+            <span className="portal-live-dot" />
+            <span className="portal-hubspot-label">HubSpot:</span>
+            <span className="portal-pill-name">{selectedPortal.id}</span>
+            <span className="portal-caret">▾</span>
           </button>
 
           {/* Portal Switcher Dropdown */}
           {portalSelectOpen && (
-            <div
-              style={{
-                position: "absolute",
-                top: "100%",
-                right: 0,
-                marginTop: 6,
-                width: 270,
-                background: "#ffffff",
-                borderRadius: "var(--radius-md)",
-                boxShadow: "var(--shadow-lg)",
-                border: "1px solid var(--hs-border-dark)",
-                padding: "8px",
-                zIndex: 150,
-              }}
-            >
-              <div style={{ fontSize: "10px", fontWeight: 700, textTransform: "uppercase", color: "var(--hs-text-muted)", padding: "4px 8px 6px" }}>
+            <div className="portal-dropdown-menu">
+              <div className="portal-dropdown-header">
                 Connected HubSpot Portals
               </div>
               {PORTALS.map((portal) => (
                 <div
                   key={portal.id}
                   onClick={() => {
-                    setSelectedPortal(`${portal.name} (${portal.id})`);
+                    setSelectedPortal(portal);
                     setPortalSelectOpen(false);
                   }}
-                  style={{
-                    padding: "8px 10px",
-                    borderRadius: "var(--radius-sm)",
-                    cursor: "pointer",
-                    background: selectedPortal.includes(portal.id) ? "var(--hs-surface-hover)" : "transparent",
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    marginBottom: 4,
-                  }}
+                  className={`portal-dropdown-item ${selectedPortal.id === portal.id ? "active" : ""}`}
                 >
                   <div>
-                    <div style={{ fontSize: "12.5px", fontWeight: 600, color: "var(--hs-primary)" }}>
+                    <div style={{ fontSize: "12.5px", fontWeight: 700, color: "var(--hs-primary)" }}>
                       {portal.name}
                     </div>
                     <div style={{ fontSize: "10.5px", color: "var(--hs-text-muted)" }}>
-                      Portal: {portal.id} · {portal.tier}
+                      Portal #{portal.id} · {portal.tier}
                     </div>
                   </div>
                   <span className="badge" style={{ background: "var(--risk-healthy-bg)", color: "var(--risk-healthy)", fontSize: "9.5px" }}>
@@ -139,23 +103,12 @@ export const TopBar: React.FC<TopBarProps> = ({
           )}
         </div>
 
-        {/* Global Quick Search Pill */}
+        {/* Global Quick Search Button */}
         <button
           className="header-search-btn"
           onClick={onOpenSearch}
+          aria-label="Search pipeline"
           title="Search deals & contacts"
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 6,
-            background: "var(--hs-surface)",
-            border: "1px solid var(--hs-border-dark)",
-            borderRadius: "var(--radius-sm)",
-            padding: "5px 10px",
-            cursor: "pointer",
-            color: "var(--hs-text-muted)",
-            fontSize: "12px",
-          }}
         >
           <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
             <circle cx={11} cy={11} r={8} />
@@ -169,62 +122,24 @@ export const TopBar: React.FC<TopBarProps> = ({
         <div style={{ position: "relative" }}>
           <button
             onClick={() => setNotificationOpen(!notificationOpen)}
-            style={{
-              width: 32,
-              height: 32,
-              borderRadius: "var(--radius-sm)",
-              background: "var(--hs-surface)",
-              border: "1px solid var(--hs-border-dark)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              cursor: "pointer",
-              position: "relative",
-              color: "var(--hs-primary)",
-              fontSize: "15px",
-            }}
+            className="header-icon-btn"
             aria-label="View Risk Notifications"
           >
             🔔
-            <span
-              style={{
-                position: "absolute",
-                top: 4,
-                right: 4,
-                width: 7,
-                height: 7,
-                borderRadius: "50%",
-                background: "var(--danger)",
-                border: "1.5px solid #ffffff",
-              }}
-            />
+            <span className="bell-badge-dot" />
           </button>
 
           {notificationOpen && (
-            <div
-              style={{
-                position: "absolute",
-                top: "100%",
-                right: 0,
-                marginTop: 6,
-                width: 300,
-                background: "#ffffff",
-                borderRadius: "var(--radius-md)",
-                boxShadow: "var(--shadow-lg)",
-                border: "1px solid var(--hs-border-dark)",
-                padding: "10px",
-                zIndex: 150,
-              }}
-            >
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6, paddingBottom: 6, borderBottom: "1px solid var(--hs-border-dark)" }}>
+            <div className="notifications-dropdown">
+              <div className="notifications-header">
                 <span style={{ fontSize: "12px", fontWeight: 700, color: "var(--hs-primary)" }}>HubSpot Risk Alerts</span>
                 <span className="badge" style={{ background: "var(--risk-critical-bg)", color: "var(--danger)", fontSize: "9px" }}>3 Critical</span>
               </div>
               <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                <div style={{ padding: "6px 8px", background: "var(--risk-critical-bg)", borderRadius: "var(--radius-sm)", border: "1px solid var(--risk-critical-border)", fontSize: "11.5px" }}>
+                <div style={{ padding: "6px 8px", background: "var(--risk-critical-bg)", borderRadius: "var(--radius-sm)", border: "1px solid var(--risk-critical-border)", fontSize: "11px" }}>
                   <strong>Orion Cloud</strong>: 18d CFO silence (TechCorp)
                 </div>
-                <div style={{ padding: "6px 8px", background: "var(--risk-high-bg)", borderRadius: "var(--radius-sm)", border: "1px solid var(--risk-high-border)", fontSize: "11.5px" }}>
+                <div style={{ padding: "6px 8px", background: "var(--risk-high-bg)", borderRadius: "var(--radius-sm)", border: "1px solid var(--risk-high-border)", fontSize: "11px" }}>
                   <strong>Quantum Security</strong>: Overdue close date by 18d
                 </div>
               </div>
@@ -233,22 +148,7 @@ export const TopBar: React.FC<TopBarProps> = ({
         </div>
 
         {/* User Profile Avatar */}
-        <div
-          style={{
-            width: 32,
-            height: 32,
-            borderRadius: "50%",
-            background: "var(--hs-primary)",
-            color: "var(--hs-on-primary)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            fontWeight: 700,
-            fontSize: "11.5px",
-            cursor: "pointer",
-            flexShrink: 0,
-          }}
-        >
+        <div className="header-avatar" onClick={onOpenSidebar} title="AiXpert Labs Profile">
           AX
         </div>
       </div>

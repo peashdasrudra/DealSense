@@ -339,7 +339,7 @@ export const PortfolioOverview: React.FC = () => {
         </motion.div>
       </div>
 
-      {/* ── At-Risk Deals Table ───────────────────────────────────────── */}
+      {/* ── At-Risk Deals Section (Adaptive Desktop Table + Mobile Cards) ── */}
       <motion.div
         className="card"
         initial={{ opacity: 0, y: 16 }}
@@ -353,7 +353,9 @@ export const PortfolioOverview: React.FC = () => {
           </div>
           <span className="badge badge-outline">{atRiskDeals.length} at risk</span>
         </div>
-        <div className="table-responsive">
+
+        {/* 1. Desktop & Tablet Responsive Table */}
+        <div className="desktop-deal-table table-responsive">
           <table>
             <thead>
               <tr>
@@ -419,6 +421,45 @@ export const PortfolioOverview: React.FC = () => {
               })}
             </tbody>
           </table>
+        </div>
+
+        {/* 2. Mobile-Native Deal Cards (<640px) */}
+        <div className="mobile-deal-cards">
+          {AT_RISK_DEALS.map((deal) => {
+            const b = (deal.band || "High").toLowerCase();
+            return (
+              <div
+                key={deal.name}
+                className="mobile-deal-card"
+                onClick={() => setSelectedDrawerDeal(deal)}
+              >
+                <div className="mobile-deal-card-header">
+                  <div className="mobile-deal-card-title">{deal.name}</div>
+                  <span className="risk-pill" data-band={b}>
+                    {deal.score} · {deal.band}
+                  </span>
+                </div>
+
+                <div className="mobile-deal-card-meta">
+                  <span>{deal.client}</span>
+                  <span>•</span>
+                  <strong style={{ color: "var(--hs-primary)" }}>${(deal.value / 1000).toFixed(0)}K</strong>
+                  <span>•</span>
+                  <span>{deal.owner}</span>
+                </div>
+
+                <button
+                  className="btn btn-secondary btn-sm mobile-deal-inspect-btn"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setSelectedDrawerDeal(deal);
+                  }}
+                >
+                  ⚡ Inspect Deal Dossier
+                </button>
+              </div>
+            );
+          })}
         </div>
       </motion.div>
 
