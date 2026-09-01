@@ -12,9 +12,9 @@
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16%2B%20%7C%20pgvector-336791?style=for-the-badge&logo=postgresql)](https://github.com/pgvector/pgvector)
 [![React 18](https://img.shields.io/badge/React-18.3-61DAFB?style=for-the-badge&logo=react)](https://reactjs.org)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.5-3178C6?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org)
-[![Vercel Deployed](https://img.shields.io/badge/Vercel-Live%20Production-000000?style=for-the-badge&logo=vercel)](https://web-dashboard-azure-ten.vercel.app)
+[![Vercel Deployed](https://img.shields.io/badge/Production-dealsense.peash.tech-000000?style=for-the-badge&logo=vercel)](https://dealsense.peash.tech)
 
-[🌐 Live Web Dashboard](https://admin-dashboard-dealsense.vercel.app) • [🧩 HubSpot Sidebar Card](https://hubspot-extension-dealsense.vercel.app) • [✨ Executive Case Study](https://admin-dashboard-dealsense.vercel.app/case-study) • [🏛️ Architecture](#-system-architecture) • [🧪 48/48 Test Suites](#-automated-verification-suites-4848-passing) • [⚡ Quick Start](#-quick-start)
+[🌐 Live Web Dashboard](https://dealsense.peash.tech) • [🧩 HubSpot Sidebar Card](https://hubspot-extension-dealsense.vercel.app) • [✨ Executive Case Study](https://dealsense.peash.tech/case-study) • [🏛️ Architecture](#-system-architecture) • [🧪 48/48 Test Suites](#-automated-verification-suites-4848-passing) • [⚡ Quick Start](#-quick-start)
 
 ---
 
@@ -24,9 +24,9 @@
 
 | Application | Description | Live Production URL |
 | :--- | :--- | :--- |
-| **🏢 Agency Command Center** | Macro-level RevOps portfolio intelligence, Monte Carlo forecasting & playbooks | [admin-dashboard-dealsense.vercel.app](https://admin-dashboard-dealsense.vercel.app) |
+| **🏢 Agency Command Center** | Macro-level RevOps portfolio intelligence, Monte Carlo forecasting & playbooks | [dealsense.peash.tech](https://dealsense.peash.tech) |
 | **🧩 HubSpot Native Sidebar Card** | React 18 Canvas extension embedded directly into HubSpot deal records | [hubspot-extension-dealsense.vercel.app](https://hubspot-extension-dealsense.vercel.app) |
-| **✨ Top-1% Portfolio & Case Study** | Interactive agency arbitrage calculator, $99 pilot offer & technical deep-dive | [admin-dashboard-dealsense.vercel.app/case-study](https://admin-dashboard-dealsense.vercel.app/case-study) |
+| **✨ Top-1% Portfolio & Case Study** | Interactive agency arbitrage calculator, $99 pilot offer & technical deep-dive | [dealsense.peash.tech/case-study](https://dealsense.peash.tech/case-study) |
 
 ---
 
@@ -247,7 +247,7 @@ DealSense/
 **Peash Das Rudra** — *Senior AI & Systems Architect*
 - ✉️ Direct Founder Email: [peashdasrudra@gmail.com](mailto:peashdasrudra@gmail.com)
 - 📂 GitHub Repository: [github.com/peashdasrudra/DealSense](https://github.com/peashdasrudra/DealSense)
-- 🌐 Live Application: [admin-dashboard-dealsense.vercel.app](https://admin-dashboard-dealsense.vercel.app)
+- 🌐 Live Application: [dealsense.peash.tech](https://dealsense.peash.tech)
 
 ---
 
