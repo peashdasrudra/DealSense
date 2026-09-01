@@ -113,8 +113,8 @@ export const PortfolioOverview: React.FC = () => {
   const atRiskValue = atRiskDeals.reduce((sum, d) => sum + (d.value || 0), 0);
 
   const KPI_DATA = [
-    { label: "Pipeline Value", value: `$${(pipelineValue / 1000000).toFixed(1)}M`, trend: "+12%", direction: "up" as const, accent: "var(--hs-primary)" },
-    { label: "Avg Health Score", value: avgScore.toString(), trend: "+3pts", direction: "up" as const, accent: "var(--success)" },
+    { label: "Pipeline Value", value: `$${(pipelineValue / 1000000).toFixed(1)}M`, trend: "+12%", direction: "up" as const, accent: "var(--success)" },
+    { label: "Avg Health Score", value: avgScore.toString(), trend: "+3pts", direction: "up" as const, accent: "var(--hs-primary)" },
     { label: "At-Risk Value", value: `$${(atRiskValue / 1000).toFixed(0)}K`, trend: "-5%", direction: "down" as const, accent: "var(--danger)" },
     { label: "Active Deals", value: deals.length.toString(), trend: "+4", direction: "up" as const, accent: "var(--warning)" },
   ];
@@ -294,7 +294,7 @@ export const PortfolioOverview: React.FC = () => {
           </div>
           <span className="badge badge-outline">{atRiskDeals.length} at risk</span>
         </div>
-        <div style={{ overflowX: "auto" }}>
+        <div className="table-responsive">
           <table>
             <thead>
               <tr>

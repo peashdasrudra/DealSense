@@ -274,7 +274,7 @@ export const RevenueForecast: React.FC = () => {
           </div>
           <span className="badge badge-outline">Rep Commit vs DealSense Reality</span>
         </div>
-        <div style={{ overflowX: "auto" }}>
+        <div className="table-responsive">
           <table>
             <thead>
               <tr>

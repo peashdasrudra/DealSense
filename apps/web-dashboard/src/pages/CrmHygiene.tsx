@@ -312,7 +312,7 @@ export const CrmHygiene: React.FC = () => {
           <span className="badge badge-outline">{filteredIssues.length} issues listed</span>
         </div>
 
-        <div style={{ overflowX: "auto" }}>
+        <div className="table-responsive">
           <table>
             <thead>
               <tr>

@@ -249,7 +249,7 @@ export const RiskHeatmap: React.FC = () => {
                 ✕ Close
               </button>
             </div>
-            <div style={{ overflowX: "auto" }}>
+            <div className="table-responsive">
               <table>
                 <thead>
                   <tr>

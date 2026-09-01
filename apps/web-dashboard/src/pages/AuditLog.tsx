@@ -122,7 +122,7 @@ export const AuditLog: React.FC = () => {
           <div className="card-title">Event & Write-Back Audit Trail</div>
           <span className="badge badge-outline">{filteredLogs.length} verified events</span>
         </div>
-        <div style={{ overflowX: "auto" }}>
+        <div className="table-responsive">
           <table>
             <thead>
               <tr>

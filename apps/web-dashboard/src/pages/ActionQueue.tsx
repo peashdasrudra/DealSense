@@ -264,7 +264,7 @@ export const ActionQueue: React.FC = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
       >
-        <div style={{ overflowX: "auto" }}>
+        <div className="table-responsive">
           <table>
             <thead>
               <tr>
