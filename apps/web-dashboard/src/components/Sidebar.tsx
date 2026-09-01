@@ -1,6 +1,6 @@
 /**
- * DealSense Dashboard — Minimalist Sidebar Navigation.
- * Streamlined, high-utility navigation without redundancy.
+ * DealSense Dashboard — Authentic HubSpot Enterprise Sidebar.
+ * Displays HubSpot Connected Account Profile, Portal ID, and Instant Navigation.
  */
 
 import React from "react";
@@ -43,14 +43,75 @@ export const Sidebar: React.FC<SidebarProps> = ({ onClose }) => {
   };
 
   return (
-    <>
-      {/* ── Brand Header ─────────────────────────────────────────────── */}
-      <div className="sidebar-brand">
+    <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
+      {/* ── Brand Header with Mobile Close ───────────────────────────── */}
+      <div
+        className="sidebar-brand"
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          padding: "14px 16px",
+        }}
+      >
         <DealSenseLogo size="md" tagline="Revenue Intelligence" />
+        {onClose && (
+          <button
+            onClick={onClose}
+            className="sidebar-close-btn"
+            style={{
+              background: "none",
+              border: "none",
+              fontSize: "18px",
+              cursor: "pointer",
+              color: "var(--hs-text-muted)",
+              padding: "4px",
+              display: "none",
+            }}
+            aria-label="Close Sidebar"
+          >
+            ✕
+          </button>
+        )}
       </div>
 
-      {/* ── Nav Links ────────────────────────────────────────────────── */}
-      <div className="sidebar-nav">
+      {/* ── HubSpot Connected Account Card (Top of Sidebar) ─────────── */}
+      <div style={{ padding: "0 14px 10px" }}>
+        <div
+          style={{
+            padding: "10px 12px",
+            background: "#ffffff",
+            border: "1px solid var(--hs-border-dark)",
+            borderRadius: "var(--radius-sm)",
+            boxShadow: "var(--shadow-sm)",
+          }}
+        >
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+              <span style={{ width: 7, height: 7, borderRadius: "50%", background: "var(--risk-healthy)", display: "inline-block" }} />
+              <span style={{ fontSize: "11px", fontWeight: 700, color: "#ff5c35", textTransform: "uppercase" }}>
+                HubSpot Connected
+              </span>
+            </div>
+            <span style={{ fontSize: "10px", color: "var(--hs-text-muted)", fontFamily: "var(--font-mono)" }}>
+              ID: 48921820
+            </span>
+          </div>
+
+          <div style={{ fontSize: "12.5px", fontWeight: 700, color: "var(--hs-primary)" }}>
+            AiXpert Labs Workspace
+          </div>
+          <div style={{ fontSize: "11px", color: "var(--hs-text-muted)", marginTop: 2 }}>
+            Diamond Partner · 20 Deals Monitored
+          </div>
+        </div>
+      </div>
+
+      {/* ── Navigation Links ─────────────────────────────────────────── */}
+      <div className="sidebar-nav" style={{ flex: 1, padding: "4px 10px" }}>
+        <div className="sidebar-section-label" style={{ paddingLeft: 10, fontSize: "10px", color: "var(--hs-text-muted)", fontWeight: 700 }}>
+          Navigation
+        </div>
         {PRIMARY_NAV.map((item) => {
           const active = isActive(item.path);
           return (
@@ -80,18 +141,17 @@ export const Sidebar: React.FC<SidebarProps> = ({ onClose }) => {
         })}
       </div>
 
-      {/* ── Minimal Footer ───────────────────────────────────────────── */}
-      <div style={{ padding: "14px 16px", borderTop: "1px solid var(--hs-border-dark)", background: "var(--hs-surface)" }}>
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <span style={{ width: 8, height: 8, borderRadius: "50%", background: "var(--risk-healthy)", display: "inline-block" }} />
-            <span style={{ fontSize: "12px", fontWeight: 600, color: "var(--hs-text)" }}>
-              HubSpot Connected
-            </span>
+      {/* ── Footer ───────────────────────────────────────────────────── */}
+      <div style={{ padding: "12px 14px", borderTop: "1px solid var(--hs-border-dark)", background: "var(--hs-surface)" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <div style={{ fontSize: "11.5px", color: "var(--hs-text-muted)" }}>
+            AES-256 Webhook Active
           </div>
-          <span style={{ fontSize: "11px", color: "var(--hs-text-muted)" }}>v1.4</span>
+          <span className="badge" style={{ background: "var(--risk-healthy-bg)", color: "var(--risk-healthy)", fontSize: "9.5px" }}>
+            ● Live
+          </span>
         </div>
       </div>
-    </>
+    </div>
   );
 };
