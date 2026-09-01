@@ -14,7 +14,7 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.5-3178C6?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org)
 [![Vercel Deployed](https://img.shields.io/badge/Vercel-Live%20Production-000000?style=for-the-badge&logo=vercel)](https://web-dashboard-azure-ten.vercel.app)
 
-[🌐 Live Web Dashboard](https://web-dashboard-azure-ten.vercel.app) • [🧩 HubSpot Sidebar Card](https://hubspot-extension-dealsense.vercel.app) • [✨ Executive Case Study](https://web-dashboard-azure-ten.vercel.app/case-study) • [🏛️ Architecture](#-system-architecture) • [🧪 48/48 Test Suites](#-automated-verification-suites-4848-passing) • [⚡ Quick Start](#-quick-start)
+[🌐 Live Web Dashboard](https://admin-dashboard-dealsense.vercel.app) • [🧩 HubSpot Sidebar Card](https://hubspot-extension-dealsense.vercel.app) • [✨ Executive Case Study](https://admin-dashboard-dealsense.vercel.app/case-study) • [🏛️ Architecture](#-system-architecture) • [🧪 48/48 Test Suites](#-automated-verification-suites-4848-passing) • [⚡ Quick Start](#-quick-start)
 
 ---
 
