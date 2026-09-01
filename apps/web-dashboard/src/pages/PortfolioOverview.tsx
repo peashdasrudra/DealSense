@@ -180,8 +180,8 @@ export const PortfolioOverview: React.FC = () => {
             <button
               onClick={handleForceSync}
               style={{
-                padding: "8px 14px", background: "rgba(255,255,255,0.1)", color: "#fff", fontSize: "12.5px", fontWeight: 700,
-                border: "1px solid rgba(255,255,255,0.2)", borderRadius: "var(--radius-sm)", cursor: "pointer", transition: "all 0.2s ease"
+                padding: "8px 14px", background: "#f8f9fa", color: "var(--hs-text)", fontSize: "12.5px", fontWeight: 700,
+                border: "1px solid var(--hs-border-dark)", borderRadius: "var(--radius-sm)", cursor: "pointer", transition: "all 0.2s ease"
               }}
             >
               ↻ Force Sync
@@ -205,15 +205,15 @@ export const PortfolioOverview: React.FC = () => {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2, duration: 0.3 }}
-          style={{ height: "100%", margin: 0 }}
+          style={{ height: "100%", margin: 0, display: "flex", flexDirection: "column", minHeight: "320px" }}
         >
-          <div className="card-header" style={{ paddingBottom: 0 }}>
+          <div className="card-header" style={{ paddingBottom: 0, borderBottom: "none" }}>
             <div>
               <div className="card-title">Health Score Trend</div>
               <div className="card-subtitle">Average deal health across portfolio</div>
             </div>
           </div>
-          <div className="card-body" style={{ height: "calc(100% - 60px)", padding: "10px 20px" }}>
+          <div className="card-body" style={{ flex: 1, padding: "10px 20px 20px" }}>
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={TREND_DATA} margin={{ top: 5, right: 10, left: -20, bottom: 0 }}>
                 <defs>

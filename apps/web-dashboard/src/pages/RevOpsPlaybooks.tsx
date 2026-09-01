@@ -125,10 +125,12 @@ export const RevOpsPlaybooks: React.FC = () => {
       <div
         className="card"
         style={{
-          background: "linear-gradient(135deg, #124548 0%, #092c2f 100%)",
-          color: "#ffffff",
-          padding: "28px 32px",
-          border: "none",
+          background: "#ffffff",
+          padding: "20px 24px",
+          border: "1px solid var(--hs-border-dark)",
+          borderTop: "3px solid var(--hs-primary)",
+          marginBottom: "var(--sp-5)",
+          boxShadow: "var(--shadow-sm)",
         }}
       >
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 16 }}>
@@ -137,12 +139,12 @@ export const RevOpsPlaybooks: React.FC = () => {
               <span className="badge" style={{ background: "var(--risk-healthy-bg)", color: "var(--risk-healthy)", fontWeight: 700 }}>
                 ● {activeCount} PLAYBOOKS LIVE
               </span>
-              <span style={{ fontSize: "12px", color: "#a5c2c4" }}>HubSpot Automated Policy Engine</span>
+              <span style={{ fontSize: "12px", color: "var(--hs-text-muted)" }}>HubSpot Automated Policy Engine</span>
             </div>
-            <h2 style={{ fontSize: "24px", fontWeight: 800, color: "#ffffff", margin: "4px 0 6px" }}>
+            <h2 style={{ fontSize: "24px", fontWeight: 800, color: "var(--hs-heading)", margin: "4px 0 6px" }}>
               Autonomous RevOps Playbooks & Trigger Engine
             </h2>
-            <p style={{ fontSize: "13.5px", color: "#d9e8e8", margin: 0, maxWidth: 680 }}>
+            <p style={{ fontSize: "13.5px", color: "var(--hs-text)", margin: 0, maxWidth: 680 }}>
               Set conditional rules that automatically rescue stalled deals, auto-remediate past-due close dates, and multi-thread silent economic buyers without manual sales rep effort.
             </p>
           </div>

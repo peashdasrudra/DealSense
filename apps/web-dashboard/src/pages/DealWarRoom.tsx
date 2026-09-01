@@ -152,25 +152,26 @@ export const DealWarRoom: React.FC = () => {
       <div
         className="card"
         style={{
-          background: "linear-gradient(135deg, #124548 0%, #062b2e 100%)",
-          color: "#ffffff",
+          background: "#ffffff",
           padding: "20px 24px",
-          border: "none",
+          border: "1px solid var(--hs-border-dark)",
+          borderTop: "3px solid var(--hs-primary)",
           marginBottom: "var(--sp-5)",
+          boxShadow: "var(--shadow-sm)",
         }}
       >
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 12 }}>
           <div>
             <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
-              <span className="badge" style={{ background: "rgba(0, 164, 189, 0.25)", color: "#7de2ea", border: "1px solid rgba(0, 164, 189, 0.4)", fontWeight: 700, padding: "2px 8px", fontSize: "9.5px", letterSpacing: "0.05em" }}>
+              <span className="badge" style={{ background: "rgba(0, 164, 189, 0.1)", color: "#00a4bd", border: "1px solid rgba(0, 164, 189, 0.4)", fontWeight: 700, padding: "2px 8px", fontSize: "9.5px", letterSpacing: "0.05em" }}>
                 ● REVOPS PIPELINE TELEMETRY
               </span>
-              <span style={{ fontSize: "11.5px", color: "#a5c2c4", fontWeight: 500 }}>Executive Deal Review</span>
+              <span style={{ fontSize: "11.5px", color: "var(--hs-text-muted)", fontWeight: 500 }}>Executive Deal Review</span>
             </div>
-            <h2 style={{ fontSize: "20px", fontWeight: 800, color: "#ffffff", margin: "0 0 4px", letterSpacing: "-0.01em" }}>
+            <h2 style={{ fontSize: "20px", fontWeight: 800, color: "var(--hs-heading)", margin: "0 0 4px", letterSpacing: "-0.01em" }}>
               Deal War Room & Executive QBR Decision Matrix
             </h2>
-            <p style={{ fontSize: "13px", color: "#d9e8e8", margin: 0, maxWidth: 680, lineHeight: 1.5 }}>
+            <p style={{ fontSize: "13px", color: "var(--hs-text)", margin: 0, maxWidth: 680, lineHeight: 1.5 }}>
               Live decision hub for closing high-ticket stalled deals this month. Evaluate single-threaded risks, unblock economic buyers, and trigger interventions.
             </p>
           </div>
@@ -181,24 +182,26 @@ export const DealWarRoom: React.FC = () => {
       <div
         className="card"
         style={{
-          background: "linear-gradient(135deg, #124548 0%, #0a3538 100%)",
-          color: "#ffffff",
-          padding: "26px 30px",
-          border: "none",
+          background: "#ffffff",
+          padding: "20px 24px",
+          border: "1px solid var(--hs-border-dark)",
+          borderTop: "3px solid var(--hs-primary)",
+          marginBottom: "var(--sp-5)",
+          boxShadow: "var(--shadow-sm)",
         }}
       >
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 16 }}>
           <div>
             <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
-              <span className="badge" style={{ background: "rgba(255, 92, 53, 0.25)", color: "#ff7a59", border: "1px solid #ff7a59", fontWeight: 700 }}>
+              <span className="badge" style={{ background: "rgba(255, 92, 53, 0.1)", color: "#ff5c35", border: "1px solid #ff7a59", fontWeight: 700 }}>
                 ● LIVE WAR ROOM ACTIVE
               </span>
-              <span style={{ fontSize: "12px", color: "#a5c2c4" }}>HubSpot Portal #48921820</span>
+              <span style={{ fontSize: "12px", color: "var(--hs-text-muted)" }}>HubSpot Portal #48921820</span>
             </div>
-            <h2 style={{ fontSize: "24px", fontWeight: 800, color: "#ffffff", margin: "4px 0 6px" }}>
+            <h2 style={{ fontSize: "24px", fontWeight: 800, color: "var(--hs-heading)", margin: "4px 0 6px" }}>
               Deal War Room & Executive QBR Decision Matrix
             </h2>
-            <p style={{ fontSize: "13.5px", color: "#d9e8e8", margin: 0, maxWidth: 680 }}>
+            <p style={{ fontSize: "13.5px", color: "var(--hs-text)", margin: 0, maxWidth: 680 }}>
               Live decision hub for closing high-ticket stalled deals this month. Evaluate single-threaded risks, unblock economic buyers, and trigger executive interventions in 1 click.
             </p>
           </div>

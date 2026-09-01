@@ -109,24 +109,26 @@ export const PipelineWaterfall: React.FC = () => {
       <div
         className="card"
         style={{
-          background: "linear-gradient(135deg, #124548 0%, #062b2e 100%)",
-          color: "#ffffff",
-          padding: "26px 30px",
-          border: "none",
+          background: "#ffffff",
+          padding: "20px 24px",
+          border: "1px solid var(--hs-border-dark)",
+          borderTop: "3px solid var(--hs-primary)",
+          marginBottom: "var(--sp-5)",
+          boxShadow: "var(--shadow-sm)",
         }}
       >
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 16 }}>
           <div>
             <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
-              <span className="badge" style={{ background: "rgba(0, 164, 189, 0.25)", color: "#7de2ea", border: "1px solid #00a4bd", fontWeight: 700 }}>
+              <span className="badge" style={{ background: "rgba(0, 164, 189, 0.1)", color: "#00a4bd", border: "1px solid #00a4bd", fontWeight: 700 }}>
                 ● REVOPS PIPELINE TELEMETRY
               </span>
-              <span style={{ fontSize: "12px", color: "#a5c2c4" }}>HubSpot Webhook Stream Ingestion</span>
+              <span style={{ fontSize: "12px", color: "var(--hs-text-muted)" }}>HubSpot Webhook Stream Ingestion</span>
             </div>
-            <h2 style={{ fontSize: "24px", fontWeight: 800, color: "#ffffff", margin: "4px 0 6px" }}>
+            <h2 style={{ fontSize: "24px", fontWeight: 800, color: "var(--hs-heading)", margin: "4px 0 6px" }}>
               Pipeline Waterfall & Stage Velocity Bottleneck Diagnostic
             </h2>
-            <p style={{ fontSize: "13.5px", color: "#d9e8e8", margin: 0, maxWidth: 680 }}>
+            <p style={{ fontSize: "13.5px", color: "var(--hs-text)", margin: 0, maxWidth: 680 }}>
               Track pipeline creation, stage duration decay, and deal slippage across every stage of your sales funnel. Surface exact bottlenecks before they derail quarterly revenue targets.
             </p>
           </div>
