@@ -24,9 +24,9 @@
 
 | Application | Description | Live Production URL |
 | :--- | :--- | :--- |
-| **🏢 Agency Command Center** | Macro-level RevOps portfolio intelligence, Monte Carlo forecasting & playbooks | [web-dashboard-azure-ten.vercel.app](https://web-dashboard-azure-ten.vercel.app) |
+| **🏢 Agency Command Center** | Macro-level RevOps portfolio intelligence, Monte Carlo forecasting & playbooks | [admin-dashboard-dealsense.vercel.app](https://admin-dashboard-dealsense.vercel.app) |
 | **🧩 HubSpot Native Sidebar Card** | React 18 Canvas extension embedded directly into HubSpot deal records | [hubspot-extension-dealsense.vercel.app](https://hubspot-extension-dealsense.vercel.app) |
-| **✨ Top-1% Portfolio & Case Study** | Interactive agency arbitrage calculator, $99 pilot offer & technical deep-dive | [web-dashboard-azure-ten.vercel.app/case-study](https://web-dashboard-azure-ten.vercel.app/case-study) |
+| **✨ Top-1% Portfolio & Case Study** | Interactive agency arbitrage calculator, $99 pilot offer & technical deep-dive | [admin-dashboard-dealsense.vercel.app/case-study](https://admin-dashboard-dealsense.vercel.app/case-study) |
 
 ---
 
