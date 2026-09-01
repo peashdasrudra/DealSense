@@ -363,8 +363,16 @@ export const DealExplorer: React.FC = () => {
                 </div>
               </div>
 
-              {/* Detected Risks & Next Action */}
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+              {/* Detected Risks & Next Action (Responsive Auto-Fit Stack) */}
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+                  gap: 16,
+                  width: "100%",
+                  minWidth: 0,
+                }}
+              >
                 {/* Risk Signals */}
                 <div
                   style={{
@@ -372,14 +380,15 @@ export const DealExplorer: React.FC = () => {
                     borderRadius: "var(--radius-md)",
                     border: "1px solid var(--risk-critical-border)",
                     background: "var(--risk-critical-bg)",
+                    minWidth: 0,
                   }}
                 >
-                  <div style={{ fontSize: "12px", fontWeight: 700, color: "var(--danger)", textTransform: "uppercase", marginBottom: 8 }}>
-                    ⚠️ Grounded Risk Signals
+                  <div style={{ fontSize: "12px", fontWeight: 700, color: "var(--danger)", textTransform: "uppercase", marginBottom: 8, display: "flex", alignItems: "center", gap: 6 }}>
+                    <span>⚠️</span> Grounded Risk Signals
                   </div>
                   <ul style={{ paddingLeft: 18, fontSize: "13px", color: "var(--hs-text)", lineHeight: 1.6 }}>
                     {activeDeal.risks.map((r, i) => (
-                      <li key={i}>{r}</li>
+                      <li key={i} style={{ marginBottom: 4 }}>{r}</li>
                     ))}
                   </ul>
                 </div>
@@ -394,22 +403,23 @@ export const DealExplorer: React.FC = () => {
                     display: "flex",
                     flexDirection: "column",
                     justifyContent: "space-between",
+                    minWidth: 0,
                   }}
                 >
                   <div>
-                    <div style={{ fontSize: "12px", fontWeight: 700, color: "var(--hs-primary)", textTransform: "uppercase", marginBottom: 6 }}>
-                      ⚡ Recommended Next Best Move
+                    <div style={{ fontSize: "12px", fontWeight: 700, color: "var(--hs-primary)", textTransform: "uppercase", marginBottom: 6, display: "flex", alignItems: "center", gap: 6 }}>
+                      <span>⚡</span> Recommended Next Best Move
                     </div>
                     <div style={{ fontSize: "13px", color: "var(--hs-text)", lineHeight: 1.5 }}>
                       {activeDeal.recommendation}
                     </div>
                   </div>
 
-                  <div style={{ display: "flex", gap: 8, marginTop: 16 }}>
-                    <button className="btn btn-primary btn-sm">
+                  <div style={{ display: "flex", gap: 8, marginTop: 16, flexWrap: "wrap" }}>
+                    <button className="btn btn-primary btn-sm" style={{ whiteSpace: "nowrap" }}>
                       ⚡ Execute Write-Back
                     </button>
-                    <button className="btn btn-secondary btn-sm">
+                    <button className="btn btn-secondary btn-sm" style={{ whiteSpace: "nowrap" }}>
                       Create HubSpot Task
                     </button>
                   </div>
