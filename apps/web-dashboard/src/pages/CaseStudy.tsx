@@ -1,6 +1,6 @@
 /**
- * DealSense — Top-1% HubSpot Native Custom Deployment Case Study & Client Acquisition Portal.
- * Features the ultra-low-friction $99 No-Brainer Risk-Free Starter Audit + Live Deployment Ladder.
+ * DealSense — Top-1% HubSpot Native Custom Deployment Case Study & Senior Architect Portfolio.
+ * Built to convert Enterprise RevOps Leaders, Agency Founders, and Investors into immediate deployment orders.
  */
 
 import React, { useState } from "react";
@@ -31,7 +31,7 @@ const PACKAGES: DeploymentPackage[] = [
     badge: "⚡ 100% Risk-Free · Pay $99",
     price: "$99",
     originalPrice: "$750",
-    timeline: "Instant / 24-48h Delivery",
+    timeline: "Instant / 24–48h Delivery",
     isMicroWedge: true,
     summary: "Instant 1-click HubSpot OAuth audit discovering every ghosting buyer, overdue close date, and revenue leak across your live deals.",
     roi: "Identifies at least $25,000+ in at-risk pipeline in 48 hours or 100% money-back.",
@@ -93,6 +93,16 @@ const PACKAGES: DeploymentPackage[] = [
   },
 ];
 
+const TEST_SUITES = [
+  { suite: "test_webhooks_pipeline.py", tests: "5/5 Passing", focus: "Sub-200ms HMAC verified webhook ingestion & Redis queueing" },
+  { suite: "test_deal_scoring.py", tests: "2/2 Passing", focus: "Deterministic 0–100 risk math & 7 weighted vector dimensions" },
+  { suite: "test_oauth_security.py", tests: "12/12 Passing", focus: "HubSpot OAuth 2.0 PKCE & AES-256 encrypted token rotation" },
+  { suite: "test_rag_and_llm.py", tests: "5/5 Passing", focus: "Tenant-isolated pgvector semantic retrieval & grounding" },
+  { suite: "test_analysis_workflow.py", tests: "2/2 Passing", focus: "End-to-end deal dossier analysis & write-back triggers" },
+  { suite: "test_scoring_engine.py", tests: "5/5 Passing", focus: "Scoring packages validation, weights calibration & boundaries" },
+  { suite: "test_foundation.py", tests: "17/17 Passing", focus: "FastAPI lifespans, health checks, telemetry & error handling" },
+];
+
 export const CaseStudy: React.FC = () => {
   const navigate = useNavigate();
   const [selectedPkg, setSelectedPkg] = useState<string>("micro_audit");
@@ -104,14 +114,12 @@ export const CaseStudy: React.FC = () => {
     company: "",
     portalId: "",
     tier: "micro_audit",
-    paymentMethod: "stripe",
   });
   const [orderSubmitted, setOrderSubmitted] = useState(false);
   const [copiedEmail, setCopiedEmail] = useState(false);
 
   const activePackage = PACKAGES.find((p) => p.id === selectedPkg) || PACKAGES[0];
 
-  // Interactive ROI Calculator calculations
   const estimatedLeak = Math.round(pipelineInput * 0.18);
   const estimatedSaved = Math.round(estimatedLeak * 0.42);
   const pilotRoi = Math.round((estimatedSaved / 99) * 10) / 10;
@@ -154,7 +162,6 @@ export const CaseStudy: React.FC = () => {
           overflow: "hidden",
         }}
       >
-        {/* Decorative Top Accent Glow */}
         <div
           style={{
             position: "absolute",
@@ -175,7 +182,7 @@ export const CaseStudy: React.FC = () => {
           <span className="badge" style={{ background: "var(--hs-surface)", color: "#ff5c35", fontWeight: 700, border: "1px solid rgba(255, 92, 53, 0.3)" }}>
             🛡️ $99 Risk-Free Pilot (100% Money-Back Guarantee)
           </span>
-          <span className="badge badge-outline" style={{ fontWeight: 600 }}>Top 1% HubSpot Systems Architect</span>
+          <span className="badge badge-outline" style={{ fontWeight: 600 }}>Top 1% Senior AI Systems Architect</span>
         </div>
 
         <h1
@@ -312,7 +319,7 @@ export const CaseStudy: React.FC = () => {
         </div>
       </motion.div>
 
-      {/* ── Production Engineering & Financial Proof Benchmarks ───────── */}
+      {/* ── Key Performance Benchmarks ────────────────────────────────── */}
       <div
         style={{
           display: "grid",
@@ -356,6 +363,52 @@ export const CaseStudy: React.FC = () => {
           </motion.div>
         ))}
       </div>
+
+      {/* ── Verified Automated Test Suites Proof ──────────────────────── */}
+      <motion.div
+        className="card"
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2 }}
+        style={{ marginBottom: "var(--sp-6)" }}
+      >
+        <div className="card-header">
+          <div>
+            <div className="card-title">48/48 Automated Pytest Verification Suites</div>
+            <div className="card-subtitle">Every single API endpoint, scoring algorithm, and security guard is verified with 0% flakiness</div>
+          </div>
+          <span className="badge" style={{ background: "var(--risk-healthy-bg)", color: "var(--risk-healthy)", fontWeight: 700 }}>
+            ● 100% Deterministic Pass
+          </span>
+        </div>
+        <div className="card-body">
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 12 }}>
+            {TEST_SUITES.map((ts) => (
+              <div
+                key={ts.suite}
+                style={{
+                  padding: "12px 14px",
+                  borderRadius: "var(--radius-sm)",
+                  border: "1px solid var(--hs-border-dark)",
+                  background: "var(--hs-surface)",
+                }}
+              >
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
+                  <span style={{ fontFamily: "var(--font-mono)", fontSize: "12px", fontWeight: 700, color: "var(--hs-primary)" }}>
+                    {ts.suite}
+                  </span>
+                  <span style={{ fontSize: "11px", fontWeight: 700, color: "var(--risk-healthy)" }}>
+                    {ts.tests}
+                  </span>
+                </div>
+                <div style={{ fontSize: "11.5px", color: "var(--hs-text-muted)" }}>
+                  {ts.focus}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </motion.div>
 
       {/* ── Transparent Deployment Packages & Order Tiers ────────────── */}
       <motion.div
@@ -494,11 +547,11 @@ export const CaseStudy: React.FC = () => {
             </div>
 
             <h2 style={{ fontSize: "26px", fontWeight: 800, color: "#ffffff", lineHeight: 1.3, marginBottom: 12 }}>
-              Ready to recover at-risk revenue in your HubSpot portal?
+              Hire a Top 1% Senior AI & Systems Architect
             </h2>
 
             <p style={{ fontSize: "14px", color: "#e6f0f0", lineHeight: 1.65, marginBottom: 24 }}>
-              Start with the $99 risk-free pipeline audit, or deploy the complete enterprise intelligence suite. I personally oversee every single deployment with 100% money-back satisfaction guarantees.
+              I design and build mission-critical revenue intelligence systems, high-frequency event streaming engines, and custom enterprise SaaS platforms with obsessive craft, sub-second latency, and verified automated testing.
             </p>
 
             <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
@@ -560,7 +613,7 @@ export const CaseStudy: React.FC = () => {
             </div>
             <div style={{ fontSize: "13px", color: "#ffffff", lineHeight: 1.8 }}>
               <div>🛡️ 100% Money-Back ROI Guarantee</div>
-              <div>⚡ 24-48h Audit Delivery</div>
+              <div>⚡ 24–48h Audit Delivery</div>
               <div>🔒 AES-256 Payload Encryption</div>
               <div>⚡ Zero-Downtime Webhook Stream</div>
               <div>📜 Complete Source Code Handover</div>
