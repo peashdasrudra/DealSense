@@ -197,36 +197,76 @@ export const CaseStudy: React.FC = () => {
         </p>
 
         {/* CTA Row */}
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
+        <div style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: 14 }}>
+          {/* Primary: Live Dashboard */}
           <button
             onClick={() => navigate("/")}
             style={{
-              padding: "14px 28px", background: "#ff5c35", color: "#fff", fontSize: "15px", fontWeight: 800,
-              border: "none", borderRadius: "var(--radius-sm)", cursor: "pointer",
-              boxShadow: "0 4px 14px rgba(255,92,53,0.4)", transition: "all 0.2s ease",
+              padding: "13px 26px",
+              background: "linear-gradient(180deg, #ff6b48 0%, #ff5c35 100%)",
+              color: "#ffffff",
+              fontSize: "14.5px",
+              fontWeight: 700,
+              fontFamily: "var(--font-heading)",
+              border: "1px solid rgba(255,255,255,0.2)",
+              borderRadius: "var(--radius-sm)",
+              cursor: "pointer",
+              boxShadow: "0 1px 2px rgba(0,0,0,0.1), 0 6px 20px rgba(255, 92, 53, 0.4), inset 0 1px 0 rgba(255,255,255,0.35)",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 8,
+              transition: "all 0.2s cubic-bezier(0.16, 1, 0.3, 1)",
             }}
           >
-            🚀 Launch Live Dashboard
+            <svg width={15} height={15} viewBox="0 0 24 24" fill="currentColor">
+              <polygon points="5 3 19 12 5 21 5 3" />
+            </svg>
+            <span>Launch Live Dashboard</span>
+            <span style={{ fontSize: "13px", opacity: 0.85, marginLeft: 2 }}>→</span>
           </button>
+
+          {/* Secondary: Start $99 Pilot Audit */}
           <button
             onClick={() => handleOpenOrder("micro_audit")}
             style={{
-              padding: "14px 24px", background: "rgba(255,255,255,0.12)", color: "#fff", fontSize: "14px", fontWeight: 700,
-              border: "1px solid rgba(255,255,255,0.25)", borderRadius: "var(--radius-sm)", cursor: "pointer",
-              transition: "all 0.2s ease", backdropFilter: "blur(4px)",
+              padding: "13px 22px",
+              background: "#ffffff",
+              color: "#124548",
+              fontSize: "14px",
+              fontWeight: 700,
+              fontFamily: "var(--font-heading)",
+              border: "1px solid #ffffff",
+              borderRadius: "var(--radius-sm)",
+              cursor: "pointer",
+              boxShadow: "0 2px 10px rgba(0, 0, 0, 0.15), inset 0 1px 0 #ffffff",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 8,
+              transition: "all 0.2s cubic-bezier(0.16, 1, 0.3, 1)",
             }}
           >
-            ⚡ Start $99 Pilot Audit
+            <span style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: 18, height: 18, borderRadius: "50%", background: "rgba(255,92,53,0.15)", color: "#ff5c35", fontSize: "11px", fontWeight: 800 }}>⚡</span>
+            <span>Start $99 Pilot Audit</span>
           </button>
+
+          {/* Tertiary: See Pricing */}
           <button
             onClick={() => scrollTo("pricing")}
             style={{
-              padding: "14px 20px", background: "transparent", color: "rgba(255,255,255,0.8)", fontSize: "13px", fontWeight: 600,
-              border: "1px solid rgba(255,255,255,0.15)", borderRadius: "var(--radius-sm)", cursor: "pointer",
-              transition: "all 0.2s ease",
+              padding: "13px 20px",
+              background: "rgba(255, 255, 255, 0.08)",
+              color: "rgba(255, 255, 255, 0.9)",
+              fontSize: "13.5px",
+              fontWeight: 600,
+              fontFamily: "var(--font-heading)",
+              border: "1px solid rgba(255, 255, 255, 0.2)",
+              borderRadius: "var(--radius-sm)",
+              backdropFilter: "blur(8px)",
+              cursor: "pointer",
+              transition: "all 0.2s cubic-bezier(0.16, 1, 0.3, 1)",
             }}
           >
-            See Pricing →
+            See Pricing & Tiers ↓
           </button>
         </div>
 
@@ -372,13 +412,20 @@ export const CaseStudy: React.FC = () => {
             <button
               onClick={() => handleOpenOrder(pkg.id)}
               style={{
-                width: "100%", padding: "13px", fontSize: "14px", fontWeight: 800, border: "none",
+                width: "100%", padding: "13px", fontSize: "14px", fontWeight: 700, border: "none",
+                fontFamily: "var(--font-heading)",
                 borderRadius: "var(--radius-sm)", cursor: "pointer", transition: "all 0.2s ease",
-                background: pkg.highlight ? "#ff5c35" : "var(--hs-primary)", color: "#fff",
-                boxShadow: pkg.highlight ? "0 4px 14px rgba(255,92,53,0.4)" : "var(--shadow-sm)",
+                background: pkg.highlight ? "linear-gradient(180deg, #ff6b48 0%, #ff5c35 100%)" : "linear-gradient(180deg, #185a5e 0%, #124548 100%)",
+                color: "#fff",
+                boxShadow: pkg.highlight ? "0 1px 2px rgba(0,0,0,0.1), 0 4px 16px rgba(255,92,53,0.4), inset 0 1px 0 rgba(255,255,255,0.35)" : "var(--shadow-sm), inset 0 1px 0 rgba(255,255,255,0.2)",
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 8,
               }}
             >
-              {pkg.cta}
+              <span>{pkg.cta}</span>
+              <span>→</span>
             </button>
           </div>
         ))}
@@ -431,12 +478,52 @@ export const CaseStudy: React.FC = () => {
         <p style={{ fontSize: "15px", color: "rgba(255,255,255,0.8)", maxWidth: 640, margin: "0 auto 28px", lineHeight: 1.6 }}>
           Every quarter you wait, your agency clients lose another $300K+ in pipeline slippage that you could have caught and charged premium retainers for.
         </p>
-        <div style={{ display: "flex", justifyContent: "center", flexWrap: "wrap", gap: 12 }}>
-          <button onClick={() => handleOpenOrder("micro_audit")} style={{ padding: "14px 28px", background: "#ff5c35", color: "#fff", fontSize: "15px", fontWeight: 800, border: "none", borderRadius: "var(--radius-sm)", cursor: "pointer", boxShadow: "0 4px 14px rgba(255,92,53,0.4)" }}>
-            ⚡ Start $99 Risk-Free Audit
+        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", flexWrap: "wrap", gap: 14 }}>
+          <button
+            onClick={() => handleOpenOrder("micro_audit")}
+            style={{
+              padding: "14px 28px",
+              background: "linear-gradient(180deg, #ff6b48 0%, #ff5c35 100%)",
+              color: "#fff",
+              fontSize: "14.5px",
+              fontWeight: 700,
+              fontFamily: "var(--font-heading)",
+              border: "1px solid rgba(255,255,255,0.2)",
+              borderRadius: "var(--radius-sm)",
+              cursor: "pointer",
+              boxShadow: "0 1px 2px rgba(0,0,0,0.1), 0 6px 20px rgba(255, 92, 53, 0.45), inset 0 1px 0 rgba(255,255,255,0.35)",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 8,
+              transition: "all 0.2s cubic-bezier(0.16, 1, 0.3, 1)",
+            }}
+          >
+            <span>⚡ Start $99 Risk-Free Audit</span>
+            <span>→</span>
           </button>
-          <button onClick={() => navigate("/")} style={{ padding: "14px 24px", background: "rgba(255,255,255,0.12)", color: "#fff", fontSize: "14px", fontWeight: 700, border: "1px solid rgba(255,255,255,0.25)", borderRadius: "var(--radius-sm)", cursor: "pointer" }}>
-            🚀 Explore Live Dashboard
+          <button
+            onClick={() => navigate("/")}
+            style={{
+              padding: "14px 24px",
+              background: "#ffffff",
+              color: "#124548",
+              fontSize: "14px",
+              fontWeight: 700,
+              fontFamily: "var(--font-heading)",
+              border: "1px solid #ffffff",
+              borderRadius: "var(--radius-sm)",
+              cursor: "pointer",
+              boxShadow: "0 2px 10px rgba(0, 0, 0, 0.15), inset 0 1px 0 #ffffff",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 8,
+              transition: "all 0.2s cubic-bezier(0.16, 1, 0.3, 1)",
+            }}
+          >
+            <svg width={15} height={15} viewBox="0 0 24 24" fill="currentColor">
+              <polygon points="5 3 19 12 5 21 5 3" />
+            </svg>
+            <span>Explore Live Dashboard</span>
           </button>
         </div>
         <div style={{ marginTop: 20, fontSize: "12px", color: "rgba(255,255,255,0.5)", fontWeight: 600 }}>
