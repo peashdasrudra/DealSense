@@ -7,6 +7,7 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { fetchDeals } from "../api";
+import { DealDrawer, DealData } from "../components/DealDrawer";
 
 const SAMPLE_CLIENTS = [
   {
@@ -78,6 +79,7 @@ const getScoreColor = (score: number) => {
 export const ClientHealth: React.FC = () => {
   const [clients, setClients] = useState<any[]>(SAMPLE_CLIENTS);
   const [isLive, setIsLive] = useState(false);
+  const [selectedDrawerDeal, setSelectedDrawerDeal] = useState<DealData | null>(null);
 
   useEffect(() => {
     fetchDeals()
@@ -239,19 +241,32 @@ export const ClientHealth: React.FC = () => {
                 {/* Worst deal */}
                 {client.worstDeal && (
                   <div
+                    onClick={() =>
+                      setSelectedDrawerDeal({
+                        id: client.worstDeal.name.toLowerCase().replace(/\s+/g, "-"),
+                        name: client.worstDeal.name,
+                        client: client.name,
+                        score: client.worstDeal.score,
+                        band: client.worstDeal.band,
+                        value: 180000,
+                        stage: "Proposal Sent",
+                        owner: "Assigned Rep",
+                      })
+                    }
                     style={{
                       padding: "12px",
                       background: "var(--hs-surface-hover)",
                       borderRadius: "var(--radius-sm)",
                       border: "1px solid var(--hs-border)",
                       borderLeft: `4px solid ${RISK_COLORS[client.worstDeal.band] || "var(--hs-primary)"}`,
+                      cursor: "pointer",
                     }}
                   >
                     <div style={{ fontSize: "11px", color: "var(--hs-text-muted)", textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: 6, fontWeight: 500 }}>
-                      Lowest Health Deal
+                      Lowest Health Deal (Click to Inspect)
                     </div>
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                      <span style={{ fontSize: "13px", fontWeight: 600, color: "var(--hs-text)" }}>
+                      <span style={{ fontSize: "13px", fontWeight: 600, color: "var(--hs-primary)" }}>
                         {client.worstDeal.name}
                       </span>
                       <span
@@ -268,6 +283,13 @@ export const ClientHealth: React.FC = () => {
           );
         })}
       </div>
+
+      {/* ── Global Deal Inspection Drawer ── */}
+      <DealDrawer
+        deal={selectedDrawerDeal}
+        isOpen={!!selectedDrawerDeal}
+        onClose={() => setSelectedDrawerDeal(null)}
+      />
     </div>
   );
 };

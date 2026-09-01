@@ -7,6 +7,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { fetchDeals } from "../api";
+import { DealDrawer, DealData } from "../components/DealDrawer";
 
 const BANDS = ["Critical", "High", "Moderate", "Low", "Healthy"];
 
@@ -55,6 +56,7 @@ export const RiskHeatmap: React.FC = () => {
   const [deals, setDeals] = useState<HeatmapDeal[]>(SAMPLE_HEATMAP_DEALS);
   const [selectedCell, setSelectedCell] = useState<{ stage: string; band: string } | null>(null);
   const [isLive, setIsLive] = useState(false);
+  const [selectedDrawerDeal, setSelectedDrawerDeal] = useState<DealData | null>(null);
 
   useEffect(() => {
     fetchDeals()
@@ -260,8 +262,23 @@ export const RiskHeatmap: React.FC = () => {
                 </thead>
                 <tbody>
                   {selectedDeals.map((deal) => (
-                    <tr key={deal.name} style={{ cursor: "pointer" }}>
-                      <td style={{ fontWeight: 600, color: "var(--hs-text)", fontSize: 13 }}>{deal.name}</td>
+                    <tr
+                      key={deal.name}
+                      onClick={() =>
+                        setSelectedDrawerDeal({
+                          id: deal.name.toLowerCase().replace(/\s+/g, "-"),
+                          name: deal.name,
+                          client: deal.client,
+                          score: deal.score,
+                          band: deal.band,
+                          value: deal.value,
+                          stage: deal.stage,
+                          owner: deal.owner,
+                        })
+                      }
+                      style={{ cursor: "pointer" }}
+                    >
+                      <td style={{ fontWeight: 600, color: "var(--hs-primary)", fontSize: 13 }}>{deal.name}</td>
                       <td style={{ color: "var(--hs-text-muted)" }}>{deal.client}</td>
                       <td>
                         <span style={{ fontFamily: "var(--font-mono)", fontWeight: 700, color: BAND_COLORS[deal.band]?.text }}>
@@ -278,6 +295,13 @@ export const RiskHeatmap: React.FC = () => {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* ── Global Deal Inspection Drawer ── */}
+      <DealDrawer
+        deal={selectedDrawerDeal}
+        isOpen={!!selectedDrawerDeal}
+        onClose={() => setSelectedDrawerDeal(null)}
+      />
     </div>
   );
 };

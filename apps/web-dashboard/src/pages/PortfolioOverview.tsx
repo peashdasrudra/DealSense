@@ -20,6 +20,8 @@ import {
 } from "recharts";
 import { fetchDeals } from "../api";
 
+import { DealDrawer, DealData } from "../components/DealDrawer";
+
 // ── Default Enterprise Sample Deals (used if DB has no seed data yet) ────────
 const SAMPLE_DEALS = [
   { id: "1", name: "Orion Cloud Migration", client: "TechCorp Inc.", score: 23, band: "Critical", value: 150000, owner: "Sarah Miller", stage: "Proposal" },
@@ -88,6 +90,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 export const PortfolioOverview: React.FC = () => {
   const [deals, setDeals] = useState<any[]>(SAMPLE_DEALS);
   const [isLive, setIsLive] = useState(false);
+  const [selectedDrawerDeal, setSelectedDrawerDeal] = useState<DealData | null>(null);
 
   useEffect(() => {
     fetchDeals()
@@ -312,6 +315,7 @@ export const PortfolioOverview: React.FC = () => {
                     initial={{ opacity: 0, x: -10 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.4 + idx * 0.04, duration: 0.2 }}
+                    onClick={() => setSelectedDrawerDeal(deal)}
                     style={{ cursor: "pointer" }}
                   >
                     <td style={{ fontWeight: 600, color: "var(--hs-text)", fontSize: 13 }}>{deal.name}</td>
@@ -346,6 +350,13 @@ export const PortfolioOverview: React.FC = () => {
           </table>
         </div>
       </motion.div>
+
+      {/* ── Global Deal Inspection Drawer ── */}
+      <DealDrawer
+        deal={selectedDrawerDeal}
+        isOpen={!!selectedDrawerDeal}
+        onClose={() => setSelectedDrawerDeal(null)}
+      />
     </div>
   );
 };

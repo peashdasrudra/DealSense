@@ -1,6 +1,6 @@
 /**
  * DealSense Dashboard — Sidebar Navigation Component.
- * Canvas Design System Edition.
+ * Official HubSpot Canvas Design System Edition with Full RevOps Suite.
  */
 
 import React from "react";
@@ -11,20 +11,26 @@ interface NavItem {
   label: string;
   icon: string;
   path: string;
-  badge?: number;
+  badge?: number | string;
 }
 
-const NAV_ITEMS: NavItem[] = [
+const INTELLIGENCE_ITEMS: NavItem[] = [
   { id: "overview", label: "Portfolio Overview", icon: "📊", path: "/" },
-  { id: "clients", label: "Client Health", icon: "🏢", path: "/clients" },
+  { id: "forecast", label: "Revenue Forecast", icon: "🔮", path: "/forecast" },
   { id: "deals", label: "Deal Explorer", icon: "🎯", path: "/deals" },
-  { id: "actions", label: "Action Queue", icon: "⚡", path: "/actions", badge: 7 },
+  { id: "actions", label: "Action Queue", icon: "⚡", path: "/actions", badge: 5 },
   { id: "heatmap", label: "Risk Heatmap", icon: "🔥", path: "/heatmap" },
 ];
 
-const SECONDARY_ITEMS: NavItem[] = [
-  { id: "audit", label: "Audit Log", icon: "📋", path: "/audit" },
-  { id: "settings", label: "Settings", icon: "⚙️", path: "/settings" },
+const REVOPS_OPERATIONS: NavItem[] = [
+  { id: "hygiene", label: "CRM Hygiene & Remediation", icon: "🧹", path: "/hygiene", badge: "6" },
+  { id: "reps", label: "Rep Coaching & Velocity", icon: "👥", path: "/reps" },
+  { id: "clients", label: "Client Health", icon: "🏢", path: "/clients" },
+];
+
+const SYSTEM_ITEMS: NavItem[] = [
+  { id: "audit", label: "Audit & Governance", icon: "📋", path: "/audit" },
+  { id: "settings", label: "Settings & Calibration", icon: "⚙️", path: "/settings" },
 ];
 
 interface SidebarProps {
@@ -51,15 +57,19 @@ export const Sidebar: React.FC<SidebarProps> = ({ onClose }) => {
       <div className="sidebar-brand">
         <div className="sidebar-logo">DS</div>
         <div>
-          <div style={{ fontWeight: 700, color: "var(--hs-text)", lineHeight: 1.2 }}>DealSense</div>
-          <div style={{ fontSize: 12, color: "var(--hs-text-muted)" }}>Command Center</div>
+          <div style={{ fontWeight: 700, color: "var(--hs-primary)", lineHeight: 1.2, fontSize: "15px" }}>
+            DealSense
+          </div>
+          <div style={{ fontSize: "11px", color: "var(--hs-text-muted)", fontWeight: 500 }}>
+            RevOps Command Center
+          </div>
         </div>
       </div>
 
-      {/* ── Primary Nav ──────────────────────────────────────────────── */}
+      {/* ── Nav Links ────────────────────────────────────────────────── */}
       <div className="sidebar-nav">
-        <div className="sidebar-section-label">Intelligence</div>
-        {NAV_ITEMS.map((item) => {
+        <div className="sidebar-section-label">Revenue Intelligence</div>
+        {INTELLIGENCE_ITEMS.map((item) => {
           const active = isActive(item.path);
           return (
             <div
@@ -67,16 +77,17 @@ export const Sidebar: React.FC<SidebarProps> = ({ onClose }) => {
               className={`sidebar-link ${active ? "active" : ""}`}
               onClick={() => handleNav(item.path)}
             >
-              <span style={{ fontSize: 16 }}>{item.icon}</span>
+              <span style={{ fontSize: "15px" }}>{item.icon}</span>
               <span style={{ flex: 1 }}>{item.label}</span>
-              {item.badge && item.badge > 0 && (
+              {item.badge && (
                 <span
                   style={{
-                    background: active ? "rgba(255,255,255,0.2)" : "var(--hs-border)",
-                    color: active ? "var(--hs-on-primary)" : "var(--hs-text)",
-                    padding: "2px 6px",
+                    background: active ? "rgba(255,255,255,0.25)" : "var(--hs-surface-hover)",
+                    color: active ? "var(--hs-on-primary)" : "var(--hs-primary)",
+                    border: active ? "none" : "1px solid var(--hs-border-dark)",
+                    padding: "1px 6px",
                     borderRadius: "var(--radius-pill)",
-                    fontSize: 11,
+                    fontSize: "10.5px",
                     fontWeight: 700,
                   }}
                 >
@@ -87,24 +98,58 @@ export const Sidebar: React.FC<SidebarProps> = ({ onClose }) => {
           );
         })}
 
-        <div className="sidebar-section-label" style={{ marginTop: 24 }}>
-          System
+        <div className="sidebar-section-label" style={{ marginTop: 20 }}>
+          RevOps Operations
         </div>
-        {SECONDARY_ITEMS.map((item) => (
-          <div
-            key={item.id}
-            className={`sidebar-link ${isActive(item.path) ? "active" : ""}`}
-            onClick={() => handleNav(item.path)}
-          >
-            <span style={{ fontSize: 16 }}>{item.icon}</span>
-            <span>{item.label}</span>
-          </div>
-        ))}
+        {REVOPS_OPERATIONS.map((item) => {
+          const active = isActive(item.path);
+          return (
+            <div
+              key={item.id}
+              className={`sidebar-link ${active ? "active" : ""}`}
+              onClick={() => handleNav(item.path)}
+            >
+              <span style={{ fontSize: "15px" }}>{item.icon}</span>
+              <span style={{ flex: 1 }}>{item.label}</span>
+              {item.badge && (
+                <span
+                  style={{
+                    background: active ? "rgba(255,255,255,0.25)" : "var(--risk-critical-bg)",
+                    color: active ? "var(--hs-on-primary)" : "var(--danger)",
+                    padding: "1px 6px",
+                    borderRadius: "var(--radius-pill)",
+                    fontSize: "10.5px",
+                    fontWeight: 700,
+                  }}
+                >
+                  {item.badge}
+                </span>
+              )}
+            </div>
+          );
+        })}
+
+        <div className="sidebar-section-label" style={{ marginTop: 20 }}>
+          System & Governance
+        </div>
+        {SYSTEM_ITEMS.map((item) => {
+          const active = isActive(item.path);
+          return (
+            <div
+              key={item.id}
+              className={`sidebar-link ${active ? "active" : ""}`}
+              onClick={() => handleNav(item.path)}
+            >
+              <span style={{ fontSize: "15px" }}>{item.icon}</span>
+              <span>{item.label}</span>
+            </div>
+          );
+        })}
       </div>
 
       {/* ── Footer ───────────────────────────────────────────────────── */}
-      <div style={{ padding: "var(--sp-4)", borderTop: "1px solid var(--hs-border-dark)" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+      <div style={{ padding: "var(--sp-4)", borderTop: "1px solid var(--hs-border-dark)", background: "var(--hs-surface)" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
           <div
             style={{
               width: 32,
@@ -116,17 +161,17 @@ export const Sidebar: React.FC<SidebarProps> = ({ onClose }) => {
               alignItems: "center",
               justifyContent: "center",
               fontWeight: 700,
-              fontSize: 12,
+              fontSize: "12px",
             }}
           >
             AX
           </div>
           <div>
-            <div style={{ fontSize: 13, fontWeight: 600, color: "var(--hs-text)" }}>
+            <div style={{ fontSize: "13px", fontWeight: 700, color: "var(--hs-primary)" }}>
               AiXpert Labs
             </div>
-            <div style={{ fontSize: 11, color: "var(--hs-text-muted)" }}>
-              Agency Owner
+            <div style={{ fontSize: "11px", color: "var(--hs-text-muted)" }}>
+              HubSpot Diamond Partner
             </div>
           </div>
         </div>
