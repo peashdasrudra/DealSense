@@ -4,12 +4,13 @@
  */
 
 import React, { useState } from "react";
-import { Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 
 import { Sidebar } from "./components/Sidebar";
 import { TopBar } from "./components/TopBar";
 import { MobileBottomNav } from "./components/MobileBottomNav";
+import { LoadingScreen } from "./components/LoadingScreen";
 import { PortfolioOverview } from "./pages/PortfolioOverview";
 import { RevenueForecast } from "./pages/RevenueForecast";
 import { DealExplorer } from "./pages/DealExplorer";
@@ -33,10 +34,10 @@ const PAGE_TITLES: Record<string, { title: string; breadcrumb: string }> = {
   "/deals": { title: "Deal Inspector & Dossiers", breadcrumb: "Deals" },
   "/heatmap": { title: "Pipeline Risk Heatmap", breadcrumb: "Heatmap" },
   "/actions": { title: "Action Approval Queue", breadcrumb: "Actions" },
-  "/map": { title: "Mutual Action Plans", breadcrumb: "MAP" },
-  "/battlecards": { title: "Competitive Battlecards", breadcrumb: "Battlecards" },
-  "/hygiene": { title: "CRM Hygiene & Auto-Remediation", breadcrumb: "Hygiene" },
-  "/reps": { title: "Rep Coaching & Velocity", breadcrumb: "Coaching" },
+  "/map": { title: "Mutual Action Plans (MAP)", breadcrumb: "MAP" },
+  "/battlecards": { title: "Competitive Battlecards & Objections", breadcrumb: "Battlecards" },
+  "/hygiene": { title: "CRM Hygiene & Remediation", breadcrumb: "Hygiene" },
+  "/reps": { title: "Rep Risk Profiles & Coaching", breadcrumb: "Reps" },
   "/clients": { title: "Client Health Scorecards", breadcrumb: "Clients" },
   "/case-study": { title: "Executive Architecture Case Study", breadcrumb: "Case Study" },
   "/portfolio": { title: "Executive Architecture Case Study", breadcrumb: "Portfolio" },
@@ -55,10 +56,26 @@ const SEARCHABLE_DEALS = [
 
 export const App: React.FC = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [selectedDrawerDeal, setSelectedDrawerDeal] = useState<DealData | null>(null);
+
+  // Animated Loading Screen Trigger
+  const [isAppLoading, setIsAppLoading] = useState(false);
+  const [loadingMessage, setLoadingMessage] = useState<string | undefined>(undefined);
+
+  const handleNavigateHome = () => {
+    if (location.pathname === "/") {
+      setLoadingMessage("Refreshing HubSpot Real-Time Webhooks...");
+      setIsAppLoading(true);
+    } else {
+      setLoadingMessage("Synchronizing HubSpot Pipeline...");
+      setIsAppLoading(true);
+      navigate("/");
+    }
+  };
 
   const pageInfo = PAGE_TITLES[location.pathname] || { title: "DealSense", breadcrumb: "Dashboard" };
 
@@ -71,6 +88,13 @@ export const App: React.FC = () => {
 
   return (
     <div className="layout">
+      {/* ── Global Animated Loading Screen Overlay ───────────────────── */}
+      <LoadingScreen
+        isLoading={isAppLoading}
+        onFinish={() => setIsAppLoading(false)}
+        message={loadingMessage}
+      />
+
       {/* Mobile Sidebar Overlay */}
       {sidebarOpen && (
         <div
@@ -87,7 +111,10 @@ export const App: React.FC = () => {
 
       {/* Sidebar Container */}
       <div className={`sidebar ${sidebarOpen ? "open" : ""}`}>
-        <Sidebar onClose={() => setSidebarOpen(false)} />
+        <Sidebar 
+          onClose={() => setSidebarOpen(false)}
+          onNavigateHome={handleNavigateHome}
+        />
       </div>
 
       {/* Main Content */}
@@ -97,6 +124,7 @@ export const App: React.FC = () => {
           title={pageInfo.title}
           onOpenSidebar={() => setSidebarOpen(true)}
           onOpenSearch={() => setIsSearchOpen(true)}
+          onNavigateHome={handleNavigateHome}
         />
 
         <div className="page-content">

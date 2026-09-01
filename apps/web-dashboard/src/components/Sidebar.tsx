@@ -65,9 +65,10 @@ const NAV_SECTIONS: NavSection[] = [
 
 interface SidebarProps {
   onClose?: () => void;
+  onNavigateHome?: () => void;
 }
 
-export const Sidebar: React.FC<SidebarProps> = ({ onClose }) => {
+export const Sidebar: React.FC<SidebarProps> = ({ onClose, onNavigateHome }) => {
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -78,6 +79,15 @@ export const Sidebar: React.FC<SidebarProps> = ({ onClose }) => {
 
   const handleNav = (path: string) => {
     navigate(path);
+    if (onClose) onClose();
+  };
+
+  const handleLogoClick = () => {
+    if (onNavigateHome) {
+      onNavigateHome();
+    } else {
+      handleNav("/");
+    }
     if (onClose) onClose();
   };
 
@@ -94,7 +104,9 @@ export const Sidebar: React.FC<SidebarProps> = ({ onClose }) => {
           borderBottom: "1px solid var(--hs-border-dark)",
         }}
       >
-        <DealSenseLogo size="md" tagline="Revenue Intelligence" />
+        <div onClick={handleLogoClick} style={{ cursor: "pointer" }} title="DealSense Home">
+          <DealSenseLogo size="md" tagline="Revenue Intelligence" />
+        </div>
         {onClose && (
           <button
             onClick={onClose}

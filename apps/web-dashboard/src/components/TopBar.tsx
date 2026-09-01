@@ -12,17 +12,27 @@ interface TopBarProps {
   title: string;
   onOpenSidebar: () => void;
   onOpenSearch: () => void;
+  onNavigateHome?: () => void;
 }
 
 export const TopBar: React.FC<TopBarProps> = ({
   title,
   onOpenSidebar,
   onOpenSearch,
+  onNavigateHome,
 }) => {
   const navigate = useNavigate();
   const [notificationOpen, setNotificationOpen] = useState(false);
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const [syncStatusMsg, setSyncStatusMsg] = useState<string | null>(null);
+
+  const handleLogoClick = () => {
+    if (onNavigateHome) {
+      onNavigateHome();
+    } else {
+      navigate("/");
+    }
+  };
 
   const [selectedPortal, setSelectedPortal] = useState({
     id: "48921820",
@@ -75,7 +85,7 @@ export const TopBar: React.FC<TopBarProps> = ({
         </button>
 
         {/* Brand Logo */}
-        <div className="header-brand-wrap" onClick={onOpenSidebar}>
+        <div className="header-brand-wrap" onClick={handleLogoClick} style={{ cursor: "pointer" }} title="DealSense Home">
           <DealSenseIcon size={24} />
           <div className="topbar-brand-text">
             <span style={{ fontWeight: 700, color: "#2d3e50" }}>Deal</span>
