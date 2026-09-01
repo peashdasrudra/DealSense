@@ -1013,3 +1013,100 @@ tr:hover td {
   border: 1px solid var(--hs-border-dark);
   color: var(--hs-text-muted);
 }
+
+/* ── Order / Checkout Modal (Responsive Desktop + Mobile Bottom Sheet) ─── */
+
+.order-modal-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 92%;
+  max-width: 580px;
+  max-height: 88vh;
+  background: #ffffff;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 20px 60px rgba(18, 69, 72, 0.45);
+  z-index: 410;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--hs-border-dark);
+}
+
+.modal-drag-pill {
+  display: none;
+  width: 36px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--hs-border-dark);
+  margin: 10px auto 0;
+}
+
+.order-modal-header {
+  padding: 18px 24px;
+  background: var(--hs-surface);
+  border-bottom: 1px solid var(--hs-border-dark);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.order-modal-body {
+  padding: 24px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.modal-form-input {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--hs-border-dark);
+  font-size: 13.5px;
+  color: var(--hs-text);
+  outline: none;
+  transition: border-color 0.15s;
+  min-height: 42px;
+  background: #ffffff;
+}
+
+.modal-form-input:focus {
+  border-color: var(--hs-primary);
+  box-shadow: 0 0 0 2px rgba(18, 69, 72, 0.12);
+}
+
+.modal-input-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+@media (max-width: 640px) {
+  .order-modal-container {
+    top: auto !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    transform: none !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    max-height: 92vh !important;
+    border-radius: 20px 20px 0 0 !important;
+    border-bottom: none !important;
+  }
+  .modal-drag-pill {
+    display: block !important;
+  }
+  .order-modal-header {
+    padding: 14px 18px !important;
+  }
+  .order-modal-body {
+    padding: 18px 16px max(24px, env(safe-area-inset-bottom)) !important;
+  }
+  .modal-input-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+}

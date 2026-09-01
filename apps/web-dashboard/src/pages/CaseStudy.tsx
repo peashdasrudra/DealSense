@@ -1,6 +1,6 @@
 /**
  * DealSense — Ultimate Agency Wedge & Client Acquisition Master Portal.
- * Engineered for HubSpot Agency Owners, RevOps Consultants, and Sales Leaders to place an instant deployment order.
+ * Features the $99 Zero-Risk Pilot Audit (Replacing $1,000 Manual Consulting) + Mobile-Optimized Order Sheet.
  */
 
 import React, { useState } from "react";
@@ -28,25 +28,25 @@ interface DeploymentPackage {
 const PACKAGES: DeploymentPackage[] = [
   {
     id: "micro_audit",
-    name: "HubSpot Pipeline Audit & Live Pilot",
-    targetBuyer: "For Individual Sales Teams & Founders",
-    badge: "⚡ 100% Risk-Free · Pay $49",
-    price: "$49",
-    originalPrice: "$500",
+    name: "HubSpot Pipeline Risk Audit & 14-Day Pilot",
+    targetBuyer: "For Sales Directors, Founders & RevOps Leads",
+    badge: "⚡ 100% Risk-Free · Pay $99 (was $1,000)",
+    price: "$99",
+    originalPrice: "$1,000",
     timeline: "24–48h Turnaround",
     isMicroWedge: true,
-    agencyDelta: "Finds $25K+ in hidden pipeline slip risk in 48h.",
-    summary: "Instant 1-click HubSpot OAuth audit discovering every ghosting buyer, overdue close date, and revenue leak across your active pipeline.",
-    guarantee: "🛡️ 100% Money-Back Guarantee: If we don't identify at least $25K in at-risk pipeline, instant 100% refund, no questions asked.",
+    agencyDelta: "Finds $25K–$100K+ in hidden pipeline slip risk in 48h.",
+    summary: "What consulting firms charge $1,000+ for manual spreadsheet analysis, DealSense delivers in 48 hours via automated sub-200ms HubSpot OAuth ingestion.",
+    guarantee: "🛡️ 100% Money-Back Guarantee: If we don't surface at least $25K in at-risk pipeline, instant 100% refund, no questions asked.",
     features: [
-      "1-Click HubSpot OAuth 2.0 Connection (Zero Dev Required)",
+      "1-Click HubSpot OAuth 2.0 Ingestion (Zero Dev or IT Setup)",
       "Instant 0–100 Deterministic Risk Scoring on All Active Deals",
-      "Comprehensive 'Revenue Leak Audit Report' (PDF + Live Dashboard)",
+      "Comprehensive 'Revenue Leak Audit Report' (PDF + Live Interactive Dashboard)",
       "14-Day Full Live Access to DealSense Action Queue & Hygiene Engine",
-      "1-Click Batch Date Slip & Hygiene Auto-Remediations",
-      "30-Min Executive RevOps Strategy & Triage Session with Builder",
+      "1-Click Batch Date Slip & CRM Auto-Remediations",
+      "30-Min Executive Strategy & Pipeline Triage Call with Senior Architect",
     ],
-    ctaText: "🚀 Pay $49 & Start Instant Audit",
+    ctaText: "🚀 Pay $99 & Start Instant Audit",
   },
   {
     id: "agency_single",
@@ -61,7 +61,7 @@ const PACKAGES: DeploymentPackage[] = [
     summary: "Full turnkey deployment with embedded native HubSpot CRM sidebar card, Monte Carlo revenue forecaster, and buyer-seller MAP generator.",
     guarantee: "🛡️ 30-Day Performance Guarantee: Complete code handover & custom telemetry calibration.",
     features: [
-      "Everything in $49 Pipeline Audit tier",
+      "Everything in $99 Pipeline Audit tier",
       "Embedded Native HubSpot CRM Sidebar Card (Canvas Design System)",
       "Multi-Model Revenue Forecaster (Commit vs Manager vs AI Reality)",
       "Interactive Mutual Action Plan (MAP) Generator with Buyer Link",
@@ -109,7 +109,7 @@ const TEST_SUITES = [
 
 export const CaseStudy: React.FC = () => {
   const navigate = useNavigate();
-  const [selectedPkg, setSelectedPkg] = useState<string>("agency_single");
+  const [selectedPkg, setSelectedPkg] = useState<string>("micro_audit");
   const [orderModalOpen, setOrderModalOpen] = useState(false);
   
   // Interactive Agency Arbitrage Calculator State
@@ -121,17 +121,16 @@ export const CaseStudy: React.FC = () => {
     email: "",
     company: "",
     portalId: "",
-    tier: "agency_single",
-    clientType: "agency",
+    tier: "micro_audit",
   });
   const [orderSubmitted, setOrderSubmitted] = useState(false);
   const [copiedEmail, setCopiedEmail] = useState(false);
 
-  const activePackage = PACKAGES.find((p) => p.id === selectedPkg) || PACKAGES[1];
+  const activePackage = PACKAGES.find((p) => p.id === selectedPkg) || PACKAGES[0];
 
   // Arbitrage math
   const annualAgencyRevenue = clientCount * clientRetainerFee * 12;
-  const deploymentCost = activePackage.id === "agency_fleet" ? 2900 : activePackage.id === "agency_single" ? 990 : 49;
+  const deploymentCost = activePackage.id === "agency_fleet" ? 2900 : activePackage.id === "agency_single" ? 990 : 99;
   const netAgencyProfit = annualAgencyRevenue - deploymentCost;
   const agencyRoiRatio = Math.round((annualAgencyRevenue / deploymentCost) * 10) / 10;
 
@@ -191,7 +190,7 @@ export const CaseStudy: React.FC = () => {
             ● Production Ready · 48/48 Test Suites Passing
           </span>
           <span className="badge" style={{ background: "var(--hs-surface)", color: "#ff5c35", fontWeight: 700, border: "1px solid rgba(255, 92, 53, 0.3)" }}>
-            ⚡ $49 No-Brainer Audit or $990 Turnkey Agency Deployment
+            🛡️ $99 Risk-Free Audit (Replaces $1,000 Manual Consulting)
           </span>
           <span className="badge badge-outline" style={{ fontWeight: 600 }}>Top 1% Senior AI Systems Architect</span>
         </div>
@@ -234,7 +233,7 @@ export const CaseStudy: React.FC = () => {
               boxShadow: "0 4px 14px rgba(255, 92, 53, 0.35)",
             }}
           >
-            ⚡ Start $49 Risk-Free HubSpot Audit
+            ⚡ Start $99 Risk-Free HubSpot Audit
           </button>
           <button
             className="btn btn-secondary"
@@ -435,7 +434,7 @@ export const CaseStudy: React.FC = () => {
                   { title: "Scoring Accuracy", ours: "✓ Deterministic 0–100 mathematical algorithms (Zero hallucination)", others: "✗ Blackbox LLM guesses prone to drift and errors" },
                   { title: "Multi-Tenant Security", ours: "✓ Strict PostgreSQL Row-Level Security (RLS) & AES-256 tokens", others: "✗ Shared database tables risking client data leakage" },
                   { title: "Automated Testing", ours: "✓ 48/48 passing Pytest test suites covering 100% of workflows", others: "✗ 0 tests, breaks on high-volume webhook spikes" },
-                  { title: "Pricing & Risk", ours: "✓ Fixed pricing from $49 with 100% Money-Back ROI Guarantee", others: "✗ Open-ended hourly billing with blown budgets" },
+                  { title: "Pricing & Risk", ours: "✓ Fixed pricing from $99 with 100% Money-Back ROI Guarantee", others: "✗ Open-ended hourly billing with blown budgets" },
                 ].map((row, i) => (
                   <tr key={i}>
                     <td style={{ fontWeight: 700, color: "var(--hs-primary)" }}>{row.title}</td>
@@ -639,7 +638,7 @@ export const CaseStudy: React.FC = () => {
             </h2>
 
             <p style={{ fontSize: "14px", color: "#e6f0f0", lineHeight: 1.65, marginBottom: 24 }}>
-              Whether you want a $49 risk-free audit, a $990 turnkey deployment for your agency client, or a full white-label platform, you work directly with me with 100% money-back satisfaction guarantees.
+              Whether you want a $99 risk-free audit, a $990 turnkey deployment for your agency client, or a full white-label platform, you work directly with me with 100% money-back satisfaction guarantees.
             </p>
 
             <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
@@ -655,7 +654,7 @@ export const CaseStudy: React.FC = () => {
                   fontSize: "14px",
                 }}
               >
-                ⚡ Start $49 Risk-Free Audit
+                ⚡ Start $99 Risk-Free Audit
               </button>
               <button
                 className="btn btn-secondary"
@@ -710,7 +709,7 @@ export const CaseStudy: React.FC = () => {
         </div>
       </motion.div>
 
-      {/* ── Order / Instant Checkout Modal ────────────────────────────── */}
+      {/* ── Order / Instant Checkout Modal (Fully Mobile-Optimized) ───── */}
       <AnimatePresence>
         {orderModalOpen && (
           <>
@@ -722,68 +721,50 @@ export const CaseStudy: React.FC = () => {
               style={{
                 position: "fixed",
                 inset: 0,
-                background: "rgba(18, 69, 72, 0.5)",
+                background: "rgba(18, 69, 72, 0.55)",
                 backdropFilter: "blur(4px)",
                 zIndex: 400,
               }}
             />
             <motion.div
-              initial={{ scale: 0.94, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.94, opacity: 0 }}
-              style={{
-                position: "fixed",
-                top: "8%",
-                left: "50%",
-                transform: "translateX(-50%)",
-                width: "92%",
-                maxWidth: "580px",
-                background: "#ffffff",
-                borderRadius: "var(--radius-lg)",
-                boxShadow: "var(--shadow-lg)",
-                zIndex: 410,
-                overflow: "hidden",
-                border: "1px solid var(--hs-border-dark)",
-              }}
+              className="order-modal-container"
+              initial={{ y: 50, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: 50, opacity: 0 }}
+              transition={{ type: "spring", damping: 26, stiffness: 300 }}
             >
-              <div
-                style={{
-                  padding: "18px 24px",
-                  background: "var(--hs-surface)",
-                  borderBottom: "1px solid var(--hs-border-dark)",
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                }}
-              >
+              {/* Mobile Drag Indicator Bar */}
+              <div className="modal-drag-pill" />
+
+              <div className="order-modal-header">
                 <div>
-                  <div style={{ fontSize: "16px", fontWeight: 700, color: "var(--hs-primary)" }}>
-                    {activePackage.name} ({activePackage.price})
+                  <div style={{ fontSize: "16px", fontWeight: 800, color: "var(--hs-primary)", lineHeight: 1.2 }}>
+                    {activePackage.name}
                   </div>
-                  <div style={{ fontSize: "12px", color: "var(--hs-text-muted)", marginTop: 2 }}>
-                    Timeline: <strong>{activePackage.timeline}</strong> · 100% Money-Back Guarantee
+                  <div style={{ fontSize: "12px", color: "var(--hs-text-muted)", marginTop: 3 }}>
+                    Fee: <strong style={{ color: "#ff5c35", fontSize: "14px" }}>{activePackage.price}</strong> · {activePackage.timeline} · 🛡️ 100% Money-Back Guarantee
                   </div>
                 </div>
                 <button
                   onClick={() => setOrderModalOpen(false)}
                   className="btn btn-secondary btn-sm"
-                  style={{ borderRadius: "50%", width: 32, height: 32, padding: 0 }}
+                  style={{ borderRadius: "50%", width: 34, height: 34, padding: 0, fontSize: "15px", flexShrink: 0 }}
                 >
                   ✕
                 </button>
               </div>
 
-              <div style={{ padding: "24px" }}>
+              <div className="order-modal-body">
                 {orderSubmitted ? (
-                  <div style={{ textAlign: "center", padding: "32px 16px" }}>
-                    <div style={{ fontSize: "40px", marginBottom: 12 }}>🎉</div>
-                    <div style={{ fontSize: "18px", fontWeight: 700, color: "var(--hs-primary)", marginBottom: 6 }}>
+                  <div style={{ textAlign: "center", padding: "36px 16px" }}>
+                    <div style={{ fontSize: "44px", marginBottom: 12 }}>🎉</div>
+                    <div style={{ fontSize: "20px", fontWeight: 800, color: "var(--hs-primary)", marginBottom: 8 }}>
                       Deployment Order Confirmed!
                     </div>
-                    <div style={{ fontSize: "13px", color: "var(--hs-text)", lineHeight: 1.5, marginBottom: 16 }}>
+                    <div style={{ fontSize: "13.5px", color: "var(--hs-text)", lineHeight: 1.6, marginBottom: 16 }}>
                       Thank you! I will review your requirements and send your 1-click HubSpot onboarding link and invoice directly to <strong>{orderForm.email}</strong> within 2 hours.
                     </div>
-                    <div style={{ fontSize: "12px", color: "var(--risk-healthy)", fontWeight: 600 }}>
+                    <div style={{ fontSize: "12px", color: "var(--risk-healthy)", fontWeight: 700, padding: "8px", background: "var(--risk-healthy-bg)", borderRadius: "var(--radius-sm)" }}>
                       🛡️ Backed by 100% Money-Back ROI Guarantee.
                     </div>
                   </div>
@@ -799,18 +780,11 @@ export const CaseStudy: React.FC = () => {
                         placeholder="e.g. Alex Morgan"
                         value={orderForm.name}
                         onChange={(e) => setOrderForm({ ...orderForm, name: e.target.value })}
-                        style={{
-                          width: "100%",
-                          padding: "9px 12px",
-                          borderRadius: "var(--radius-sm)",
-                          border: "1px solid var(--hs-border-dark)",
-                          fontSize: "13px",
-                          outline: "none",
-                        }}
+                        className="modal-form-input"
                       />
                     </div>
 
-                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+                    <div className="modal-input-grid">
                       <div>
                         <label style={{ display: "block", fontSize: "12px", fontWeight: 700, color: "var(--hs-primary)", marginBottom: 4 }}>
                           Work Email *
@@ -821,14 +795,7 @@ export const CaseStudy: React.FC = () => {
                           placeholder="alex@agency.com"
                           value={orderForm.email}
                           onChange={(e) => setOrderForm({ ...orderForm, email: e.target.value })}
-                          style={{
-                            width: "100%",
-                            padding: "9px 12px",
-                            borderRadius: "var(--radius-sm)",
-                            border: "1px solid var(--hs-border-dark)",
-                            fontSize: "13px",
-                            outline: "none",
-                          }}
+                          className="modal-form-input"
                         />
                       </div>
                       <div>
@@ -841,14 +808,7 @@ export const CaseStudy: React.FC = () => {
                           placeholder="e.g. Apex RevOps Agency"
                           value={orderForm.company}
                           onChange={(e) => setOrderForm({ ...orderForm, company: e.target.value })}
-                          style={{
-                            width: "100%",
-                            padding: "9px 12px",
-                            borderRadius: "var(--radius-sm)",
-                            border: "1px solid var(--hs-border-dark)",
-                            fontSize: "13px",
-                            outline: "none",
-                          }}
+                          className="modal-form-input"
                         />
                       </div>
                     </div>
@@ -863,15 +823,8 @@ export const CaseStudy: React.FC = () => {
                           setOrderForm({ ...orderForm, tier: e.target.value });
                           setSelectedPkg(e.target.value);
                         }}
-                        style={{
-                          width: "100%",
-                          padding: "9px 12px",
-                          borderRadius: "var(--radius-sm)",
-                          border: "1px solid var(--hs-border-dark)",
-                          fontSize: "13px",
-                          outline: "none",
-                          background: "#ffffff",
-                        }}
+                        className="modal-form-input"
+                        style={{ background: "#ffffff" }}
                       >
                         {PACKAGES.map((p) => (
                           <option key={p.id} value={p.id}>
@@ -890,30 +843,30 @@ export const CaseStudy: React.FC = () => {
                         placeholder="e.g. Portal #48921820 · $1.5M Pipeline"
                         value={orderForm.portalId}
                         onChange={(e) => setOrderForm({ ...orderForm, portalId: e.target.value })}
-                        style={{
-                          width: "100%",
-                          padding: "9px 12px",
-                          borderRadius: "var(--radius-sm)",
-                          border: "1px solid var(--hs-border-dark)",
-                          fontSize: "13px",
-                          outline: "none",
-                        }}
+                        className="modal-form-input"
                       />
                     </div>
 
                     <div style={{ padding: "10px 14px", background: "var(--hs-surface)", borderRadius: "var(--radius-sm)", border: "1px solid var(--hs-border-dark)" }}>
-                      <div style={{ fontSize: "11.5px", color: "var(--hs-text-muted)" }}>
-                        🔒 <strong>Zero Risk Guarantee:</strong> Backed by a 100% money-back satisfaction guarantee. You will receive an invoice and direct onboarding instructions.
+                      <div style={{ fontSize: "11.5px", color: "var(--hs-text-muted)", lineHeight: 1.5 }}>
+                        🔒 <strong>Zero-Risk Commitment:</strong> You will receive an invoice and 1-click HubSpot OAuth onboarding link. Backed by an unconditional 100% money-back guarantee.
                       </div>
                     </div>
 
-                    <div style={{ display: "flex", gap: 10, marginTop: 4 }}>
+                    <div style={{ marginTop: 4 }}>
                       <button
                         type="submit"
                         className="btn btn-primary"
-                        style={{ flex: 1, padding: "11px", fontWeight: 700, background: "#ff5c35", fontSize: "14px" }}
+                        style={{
+                          width: "100%",
+                          padding: "13px",
+                          fontWeight: 800,
+                          background: "#ff5c35",
+                          fontSize: "14.5px",
+                          boxShadow: "0 4px 14px rgba(255, 92, 53, 0.35)",
+                        }}
                       >
-                        🚀 Confirm Order & Reserve Deployment Slot
+                        {activePackage.isMicroWedge ? "🚀 Pay $99 & Start Audit" : `🚀 Confirm Order (${activePackage.price})`}
                       </button>
                     </div>
                   </form>
