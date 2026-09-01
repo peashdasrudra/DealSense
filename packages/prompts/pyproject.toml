@@ -1,0 +1,13 @@
+[project]
+name = "dealsense-prompts"
+version = "0.1.0"
+description = "DealSense Versioned Prompt Templates"
+requires-python = ">=3.12"
+dependencies = []
+
+[build-system]
+requires = ["setuptools>=75.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]

@@ -1,0 +1,95 @@
+# ============================================================
+# DealSense — Docker Compose (Local Development)
+# ============================================================
+# Start everything: docker compose -f infrastructure/docker/docker-compose.yml up -d
+# ============================================================
+
+services:
+  # ---- PostgreSQL with pgvector ----
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: dealsense-postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-dealsense}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-dealsense_dev_password}
+      POSTGRES_DB: ${POSTGRES_DB:-dealsense}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-db.sql:/docker-entrypoint-initdb.d/01-init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-dealsense} -d ${POSTGRES_DB:-dealsense}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # ---- Redis ----
+  redis:
+    image: redis:7-alpine
+    container_name: dealsense-redis
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # ---- FastAPI Backend ----
+  api:
+    build:
+      context: ../../
+      dockerfile: apps/api/Dockerfile
+    container_name: dealsense-api
+    environment:
+      - APP_ENV=development
+      - DEBUG=true
+      - DATABASE_URL=postgresql+asyncpg://dealsense:dealsense_dev_password@postgres:5432/dealsense
+      - DATABASE_URL_SYNC=postgresql://dealsense:dealsense_dev_password@postgres:5432/dealsense
+      - REDIS_URL=redis://redis:6379/0
+      - API_HOST=0.0.0.0
+      - API_PORT=8000
+      - API_RELOAD=true
+    ports:
+      - "8000:8000"
+    volumes:
+      - ../../apps/api/src:/app/src
+      - ../../packages:/app/packages
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # ---- Background Worker ----
+  worker:
+    build:
+      context: ../../
+      dockerfile: apps/worker/Dockerfile
+    container_name: dealsense-worker
+    environment:
+      - APP_ENV=development
+      - DATABASE_URL=postgresql+asyncpg://dealsense:dealsense_dev_password@postgres:5432/dealsense
+      - REDIS_URL=redis://redis:6379/0
+    volumes:
+      - ../../apps/worker/src:/app/src
+      - ../../packages:/app/packages
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local

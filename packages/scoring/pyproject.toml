@@ -1,0 +1,22 @@
+[project]
+name = "dealsense-scoring"
+version = "0.1.0"
+description = "DealSense Deterministic Scoring Engine — 7 measurable risk signals"
+requires-python = ">=3.12"
+dependencies = [
+    "pydantic>=2.9.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.3.0",
+    "pytest-asyncio>=0.24.0",
+    "ruff>=0.7.0",
+]
+
+[build-system]
+requires = ["setuptools>=75.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]

@@ -1,0 +1,74 @@
+# ---- Python ----
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+*.egg
+dist/
+build/
+.eggs/
+*.whl
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+*.cover
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.hypothesis/
+
+# ---- Virtual Environments ----
+.venv/
+venv/
+env/
+ENV/
+
+# ---- Node.js ----
+node_modules/
+.next/
+out/
+.turbo/
+*.tsbuildinfo
+
+# ---- Docker ----
+.docker/
+
+# ---- Environment ----
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# ---- IDE ----
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# ---- OS ----
+*.log
+*.tmp
+*.temp
+
+# ---- Infrastructure ----
+infrastructure/terraform/.terraform/
+infrastructure/terraform/*.tfstate
+infrastructure/terraform/*.tfstate.backup
+infrastructure/terraform/*.tfplan
+infrastructure/terraform/.terraform.lock.hcl
+
+# ---- Secrets (never commit) ----
+*.pem
+*.key
+*.crt
+*.p12
+secrets/
+
+# ---- Build artifacts ----
+*.tar.gz
+*.zip

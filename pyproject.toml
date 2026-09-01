@@ -1,0 +1,62 @@
+# ============================================================
+# DealSense — Workspace-level Python Configuration
+# ============================================================
+
+[project]
+name = "dealsense-workspace"
+version = "0.1.0"
+description = "White-label HubSpot-native AI Deal Intelligence platform"
+requires-python = ">=3.12"
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+src = ["apps/api/src", "apps/worker/src", "packages/scoring/src"]
+
+[tool.ruff.lint]
+select = [
+    "E",    # pycodestyle errors
+    "W",    # pycodestyle warnings
+    "F",    # pyflakes
+    "I",    # isort
+    "N",    # pep8-naming
+    "UP",   # pyupgrade
+    "B",    # flake8-bugbear
+    "S",    # flake8-bandit (security)
+    "T20",  # flake8-print
+    "SIM",  # flake8-simplify
+    "TCH",  # flake8-type-checking
+    "RUF",  # ruff-specific rules
+]
+ignore = [
+    "S101",  # allow assert in tests
+    "B008",  # allow function calls in default arguments (FastAPI Depends)
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ["dealsense", "dealsense_worker", "scoring"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+plugins = ["pydantic.mypy", "sqlalchemy.ext.mypy.plugin"]
+
+[[tool.mypy.overrides]]
+module = ["redis.*", "celery.*", "dramatiq.*"]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["apps/api/src/tests", "apps/worker/src/tests", "packages/scoring/tests"]
+asyncio_mode = "auto"
+filterwarnings = [
+    "ignore::DeprecationWarning",
+]
+markers = [
+    "unit: Unit tests (no external dependencies)",
+    "integration: Integration tests (require database/redis)",
+    "e2e: End-to-end tests",
+    "security: Security-focused tests",
+]

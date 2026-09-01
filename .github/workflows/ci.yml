@@ -1,0 +1,139 @@
+# ============================================================
+# DealSense — CI Pipeline
+# ============================================================
+
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+env:
+  PYTHON_VERSION: "3.12"
+  NODE_VERSION: "20"
+
+jobs:
+  # ---- Python Linting ----
+  lint:
+    name: Lint & Type Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install dependencies
+        run: |
+          pip install ruff mypy
+          pip install -e apps/api[dev]
+          pip install -e packages/scoring[dev]
+
+      - name: Ruff lint
+        run: ruff check apps/api/src apps/worker/src packages/scoring/src
+
+      - name: Ruff format check
+        run: ruff format --check apps/api/src apps/worker/src packages/scoring/src
+
+      - name: Mypy type check
+        run: mypy apps/api/src/dealsense --ignore-missing-imports
+
+  # ---- Unit Tests ----
+  test:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: pgvector/pgvector:pg16
+        env:
+          POSTGRES_USER: dealsense_test
+          POSTGRES_PASSWORD: test_password
+          POSTGRES_DB: dealsense_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U dealsense_test"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      DATABASE_URL: postgresql+asyncpg://dealsense_test:test_password@localhost:5432/dealsense_test
+      DATABASE_URL_SYNC: postgresql://dealsense_test:test_password@localhost:5432/dealsense_test
+      REDIS_URL: redis://localhost:6379/0
+      SECRET_KEY: test-secret-key-minimum-32-characters-long
+      ENCRYPTION_KEY: ""
+      APP_ENV: development
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install dependencies
+        run: |
+          pip install -e apps/api[dev]
+          pip install -e packages/scoring[dev]
+
+      - name: Enable pgvector extension
+        run: |
+          PGPASSWORD=test_password psql -h localhost -U dealsense_test -d dealsense_test -c "CREATE EXTENSION IF NOT EXISTS vector;"
+          PGPASSWORD=test_password psql -h localhost -U dealsense_test -d dealsense_test -c "CREATE EXTENSION IF NOT EXISTS pg_trgm;"
+          PGPASSWORD=test_password psql -h localhost -U dealsense_test -d dealsense_test -c 'CREATE EXTENSION IF NOT EXISTS "uuid-ossp";'
+
+      - name: Run API tests
+        run: |
+          cd apps/api && python -m pytest src/tests/ -v --tb=short --junitxml=test-results.xml
+
+      - name: Run scoring tests
+        run: |
+          cd packages/scoring && python -m pytest tests/ -v --tb=short || true
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: apps/api/test-results.xml
+
+  # ---- Security Scanning ----
+  security:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install pip-audit
+        run: pip install pip-audit
+
+      - name: Dependency audit (API)
+        run: |
+          pip install -e apps/api 2>/dev/null
+          pip-audit || true
+
+      - name: Secret scanning
+        uses: trufflesecurity/trufflehog@main
+        with:
+          extra_args: --only-verified

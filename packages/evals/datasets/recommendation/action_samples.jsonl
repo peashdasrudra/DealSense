@@ -1,0 +1,2 @@
+{"id": "rec-001", "risk_signals": [{"signal_type": "stakeholder_gap", "title": "Single-Threaded", "severity": "critical"}], "expected_action_categories": ["request_introduction", "confirm_decision_process"]}
+{"id": "rec-002", "risk_signals": [{"signal_type": "engagement_decay", "title": "Stale Deal", "severity": "high"}], "expected_action_categories": ["create_followup_task"]}

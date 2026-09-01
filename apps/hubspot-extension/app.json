@@ -1,0 +1,25 @@
+{
+  "name": "DealSense Intelligence",
+  "description": "AI-powered deal risk intelligence and revenue decision support for HubSpot CRM",
+  "uid": "dealsense-intelligence",
+  "scopes": [
+    "crm.objects.deals.read",
+    "crm.objects.deals.write",
+    "crm.objects.contacts.read",
+    "crm.schemas.deals.read",
+    "timeline",
+    "oauth"
+  ],
+  "public": false,
+  "extensions": {
+    "crm": {
+      "cards": [
+        {
+          "file": "DealSenseCard",
+          "location": "crm.record.tab",
+          "objectTypes": ["DEAL"]
+        }
+      ]
+    }
+  }
+}
