@@ -1,6 +1,6 @@
 /**
  * DealSense — Ultimate Agency Wedge & Client Acquisition Master Portal.
- * Features the $99 Zero-Risk Pilot Audit (Replacing $1,000 Manual Consulting) + Mobile-Optimized Order Sheet.
+ * Features $99 Zero-Risk Pilot Audit, Real B2B Deployment Metrics, FAQ Accordion, and Mobile Bottom Sheet.
  */
 
 import React, { useState } from "react";
@@ -107,10 +107,30 @@ const TEST_SUITES = [
   { suite: "test_foundation.py", tests: "17/17 Passing", focus: "FastAPI lifespans, health checks, telemetry & error handling" },
 ];
 
+const FAQS = [
+  {
+    q: "How does the $99 Risk-Free Pilot Audit work?",
+    a: "You authenticate your HubSpot portal with 1 click via secure OAuth 2.0. DealSense immediately ingests your active pipeline, runs our 0–100 deterministic risk engine, and generates a comprehensive Revenue Leak Report in 24–48 hours. If we don't surface at least $25,000 in at-risk deals, you get a 100% immediate refund.",
+  },
+  {
+    q: "Does this require any engineering or developer time on our end?",
+    a: "Zero. DealSense is 100% turnkey and HubSpot-native. It uses standard HubSpot Webhooks and the HubSpot Canvas UI Extension SDK. There is nothing to code, configure, or host on your servers.",
+  },
+  {
+    q: "How can HubSpot agencies use this to charge higher retainers?",
+    a: "Agencies use DealSense to offer high-value 'Autonomous AI RevOps Retainers' ($2,500–$5,000/mo). Instead of manual spreadsheet hygiene, you deliver automated risk scoring, MAP generation, and objection battlecards to your clients with zero ongoing dev labor.",
+  },
+  {
+    q: "Is our CRM data and client contact information secure?",
+    a: "Yes. DealSense enforces strict PostgreSQL Row-Level Security (RLS) ensuring total multi-tenant isolation. All HubSpot OAuth tokens and API secrets are encrypted at rest using AES-256-GCM. We never share, sell, or train public AI models on your deal data.",
+  },
+];
+
 export const CaseStudy: React.FC = () => {
   const navigate = useNavigate();
   const [selectedPkg, setSelectedPkg] = useState<string>("micro_audit");
   const [orderModalOpen, setOrderModalOpen] = useState(false);
+  const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
   
   // Interactive Agency Arbitrage Calculator State
   const [clientCount, setClientCount] = useState<number>(5);
@@ -606,6 +626,70 @@ export const CaseStudy: React.FC = () => {
                 </button>
               </div>
             ))}
+          </div>
+        </div>
+      </motion.div>
+
+      {/* ── Frequently Asked Questions (FAQ Accordion) ───────────────── */}
+      <motion.div
+        className="card"
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.35 }}
+        style={{ marginBottom: "var(--sp-6)" }}
+      >
+        <div className="card-header">
+          <div>
+            <div className="card-title">Frequently Asked Questions</div>
+            <div className="card-subtitle">Clear, transparent answers to every technical and commercial question</div>
+          </div>
+          <span className="badge badge-outline">Zero Uncertainty</span>
+        </div>
+        <div className="card-body">
+          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+            {FAQS.map((faq, idx) => {
+              const isOpen = openFaqIndex === idx;
+              return (
+                <div
+                  key={idx}
+                  style={{
+                    borderRadius: "var(--radius-md)",
+                    border: "1px solid var(--hs-border-dark)",
+                    background: isOpen ? "var(--hs-surface)" : "#ffffff",
+                    overflow: "hidden",
+                    transition: "all 0.2s ease",
+                  }}
+                >
+                  <button
+                    onClick={() => setOpenFaqIndex(isOpen ? null : idx)}
+                    style={{
+                      width: "100%",
+                      padding: "14px 18px",
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      background: "none",
+                      border: "none",
+                      textAlign: "left",
+                      cursor: "pointer",
+                      fontSize: "13.5px",
+                      fontWeight: 700,
+                      color: "var(--hs-primary)",
+                    }}
+                  >
+                    <span>{faq.q}</span>
+                    <span style={{ fontSize: "16px", color: "var(--hs-text-muted)", marginLeft: 12 }}>
+                      {isOpen ? "−" : "+"}
+                    </span>
+                  </button>
+                  {isOpen && (
+                    <div style={{ padding: "0 18px 16px", fontSize: "13px", color: "var(--hs-text)", lineHeight: 1.6 }}>
+                      {faq.a}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
         </div>
       </motion.div>
