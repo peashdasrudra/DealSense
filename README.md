@@ -12,7 +12,7 @@
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16%2B%20%7C%20pgvector-336791?style=for-the-badge&logo=postgresql)](https://github.com/pgvector/pgvector)
 [![React 18](https://img.shields.io/badge/React-18.3-61DAFB?style=for-the-badge&logo=react)](https://reactjs.org)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.5-3178C6?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org)
-[![Vercel Deployed](https://img.shields.io/badge/Production-dealsense.peash.tech-000000?style=for-the-badge&logo=vercel)](https://dealsense.peash.tech)
+[![Production Deployed](https://img.shields.io/badge/Production-dealsense.peash.tech-000000?style=for-the-badge&logo=vercel)](https://dealsense.peash.tech)
 
 <br />
 
@@ -20,7 +20,7 @@
 
 <br /><br />
 
-[🌐 Live Web Dashboard](https://dealsense.peash.tech) • [🧩 HubSpot Sidebar Card](https://hubspot-extension-dealsense.vercel.app) • [✨ Executive Case Study](https://dealsense.peash.tech/case-study) • [🏛️ Architecture](#-system-architecture) • [🧪 48/48 Test Suites](#-automated-verification-suites-4848-passing) • [⚡ Quick Start](#-quick-start)
+[🌐 Live Web Dashboard](https://dealsense.peash.tech) • [🧩 HubSpot Native App](https://dealsense.peash.tech/pipeline) • [✨ Executive Case Study](https://dealsense.peash.tech/case-study) • [🏛️ Architecture](#-system-architecture) • [🧪 48/48 Test Suites](#-automated-verification-suites-4848-passing) • [⚡ Quick Start](#-quick-start) • [💬 Developer Outbound](#-creator--lead-architect)
 
 ---
 
@@ -30,9 +30,9 @@
 
 | Application | Description | Live Production URL |
 | :--- | :--- | :--- |
-| **🏢 Agency Command Center** | Macro-level RevOps portfolio intelligence, Monte Carlo forecasting & playbooks | [dealsense.peash.tech](https://dealsense.peash.tech) |
-| **🧩 HubSpot Native Sidebar Card** | React 18 Canvas extension embedded directly into HubSpot deal records | [hubspot-extension-dealsense.vercel.app](https://hubspot-extension-dealsense.vercel.app) |
-| **✨ Top-1% Portfolio & Case Study** | Interactive agency arbitrage calculator, $99 pilot offer & technical deep-dive | [dealsense.peash.tech/case-study](https://dealsense.peash.tech/case-study) |
+| **🏢 Agency Command Center** | Macro-level RevOps portfolio intelligence, Monte Carlo forecasting, Waterfall & Playbooks | [dealsense.peash.tech](https://dealsense.peash.tech) |
+| **🧩 HubSpot Native Command Deck** | Native HubSpot Canvas UI embedded directly into HubSpot pipelines | [dealsense.peash.tech/pipeline](https://dealsense.peash.tech/pipeline) |
+| **✨ Architecture & Pricing Case Study** | Agency ROI arbitrage calculator, $99 pilot risk audit & technical deep-dive | [dealsense.peash.tech/case-study](https://dealsense.peash.tech/case-study) |
 
 ---
 
@@ -45,7 +45,7 @@ Most "AI CRM" tools simply dump generic LLM wrappers on deal properties, halluci
 2. **Sub-200ms Webhook Streaming**: Ingests high-frequency HubSpot CRM events via HMAC-SHA256 verified webhooks into distributed Redis Streams for zero-downtime, backpressure-tolerant processing.
 3. **Multi-Threaded Stakeholder Tracking**: Automatically detects single-threaded deals and alerts revenue leaders when the Economic Buyer (CFO/CEO) has been silent for >14 days.
 4. **Controlled Autonomy & Approval Gates**: 4 distinct action tiers ensure AI never mutates CRM data without human authorization and complete audit logging.
-5. **HubSpot Native Canvas Design**: Designed according to official HubSpot Canvas guidelines with `#124548` teal accents, signature `#ff5c35` flame highlights, warm surfaces, and zero-clutter typography.
+5. **HubSpot Native Canvas Design**: Designed according to official HubSpot Canvas guidelines with `#124548` deep teal accents, signature `#ff5c35` flame highlights, warm surfaces, and crisp enterprise typography.
 
 ---
 
@@ -101,14 +101,16 @@ Most "AI CRM" tools simply dump generic LLM wrappers on deal properties, halluci
 
 ---
 
-## ✨ Complete Platform Map (13 Production Modules)
+## ✨ Complete Platform Map (15 Production Modules)
 
 | Module | Route | Key Capabilities |
 | :--- | :--- | :--- |
-| **📊 Pipeline Overview** | `/` | Macro portfolio health, slip forecast, 0–100 risk scoring & interactive deal drawer |
+| **📊 Pipeline Overview** | `/pipeline` | Macro portfolio health, slip forecast, 0–100 risk scoring & interactive deal drawer |
 | **🔮 Revenue Forecast** | `/forecast` | Monte Carlo revenue simulation (Commit vs Best Case vs AI Reality across 1,000 iterations) |
+| **🌊 Pipeline Waterfall** | `/waterfall` | Inflow/outflow velocity, stage transition analytics & slippage leakage triage |
 | **🎯 Deal Inspector** | `/deals` | Filterable deal dossier table with CSV export, stage velocity & next-step triage |
 | **🛡️ Deal War Room** | `/war-room` | Friday pipeline review hub, stakeholder multi-threading map & instant executive QBR export |
+| **🤝 Stakeholder Matrix** | `/stakeholders` | Power matrix mapping Economic Buyers, Champions, Technical Evaluators & Single-Threading |
 | **🔥 Risk Heatmap** | `/heatmap` | Multi-dimensional matrix mapping deal value by stage and risk severity band |
 | **⚡ Action Approval Queue** | `/actions` | 1-click batch deal rescue approvals with Slack preview and instant HubSpot write-back |
 | **🗺️ Mutual Action Plans** | `/map` | Buyer-seller shared milestone schedules with public interactive client links |
@@ -117,7 +119,7 @@ Most "AI CRM" tools simply dump generic LLM wrappers on deal properties, halluci
 | **🧹 CRM Hygiene Engine** | `/hygiene` | Automated discrepancy detector with 1-click batch close date slip auto-remediation |
 | **👥 Rep Coaching** | `/reps` | Rep risk index, stage velocity bottleneck analysis, and customized coaching plans |
 | **🏢 Client Health** | `/clients` | Account churn probability, expansion pipeline, and executive sponsor health scorecards |
-| **✨ Top-1% Portfolio & Case Study**| `/case-study`| Live agency arbitrage calculator, $99 / $490 / $1,490 fixed tiers & mobile bottom-sheet checkout |
+| **✨ Architecture & Case Study**| `/case-study`| Live agency arbitrage calculator, $99 / $1,500 / $3,500 packages & direct outbound booking |
 
 ---
 
@@ -168,18 +170,18 @@ apps/api/src/tests/test_rag_and_llm.py .....                             [ 79%]
 apps/api/src/tests/test_webhooks_pipeline.py .....                       [ 89%]
 packages/scoring/tests/test_scoring_engine.py .....                      [100%]
 
-======================= 48 passed in 1.55s ========================
+======================= 48 passed in 1.65s ========================
 ```
 
 ---
 
-## 📦 Deployment Packages & Agency Arbitrage
+## 📦 Transparent Deployment Packages
 
 | Tier | Investment | Timeline | Target Buyer | Value Delta & Deliverables |
 | :--- | :--- | :--- | :--- | :--- |
-| **⚡ Pipeline Risk Audit & Pilot** | **$99 flat fee** *(was $5,000)* | 24–48h | Founders, VPs of Sales | • 1-Click HubSpot OAuth connection<br>• Full 0–100 deterministic risk scoring<br>• Comprehensive PDF + Live Leak Report<br>• 14-day Action Queue & Hygiene Engine<br>• 30-min Strategy Call with Senior Architect<br>• **🛡️ 100% Money-Back ROI Guarantee** |
-| **⭐ Single Portal AI Deployment** | **$490 flat fee** *(was $3,500)* | 5 Days | High-Growth B2B or 1 Client | • Everything in $99 Audit tier<br>• Native embedded HubSpot Canvas Sidebar<br>• Monte Carlo Revenue Forecaster<br>• Mutual Action Plan & Battlecard engine<br>• **Agency charges client $2.5K/mo (61x ROI)** |
-| **🏢 White-Label Agency Fleet** | **$1,490 flat fee** *(was $9,000)* | 10 Days | HubSpot Solutions Partners | • Everything in Single Deployment tier<br>• Multi-tenant architecture (up to 25 portals)<br>• 100% Agency white-labeling & custom domain<br>• Complete source code handover + 60-day SLA<br>• **Deploy to 10 clients = $240K/yr (161x ROI)** |
+| **⚡ Pilot Deal Risk Audit** | **$99 flat fee** *(was $5,000)* | 24–48h | Founders, VPs of Sales | • 1-Click HubSpot OAuth connection (zero dev setup)<br>• Full 0–100 deterministic risk scoring across 50 deals<br>• Executive PDF briefing + live dashboard leak report<br>• 14-day Action Queue & CRM Hygiene access<br>• 30-min strategy call with Senior Architect<br>• **🛡️ 100% "Find $25K Or It's Free" Money-Back Guarantee** |
+| **⭐ Full RevOps AI Deployment** | **$1,500 flat fee** *(was $3,500)* | 5 Days | High-Growth B2B Brands | • Everything in $99 Audit tier<br>• Complete FastAPI + PostgreSQL + Redis stack deployed<br>• Sub-200ms bi-directional HubSpot webhooks<br>• All 15 RevOps intelligence modules & Monte Carlo forecaster<br>• **Full source code & database ownership (No recurring fees)** |
+| **🏢 White-Label Agency Fleet** | **$3,500 flat fee** *(was $9,000)* | 10 Days | HubSpot Solutions Partners | • Everything in Full Deployment tier<br>• Multi-tenant client fleet dashboard (Unlimited portals)<br>• 100% Agency white-labeling (your logo, domain & brand)<br>• Custom property schema mapping & priority Slack SLA<br>• **Charge clients $2.5K/mo → $240K/yr recurring (161x ROI)** |
 
 ---
 
@@ -213,17 +215,12 @@ pip install -e apps/api -e apps/worker -e packages/scoring
 python -m pytest
 ```
 
-### 5. Launch Web Dashboard & HubSpot Extension
+### 5. Launch Web Dashboard
 ```bash
-# Launch Web Dashboard
 cd apps/web-dashboard
 npm install
 npm run dev
-
-# Launch HubSpot Canvas Extension (in separate terminal)
-cd apps/hubspot-extension
-npm install
-npm run dev
+# Dashboard opens on http://localhost:3000/
 ```
 
 ---
@@ -248,12 +245,13 @@ DealSense/
 
 ---
 
-## 👨‍💻 Built By
+## 👨‍💻 Creator & Lead Architect
 
-**Peash Das Rudra** — *Senior AI & Systems Architect*
-- ✉️ Direct Founder Email: [peashdasrudra@gmail.com](mailto:peashdasrudra@gmail.com)
+**Peash Das Rudra** — *Senior AI & Distributed Systems Architect*
+- ✉️ Direct Outbound Email: [peashdasrudra@gmail.com](mailto:peashdasrudra@gmail.com)
 - 📂 GitHub Repository: [github.com/peashdasrudra/DealSense](https://github.com/peashdasrudra/DealSense)
 - 🌐 Live Application: [dealsense.peash.tech](https://dealsense.peash.tech)
+- 📜 Architectural Case Study: [dealsense.peash.tech/case-study](https://dealsense.peash.tech/case-study)
 
 ---
 
