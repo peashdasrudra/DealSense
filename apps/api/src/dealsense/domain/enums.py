@@ -19,11 +19,11 @@ class TenantStatus(StrEnum):
 class RiskBand(StrEnum):
     """Risk classification bands for deal health scores."""
 
-    CRITICAL = "critical"    # 0-20
-    HIGH = "high"            # 21-40
-    ELEVATED = "elevated"    # 41-60
-    MODERATE = "moderate"    # 61-80
-    HEALTHY = "healthy"      # 81-100
+    CRITICAL = "critical"  # 0-20
+    HIGH = "high"  # 21-40
+    ELEVATED = "elevated"  # 41-60
+    MODERATE = "moderate"  # 61-80
+    HEALTHY = "healthy"  # 81-100
 
 
 class SignalType(StrEnum):
@@ -67,12 +67,12 @@ class ActivityType(StrEnum):
 class ActionTier(StrEnum):
     """Action execution tiers with increasing risk and approval requirements."""
 
-    TIER_0_READ_ONLY = "tier_0_read_only"          # Automatic
-    TIER_1_SUGGESTION = "tier_1_suggestion"         # User manually triggers
-    TIER_2_DRAFT = "tier_2_draft"                   # User reviews and confirms
-    TIER_3_CONTROLLED_WRITE = "tier_3_controlled"   # Explicit user approval
-    TIER_4_HIGH_IMPACT = "tier_4_high_impact"       # Manager approval + user confirmation
-    TIER_5_AUTONOMOUS = "tier_5_autonomous"         # Customer-specific policy only
+    TIER_0_READ_ONLY = "tier_0_read_only"  # Automatic
+    TIER_1_SUGGESTION = "tier_1_suggestion"  # User manually triggers
+    TIER_2_DRAFT = "tier_2_draft"  # User reviews and confirms
+    TIER_3_CONTROLLED_WRITE = "tier_3_controlled"  # Explicit user approval
+    TIER_4_HIGH_IMPACT = "tier_4_high_impact"  # Manager approval + user confirmation
+    TIER_5_AUTONOMOUS = "tier_5_autonomous"  # Customer-specific policy only
 
 
 class ActionStatus(StrEnum):

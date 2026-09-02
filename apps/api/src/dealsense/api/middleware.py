@@ -16,9 +16,7 @@ logger = structlog.get_logger(__name__)
 class RequestContextMiddleware(BaseHTTPMiddleware):
     """Injects request ID and timing into every request."""
 
-    async def dispatch(
-        self, request: Request, call_next: RequestResponseEndpoint
-    ) -> Response:
+    async def dispatch(self, request: Request, call_next: RequestResponseEndpoint) -> Response:
         # Generate or extract request ID
         request_id = request.headers.get("X-Request-ID", str(uuid4()))
         start_time = time.perf_counter()

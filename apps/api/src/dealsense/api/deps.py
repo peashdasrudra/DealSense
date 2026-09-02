@@ -6,7 +6,7 @@ FastAPI dependencies for database sessions, Redis, and request context.
 from collections.abc import AsyncGenerator
 from uuid import UUID
 
-from fastapi import Depends, Header, HTTPException
+from fastapi import Header, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from dealsense.infrastructure.database import get_session_factory
@@ -65,4 +65,5 @@ async def get_request_id(
     if x_request_id:
         return x_request_id
     from uuid import uuid4
+
     return str(uuid4())

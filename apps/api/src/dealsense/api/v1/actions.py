@@ -9,18 +9,18 @@ Tier 3 (Assist):   Human-approved CRM write-back (create task, note, etc.)
 Tier 4 (Act):      Auto-executed write-back with rollback capability
 """
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Literal
 from uuid import UUID
 
 import structlog
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel, Field
-from sqlalchemy import select, update
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from dealsense.api.deps import get_db
-from dealsense.domain.models import ActionProposal, ActionExecution, AuditEvent
+from dealsense.domain.models import ActionExecution, ActionProposal, AuditEvent
 from dealsense.security.rbac import Permission, require_permission
 
 logger = structlog.get_logger(__name__)
@@ -30,14 +30,17 @@ router = APIRouter(prefix="/actions", tags=["Actions & Write-Backs"])
 
 # ─── Request / Response Schemas ──────────────────────────────────────────────
 
+
 class ActionApprovalRequest(BaseModel):
     """Approve or reject a pending action proposal."""
+
     decision: Literal["approve", "reject"]
     reason: str = Field(default="", max_length=500)
 
 
 class WriteBackRequest(BaseModel):
     """Execute an approved write-back action against HubSpot CRM."""
+
     action_type: str = Field(
         ...,
         description="One of: create_task, create_note, update_property, update_deal_stage, create_engagement, send_notification",
@@ -47,6 +50,7 @@ class WriteBackRequest(BaseModel):
 
 class ActionProposalResponse(BaseModel):
     """Serialized action proposal."""
+
     id: str
     deal_id: str
     tenant_id: str
@@ -65,6 +69,7 @@ class ActionProposalResponse(BaseModel):
 
 class ActionExecutionResponse(BaseModel):
     """Serialized write-back execution result."""
+
     id: str
     action_proposal_id: str
     action_type: str
@@ -80,6 +85,7 @@ class ActionExecutionResponse(BaseModel):
 
 class WriteBackResultResponse(BaseModel):
     """Result from executing a write-back."""
+
     success: bool
     action_type: str
     hubspot_object_id: str | None = None
@@ -89,6 +95,7 @@ class WriteBackResultResponse(BaseModel):
 
 
 # ─── Endpoints ───────────────────────────────────────────────────────────────
+
 
 @router.get("", response_model=list[ActionProposalResponse])
 async def list_pending_actions(
@@ -121,7 +128,9 @@ async def list_pending_actions(
             impact_estimate=p.impact_estimate or "",
             status=p.status,
             created_at=p.created_at.isoformat() if p.created_at else "",
-            updated_at=p.updated_at.isoformat() if hasattr(p, "updated_at") and p.updated_at else None,
+            updated_at=p.updated_at.isoformat()
+            if hasattr(p, "updated_at") and p.updated_at
+            else None,
         )
         for p in proposals
     ]
@@ -220,7 +229,7 @@ async def execute_write_back(
 
     # TODO: In production, call HubSpot CRM API here based on proposal.action_type
     # For now, simulate successful execution
-    executed_at = datetime.now(timezone.utc)
+    executed_at = datetime.now(UTC)
 
     execution = ActionExecution(
         proposal_id=proposal.id,

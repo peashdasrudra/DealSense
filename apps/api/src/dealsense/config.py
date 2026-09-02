@@ -29,7 +29,7 @@ class Settings(BaseSettings):
     secret_key: str = Field(min_length=32)
 
     # ---- API Server ----
-    api_host: str = "0.0.0.0"
+    api_host: str = "0.0.0.0"  # noqa: S104
     api_port: int = 8000
     api_reload: bool = False
     cors_origins: str = "http://localhost:3000"
@@ -38,7 +38,7 @@ class Settings(BaseSettings):
     postgres_host: str = "localhost"
     postgres_port: int = 5432
     postgres_user: str = "dealsense"
-    postgres_password: str = "dealsense_dev_password"
+    postgres_password: str = "dealsense_dev_password"  # noqa: S105
     postgres_db: str = "dealsense"
     database_url: str | None = None
     database_url_sync: str | None = None

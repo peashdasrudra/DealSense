@@ -5,7 +5,7 @@ MEDDICC qualification extraction, tiered recommendations, and immutable snapshot
 """
 
 import time
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from uuid import UUID, uuid4
 
 import structlog
@@ -13,9 +13,14 @@ from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
-from dealsense.domain.enums import ActionStatus, WebhookEventStatus
+from dealsense.domain.enums import ActionStatus
 from dealsense.domain.exceptions import DealNotFoundError
-from dealsense.domain.models import ActionProposal, Activity, Deal, DealParticipant, DealSignal, DealSnapshot, DealStageHistory
+from dealsense.domain.models import (
+    ActionProposal,
+    Deal,
+    DealSignal,
+    DealSnapshot,
+)
 from dealsense.services.llm_service import extract_meddicc_analysis
 from dealsense.services.recommendation_service import generate_recommended_actions
 from dealsense.services.retrieval_service import search_deal_evidence
@@ -31,7 +36,9 @@ class DealAnalysisWorkflow:
     def __init__(self, db: AsyncSession) -> None:
         self.db = db
 
-    async def execute(self, tenant_id: UUID, deal_id: UUID, trace_id: str = "") -> DealAnalysisState:
+    async def execute(
+        self, tenant_id: UUID, deal_id: UUID, trace_id: str = ""
+    ) -> DealAnalysisState:
         """Run the full analysis pipeline across all sequential nodes."""
         start_time = time.perf_counter()
         state = DealAnalysisState(
@@ -138,7 +145,7 @@ class DealAnalysisWorkflow:
     async def _score_deal_node(self, state: DealAnalysisState) -> DealAnalysisState:
         """Node 2: Evaluate deterministic risk signals."""
         state.current_node = "score_deal"
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
 
         # Calculate time in current stage
         days_in_stage = 0.0
@@ -262,7 +269,9 @@ class DealAnalysisWorkflow:
 
         if state.stage_history:
             last_change = state.stage_history[-1]
-            state.what_changed = f"Deal moved from '{last_change['from_stage']}' to '{last_change['to_stage']}'."
+            state.what_changed = (
+                f"Deal moved from '{last_change['from_stage']}' to '{last_change['to_stage']}'."
+            )
         else:
             state.what_changed = "No recent stage transitions recorded."
 
@@ -274,13 +283,10 @@ class DealAnalysisWorkflow:
         state.current_node = "persist_snapshot"
 
         # Fetch previous snapshot for delta calculation
-        prev_stmt = (
-            select(DealSnapshot)
-            .where(
-                DealSnapshot.deal_id == state.deal_id,
-                DealSnapshot.tenant_id == state.tenant_id,
-                DealSnapshot.is_current.is_(True),
-            )
+        prev_stmt = select(DealSnapshot).where(
+            DealSnapshot.deal_id == state.deal_id,
+            DealSnapshot.tenant_id == state.tenant_id,
+            DealSnapshot.is_current.is_(True),
         )
         prev_res = await self.db.execute(prev_stmt)
         prev_snapshot = prev_res.scalar_one_or_none()
@@ -293,7 +299,9 @@ class DealAnalysisWorkflow:
         if prev_snapshot:
             await self.db.execute(
                 update(DealSnapshot)
-                .where(DealSnapshot.deal_id == state.deal_id, DealSnapshot.tenant_id == state.tenant_id)
+                .where(
+                    DealSnapshot.deal_id == state.deal_id, DealSnapshot.tenant_id == state.tenant_id
+                )
                 .values(is_current=False)
             )
 
@@ -307,8 +315,12 @@ class DealAnalysisWorkflow:
             confidence=state.scoring_result.confidence if state.scoring_result else 1.0,
             previous_health_score=prev_score,
             score_delta=score_delta,
-            top_signals=[s.model_dump() for s in state.scoring_result.top_signals] if state.scoring_result else [],
-            methodology_extraction=state.meddicc_result.model_dump() if state.meddicc_result else {},
+            top_signals=[s.model_dump() for s in state.scoring_result.top_signals]
+            if state.scoring_result
+            else [],
+            methodology_extraction=state.meddicc_result.model_dump()
+            if state.meddicc_result
+            else {},
             risk_explanation=state.risk_explanation,
             what_changed=state.what_changed,
             recommended_actions=[a.model_dump() for a in state.recommendations],

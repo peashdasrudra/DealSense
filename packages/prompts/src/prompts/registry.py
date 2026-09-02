@@ -1,7 +1,5 @@
 """DealSense Prompts — Version Registry."""
 
-from typing import Any
-
 PROMPT_VERSIONS: dict[str, str] = {
     "meddicc_extraction": "v1.0.0",
     "risk_explanation": "v1.0.0",

@@ -71,7 +71,7 @@ class HubSpotClient:
 
                     # Handle Rate Limiting (429) or transient server errors (502, 503, 504)
                     if response.status_code in (429, 502, 503, 504) and attempt < MAX_RETRIES:
-                        retry_after = float(response.headers.get("Retry-After", 2 ** attempt))
+                        retry_after = float(response.headers.get("Retry-After", 2**attempt))
                         logger.warning(
                             "hubspot_api_rate_limited_or_error",
                             status_code=response.status_code,
@@ -102,7 +102,7 @@ class HubSpotClient:
 
                 except httpx.RequestError as e:
                     if attempt < MAX_RETRIES:
-                        backoff = 2 ** attempt
+                        backoff = 2**attempt
                         logger.warning(
                             "hubspot_api_network_error_retry",
                             attempt=attempt,
@@ -117,9 +117,7 @@ class HubSpotClient:
 
     # ---- Deals API ----
 
-    async def get_deal(
-        self, deal_id: str, properties: list[str] | None = None
-    ) -> dict[str, Any]:
+    async def get_deal(self, deal_id: str, properties: list[str] | None = None) -> dict[str, Any]:
         """Fetch deal details including requested properties and associations."""
         props = properties or [
             "dealname",
@@ -172,9 +170,7 @@ class HubSpotClient:
 
     # ---- Engagements & Activities API ----
 
-    async def get_deal_engagements(
-        self, deal_id: str, limit: int = 50
-    ) -> list[dict[str, Any]]:
+    async def get_deal_engagements(self, deal_id: str, limit: int = 50) -> list[dict[str, Any]]:
         """Fetch associated engagements (notes, calls, meetings, emails, tasks) for a deal."""
         # Query engagements associated with the deal via association search
         # Using CRM v3 associations & engagements API

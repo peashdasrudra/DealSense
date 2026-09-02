@@ -4,6 +4,7 @@ Pydantic schemas for HubSpot webhook event payloads and responses.
 """
 
 from typing import Any
+
 from pydantic import BaseModel, Field
 
 

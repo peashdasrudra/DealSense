@@ -8,7 +8,7 @@ Processes raw CRM webhook events consumed from Redis Streams:
 """
 
 import json
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 from uuid import UUID, uuid4
 
@@ -17,7 +17,13 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from dealsense.domain.enums import ActivityType, WebhookEventStatus
-from dealsense.domain.models import Activity, Deal, DealParticipant, DealStageHistory, Person, WebhookEvent
+from dealsense.domain.models import (
+    Activity,
+    Deal,
+    DealStageHistory,
+    Person,
+    WebhookEvent,
+)
 from dealsense.infrastructure.hubspot_client import HubSpotClient, HubSpotClientError
 
 logger = structlog.get_logger(__name__)
@@ -36,7 +42,7 @@ async def process_stream_event(
     Returns:
         bool: True if processed successfully, False if failed
     """
-    event_type = event_fields.get("event_type", "")
+    event_fields.get("event_type", "")
     payload_raw = event_fields.get("payload", "{}")
 
     try:
@@ -86,7 +92,7 @@ async def process_stream_event(
             record = res.scalar_one_or_none()
             if record:
                 record.status = WebhookEventStatus.PROCESSED
-                record.processed_at = datetime.now(timezone.utc)
+                record.processed_at = datetime.now(UTC)
                 await db.flush()
 
         logger.info(
@@ -130,7 +136,9 @@ async def _handle_deal_event(
     try:
         crm_deal = await hubspot_client.get_deal(hubspot_deal_id)
     except HubSpotClientError as e:
-        logger.warning("hubspot_deal_fetch_failed_using_event_data", error=str(e), deal_id=hubspot_deal_id)
+        logger.warning(
+            "hubspot_deal_fetch_failed_using_event_data", error=str(e), deal_id=hubspot_deal_id
+        )
         crm_deal = {"properties": {}}
 
     props = crm_deal.get("properties", {})
@@ -177,7 +185,7 @@ async def _handle_deal_event(
             tenant_id=tenant_id,
             from_stage=old_stage,
             to_stage=stage,
-            changed_at=datetime.now(timezone.utc),
+            changed_at=datetime.now(UTC),
         )
         db.add(history)
         await db.flush()
@@ -212,7 +220,9 @@ async def _handle_contact_event(
     title = props.get("jobtitle")
     company = props.get("company")
 
-    stmt = select(Person).where(Person.tenant_id == tenant_id, Person.hubspot_contact_id == hubspot_contact_id)
+    stmt = select(Person).where(
+        Person.tenant_id == tenant_id, Person.hubspot_contact_id == hubspot_contact_id
+    )
     res = await db.execute(stmt)
     person = res.scalar_one_or_none()
 

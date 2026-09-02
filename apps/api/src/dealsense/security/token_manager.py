@@ -9,7 +9,7 @@ Manages HubSpot OAuth tokens with:
 """
 
 import time
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from uuid import UUID
 
 import httpx
@@ -88,8 +88,8 @@ async def get_access_token(
     connection = await _get_connection(tenant_id, db)
 
     # 3. Check if token is still valid
-    now = datetime.now(timezone.utc)
-    if connection.token_expires_at.replace(tzinfo=timezone.utc) > now:
+    now = datetime.now(UTC)
+    if connection.token_expires_at.replace(tzinfo=UTC) > now:
         # Token is still valid — decrypt and cache
         access_token = decrypt_value(connection.encrypted_access_token)
         await cache_set(
@@ -125,18 +125,14 @@ async def store_tokens(
         scopes: Granted OAuth scopes
         db: Active database session
     """
-    expires_at = datetime.fromtimestamp(
-        time.time() + expires_in, tz=timezone.utc
-    )
+    expires_at = datetime.fromtimestamp(time.time() + expires_in, tz=UTC)
 
     # Encrypt tokens
     encrypted_access = encrypt_value(access_token)
     encrypted_refresh = encrypt_value(refresh_token)
 
     # Check if connection already exists
-    stmt = select(HubSpotConnection).where(
-        HubSpotConnection.tenant_id == tenant_id
-    )
+    stmt = select(HubSpotConnection).where(HubSpotConnection.tenant_id == tenant_id)
     result = await db.execute(stmt)
     connection = result.scalar_one_or_none()
 
@@ -148,7 +144,7 @@ async def store_tokens(
         connection.scopes = scopes
         connection.is_active = True
         connection.refresh_failure_count = 0
-        connection.last_refresh_at = datetime.now(timezone.utc)
+        connection.last_refresh_at = datetime.now(UTC)
     else:
         # Create new connection
         connection = HubSpotConnection(
@@ -195,9 +191,7 @@ async def invalidate_tokens(tenant_id: UUID, db: AsyncSession) -> None:
     logger.info("tokens_invalidated", tenant_id=str(tenant_id))
 
 
-async def get_connection_status(
-    tenant_id: UUID, db: AsyncSession
-) -> dict[str, object]:
+async def get_connection_status(tenant_id: UUID, db: AsyncSession) -> dict[str, object]:
     """Get the OAuth connection status for a tenant.
 
     Returns:
@@ -212,8 +206,8 @@ async def get_connection_status(
             "scopes": "",
         }
 
-    now = datetime.now(timezone.utc)
-    expires_at = connection.token_expires_at.replace(tzinfo=timezone.utc)
+    now = datetime.now(UTC)
+    expires_at = connection.token_expires_at.replace(tzinfo=UTC)
 
     return {
         "connected": True,
@@ -222,9 +216,7 @@ async def get_connection_status(
         "token_expired": expires_at <= now,
         "scopes": connection.scopes,
         "last_refresh_at": (
-            connection.last_refresh_at.isoformat()
-            if connection.last_refresh_at
-            else None
+            connection.last_refresh_at.isoformat() if connection.last_refresh_at else None
         ),
         "refresh_failure_count": connection.refresh_failure_count,
     }
@@ -233,13 +225,9 @@ async def get_connection_status(
 # ---- Internal Helpers ----
 
 
-async def _get_connection(
-    tenant_id: UUID, db: AsyncSession
-) -> HubSpotConnection:
+async def _get_connection(tenant_id: UUID, db: AsyncSession) -> HubSpotConnection:
     """Load a tenant's HubSpot connection or raise."""
-    stmt = select(HubSpotConnection).where(
-        HubSpotConnection.tenant_id == tenant_id
-    )
+    stmt = select(HubSpotConnection).where(HubSpotConnection.tenant_id == tenant_id)
     result = await db.execute(stmt)
     connection = result.scalar_one_or_none()
 
@@ -309,7 +297,7 @@ async def _refresh_token_with_lock(
         logger.info("token_refreshed", tenant_id=str(tenant_id))
         return new_tokens["access_token"]
 
-    except OAuthTokenRefreshError:
+    except OAuthTokenRefreshError as err:
         # Track failures
         connection.refresh_failure_count += 1
         await db.flush()
@@ -322,7 +310,7 @@ async def _refresh_token_with_lock(
             )
             connection.is_active = False
             await db.flush()
-            raise OAuthTokenExpiredError()
+            raise OAuthTokenExpiredError() from err
 
         raise
 
@@ -374,6 +362,4 @@ async def _call_hubspot_refresh(
             }
 
         except httpx.HTTPError as e:
-            raise OAuthTokenRefreshError(
-                f"HubSpot token refresh network error: {e}"
-            ) from e
+            raise OAuthTokenRefreshError(f"HubSpot token refresh network error: {e}") from e

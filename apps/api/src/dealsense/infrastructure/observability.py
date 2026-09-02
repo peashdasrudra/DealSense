@@ -3,13 +3,12 @@
 Structured logging with structlog and OpenTelemetry trace integration.
 """
 
-import sys
 from typing import Any
 
 import structlog
 from opentelemetry import trace
-from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.resources import Resource
+from opentelemetry.sdk.trace import TracerProvider
 
 from dealsense.config import get_settings
 

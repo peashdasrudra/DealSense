@@ -9,7 +9,7 @@ Verifies:
 """
 
 import os
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from unittest.mock import AsyncMock, MagicMock, patch
 from uuid import uuid4
 
@@ -19,7 +19,7 @@ from httpx import ASGITransport, AsyncClient
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from dealsense.domain.enums import TenantStatus
-from dealsense.domain.models import Deal, DealSnapshot, Tenant
+from dealsense.domain.models import Deal, DealSnapshot
 from dealsense.services.scoring_service import compute_and_persist_deal_snapshot
 
 
@@ -30,8 +30,10 @@ def setup_test_env():
     os.environ["ENCRYPTION_KEY"] = key
     os.environ["SECRET_KEY"] = "test-secret-key-minimum-32-characters-long"
     from dealsense.infrastructure import encryption
+
     encryption._fernet = None
     from dealsense.config import get_settings
+
     get_settings.cache_clear()
     yield
     encryption._fernet = None
@@ -55,10 +57,10 @@ class TestDealScoringService:
             stage="contract_sent",
             pipeline="default",
             amount=75000.0,
-            close_date=datetime.now(timezone.utc),
+            close_date=datetime.now(UTC),
             owner_id="rep1",
             properties={},
-            created_at=datetime.now(timezone.utc),
+            created_at=datetime.now(UTC),
         )
         deal.stage_history = []
         deal.activities = []
@@ -94,8 +96,8 @@ class TestDealEndpoints:
     @pytest.mark.asyncio
     async def test_get_deal_snapshot_endpoint(self) -> None:
         """GET /api/v1/deals/{deal_id}/snapshot should return precomputed snapshot."""
-        from dealsense.main import app
         from dealsense.api.deps import get_db
+        from dealsense.main import app
 
         tenant_id = uuid4()
         deal_id = uuid4()
@@ -113,7 +115,7 @@ class TestDealEndpoints:
             top_signals=[],
             risk_explanation="Healthy deal.",
             is_current=True,
-            created_at=datetime.now(timezone.utc),
+            created_at=datetime.now(UTC),
         )
 
         mock_db = AsyncMock(spec=AsyncSession)
@@ -128,7 +130,10 @@ class TestDealEndpoints:
         mock_tenant_res = MagicMock()
         mock_tenant_res.scalar_one_or_none.return_value = TenantStatus.ACTIVE
 
-        with patch("dealsense.security.tenant_guard.TenantGuardMiddleware._validate_tenant", new_callable=AsyncMock) as mock_val:
+        with patch(
+            "dealsense.security.tenant_guard.TenantGuardMiddleware._validate_tenant",
+            new_callable=AsyncMock,
+        ) as mock_val:
             mock_val.return_value = TenantStatus.ACTIVE
 
             app.dependency_overrides[get_db] = _override_get_db

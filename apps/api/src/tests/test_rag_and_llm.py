@@ -31,8 +31,10 @@ def setup_test_env():
     os.environ["SECRET_KEY"] = "test-secret-key-minimum-32-characters-long"
     os.environ["OPENAI_API_KEY"] = ""  # Test fallback & mock paths
     from dealsense.infrastructure import encryption
+
     encryption._fernet = None
     from dealsense.config import get_settings
+
     get_settings.cache_clear()
     yield
     encryption._fernet = None
@@ -63,7 +65,9 @@ class TestChunkingAndEmbedding:
 
         mock_db = AsyncMock(spec=AsyncSession)
 
-        with patch("dealsense.services.embedding_service.generate_embeddings", new_callable=AsyncMock) as mock_emb:
+        with patch(
+            "dealsense.services.embedding_service.generate_embeddings", new_callable=AsyncMock
+        ) as mock_emb:
             mock_emb.return_value = [[0.1] * 1536]
 
             chunks = await process_and_store_activity_chunks(
@@ -108,7 +112,9 @@ class TestHybridRetrieval:
 
         mock_db.execute.side_effect = [mock_vec_res, mock_kw_res]
 
-        with patch("dealsense.services.retrieval_service.generate_embeddings", new_callable=AsyncMock) as mock_emb:
+        with patch(
+            "dealsense.services.retrieval_service.generate_embeddings", new_callable=AsyncMock
+        ) as mock_emb:
             mock_emb.return_value = [[0.1] * 1536]
 
             results = await search_deal_evidence(
@@ -174,7 +180,10 @@ class TestLLMExtractionAndRecommendations:
 
         assert len(actions) >= 2
         categories = [a.category for a in actions]
-        assert ActionCategory.REQUEST_INTRODUCTION in categories or ActionCategory.CREATE_FOLLOWUP_TASK in categories
+        assert (
+            ActionCategory.REQUEST_INTRODUCTION in categories
+            or ActionCategory.CREATE_FOLLOWUP_TASK in categories
+        )
         # Verify action tiers
         tiers = [a.tier for a in actions]
         assert ActionTier.TIER_1_SUGGESTION in tiers or ActionTier.TIER_3_CONTROLLED_WRITE in tiers

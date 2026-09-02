@@ -6,19 +6,19 @@ to generate concrete, evidence-grounded action proposals categorized by action t
 
 import json
 from typing import Any
-from uuid import UUID, uuid4
+from uuid import uuid4
 
 import structlog
 from openai import AsyncOpenAI
+from prompts import (
+    RECOMMENDATION_SYSTEM_PROMPT,
+    RECOMMENDATION_USER_TEMPLATE,
+)
 from pydantic import BaseModel, Field
 
 from dealsense.config import get_settings
 from dealsense.domain.enums import ActionCategory, ActionTier
 from dealsense.services.llm_service import MEDDICCExtractionResult
-from prompts import (
-    RECOMMENDATION_SYSTEM_PROMPT,
-    RECOMMENDATION_USER_TEMPLATE,
-)
 
 logger = structlog.get_logger(__name__)
 
@@ -78,7 +78,10 @@ async def generate_recommended_actions(
         return _generate_heuristic_recommendations(top_signals, meddicc)
 
     signals_summary = "\n".join(
-        [f"- [{s.get('severity', 'info').upper()}] {s.get('title', '')}: {s.get('description', '')}" for s in top_signals]
+        [
+            f"- [{s.get('severity', 'info').upper()}] {s.get('title', '')}: {s.get('description', '')}"
+            for s in top_signals
+        ]
     )
 
     meddicc_summary = (
@@ -157,7 +160,10 @@ def _generate_heuristic_recommendations(
                 description="Create a high-priority task to share a relevant customer case study and request a 15-minute sync.",
                 rationale="Over 14 days have passed without recorded touchpoint activity.",
                 confidence=0.85,
-                suggested_payload={"task_subject": "Re-engage prospect with case study", "due_days": 2},
+                suggested_payload={
+                    "task_subject": "Re-engage prospect with case study",
+                    "due_days": 2,
+                },
             )
         )
 

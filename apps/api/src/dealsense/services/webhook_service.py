@@ -5,7 +5,6 @@ and publishing to Redis Streams for asynchronous worker processing.
 """
 
 from typing import Any
-from uuid import UUID
 
 import structlog
 from sqlalchemy import select
@@ -90,7 +89,9 @@ async def process_incoming_webhooks(
             continue
 
         if tenant.status != TenantStatus.ACTIVE:
-            logger.warning("webhook_tenant_inactive", tenant_id=str(tenant.id), status=tenant.status)
+            logger.warning(
+                "webhook_tenant_inactive", tenant_id=str(tenant.id), status=tenant.status
+            )
             events_skipped += 1
             continue
 
@@ -125,7 +126,9 @@ async def process_incoming_webhooks(
         await publish_event(event_type=subscription_type, payload=stream_payload)
 
         # 7. Record Idempotency in Redis (24-hour TTL)
-        await cache_set(f"idempotency:{idempotency_key}", "processed", ttl_seconds=IDEMPOTENCY_TTL_SECONDS)
+        await cache_set(
+            f"idempotency:{idempotency_key}", "processed", ttl_seconds=IDEMPOTENCY_TTL_SECONDS
+        )
         events_queued += 1
 
     logger.info(

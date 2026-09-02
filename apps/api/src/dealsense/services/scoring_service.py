@@ -4,8 +4,7 @@ Hydrates deal metrics from normalized database tables, computes deterministic ri
 persists immutable DealSnapshot and DealSignal records, and tracks historical deltas.
 """
 
-from datetime import datetime, timezone
-from typing import Any
+from datetime import UTC, datetime
 from uuid import UUID, uuid4
 
 import structlog
@@ -14,7 +13,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
 from dealsense.domain.exceptions import DealNotFoundError
-from dealsense.domain.models import Activity, Deal, DealParticipant, DealSignal, DealSnapshot, DealStageHistory
+from dealsense.domain.models import Deal, DealSignal, DealSnapshot
 from scoring import ScoringDealInput, score_deal
 
 logger = structlog.get_logger(__name__)
@@ -52,15 +51,19 @@ async def compute_and_persist_deal_snapshot(
         raise DealNotFoundError(str(deal_id))
 
     # 2. Extract metrics from relational history
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
 
     # Days in current stage
     days_in_stage = 0.0
     if deal.stage_history:
         latest_transition = max(deal.stage_history, key=lambda h: h.changed_at)
-        days_in_stage = max(0.0, (now - latest_transition.changed_at.replace(tzinfo=timezone.utc)).total_seconds() / 86400.0)
+        days_in_stage = max(
+            0.0, (now - latest_transition.changed_at.replace(tzinfo=UTC)).total_seconds() / 86400.0
+        )
     elif deal.created_at:
-        days_in_stage = max(0.0, (now - deal.created_at.replace(tzinfo=timezone.utc)).total_seconds() / 86400.0)
+        days_in_stage = max(
+            0.0, (now - deal.created_at.replace(tzinfo=UTC)).total_seconds() / 86400.0
+        )
 
     # Days since last activity
     days_since_activity = 0.0
@@ -70,7 +73,9 @@ async def compute_and_persist_deal_snapshot(
 
     if deal.activities:
         latest_activity = max(deal.activities, key=lambda a: a.occurred_at)
-        days_since_activity = max(0.0, (now - latest_activity.occurred_at.replace(tzinfo=timezone.utc)).total_seconds() / 86400.0)
+        days_since_activity = max(
+            0.0, (now - latest_activity.occurred_at.replace(tzinfo=UTC)).total_seconds() / 86400.0
+        )
 
         for act in deal.activities:
             if act.activity_type == "task":
@@ -83,7 +88,7 @@ async def compute_and_persist_deal_snapshot(
                         past_due_tasks += 1
             elif act.activity_type in ("meeting", "call"):
                 # If meeting scheduled in the future
-                if act.occurred_at.replace(tzinfo=timezone.utc) > now:
+                if act.occurred_at.replace(tzinfo=UTC) > now:
                     has_scheduled_next_step = True
 
     # Stakeholder roles
@@ -116,13 +121,10 @@ async def compute_and_persist_deal_snapshot(
     scoring_result = score_deal(scoring_input)
 
     # 5. Fetch previous snapshot for delta tracking
-    prev_stmt = (
-        select(DealSnapshot)
-        .where(
-            DealSnapshot.deal_id == deal.id,
-            DealSnapshot.tenant_id == tenant_id,
-            DealSnapshot.is_current.is_(True),
-        )
+    prev_stmt = select(DealSnapshot).where(
+        DealSnapshot.deal_id == deal.id,
+        DealSnapshot.tenant_id == tenant_id,
+        DealSnapshot.is_current.is_(True),
     )
     prev_res = await db.execute(prev_stmt)
     prev_snapshot = prev_res.scalar_one_or_none()

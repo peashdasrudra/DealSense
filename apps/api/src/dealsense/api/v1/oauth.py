@@ -103,9 +103,13 @@ async def connection_status(
         connected=bool(status_info.get("connected", False)),
         is_active=bool(status_info.get("is_active", False)),
         scopes=str(status_info.get("scopes", "")),
-        token_expires_at=str(status_info.get("token_expires_at")) if status_info.get("token_expires_at") else None,
+        token_expires_at=str(status_info.get("token_expires_at"))
+        if status_info.get("token_expires_at")
+        else None,
         token_expired=bool(status_info.get("token_expired", False)),
-        last_refresh_at=str(status_info.get("last_refresh_at")) if status_info.get("last_refresh_at") else None,
+        last_refresh_at=str(status_info.get("last_refresh_at"))
+        if status_info.get("last_refresh_at")
+        else None,
         refresh_failure_count=int(status_info.get("refresh_failure_count", 0)),
     )
 

@@ -116,7 +116,10 @@ def evaluate_stakeholder_gap(deal: ScoringDealInput) -> EvaluatedSignal | None:
         score_penalty=penalty,
         title="Stakeholder Coverage Gap",
         description=desc,
-        evidence=[f"Missing Roles: {', '.join(missing)}", f"Identified Contacts: {deal.total_contacts_count}"],
+        evidence=[
+            f"Missing Roles: {', '.join(missing)}",
+            f"Identified Contacts: {deal.total_contacts_count}",
+        ],
         metrics={
             "has_champion": has_champion,
             "has_economic_buyer": has_economic_buyer,
@@ -237,7 +240,10 @@ def evaluate_historical_similarity(deal: ScoringDealInput) -> EvaluatedSignal | 
             score_penalty=8.0,
             title="High Value Stalled Profile",
             description="Enterprise tier deal (> $100k) exhibiting stalling pattern uncommon in winning deals.",
-            evidence=[f"Amount: ${deal.amount:,.0f}", f"Stage days: {deal.days_in_current_stage:.0f}"],
+            evidence=[
+                f"Amount: ${deal.amount:,.0f}",
+                f"Stage days: {deal.days_in_current_stage:.0f}",
+            ],
             metrics={"amount": deal.amount, "days": deal.days_in_current_stage},
         )
     return None

@@ -8,7 +8,7 @@ Verifies:
 """
 
 import os
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from unittest.mock import AsyncMock, MagicMock, patch
 from uuid import uuid4
 
@@ -17,7 +17,7 @@ from cryptography.fernet import Fernet
 from httpx import ASGITransport, AsyncClient
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from dealsense.domain.enums import ActionTier, TenantStatus
+from dealsense.domain.enums import TenantStatus
 from dealsense.domain.models import Deal, DealSnapshot
 from dealsense_worker.workflows.deal_analysis import DealAnalysisWorkflow
 
@@ -30,8 +30,10 @@ def setup_test_env():
     os.environ["SECRET_KEY"] = "test-secret-key-minimum-32-characters-long"
     os.environ["OPENAI_API_KEY"] = ""
     from dealsense.infrastructure import encryption
+
     encryption._fernet = None
     from dealsense.config import get_settings
+
     get_settings.cache_clear()
     yield
     encryption._fernet = None
@@ -57,8 +59,8 @@ class TestDealAnalysisWorkflow:
             amount=150000.0,
             owner_id="rep_sarah",
             owner_name="Sarah Rep",
-            close_date=datetime.now(timezone.utc),
-            created_at=datetime.now(timezone.utc),
+            close_date=datetime.now(UTC),
+            created_at=datetime.now(UTC),
             properties={},
         )
         deal.stage_history = []
@@ -78,7 +80,9 @@ class TestDealAnalysisWorkflow:
 
         mock_db.execute.side_effect = [mock_deal_res, mock_prev_res, None]
 
-        with patch("dealsense_worker.workflows.deal_analysis.search_deal_evidence", new_callable=AsyncMock) as mock_retrieval:
+        with patch(
+            "dealsense_worker.workflows.deal_analysis.search_deal_evidence", new_callable=AsyncMock
+        ) as mock_retrieval:
             mock_retrieval.return_value = []
 
             workflow = DealAnalysisWorkflow(db=mock_db)
@@ -101,8 +105,8 @@ class TestDealAnalysisWorkflow:
     @pytest.mark.asyncio
     async def test_trigger_deal_analysis_endpoint(self) -> None:
         """POST /api/v1/deals/{deal_id}/analyze should execute analysis and return 200."""
-        from dealsense.main import app
         from dealsense.api.deps import get_db
+        from dealsense.main import app
 
         tenant_id = uuid4()
         deal_id = uuid4()
@@ -120,7 +124,7 @@ class TestDealAnalysisWorkflow:
             what_changed="Stage updated.",
             recommended_actions=[],
             is_current=True,
-            created_at=datetime.now(timezone.utc),
+            created_at=datetime.now(UTC),
         )
 
         mock_db = AsyncMock(spec=AsyncSession)
@@ -128,10 +132,18 @@ class TestDealAnalysisWorkflow:
         async def _override_get_db():
             yield mock_db
 
-        with patch("dealsense.security.tenant_guard.TenantGuardMiddleware._validate_tenant", new_callable=AsyncMock) as mock_val, \
-             patch("dealsense_worker.tasks.analyze.run_deal_analysis", new_callable=AsyncMock) as mock_run_analysis, \
-             patch("dealsense.api.v1.deals.get_latest_deal_snapshot", new_callable=AsyncMock) as mock_get_snap:
-
+        with (
+            patch(
+                "dealsense.security.tenant_guard.TenantGuardMiddleware._validate_tenant",
+                new_callable=AsyncMock,
+            ) as mock_val,
+            patch(
+                "dealsense_worker.tasks.analyze.run_deal_analysis", new_callable=AsyncMock
+            ) as mock_run_analysis,
+            patch(
+                "dealsense.api.v1.deals.get_latest_deal_snapshot", new_callable=AsyncMock
+            ) as mock_get_snap,
+        ):
             mock_val.return_value = TenantStatus.ACTIVE
             mock_run_analysis.return_value = MagicMock()
             mock_get_snap.return_value = mock_snapshot

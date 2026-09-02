@@ -62,74 +62,79 @@ class Permission(StrEnum):
 
 ROLE_PERMISSIONS: dict[UserRole, frozenset[Permission]] = {
     UserRole.AGENCY_OWNER: frozenset(Permission),  # All permissions
-
-    UserRole.AGENCY_OPERATOR: frozenset({
-        Permission.TENANT_READ,
-        Permission.TENANT_UPDATE,
-        Permission.DEAL_READ,
-        Permission.DEAL_ANALYZE,
-        Permission.SNAPSHOT_READ,
-        Permission.ACTION_READ,
-        Permission.ACTION_APPROVE,
-        Permission.ACTION_REJECT,
-        Permission.ACTION_EXECUTE,
-        Permission.CONFIG_READ,
-        Permission.CONFIG_UPDATE,
-        Permission.SCORING_CONFIG,
-        Permission.OAUTH_MANAGE,
-        Permission.AUDIT_READ,
-        Permission.PORTFOLIO_READ,
-        Permission.WHITE_LABEL_CONFIG,
-        Permission.USER_READ,
-    }),
-
-    UserRole.CLIENT_ADMIN: frozenset({
-        Permission.TENANT_READ,
-        Permission.DEAL_READ,
-        Permission.DEAL_ANALYZE,
-        Permission.SNAPSHOT_READ,
-        Permission.ACTION_READ,
-        Permission.ACTION_APPROVE,
-        Permission.ACTION_REJECT,
-        Permission.ACTION_EXECUTE,
-        Permission.CONFIG_READ,
-        Permission.CONFIG_UPDATE,
-        Permission.SCORING_CONFIG,
-        Permission.OAUTH_MANAGE,
-        Permission.OAUTH_DISCONNECT,
-        Permission.AUDIT_READ,
-        Permission.USER_READ,
-        Permission.USER_MANAGE,
-    }),
-
-    UserRole.SALES_MANAGER: frozenset({
-        Permission.DEAL_READ,
-        Permission.DEAL_ANALYZE,
-        Permission.SNAPSHOT_READ,
-        Permission.ACTION_READ,
-        Permission.ACTION_APPROVE,
-        Permission.ACTION_REJECT,
-        Permission.CONFIG_READ,
-        Permission.AUDIT_READ,
-    }),
-
-    UserRole.SALES_REP: frozenset({
-        Permission.DEAL_READ,
-        Permission.SNAPSHOT_READ,
-        Permission.ACTION_READ,
-        Permission.ACTION_APPROVE,  # Own actions only
-    }),
-
-    UserRole.AUDITOR: frozenset({
-        Permission.TENANT_READ,
-        Permission.DEAL_READ,
-        Permission.SNAPSHOT_READ,
-        Permission.ACTION_READ,
-        Permission.CONFIG_READ,
-        Permission.AUDIT_READ,
-        Permission.AUDIT_EXPORT,
-        Permission.PORTFOLIO_READ,
-    }),
+    UserRole.AGENCY_OPERATOR: frozenset(
+        {
+            Permission.TENANT_READ,
+            Permission.TENANT_UPDATE,
+            Permission.DEAL_READ,
+            Permission.DEAL_ANALYZE,
+            Permission.SNAPSHOT_READ,
+            Permission.ACTION_READ,
+            Permission.ACTION_APPROVE,
+            Permission.ACTION_REJECT,
+            Permission.ACTION_EXECUTE,
+            Permission.CONFIG_READ,
+            Permission.CONFIG_UPDATE,
+            Permission.SCORING_CONFIG,
+            Permission.OAUTH_MANAGE,
+            Permission.AUDIT_READ,
+            Permission.PORTFOLIO_READ,
+            Permission.WHITE_LABEL_CONFIG,
+            Permission.USER_READ,
+        }
+    ),
+    UserRole.CLIENT_ADMIN: frozenset(
+        {
+            Permission.TENANT_READ,
+            Permission.DEAL_READ,
+            Permission.DEAL_ANALYZE,
+            Permission.SNAPSHOT_READ,
+            Permission.ACTION_READ,
+            Permission.ACTION_APPROVE,
+            Permission.ACTION_REJECT,
+            Permission.ACTION_EXECUTE,
+            Permission.CONFIG_READ,
+            Permission.CONFIG_UPDATE,
+            Permission.SCORING_CONFIG,
+            Permission.OAUTH_MANAGE,
+            Permission.OAUTH_DISCONNECT,
+            Permission.AUDIT_READ,
+            Permission.USER_READ,
+            Permission.USER_MANAGE,
+        }
+    ),
+    UserRole.SALES_MANAGER: frozenset(
+        {
+            Permission.DEAL_READ,
+            Permission.DEAL_ANALYZE,
+            Permission.SNAPSHOT_READ,
+            Permission.ACTION_READ,
+            Permission.ACTION_APPROVE,
+            Permission.ACTION_REJECT,
+            Permission.CONFIG_READ,
+            Permission.AUDIT_READ,
+        }
+    ),
+    UserRole.SALES_REP: frozenset(
+        {
+            Permission.DEAL_READ,
+            Permission.SNAPSHOT_READ,
+            Permission.ACTION_READ,
+            Permission.ACTION_APPROVE,  # Own actions only
+        }
+    ),
+    UserRole.AUDITOR: frozenset(
+        {
+            Permission.TENANT_READ,
+            Permission.DEAL_READ,
+            Permission.SNAPSHOT_READ,
+            Permission.ACTION_READ,
+            Permission.CONFIG_READ,
+            Permission.AUDIT_READ,
+            Permission.AUDIT_EXPORT,
+            Permission.PORTFOLIO_READ,
+        }
+    ),
 }
 
 

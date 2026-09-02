@@ -92,9 +92,7 @@ def _validate_timestamp(timestamp_header: str) -> None:
     try:
         timestamp_ms = int(timestamp_header)
     except (ValueError, TypeError) as e:
-        raise WebhookValidationError(
-            f"Invalid webhook timestamp: {timestamp_header}"
-        ) from e
+        raise WebhookValidationError(f"Invalid webhook timestamp: {timestamp_header}") from e
 
     current_time_ms = int(time.time() * 1000)
     age_seconds = (current_time_ms - timestamp_ms) / 1000

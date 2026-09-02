@@ -8,8 +8,9 @@ Verifies:
 """
 
 import json
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
+
 import pytest
 
 from scoring.engine import score_deal
@@ -28,7 +29,7 @@ class TestScoringSignals:
             stage_benchmark_days=14.0,
             owner_id="rep1",
             amount=50000.0,
-            close_date=datetime.now(timezone.utc),
+            close_date=datetime.now(UTC),
             has_scheduled_next_step=True,
             identified_roles=["champion", "economic_buyer"],
         )
@@ -48,7 +49,7 @@ class TestScoringSignals:
             days_in_current_stage=5.0,
             owner_id="rep1",
             amount=10000.0,
-            close_date=datetime.now(timezone.utc),
+            close_date=datetime.now(UTC),
             has_scheduled_next_step=True,
             identified_roles=["champion", "economic_buyer"],
         )
@@ -71,7 +72,7 @@ class TestScoringSignals:
             days_in_current_stage=5.0,
             owner_id="rep1",
             amount=50000.0,
-            close_date=datetime.now(timezone.utc),
+            close_date=datetime.now(UTC),
             has_scheduled_next_step=True,
             identified_roles=[],  # No confirmed stakeholders
         )
@@ -94,7 +95,7 @@ class TestScoringDeterminism:
             days_since_last_activity=15.0,
             owner_id="rep2",
             amount=80000.0,
-            close_date=datetime.now(timezone.utc),
+            close_date=datetime.now(UTC),
             has_scheduled_next_step=False,
             close_date_push_count=2,
             past_due_tasks_count=1,
@@ -114,11 +115,17 @@ class TestScoringDatasetValidation:
 
     def test_dataset_scenarios(self) -> None:
         """All seeded evaluation scenarios must fall within expected risk bands and score bounds."""
-        dataset_path = Path(__file__).resolve().parent.parent.parent / "evals" / "datasets" / "scoring" / "deal_scenarios.jsonl"
+        dataset_path = (
+            Path(__file__).resolve().parent.parent.parent
+            / "evals"
+            / "datasets"
+            / "scoring"
+            / "deal_scenarios.jsonl"
+        )
         if not dataset_path.exists():
             pytest.skip("Dataset file not found")
 
-        with open(dataset_path, "r", encoding="utf-8") as f:
+        with open(dataset_path, encoding="utf-8") as f:
             for line in f:
                 if not line.strip():
                     continue
@@ -136,12 +143,14 @@ class TestScoringDatasetValidation:
                     close_date_push_count=scenario["close_date_pushes"],
                     past_due_tasks_count=scenario["past_due_tasks"],
                     owner_id="rep1",
-                    close_date=datetime.now(timezone.utc),
+                    close_date=datetime.now(UTC),
                 )
                 res = score_deal(deal)
 
                 if "expected_risk_band" in scenario:
-                    assert res.risk_band == scenario["expected_risk_band"], f"Failed on scenario {scenario['id']}: score={res.health_score}"
+                    assert res.risk_band == scenario["expected_risk_band"], (
+                        f"Failed on scenario {scenario['id']}: score={res.health_score}"
+                    )
                 if "min_score" in scenario:
                     assert res.health_score >= scenario["min_score"]
                 if "max_score" in scenario:

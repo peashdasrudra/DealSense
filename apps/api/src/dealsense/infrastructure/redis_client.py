@@ -3,6 +3,8 @@
 Connection pool, typed helper methods, and distributed locking.
 """
 
+from contextlib import suppress
+
 import redis.asyncio as redis
 
 from dealsense.config import get_settings
@@ -76,7 +78,5 @@ async def acquire_lock(
 
 async def release_lock(lock: redis.lock.Lock) -> None:
     """Release a distributed lock."""
-    try:
+    with suppress(redis.exceptions.LockNotOwnedError):
         await lock.release()
-    except redis.exceptions.LockNotOwnedError:
-        pass  # Lock already expired or released

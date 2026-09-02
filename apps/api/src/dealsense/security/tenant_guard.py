@@ -21,17 +21,19 @@ from dealsense.infrastructure.database import get_session_factory
 logger = structlog.get_logger(__name__)
 
 # Paths that do NOT require tenant context
-TENANT_EXEMPT_PATHS = frozenset({
-    "/health",
-    "/ready",
-    "/docs",
-    "/redoc",
-    "/openapi.json",
-    "/api/v1/status",
-    "/api/v1/oauth/authorize",
-    "/api/v1/oauth/callback",
-    "/api/v1/webhooks/hubspot",
-})
+TENANT_EXEMPT_PATHS = frozenset(
+    {
+        "/health",
+        "/ready",
+        "/docs",
+        "/redoc",
+        "/openapi.json",
+        "/api/v1/status",
+        "/api/v1/oauth/authorize",
+        "/api/v1/oauth/callback",
+        "/api/v1/webhooks/hubspot",
+    }
+)
 
 
 def _is_exempt(path: str) -> bool:
@@ -46,9 +48,7 @@ class TenantGuardMiddleware(BaseHTTPMiddleware):
     this would be derived from the authenticated JWT or OAuth session.
     """
 
-    async def dispatch(
-        self, request: Request, call_next: RequestResponseEndpoint
-    ) -> Response:
+    async def dispatch(self, request: Request, call_next: RequestResponseEndpoint) -> Response:
         path = request.url.path
 
         # Skip validation for exempt paths
@@ -60,6 +60,7 @@ class TenantGuardMiddleware(BaseHTTPMiddleware):
 
         if not tenant_id_header:
             from fastapi.responses import JSONResponse
+
             return JSONResponse(
                 status_code=400,
                 content={
@@ -73,6 +74,7 @@ class TenantGuardMiddleware(BaseHTTPMiddleware):
             tenant_id = UUID(tenant_id_header)
         except ValueError:
             from fastapi.responses import JSONResponse
+
             return JSONResponse(
                 status_code=400,
                 content={
@@ -86,6 +88,7 @@ class TenantGuardMiddleware(BaseHTTPMiddleware):
 
         if tenant_status is None:
             from fastapi.responses import JSONResponse
+
             return JSONResponse(
                 status_code=404,
                 content={
@@ -96,6 +99,7 @@ class TenantGuardMiddleware(BaseHTTPMiddleware):
 
         if tenant_status == TenantStatus.SUSPENDED:
             from fastapi.responses import JSONResponse
+
             return JSONResponse(
                 status_code=403,
                 content={
@@ -106,6 +110,7 @@ class TenantGuardMiddleware(BaseHTTPMiddleware):
 
         if tenant_status == TenantStatus.DISCONNECTED:
             from fastapi.responses import JSONResponse
+
             return JSONResponse(
                 status_code=403,
                 content={

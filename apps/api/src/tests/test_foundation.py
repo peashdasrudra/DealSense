@@ -201,7 +201,9 @@ class TestEncryption:
     def test_encrypt_decrypt_roundtrip(self) -> None:
         """Encrypting and decrypting should return original value."""
         import os
+
         from cryptography.fernet import Fernet
+
         from dealsense.infrastructure import encryption
 
         # Generate a valid Fernet key and set it
@@ -213,6 +215,7 @@ class TestEncryption:
 
         # Also need to clear the cached settings singleton
         from dealsense.config import get_settings
+
         get_settings.cache_clear()
 
         from dealsense.infrastructure.encryption import decrypt_value, encrypt_value
@@ -248,6 +251,7 @@ class TestDomainEvents:
     def test_deal_updated_event(self) -> None:
         """DealUpdatedEvent should serialize correctly."""
         from uuid import uuid4
+
         from dealsense.domain.events import DealUpdatedEvent
 
         event = DealUpdatedEvent(
@@ -263,6 +267,7 @@ class TestDomainEvents:
     def test_analysis_completed_event(self) -> None:
         """AnalysisCompletedEvent should include all required fields."""
         from uuid import uuid4
+
         from dealsense.domain.events import AnalysisCompletedEvent
 
         event = AnalysisCompletedEvent(

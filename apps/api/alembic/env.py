@@ -8,7 +8,7 @@ from sqlalchemy import pool
 from sqlalchemy.ext.asyncio import create_async_engine
 
 # Import all models so Alembic can detect them
-from dealsense.domain.models import Base  # noqa: F401
+from dealsense.domain.models import Base
 
 # Alembic Config object
 config = context.config
@@ -24,6 +24,7 @@ target_metadata = Base.metadata
 def get_url() -> str:
     """Get database URL from environment or alembic.ini."""
     import os
+
     url = os.getenv("DATABASE_URL_SYNC")
     if url:
         return url

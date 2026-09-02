@@ -12,37 +12,29 @@ import hashlib
 import hmac
 import os
 import time
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime
 from unittest.mock import AsyncMock, patch
-from uuid import UUID, uuid4
+from uuid import uuid4
 
 import pytest
 from cryptography.fernet import Fernet
-from fastapi import FastAPI
 from httpx import ASGITransport, AsyncClient
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from dealsense.domain.enums import TenantStatus, UserRole
+from dealsense.domain.enums import UserRole
 from dealsense.domain.exceptions import (
-    OAuthStateValidationError,
-    OAuthTokenExpiredError,
     WebhookReplayError,
     WebhookValidationError,
 )
-from dealsense.domain.models import HubSpotConnection, Tenant
+from dealsense.domain.models import HubSpotConnection
 from dealsense.infrastructure import encryption
 from dealsense.security.rbac import Permission, get_role_permissions, has_permission
 from dealsense.security.token_manager import (
     get_access_token,
-    get_connection_status,
     invalidate_tokens,
     store_tokens,
 )
 from dealsense.security.webhook_signature import verify_webhook_signature
-from dealsense.services.oauth_service import (
-    generate_authorize_url,
-    handle_oauth_callback,
-)
 
 
 @pytest.fixture(autouse=True)
@@ -55,6 +47,7 @@ def setup_test_env():
     os.environ["SECRET_KEY"] = "test-secret-key-minimum-32-characters-long"
     encryption._fernet = None
     from dealsense.config import get_settings
+
     get_settings.cache_clear()
     yield
     encryption._fernet = None
@@ -78,14 +71,20 @@ class TestTokenManager:
 
         # Mock DB session and Redis cache
         from unittest.mock import MagicMock
+
         mock_db = AsyncMock(spec=AsyncSession)
         mock_result = MagicMock()
         mock_result.scalar_one_or_none.return_value = None
         mock_db.execute.return_value = mock_result
 
-        with patch("dealsense.security.token_manager.cache_set", new_callable=AsyncMock) as mock_cache_set, \
-             patch("dealsense.security.token_manager.cache_get", new_callable=AsyncMock) as mock_cache_get:
-
+        with (
+            patch(
+                "dealsense.security.token_manager.cache_set", new_callable=AsyncMock
+            ) as mock_cache_set,
+            patch(
+                "dealsense.security.token_manager.cache_get", new_callable=AsyncMock
+            ) as mock_cache_get,
+        ):
             mock_cache_get.return_value = None
 
             # Store tokens
@@ -114,7 +113,9 @@ class TestTokenManager:
 
         mock_db = AsyncMock(spec=AsyncSession)
 
-        with patch("dealsense.security.token_manager.cache_get", new_callable=AsyncMock) as mock_cache_get:
+        with patch(
+            "dealsense.security.token_manager.cache_get", new_callable=AsyncMock
+        ) as mock_cache_get:
             mock_cache_get.return_value = cached_token
 
             token = await get_access_token(tenant_id, mock_db)
@@ -125,12 +126,13 @@ class TestTokenManager:
     async def test_invalidate_tokens(self) -> None:
         """Invalidating tokens should mark connection inactive and purge cache."""
         from unittest.mock import MagicMock
+
         tenant_id = uuid4()
         connection = HubSpotConnection(
             tenant_id=tenant_id,
             encrypted_access_token="enc",
             encrypted_refresh_token="enc",
-            token_expires_at=datetime.now(timezone.utc),
+            token_expires_at=datetime.now(UTC),
             is_active=True,
         )
 
@@ -139,7 +141,9 @@ class TestTokenManager:
         mock_result.scalar_one_or_none.return_value = connection
         mock_db.execute.return_value = mock_result
 
-        with patch("dealsense.security.token_manager.cache_delete", new_callable=AsyncMock) as mock_cache_del:
+        with patch(
+            "dealsense.security.token_manager.cache_delete", new_callable=AsyncMock
+        ) as mock_cache_del:
             await invalidate_tokens(tenant_id, mock_db)
             assert connection.is_active is False
             assert mock_cache_del.called
@@ -262,12 +266,16 @@ class TestOAuthAndTenantGuard:
         """Callback with invalid or absent state should raise 400."""
         from dealsense.main import app
 
-        with patch("dealsense.services.oauth_service.cache_get", new_callable=AsyncMock) as mock_cache_get:
+        with patch(
+            "dealsense.services.oauth_service.cache_get", new_callable=AsyncMock
+        ) as mock_cache_get:
             mock_cache_get.return_value = None  # State not in Redis
 
             transport = ASGITransport(app=app)
             async with AsyncClient(transport=transport, base_url="http://test") as client:
-                response = await client.get("/api/v1/oauth/callback?code=test_code&state=invalid_state")
+                response = await client.get(
+                    "/api/v1/oauth/callback?code=test_code&state=invalid_state"
+                )
 
             assert response.status_code == 400
             assert response.json()["error"] == "OAUTH_ERROR"

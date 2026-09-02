@@ -20,7 +20,7 @@ def _get_fernet() -> Fernet:
         if not settings.encryption_key:
             raise EncryptionError(
                 "ENCRYPTION_KEY is not configured. "
-                "Generate one with: python -c \"from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())\""
+                'Generate one with: python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"'
             )
         try:
             _fernet = Fernet(settings.encryption_key.encode())
@@ -58,9 +58,7 @@ def decrypt_value(encrypted: str) -> str:
         decrypted = fernet.decrypt(encrypted.encode("utf-8"))
         return decrypted.decode("utf-8")
     except InvalidToken as e:
-        raise EncryptionError(
-            "Decryption failed — invalid token or wrong key"
-        ) from e
+        raise EncryptionError("Decryption failed — invalid token or wrong key") from e
     except EncryptionError:
         raise
     except Exception as e:

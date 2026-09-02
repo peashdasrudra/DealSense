@@ -5,19 +5,18 @@ and enforces abstention policies when evidence is weak.
 """
 
 import json
-from typing import Any, Literal
-from uuid import UUID
+from typing import Literal
 
 import structlog
 from openai import AsyncOpenAI
-from pydantic import BaseModel, Field
-
-from dealsense.config import get_settings
-from dealsense.domain.exceptions import LLMExtractionError
 from prompts import (
     MEDDICC_EXTRACTION_SYSTEM_PROMPT,
     MEDDICC_EXTRACTION_USER_TEMPLATE,
 )
+from pydantic import BaseModel, Field
+
+from dealsense.config import get_settings
+from dealsense.domain.exceptions import LLMExtractionError
 
 logger = structlog.get_logger(__name__)
 
@@ -75,7 +74,7 @@ async def extract_meddicc_analysis(
         )
 
     formatted_evidence = "\n---\n".join(
-        [f"[Evidence {i+1}]: {t}" for i, t in enumerate(evidence_texts)]
+        [f"[Evidence {i + 1}]: {t}" for i, t in enumerate(evidence_texts)]
     )
 
     user_prompt = MEDDICC_EXTRACTION_USER_TEMPLATE.format(
@@ -89,8 +88,12 @@ async def extract_meddicc_analysis(
     if not settings.openai_api_key:
         logger.warning("openai_api_key_unset_returning_heuristic_meddicc")
         return MEDDICCExtractionResult(
-            identify_pain=MEDDICCComponent(status="partial", summary="Extracted from initial notes", confidence=0.6),
-            champion=MEDDICCComponent(status="partial", summary="Main point of contact identified", confidence=0.5),
+            identify_pain=MEDDICCComponent(
+                status="partial", summary="Extracted from initial notes", confidence=0.6
+            ),
+            champion=MEDDICCComponent(
+                status="partial", summary="Main point of contact identified", confidence=0.5
+            ),
             overall_qualification_score=35,
             extraction_confidence=0.5,
         )

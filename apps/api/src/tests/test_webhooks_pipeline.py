@@ -11,19 +11,17 @@ Comprehensive tests for:
 import hashlib
 import json
 import os
-from datetime import datetime, timezone
 from unittest.mock import AsyncMock, MagicMock, patch
 from uuid import uuid4
 
 import pytest
 from cryptography.fernet import Fernet
-from fastapi import FastAPI
 from httpx import ASGITransport, AsyncClient
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from dealsense.domain.enums import ActivityType, TenantStatus, WebhookEventStatus
-from dealsense.domain.models import Activity, Deal, DealStageHistory, Person, Tenant, WebhookEvent
-from dealsense.infrastructure.hubspot_client import HubSpotClient, HubSpotClientError
+from dealsense.domain.enums import TenantStatus
+from dealsense.domain.models import Deal, DealStageHistory, Person, Tenant
+from dealsense.infrastructure.hubspot_client import HubSpotClient
 from dealsense.services.webhook_service import process_incoming_webhooks
 from dealsense_worker.tasks.ingest import process_stream_event
 
@@ -37,8 +35,10 @@ def setup_test_env():
     os.environ["HUBSPOT_CLIENT_ID"] = "test-client-id"
     os.environ["SECRET_KEY"] = "test-secret-key-minimum-32-characters-long"
     from dealsense.infrastructure import encryption
+
     encryption._fernet = None
     from dealsense.config import get_settings
+
     get_settings.cache_clear()
     yield
     encryption._fernet = None
@@ -91,12 +91,18 @@ class TestWebhookIngestion:
             yield mock_db
 
         from dealsense.api.deps import get_db
+
         app.dependency_overrides[get_db] = _override_get_db
 
-        with patch("dealsense.services.webhook_service.cache_get", new_callable=AsyncMock) as mock_cache_get, \
-             patch("dealsense.services.webhook_service.cache_set", new_callable=AsyncMock) as mock_cache_set, \
-             patch("dealsense.services.webhook_service.publish_event", new_callable=AsyncMock) as mock_publish:
-
+        with (
+            patch(
+                "dealsense.services.webhook_service.cache_get", new_callable=AsyncMock
+            ) as mock_cache_get,
+            patch("dealsense.services.webhook_service.cache_set", new_callable=AsyncMock),
+            patch(
+                "dealsense.services.webhook_service.publish_event", new_callable=AsyncMock
+            ) as mock_publish,
+        ):
             mock_cache_get.return_value = None
 
             transport = ASGITransport(app=app)
@@ -119,7 +125,7 @@ class TestWebhookIngestion:
     @pytest.mark.asyncio
     async def test_webhook_duplicate_skipped(self) -> None:
         """Duplicate webhook event based on idempotency key should be skipped."""
-        tenant_id = uuid4()
+        uuid4()
         events = [
             {
                 "eventId": "dup-123",
@@ -130,7 +136,9 @@ class TestWebhookIngestion:
         ]
         mock_db = AsyncMock(spec=AsyncSession)
 
-        with patch("dealsense.services.webhook_service.cache_get", new_callable=AsyncMock) as mock_cache_get:
+        with patch(
+            "dealsense.services.webhook_service.cache_get", new_callable=AsyncMock
+        ) as mock_cache_get:
             # Simulate Redis returning existing record for idempotency
             mock_cache_get.return_value = "processed"
 
@@ -192,7 +200,9 @@ class TestWorkerIngestionTask:
             "retry_count": "0",
         }
 
-        with patch("dealsense_worker.tasks.ingest.HubSpotClient.get_deal", new_callable=AsyncMock) as mock_get_deal:
+        with patch(
+            "dealsense_worker.tasks.ingest.HubSpotClient.get_deal", new_callable=AsyncMock
+        ) as mock_get_deal:
             mock_get_deal.return_value = {
                 "properties": {
                     "dealname": "Alpha Deal",
@@ -237,7 +247,9 @@ class TestWorkerIngestionTask:
             "retry_count": "0",
         }
 
-        with patch("dealsense_worker.tasks.ingest.HubSpotClient.get_contact", new_callable=AsyncMock) as mock_get_contact:
+        with patch(
+            "dealsense_worker.tasks.ingest.HubSpotClient.get_contact", new_callable=AsyncMock
+        ) as mock_get_contact:
             mock_get_contact.return_value = {
                 "properties": {
                     "firstname": "Sarah",
@@ -272,7 +284,9 @@ class TestHubSpotClient:
         tenant_id = uuid4()
         mock_db = AsyncMock(spec=AsyncSession)
 
-        with patch("dealsense.infrastructure.hubspot_client.get_access_token", new_callable=AsyncMock) as mock_get_tok:
+        with patch(
+            "dealsense.infrastructure.hubspot_client.get_access_token", new_callable=AsyncMock
+        ) as mock_get_tok:
             mock_get_tok.return_value = "pat-mock-token-xyz"
 
             client = HubSpotClient(tenant_id=tenant_id, db=mock_db)

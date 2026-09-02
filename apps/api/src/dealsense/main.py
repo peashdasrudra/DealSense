@@ -8,8 +8,8 @@ Creates and configures the FastAPI application with:
 - Health check endpoints
 """
 
-from contextlib import asynccontextmanager
 from collections.abc import AsyncGenerator
+from contextlib import asynccontextmanager
 from typing import Any
 
 import structlog
@@ -17,6 +17,7 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import ORJSONResponse
 
+from dealsense.api.v1 import api_v1_router
 from dealsense.config import get_settings
 from dealsense.domain.exceptions import (
     AuthenticationError,
@@ -32,9 +33,8 @@ from dealsense.domain.exceptions import (
 )
 from dealsense.infrastructure.database import close_db, init_db
 from dealsense.infrastructure.observability import setup_logging, setup_tracing
-from dealsense.infrastructure.redis_client import close_redis, init_redis
 from dealsense.infrastructure.queue import ensure_consumer_group
-from dealsense.api.v1 import api_v1_router
+from dealsense.infrastructure.redis_client import close_redis, init_redis
 
 logger = structlog.get_logger(__name__)
 
@@ -125,10 +125,9 @@ def create_app() -> FastAPI:
         # Check database
         try:
             from dealsense.infrastructure.database import get_engine
+
             async with get_engine().connect() as conn:
-                await conn.execute(
-                    __import__("sqlalchemy").text("SELECT 1")
-                )
+                await conn.execute(__import__("sqlalchemy").text("SELECT 1"))
             checks["database"] = "ok"
         except Exception as e:
             checks["database"] = f"error: {e}"
@@ -136,6 +135,7 @@ def create_app() -> FastAPI:
         # Check Redis
         try:
             from dealsense.infrastructure.redis_client import get_redis
+
             await get_redis().ping()
             checks["redis"] = "ok"
         except Exception as e:
@@ -154,27 +154,21 @@ def _register_exception_handlers(app: FastAPI) -> None:
     """Register structured error handlers for domain exceptions."""
 
     @app.exception_handler(AuthenticationError)
-    async def handle_auth_error(
-        request: Request, exc: AuthenticationError
-    ) -> ORJSONResponse:
+    async def handle_auth_error(request: Request, exc: AuthenticationError) -> ORJSONResponse:
         return ORJSONResponse(
             status_code=401,
             content={"error": exc.code, "message": exc.message},
         )
 
     @app.exception_handler(AuthorizationError)
-    async def handle_authz_error(
-        request: Request, exc: AuthorizationError
-    ) -> ORJSONResponse:
+    async def handle_authz_error(request: Request, exc: AuthorizationError) -> ORJSONResponse:
         return ORJSONResponse(
             status_code=403,
             content={"error": exc.code, "message": exc.message},
         )
 
     @app.exception_handler(CrossTenantAccessError)
-    async def handle_cross_tenant(
-        request: Request, exc: CrossTenantAccessError
-    ) -> ORJSONResponse:
+    async def handle_cross_tenant(request: Request, exc: CrossTenantAccessError) -> ORJSONResponse:
         logger.warning("cross_tenant_access_attempt", path=request.url.path)
         return ORJSONResponse(
             status_code=403,
@@ -182,18 +176,14 @@ def _register_exception_handlers(app: FastAPI) -> None:
         )
 
     @app.exception_handler(TenantNotFoundError)
-    async def handle_tenant_not_found(
-        request: Request, exc: TenantNotFoundError
-    ) -> ORJSONResponse:
+    async def handle_tenant_not_found(request: Request, exc: TenantNotFoundError) -> ORJSONResponse:
         return ORJSONResponse(
             status_code=404,
             content={"error": exc.code, "message": exc.message},
         )
 
     @app.exception_handler(DealNotFoundError)
-    async def handle_deal_not_found(
-        request: Request, exc: DealNotFoundError
-    ) -> ORJSONResponse:
+    async def handle_deal_not_found(request: Request, exc: DealNotFoundError) -> ORJSONResponse:
         return ORJSONResponse(
             status_code=404,
             content={"error": exc.code, "message": exc.message},
@@ -209,9 +199,7 @@ def _register_exception_handlers(app: FastAPI) -> None:
         )
 
     @app.exception_handler(WebhookValidationError)
-    async def handle_webhook_error(
-        request: Request, exc: WebhookValidationError
-    ) -> ORJSONResponse:
+    async def handle_webhook_error(request: Request, exc: WebhookValidationError) -> ORJSONResponse:
         logger.warning("webhook_validation_failed", error=exc.message)
         return ORJSONResponse(
             status_code=401,
@@ -228,18 +216,14 @@ def _register_exception_handlers(app: FastAPI) -> None:
         )
 
     @app.exception_handler(OAuthError)
-    async def handle_oauth_error(
-        request: Request, exc: OAuthError
-    ) -> ORJSONResponse:
+    async def handle_oauth_error(request: Request, exc: OAuthError) -> ORJSONResponse:
         return ORJSONResponse(
             status_code=400,
             content={"error": exc.code, "message": exc.message},
         )
 
     @app.exception_handler(DealSenseError)
-    async def handle_dealsense_error(
-        request: Request, exc: DealSenseError
-    ) -> ORJSONResponse:
+    async def handle_dealsense_error(request: Request, exc: DealSenseError) -> ORJSONResponse:
         logger.error("unhandled_domain_error", code=exc.code, message=exc.message)
         return ORJSONResponse(
             status_code=500,
@@ -247,9 +231,7 @@ def _register_exception_handlers(app: FastAPI) -> None:
         )
 
     @app.exception_handler(Exception)
-    async def handle_unexpected_error(
-        request: Request, exc: Exception
-    ) -> ORJSONResponse:
+    async def handle_unexpected_error(request: Request, exc: Exception) -> ORJSONResponse:
         logger.exception("unexpected_error", error=str(exc))
         return ORJSONResponse(
             status_code=500,

@@ -4,8 +4,9 @@ Receives webhook batches from HubSpot CRM, verifies signatures, deduplicates,
 persists records, and delegates processing asynchronously via Redis Streams.
 """
 
-from typing import Any
 import json
+from typing import Any
+
 import structlog
 from fastapi import APIRouter, Depends, Header, HTTPException, Request
 from sqlalchemy.ext.asyncio import AsyncSession

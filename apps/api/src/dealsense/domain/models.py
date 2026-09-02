@@ -7,13 +7,12 @@ mandatory tenant-scoped queries.
 
 import uuid
 from datetime import datetime
-from typing import Any
+from typing import Any, ClassVar
 
 from pgvector.sqlalchemy import Vector
 from sqlalchemy import (
     Boolean,
     DateTime,
-    Enum,
     Float,
     ForeignKey,
     Index,
@@ -29,7 +28,7 @@ from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 class Base(DeclarativeBase):
     """Base class for all ORM models."""
 
-    type_annotation_map = {
+    type_annotation_map: ClassVar[dict[Any, Any]] = {
         dict[str, Any]: JSONB,
     }
 
@@ -44,23 +43,15 @@ class Tenant(Base):
 
     __tablename__ = "tenants"
 
-    id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
-    )
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     hubspot_portal_id: Mapped[str] = mapped_column(
         String(64), unique=True, nullable=False, index=True
     )
     name: Mapped[str] = mapped_column(String(255), nullable=False, default="")
-    status: Mapped[str] = mapped_column(
-        String(32), nullable=False, default="pending_setup"
-    )
+    status: Mapped[str] = mapped_column(String(32), nullable=False, default="pending_setup")
     settings: Mapped[dict[str, Any]] = mapped_column(JSONB, nullable=False, default=dict)
-    white_label_config: Mapped[dict[str, Any]] = mapped_column(
-        JSONB, nullable=False, default=dict
-    )
-    methodology: Mapped[str] = mapped_column(
-        String(64), nullable=False, default="meddicc"
-    )
+    white_label_config: Mapped[dict[str, Any]] = mapped_column(JSONB, nullable=False, default=dict)
+    methodology: Mapped[str] = mapped_column(String(64), nullable=False, default="meddicc")
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False, default=datetime.utcnow
     )
@@ -72,7 +63,9 @@ class Tenant(Base):
     connection: Mapped["HubSpotConnection"] = relationship(
         back_populates="tenant", uselist=False, cascade="all, delete-orphan"
     )
-    deals: Mapped[list["Deal"]] = relationship(back_populates="tenant", cascade="all, delete-orphan")
+    deals: Mapped[list["Deal"]] = relationship(
+        back_populates="tenant", cascade="all, delete-orphan"
+    )
     audit_events: Mapped[list["AuditEvent"]] = relationship(
         back_populates="tenant", cascade="all, delete-orphan"
     )
@@ -87,23 +80,19 @@ class HubSpotConnection(Base):
 
     __tablename__ = "hubspot_connections"
 
-    id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
-    )
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     tenant_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True), ForeignKey("tenants.id", ondelete="CASCADE"),
-        nullable=False, unique=True
+        UUID(as_uuid=True),
+        ForeignKey("tenants.id", ondelete="CASCADE"),
+        nullable=False,
+        unique=True,
     )
     encrypted_access_token: Mapped[str] = mapped_column(Text, nullable=False)
     encrypted_refresh_token: Mapped[str] = mapped_column(Text, nullable=False)
     token_type: Mapped[str] = mapped_column(String(32), nullable=False, default="bearer")
     scopes: Mapped[str] = mapped_column(Text, nullable=False, default="")
-    token_expires_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), nullable=False
-    )
-    last_refresh_at: Mapped[datetime | None] = mapped_column(
-        DateTime(timezone=True), nullable=True
-    )
+    token_expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    last_refresh_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     refresh_failure_count: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
     is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
     created_at: Mapped[datetime] = mapped_column(
@@ -127,12 +116,9 @@ class Deal(Base):
 
     __tablename__ = "deals"
 
-    id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
-    )
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     tenant_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True), ForeignKey("tenants.id", ondelete="CASCADE"),
-        nullable=False, index=True
+        UUID(as_uuid=True), ForeignKey("tenants.id", ondelete="CASCADE"), nullable=False, index=True
     )
     hubspot_deal_id: Mapped[str] = mapped_column(String(64), nullable=False)
     name: Mapped[str] = mapped_column(String(512), nullable=False, default="")
@@ -180,7 +166,9 @@ class Deal(Base):
         back_populates="deal", cascade="all, delete-orphan"
     )
     snapshots: Mapped[list["DealSnapshot"]] = relationship(
-        back_populates="deal", cascade="all, delete-orphan", order_by="DealSnapshot.created_at.desc()"
+        back_populates="deal",
+        cascade="all, delete-orphan",
+        order_by="DealSnapshot.created_at.desc()",
     )
     action_proposals: Mapped[list["ActionProposal"]] = relationship(
         back_populates="deal", cascade="all, delete-orphan"
@@ -192,24 +180,17 @@ class DealStageHistory(Base):
 
     __tablename__ = "deal_stage_history"
 
-    id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
-    )
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     deal_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True), ForeignKey("deals.id", ondelete="CASCADE"),
-        nullable=False, index=True
+        UUID(as_uuid=True), ForeignKey("deals.id", ondelete="CASCADE"), nullable=False, index=True
     )
-    tenant_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True), nullable=False, index=True
-    )
+    tenant_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), nullable=False, index=True)
     from_stage: Mapped[str] = mapped_column(String(255), nullable=False, default="")
     to_stage: Mapped[str] = mapped_column(String(255), nullable=False)
     changed_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False, default=datetime.utcnow
     )
-    duration_in_previous_stage_hours: Mapped[float | None] = mapped_column(
-        Float, nullable=True
-    )
+    duration_in_previous_stage_hours: Mapped[float | None] = mapped_column(Float, nullable=True)
 
     # Relationships
     deal: Mapped["Deal"] = relationship(back_populates="stage_history")
@@ -220,12 +201,9 @@ class Person(Base):
 
     __tablename__ = "persons"
 
-    id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
-    )
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     tenant_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True), ForeignKey("tenants.id", ondelete="CASCADE"),
-        nullable=False, index=True
+        UUID(as_uuid=True), ForeignKey("tenants.id", ondelete="CASCADE"), nullable=False, index=True
     )
     hubspot_contact_id: Mapped[str] = mapped_column(String(64), nullable=False)
     name: Mapped[str] = mapped_column(String(512), nullable=False, default="")
@@ -255,20 +233,14 @@ class DealParticipant(Base):
 
     __tablename__ = "deal_participants"
 
-    id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
-    )
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     deal_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True), ForeignKey("deals.id", ondelete="CASCADE"),
-        nullable=False, index=True
+        UUID(as_uuid=True), ForeignKey("deals.id", ondelete="CASCADE"), nullable=False, index=True
     )
     person_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True), ForeignKey("persons.id", ondelete="CASCADE"),
-        nullable=False, index=True
+        UUID(as_uuid=True), ForeignKey("persons.id", ondelete="CASCADE"), nullable=False, index=True
     )
-    tenant_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True), nullable=False, index=True
-    )
+    tenant_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), nullable=False, index=True)
     role: Mapped[str] = mapped_column(String(64), nullable=False, default="unknown")
     role_confidence: Mapped[float] = mapped_column(Float, nullable=False, default=0.0)
     last_activity_at: Mapped[datetime | None] = mapped_column(
@@ -282,9 +254,7 @@ class DealParticipant(Base):
         DateTime(timezone=True), nullable=False, default=datetime.utcnow, onupdate=datetime.utcnow
     )
 
-    __table_args__ = (
-        UniqueConstraint("deal_id", "person_id", name="uq_participant_deal_person"),
-    )
+    __table_args__ = (UniqueConstraint("deal_id", "person_id", name="uq_participant_deal_person"),)
 
     # Relationships
     deal: Mapped["Deal"] = relationship(back_populates="participants")
@@ -301,16 +271,12 @@ class Activity(Base):
 
     __tablename__ = "activities"
 
-    id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
-    )
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     tenant_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True), ForeignKey("tenants.id", ondelete="CASCADE"),
-        nullable=False, index=True
+        UUID(as_uuid=True), ForeignKey("tenants.id", ondelete="CASCADE"), nullable=False, index=True
     )
     deal_id: Mapped[uuid.UUID | None] = mapped_column(
-        UUID(as_uuid=True), ForeignKey("deals.id", ondelete="SET NULL"),
-        nullable=True, index=True
+        UUID(as_uuid=True), ForeignKey("deals.id", ondelete="SET NULL"), nullable=True, index=True
     )
     activity_type: Mapped[str] = mapped_column(String(64), nullable=False)
     hubspot_object_id: Mapped[str] = mapped_column(String(64), nullable=False)
@@ -321,17 +287,14 @@ class Activity(Base):
     )
     metadata_json: Mapped[dict[str, Any]] = mapped_column(JSONB, nullable=False, default=dict)
     source: Mapped[str] = mapped_column(String(64), nullable=False, default="hubspot")
-    processing_version: Mapped[str] = mapped_column(
-        String(32), nullable=False, default="v1.0.0"
-    )
+    processing_version: Mapped[str] = mapped_column(String(32), nullable=False, default="v1.0.0")
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False, default=datetime.utcnow
     )
 
     __table_args__ = (
         UniqueConstraint(
-            "tenant_id", "hubspot_object_id", "activity_type",
-            name="uq_activity_tenant_hubspot"
+            "tenant_id", "hubspot_object_id", "activity_type", name="uq_activity_tenant_hubspot"
         ),
         Index("ix_activity_tenant_deal", "tenant_id", "deal_id"),
         Index("ix_activity_tenant_type", "tenant_id", "activity_type"),
@@ -355,19 +318,15 @@ class DocumentChunk(Base):
 
     __tablename__ = "document_chunks"
 
-    id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
-    )
-    tenant_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True), nullable=False, index=True
-    )
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    tenant_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), nullable=False, index=True)
     activity_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True), ForeignKey("activities.id", ondelete="CASCADE"),
-        nullable=False, index=True
+        UUID(as_uuid=True),
+        ForeignKey("activities.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
     )
-    deal_id: Mapped[uuid.UUID | None] = mapped_column(
-        UUID(as_uuid=True), nullable=True, index=True
-    )
+    deal_id: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True), nullable=True, index=True)
     content: Mapped[str] = mapped_column(Text, nullable=False)
     chunk_index: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
     token_count: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
@@ -375,16 +334,12 @@ class DocumentChunk(Base):
     embedding_model: Mapped[str] = mapped_column(
         String(128), nullable=False, default="text-embedding-3-small"
     )
-    embedding_version: Mapped[str] = mapped_column(
-        String(32), nullable=False, default="v1.0.0"
-    )
+    embedding_version: Mapped[str] = mapped_column(String(32), nullable=False, default="v1.0.0")
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False, default=datetime.utcnow
     )
 
-    __table_args__ = (
-        Index("ix_chunk_tenant_deal", "tenant_id", "deal_id"),
-    )
+    __table_args__ = (Index("ix_chunk_tenant_deal", "tenant_id", "deal_id"),)
 
     # Relationships
     activity: Mapped["Activity"] = relationship(back_populates="document_chunks")
@@ -400,28 +355,20 @@ class DealSignal(Base):
 
     __tablename__ = "deal_signals"
 
-    id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
-    )
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     deal_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True), ForeignKey("deals.id", ondelete="CASCADE"),
-        nullable=False, index=True
+        UUID(as_uuid=True), ForeignKey("deals.id", ondelete="CASCADE"), nullable=False, index=True
     )
-    tenant_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True), nullable=False, index=True
-    )
+    tenant_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), nullable=False, index=True)
     snapshot_id: Mapped[uuid.UUID | None] = mapped_column(
-        UUID(as_uuid=True), ForeignKey("deal_snapshots.id", ondelete="SET NULL"),
-        nullable=True
+        UUID(as_uuid=True), ForeignKey("deal_snapshots.id", ondelete="SET NULL"), nullable=True
     )
     signal_type: Mapped[str] = mapped_column(String(64), nullable=False)
     severity: Mapped[str] = mapped_column(String(32), nullable=False, default="info")
     impact_score: Mapped[float] = mapped_column(Float, nullable=False, default=0.0)
     details: Mapped[dict[str, Any]] = mapped_column(JSONB, nullable=False, default=dict)
     evidence_ids: Mapped[list[str]] = mapped_column(JSONB, nullable=False, default=list)
-    scoring_version: Mapped[str] = mapped_column(
-        String(32), nullable=False, default="v1.0.0"
-    )
+    scoring_version: Mapped[str] = mapped_column(String(32), nullable=False, default="v1.0.0")
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False, default=datetime.utcnow
     )
@@ -439,16 +386,11 @@ class DealSnapshot(Base):
 
     __tablename__ = "deal_snapshots"
 
-    id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
-    )
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     deal_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True), ForeignKey("deals.id", ondelete="CASCADE"),
-        nullable=False, index=True
+        UUID(as_uuid=True), ForeignKey("deals.id", ondelete="CASCADE"), nullable=False, index=True
     )
-    tenant_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True), nullable=False, index=True
-    )
+    tenant_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), nullable=False, index=True)
     health_score: Mapped[int] = mapped_column(Integer, nullable=False)
     risk_band: Mapped[str] = mapped_column(String(32), nullable=False)
     confidence: Mapped[float] = mapped_column(Float, nullable=False, default=0.0)
@@ -456,9 +398,7 @@ class DealSnapshot(Base):
     score_delta: Mapped[int | None] = mapped_column(Integer, nullable=True)
 
     # Structured analysis outputs
-    top_signals: Mapped[list[dict[str, Any]]] = mapped_column(
-        JSONB, nullable=False, default=list
-    )
+    top_signals: Mapped[list[dict[str, Any]]] = mapped_column(JSONB, nullable=False, default=list)
     methodology_extraction: Mapped[dict[str, Any]] = mapped_column(
         JSONB, nullable=False, default=dict
     )
@@ -472,15 +412,9 @@ class DealSnapshot(Base):
     )
 
     # Versioning & traceability
-    scoring_version: Mapped[str] = mapped_column(
-        String(32), nullable=False, default="v1.0.0"
-    )
-    prompt_version: Mapped[str] = mapped_column(
-        String(32), nullable=False, default="v1.0.0"
-    )
-    model_version: Mapped[str] = mapped_column(
-        String(64), nullable=False, default=""
-    )
+    scoring_version: Mapped[str] = mapped_column(String(32), nullable=False, default="v1.0.0")
+    prompt_version: Mapped[str] = mapped_column(String(32), nullable=False, default="v1.0.0")
+    model_version: Mapped[str] = mapped_column(String(64), nullable=False, default="")
     trace_id: Mapped[str] = mapped_column(String(128), nullable=False, default="")
     analysis_duration_ms: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
     token_usage: Mapped[dict[str, Any]] = mapped_column(JSONB, nullable=False, default=dict)
@@ -511,19 +445,12 @@ class ActionProposal(Base):
 
     __tablename__ = "action_proposals"
 
-    id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
-    )
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     deal_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True), ForeignKey("deals.id", ondelete="CASCADE"),
-        nullable=False, index=True
+        UUID(as_uuid=True), ForeignKey("deals.id", ondelete="CASCADE"), nullable=False, index=True
     )
-    tenant_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True), nullable=False, index=True
-    )
-    snapshot_id: Mapped[uuid.UUID | None] = mapped_column(
-        UUID(as_uuid=True), nullable=True
-    )
+    tenant_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), nullable=False, index=True)
+    snapshot_id: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True), nullable=True)
     category: Mapped[str] = mapped_column(String(64), nullable=False)
     tier: Mapped[str] = mapped_column(String(32), nullable=False)
     title: Mapped[str] = mapped_column(String(512), nullable=False)
@@ -533,18 +460,12 @@ class ActionProposal(Base):
     confidence: Mapped[float] = mapped_column(Float, nullable=False, default=0.0)
     payload: Mapped[dict[str, Any]] = mapped_column(JSONB, nullable=False, default=dict)
     status: Mapped[str] = mapped_column(String(32), nullable=False, default="proposed")
-    idempotency_key: Mapped[str] = mapped_column(
-        String(128), nullable=False, unique=True
-    )
+    idempotency_key: Mapped[str] = mapped_column(String(128), nullable=False, unique=True)
     created_by: Mapped[str] = mapped_column(String(128), nullable=False, default="system")
     approved_by: Mapped[str | None] = mapped_column(String(128), nullable=True)
-    approved_at: Mapped[datetime | None] = mapped_column(
-        DateTime(timezone=True), nullable=True
-    )
+    approved_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     rejected_by: Mapped[str | None] = mapped_column(String(128), nullable=True)
-    rejected_at: Mapped[datetime | None] = mapped_column(
-        DateTime(timezone=True), nullable=True
-    )
+    rejected_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     rejection_reason: Mapped[str | None] = mapped_column(Text, nullable=True)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False, default=datetime.utcnow
@@ -565,25 +486,17 @@ class ActionExecution(Base):
 
     __tablename__ = "action_executions"
 
-    id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
-    )
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     proposal_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True), ForeignKey("action_proposals.id", ondelete="CASCADE"),
-        nullable=False, index=True
+        UUID(as_uuid=True),
+        ForeignKey("action_proposals.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
     )
-    tenant_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True), nullable=False, index=True
-    )
-    pre_action_state: Mapped[dict[str, Any]] = mapped_column(
-        JSONB, nullable=False, default=dict
-    )
-    post_action_state: Mapped[dict[str, Any]] = mapped_column(
-        JSONB, nullable=False, default=dict
-    )
-    hubspot_response: Mapped[dict[str, Any]] = mapped_column(
-        JSONB, nullable=False, default=dict
-    )
+    tenant_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), nullable=False, index=True)
+    pre_action_state: Mapped[dict[str, Any]] = mapped_column(JSONB, nullable=False, default=dict)
+    post_action_state: Mapped[dict[str, Any]] = mapped_column(JSONB, nullable=False, default=dict)
+    hubspot_response: Mapped[dict[str, Any]] = mapped_column(JSONB, nullable=False, default=dict)
     hubspot_object_id: Mapped[str | None] = mapped_column(String(64), nullable=True)
     status: Mapped[str] = mapped_column(String(32), nullable=False, default="executing")
     error_message: Mapped[str | None] = mapped_column(Text, nullable=True)
@@ -610,32 +523,22 @@ class WebhookEvent(Base):
 
     __tablename__ = "webhook_events"
 
-    id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
-    )
-    tenant_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True), nullable=False, index=True
-    )
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    tenant_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), nullable=False, index=True)
     hubspot_event_id: Mapped[str] = mapped_column(String(128), nullable=False)
     event_type: Mapped[str] = mapped_column(String(128), nullable=False)
     subscription_type: Mapped[str] = mapped_column(String(128), nullable=False, default="")
     object_type: Mapped[str] = mapped_column(String(64), nullable=False, default="")
     object_id: Mapped[str] = mapped_column(String(64), nullable=False, default="")
     raw_payload: Mapped[dict[str, Any]] = mapped_column(JSONB, nullable=False)
-    idempotency_key: Mapped[str] = mapped_column(
-        String(256), nullable=False, unique=True
-    )
-    status: Mapped[str] = mapped_column(
-        String(32), nullable=False, default="received"
-    )
+    idempotency_key: Mapped[str] = mapped_column(String(256), nullable=False, unique=True)
+    status: Mapped[str] = mapped_column(String(32), nullable=False, default="received")
     retry_count: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
     error_message: Mapped[str | None] = mapped_column(Text, nullable=True)
     received_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False, default=datetime.utcnow
     )
-    processed_at: Mapped[datetime | None] = mapped_column(
-        DateTime(timezone=True), nullable=True
-    )
+    processed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
 
     __table_args__ = (
         Index("ix_webhook_tenant_status", "tenant_id", "status"),
@@ -657,12 +560,9 @@ class AuditEvent(Base):
 
     __tablename__ = "audit_events"
 
-    id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
-    )
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     tenant_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True), ForeignKey("tenants.id", ondelete="CASCADE"),
-        nullable=False, index=True
+        UUID(as_uuid=True), ForeignKey("tenants.id", ondelete="CASCADE"), nullable=False, index=True
     )
     actor: Mapped[str] = mapped_column(String(256), nullable=False)
     actor_type: Mapped[str] = mapped_column(

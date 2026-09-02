@@ -4,16 +4,14 @@ Chunks CRM activity content (notes, call transcripts, emails) and generates
 vector embeddings using OpenAI text-embedding-3-small, persisting DocumentChunk records.
 """
 
-from typing import Any
 from uuid import UUID, uuid4
 
 import structlog
 from openai import AsyncOpenAI
-from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from dealsense.config import get_settings
-from dealsense.domain.models import Activity, DocumentChunk
+from dealsense.domain.models import DocumentChunk
 
 logger = structlog.get_logger(__name__)
 
@@ -23,7 +21,9 @@ DEFAULT_EMBEDDING_MODEL = "text-embedding-3-small"
 EMBEDDING_DIMENSIONS = 1536
 
 
-def chunk_text(text: str, chunk_size: int = CHUNK_SIZE_CHARS, overlap: int = CHUNK_OVERLAP_CHARS) -> list[str]:
+def chunk_text(
+    text: str, chunk_size: int = CHUNK_SIZE_CHARS, overlap: int = CHUNK_OVERLAP_CHARS
+) -> list[str]:
     """Split text into overlapping character chunks."""
     if not text or not text.strip():
         return []

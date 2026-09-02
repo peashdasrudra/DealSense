@@ -4,7 +4,7 @@ Shared Pydantic response/request schemas used across API endpoints.
 """
 
 from datetime import datetime
-from typing import Any, Generic, TypeVar
+from typing import Any, TypeVar
 from uuid import UUID
 
 from pydantic import BaseModel, Field
@@ -27,7 +27,7 @@ class SuccessResponse(BaseModel):
     message: str = ""
 
 
-class PaginatedResponse(BaseModel, Generic[T]):
+class PaginatedResponse[T](BaseModel):
     """Paginated list response."""
 
     items: list[T]

@@ -52,9 +52,7 @@ class CrossTenantAccessError(DealSenseError):
     """Raised when a request attempts to access another tenant's data."""
 
     def __init__(self) -> None:
-        super().__init__(
-            "Cross-tenant access denied", code="CROSS_TENANT_ACCESS_DENIED"
-        )
+        super().__init__("Cross-tenant access denied", code="CROSS_TENANT_ACCESS_DENIED")
 
 
 # ---- OAuth ----
@@ -149,9 +147,7 @@ class ActionNotApprovedError(DealSenseError):
     """Raised when attempting to execute a non-approved action."""
 
     def __init__(self, action_id: str) -> None:
-        super().__init__(
-            f"Action not approved: {action_id}", code="ACTION_NOT_APPROVED"
-        )
+        super().__init__(f"Action not approved: {action_id}", code="ACTION_NOT_APPROVED")
 
 
 class ActionExecutionError(DealSenseError):

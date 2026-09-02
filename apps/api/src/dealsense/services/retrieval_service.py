@@ -7,11 +7,10 @@ Implements hybrid keyword + vector semantic search over deal document chunks wit
 - Reciprocal Rank Fusion (RRF) rank aggregation
 """
 
-from typing import Any
 from uuid import UUID
 
 import structlog
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 

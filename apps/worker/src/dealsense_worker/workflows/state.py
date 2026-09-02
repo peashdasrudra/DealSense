@@ -6,6 +6,7 @@ deal intelligence analysis pipeline.
 
 from typing import Any
 from uuid import UUID
+
 from pydantic import BaseModel, Field
 
 from dealsense.services.llm_service import MEDDICCExtractionResult

@@ -3,6 +3,7 @@
 from datetime import datetime
 from typing import Any
 from uuid import UUID
+
 from pydantic import BaseModel, Field
 
 
@@ -72,5 +73,5 @@ class DealDashboardSchema(BaseModel):
     owner: str
     stage: str
     band: str
-    
+
     model_config = {"from_attributes": True}

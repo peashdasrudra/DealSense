@@ -6,6 +6,7 @@ Supports consumer groups, acknowledgment, DLQ routing, and retry tracking.
 
 import json
 import time
+from contextlib import suppress
 from typing import Any
 from uuid import uuid4
 
@@ -22,16 +23,11 @@ DEFAULT_DLQ_STREAM = "dealsense:events:dlq"
 MAX_RETRIES = 5
 
 
-async def ensure_consumer_group(
-    stream: str = DEFAULT_STREAM, group: str = DEFAULT_GROUP
-) -> None:
+async def ensure_consumer_group(stream: str = DEFAULT_STREAM, group: str = DEFAULT_GROUP) -> None:
     """Create the consumer group if it doesn't exist."""
     client = get_redis()
-    try:
+    with suppress(Exception):
         await client.xgroup_create(stream, group, id="0", mkstream=True)
-    except Exception:
-        # Group already exists
-        pass
 
 
 async def publish_event(
