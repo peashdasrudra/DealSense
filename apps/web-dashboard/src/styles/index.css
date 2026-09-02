@@ -1826,6 +1826,19 @@ tr:hover td {
 }
 
 /* ── Mobile-First Responsive Polish for Agency & Landing Pages ──────────── */
+.pricing-comparison-dock {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 6px;
+}
+
+@media (min-width: 680px) {
+  .pricing-comparison-dock {
+    grid-template-columns: 1fr 1fr 1.25fr;
+    gap: 8px;
+  }
+}
+
 @media (max-width: 640px) {
   .landing-hero-btns {
     flex-direction: column !important;

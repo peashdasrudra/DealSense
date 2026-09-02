@@ -822,33 +822,31 @@ export const AgencyFleet: React.FC = () => {
 
             {/* 100x Market Delta Comparison Ribbon */}
             <div
+              className="pricing-comparison-dock"
               style={{
                 background: "linear-gradient(180deg, #092124 0%, #0c272a 100%)",
                 border: "1px solid rgba(255, 255, 255, 0.1)",
                 borderRadius: "14px",
-                padding: "8px 14px",
-                display: "grid",
-                gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
-                gap: 8,
+                padding: "8px 12px",
                 boxShadow: "0 8px 24px -6px rgba(9, 33, 36, 0.25), inset 0 1px 0 rgba(255,255,255,0.1)",
               }}
             >
               {/* Option 1 */}
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 6, padding: "6px 10px", background: "rgba(255,255,255,0.03)", borderRadius: "8px", border: "1px solid rgba(255,255,255,0.06)" }}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 6, padding: "7px 12px", background: "rgba(255,255,255,0.03)", borderRadius: "8px", border: "1px solid rgba(255,255,255,0.06)" }}>
                 <span style={{ color: "#94a3b8", fontSize: "11.5px", fontWeight: 600 }}>In-House Dev:</span>
-                <span style={{ color: "#f87171", textDecoration: "line-through", fontSize: "12px", fontWeight: 700 }}>$58K+ & 8 Mos</span>
+                <span style={{ color: "#f87171", textDecoration: "line-through", fontSize: "12px", fontWeight: 700, whiteSpace: "nowrap" }}>$58K+ & 8 Mos</span>
               </div>
 
               {/* Option 2 */}
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 6, padding: "6px 10px", background: "rgba(255,255,255,0.03)", borderRadius: "8px", border: "1px solid rgba(255,255,255,0.06)" }}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 6, padding: "7px 12px", background: "rgba(255,255,255,0.03)", borderRadius: "8px", border: "1px solid rgba(255,255,255,0.06)" }}>
                 <span style={{ color: "#94a3b8", fontSize: "11.5px", fontWeight: 600 }}>Gong / Clari:</span>
-                <span style={{ color: "#f87171", textDecoration: "line-through", fontSize: "12px", fontWeight: 700 }}>$45K/yr (0% Brand)</span>
+                <span style={{ color: "#f87171", textDecoration: "line-through", fontSize: "12px", fontWeight: 700, whiteSpace: "nowrap" }}>$45K/yr (0% Brand)</span>
               </div>
 
               {/* Option 3 (Winner) */}
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 6, padding: "6px 10px", background: "rgba(16, 185, 129, 0.12)", borderRadius: "8px", border: "1px solid rgba(16, 185, 129, 0.35)", boxShadow: "0 0 14px rgba(16, 185, 129, 0.15)" }}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 6, padding: "7px 12px", background: "rgba(16, 185, 129, 0.12)", borderRadius: "8px", border: "1px solid rgba(16, 185, 129, 0.35)", boxShadow: "0 0 14px rgba(16, 185, 129, 0.15)" }}>
                 <span style={{ color: "#34d399", fontSize: "11.5px", fontWeight: 800 }}>DealSense Fleet:</span>
-                <span style={{ color: "#ffffff", fontSize: "12px", fontWeight: 900 }}>$1,500–$3,500 (100% Owned)</span>
+                <span style={{ color: "#ffffff", fontSize: "12px", fontWeight: 900, whiteSpace: "nowrap" }}>$1,500–$3,500 (100% Owned)</span>
               </div>
             </div>
           </div>
