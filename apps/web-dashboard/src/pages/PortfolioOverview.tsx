@@ -5,6 +5,7 @@
  */
 
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   AreaChart,
@@ -88,6 +89,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 };
 
 export const PortfolioOverview: React.FC = () => {
+  const navigate = useNavigate();
   const [deals, setDeals] = useState<any[]>(SAMPLE_DEALS);
   const [selectedDrawerDeal, setSelectedDrawerDeal] = useState<DealData | null>(null);
 
@@ -152,7 +154,7 @@ export const PortfolioOverview: React.FC = () => {
           style={{
             background: "#ffffff",
             borderRadius: "var(--radius-md)",
-            padding: "24px 28px",
+            padding: "20px 24px",
             display: "flex",
             flexDirection: "column",
             justifyContent: "space-between",
@@ -161,28 +163,38 @@ export const PortfolioOverview: React.FC = () => {
             boxShadow: "var(--shadow-sm)",
             position: "relative",
             overflow: "hidden",
-            height: "100%",
-            minHeight: "320px",
+            minHeight: "240px",
           }}
         >
           <div style={{ position: "absolute", top: -80, right: -80, width: 250, height: 250, borderRadius: "50%", background: "radial-gradient(circle, rgba(255,92,53,0.08) 0%, transparent 70%)", pointerEvents: "none" }} />
           
           <div>
-            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
-              <span style={{ background: "rgba(5,150,105,0.1)", color: "var(--risk-healthy)", border: "1px solid rgba(5,150,105,0.25)", padding: "4px 10px", borderRadius: "var(--radius-pill)", fontSize: "10px", fontWeight: 700, textTransform: "uppercase" }}>● Webhook Synced</span>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
+              <span style={{ background: "rgba(5,150,105,0.1)", color: "var(--risk-healthy)", border: "1px solid rgba(5,150,105,0.25)", padding: "3px 9px", borderRadius: "var(--radius-pill)", fontSize: "10px", fontWeight: 700, textTransform: "uppercase" }}>● Webhook Synced</span>
               <span style={{ fontSize: "11px", color: "var(--hs-text-muted)" }}>Portal #48921820</span>
             </div>
-            <h2 style={{ fontSize: "20px", fontWeight: 800, color: "var(--hs-heading)", margin: "0 0 8px", letterSpacing: "-0.02em" }}>Welcome to DealSense Intelligence</h2>
-            <p style={{ fontSize: "13px", color: "var(--hs-text-muted)", margin: 0, lineHeight: 1.6 }}>
+            <h2 style={{ fontSize: "19px", fontWeight: 800, color: "var(--hs-heading)", margin: "0 0 6px", letterSpacing: "-0.02em" }}>Welcome to DealSense Intelligence</h2>
+            <p style={{ fontSize: "13px", color: "var(--hs-text-muted)", margin: 0, lineHeight: 1.55 }}>
               You're viewing a live interactive demo of the DealSense Revenue Operations engine. Navigate through the modules to explore predictive deal scoring, pipeline waterfalls, and autonomous CRM hygiene.
             </p>
           </div>
 
-          <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 24, flexWrap: "wrap" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 16, flexWrap: "wrap" }}>
+            <button
+              onClick={() => navigate("/deals")}
+              style={{
+                padding: "8px 18px", background: "linear-gradient(180deg, #ff6b48 0%, #ff5c35 100%)", color: "#fff", fontSize: "13px", fontWeight: 700,
+                border: "none", borderRadius: "var(--radius-sm)", cursor: "pointer", boxShadow: "0 2px 6px rgba(255,92,53,0.3), inset 0 1px 0 rgba(255,255,255,0.3)",
+                display: "inline-flex", alignItems: "center", gap: 6, transition: "all 0.2s ease"
+              }}
+            >
+              <span>Get Started</span>
+              <span>→</span>
+            </button>
             <button
               onClick={handleForceSync}
               style={{
-                padding: "8px 16px", background: "#ffffff", color: "var(--hs-text)", fontSize: "12.5px", fontWeight: 600,
+                padding: "8px 14px", background: "#ffffff", color: "var(--hs-text)", fontSize: "12.5px", fontWeight: 600,
                 border: "1px solid var(--hs-border-dark)", borderRadius: "var(--radius-sm)", cursor: "pointer", transition: "all 0.2s ease",
                 boxShadow: "var(--shadow-sm)"
               }}
@@ -192,12 +204,12 @@ export const PortfolioOverview: React.FC = () => {
             <a
               href="/case-study"
               style={{
-                padding: "8px 18px", background: "#ff5c35", color: "#fff", fontSize: "12.5px", fontWeight: 700,
-                border: "none", borderRadius: "var(--radius-sm)", cursor: "pointer", boxShadow: "0 2px 6px rgba(255,92,53,0.25)",
+                padding: "8px 14px", background: "#f8f9fa", color: "var(--hs-text)", fontSize: "12px", fontWeight: 600,
+                border: "1px solid var(--hs-border-dark)", borderRadius: "var(--radius-sm)", cursor: "pointer",
                 textDecoration: "none", display: "inline-block"
               }}
             >
-              Read Case Study →
+              Read Case Study ↗
             </a>
           </div>
         </motion.div>
@@ -208,7 +220,7 @@ export const PortfolioOverview: React.FC = () => {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2, duration: 0.3 }}
-          style={{ height: "100%", margin: 0, display: "flex", flexDirection: "column", minHeight: "320px" }}
+          style={{ height: "100%", margin: 0, display: "flex", flexDirection: "column", minHeight: "240px" }}
         >
           <div className="card-header" style={{ paddingBottom: 0, borderBottom: "none" }}>
             <div>

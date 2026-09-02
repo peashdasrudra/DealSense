@@ -102,6 +102,14 @@ export const App: React.FC = () => {
     };
   }, [sidebarOpen, isSearchOpen]);
 
+  const [isNavigating, setIsNavigating] = useState(false);
+
+  useEffect(() => {
+    setIsNavigating(true);
+    const timer = setTimeout(() => setIsNavigating(false), 240);
+    return () => clearTimeout(timer);
+  }, [location.pathname]);
+
   const pageMeta = PAGE_TITLES[location.pathname] || {
     title: "DealSense Intelligence",
     breadcrumb: "Dashboard",
@@ -158,7 +166,29 @@ export const App: React.FC = () => {
       </div>
 
       {/* Main Content */}
-      <main className="main-content">
+      <main className="main-content" style={{ position: "relative" }}>
+        {/* Top Telemetry Loading Bar on Navigation */}
+        <AnimatePresence>
+          {isNavigating && (
+            <motion.div
+              initial={{ scaleX: 0, opacity: 1 }}
+              animate={{ scaleX: 1, opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.22, ease: "easeInOut" }}
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                right: 0,
+                height: 2.5,
+                background: "linear-gradient(90deg, #ff5c35 0%, #ff7a59 50%, #00a4bd 100%)",
+                transformOrigin: "left",
+                zIndex: 9999,
+                boxShadow: "0 0 8px rgba(255, 92, 53, 0.6)",
+              }}
+            />
+          )}
+        </AnimatePresence>
         <TopBar
           breadcrumb={pageMeta.breadcrumb}
           title={pageMeta.title}
