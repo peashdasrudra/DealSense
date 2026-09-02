@@ -182,20 +182,20 @@ export const Footer: React.FC = () => {
             </div>
           </div>
 
-          {/* Col 3: Commercial & Case Study */}
+          {/* Col 3: Commercial & Partnerships */}
           <div>
             <div style={{ fontSize: "11.5px", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em", color: "#ff5c35", marginBottom: "16px" }}>
-              Agency & Pricing
+              Agency & Partnerships
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: "11px", fontSize: "13px" }}>
               <Link to="/case-study" style={{ color: "rgba(255, 255, 255, 0.75)", textDecoration: "none" }}>
-                Agency Case Study
+                Agency Case Study & ROI
               </Link>
               <Link to="/case-study" style={{ color: "rgba(255, 255, 255, 0.75)", textDecoration: "none" }}>
-                $99 Pilot Deal Audit
+                Pilot Portal Deal Audit
               </Link>
               <Link to="/case-study" style={{ color: "rgba(255, 255, 255, 0.75)", textDecoration: "none" }}>
-                $1,500 Deployment Tier
+                White-Label Fleet Deployment
               </Link>
               <Link to="/clients" style={{ color: "rgba(255, 255, 255, 0.75)", textDecoration: "none" }}>
                 Client Health Scorecards
