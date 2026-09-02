@@ -1556,17 +1556,18 @@ tr:hover td {
 }
 
 .top-telemetry-banner {
-  background: linear-gradient(90deg, #092124 0%, #124548 40%, #ff5c35 70%, #092124 100%);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: linear-gradient(90deg, #07191b 0%, #092124 25%, #0f3034 50%, #092124 75%, #07191b 100%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   color: #ffffff;
   padding: 6px 16px;
-  min-height: 32px;
+  min-height: 34px;
   display: flex;
   justifyContent: center;
   align-items: center;
+  text-align: center;
   position: relative;
   z-index: 1001;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
   font-family: var(--font-sans);
 }
 
@@ -1574,8 +1575,10 @@ tr:hover td {
   display: flex;
   align-items: center;
   justifyContent: center;
-  gap: 10px;
+  gap: 8px;
   flex-wrap: wrap;
+  margin: 0 auto;
+  text-align: center;
 }
 
 .telemetry-beacon-container {

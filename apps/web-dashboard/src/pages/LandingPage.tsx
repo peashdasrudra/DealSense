@@ -90,7 +90,7 @@ export const LandingPage: React.FC = () => {
 
   return (
     <div style={{ background: "#ffffff", color: "#0f172a", fontFamily: "var(--font-sans)", overflowX: "hidden" }}>
-      {/* ── 0. Top Enterprise Telemetry Ticker ────────────────────────── */}
+      {/* ── 0. Top Enterprise Founder Discount & Telemetry Ticker ──────────────── */}
       <div className="top-telemetry-banner">
         <div className="telemetry-inner-wrapper">
           {/* Live Status Beacon */}
@@ -99,9 +99,32 @@ export const LandingPage: React.FC = () => {
             <span className="telemetry-beacon-dot" />
           </div>
 
-          {/* HubSpot Platform Label */}
-          <span style={{ letterSpacing: "0.04em", textTransform: "uppercase", fontSize: "11px", fontWeight: 700, color: "#f1f5f9", lineHeight: 1 }}>
+          {/* HubSpot Native Platform Label */}
+          <span style={{ letterSpacing: "0.04em", textTransform: "uppercase", fontSize: "11px", fontWeight: 800, color: "#f1f5f9", lineHeight: 1 }}>
             HubSpot Native Platform
+          </span>
+
+          {/* Vertical Divider */}
+          <span className="telemetry-divider" />
+
+          {/* Founder Discount Pill */}
+          <span
+            style={{
+              fontSize: "10.5px",
+              fontWeight: 800,
+              color: "#ff8c6b",
+              background: "rgba(255, 92, 53, 0.18)",
+              border: "1px solid rgba(255, 92, 53, 0.4)",
+              padding: "2px 8px",
+              borderRadius: "9999px",
+              letterSpacing: "0.03em",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 4,
+            }}
+          >
+            <span>🔥</span>
+            <span>FOUNDER DISCOUNT: UP TO 98% OFF</span>
           </span>
 
           {/* Vertical Divider */}
@@ -111,9 +134,10 @@ export const LandingPage: React.FC = () => {
           <span
             className="telemetry-link"
             onClick={() => openOrder("audit-99")}
-            title="Open $99 Starter Risk Audit Scope"
+            title="Claim $99 Starter Risk Audit"
+            style={{ display: "inline-flex", alignItems: "center", gap: 4, cursor: "pointer", color: "#ffffff", fontWeight: 700, fontSize: "11.5px" }}
           >
-            <span>$99 Starter</span>
+            <span style={{ textDecoration: "underline", textUnderlineOffset: "2px" }}>Claim $99 Pilot Audit</span>
             <span style={{ fontSize: "11px" }}>→</span>
           </span>
 
@@ -123,7 +147,7 @@ export const LandingPage: React.FC = () => {
           {/* Telemetry Metric Chip */}
           <div className="telemetry-cta-pill" title="0.2s Real-Time Webhook Processing">
             <span style={{ color: "#38bdf8", fontSize: "10px" }}>⚡</span>
-            <span>0.2s sync</span>
+            <span>0.2s sync · $0 SaaS tax</span>
           </div>
         </div>
       </div>
