@@ -1,7 +1,7 @@
 /**
  * DealSense — Ultimate High-Converting HubSpot SaaS Landing Page.
- * Engineered for HubSpot RevOps Agencies, Sales Leaders, and Executives.
- * Clear, compelling pathways directly into the Live App and Transparent Pricing.
+ * Engineered for Irresistible FOMO, No-Brainer Pricing ($29 / $299 / $699),
+ * and Direct Pathways into the Live App.
  */
 
 import React, { useState } from "react";
@@ -13,6 +13,26 @@ import { Footer } from "../components/Footer";
 export const LandingPage: React.FC = () => {
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [orderModalOpen, setOrderModalOpen] = useState(false);
+  const [selectedTier, setSelectedTier] = useState<"audit-29" | "deploy-299" | "agency-699">("audit-29");
+  const [orderSuccess, setOrderSuccess] = useState(false);
+
+  // ── Order Form State ───────────────────────────────────────────────────────
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    company: "",
+    portalId: "",
+  });
+
+  const handleOrderSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setOrderSuccess(true);
+    setTimeout(() => {
+      setOrderSuccess(false);
+      setOrderModalOpen(false);
+    }, 3800);
+  };
 
   // ── Interactive Deal Risk Simulator State ──────────────────────────────────
   const [simBuyerSilent, setSimBuyerSilent] = useState(true);
@@ -39,8 +59,35 @@ export const LandingPage: React.FC = () => {
   };
   const band = getRiskBand(currentScore);
 
+  const openOrder = (tier: "audit-29" | "deploy-299" | "agency-699") => {
+    setSelectedTier(tier);
+    setOrderModalOpen(true);
+  };
+
   return (
     <div style={{ background: "#ffffff", color: "var(--hs-text)", fontFamily: "var(--font-sans)", overflowX: "hidden" }}>
+      {/* ── 0. Top FOMO Urgency Bar ──────────────────────────────────── */}
+      <div
+        style={{
+          background: "linear-gradient(90deg, #124548 0%, #ff5c35 50%, #124548 100%)",
+          color: "#ffffff",
+          padding: "7px 16px",
+          textAlign: "center",
+          fontSize: "12px",
+          fontWeight: 700,
+          letterSpacing: "0.02em",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          gap: 10,
+        }}
+      >
+        <span>🔥 FOUNDER LAUNCH PRICING: 85% OFF DEAL RISK AUDITS ($29)</span>
+        <span style={{ background: "rgba(0,0,0,0.25)", padding: "2px 8px", borderRadius: "var(--radius-pill)", fontSize: "11px" }}>
+          ONLY 3 SLOTS REMAINING TODAY
+        </span>
+      </div>
+
       {/* ── 1. Top Global Navigation Header ──────────────────────────── */}
       <header
         style={{
@@ -73,7 +120,7 @@ export const LandingPage: React.FC = () => {
             <span onClick={() => navigate("/pipeline")} style={{ fontSize: "13.5px", fontWeight: 600, color: "var(--hs-heading)", cursor: "pointer" }}>Home Dashboard</span>
             <span onClick={() => navigate("/forecast")} style={{ fontSize: "13.5px", fontWeight: 600, color: "var(--hs-text)", cursor: "pointer" }}>Forecasting</span>
             <span onClick={() => navigate("/war-room")} style={{ fontSize: "13.5px", fontWeight: 600, color: "var(--hs-text)", cursor: "pointer" }}>War Room</span>
-            <span onClick={() => navigate("/case-study")} style={{ fontSize: "13.5px", fontWeight: 700, color: "#ff5c35", cursor: "pointer" }}>Pricing & Plans</span>
+            <a href="#fomo-pricing" style={{ fontSize: "13.5px", fontWeight: 700, color: "#ff5c35", textDecoration: "none" }}>⚡ $29 Audit & Pricing</a>
             <span onClick={() => navigate("/case-study")} style={{ fontSize: "13.5px", fontWeight: 600, color: "var(--hs-text)", cursor: "pointer" }}>Architecture Case Study</span>
           </div>
 
@@ -81,7 +128,7 @@ export const LandingPage: React.FC = () => {
           <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
             <button
               className="desktop-cta-btn"
-              onClick={() => navigate("/case-study")}
+              onClick={() => openOrder("audit-29")}
               style={{
                 padding: "8px 16px",
                 background: "#ffffff",
@@ -95,7 +142,7 @@ export const LandingPage: React.FC = () => {
                 transition: "all 0.2s ease",
               }}
             >
-              💰 View Pricing & Audit
+              ⚡ Claim $29 Audit
             </button>
             <button
               onClick={() => navigate("/pipeline")}
@@ -160,8 +207,8 @@ export const LandingPage: React.FC = () => {
               <div onClick={() => { navigate("/pipeline"); setMobileMenuOpen(false); }} style={{ padding: "10px 12px", fontWeight: 700, color: "var(--hs-heading)", borderRadius: "var(--radius-sm)", background: "var(--hs-surface)", cursor: "pointer" }}>
                 📊 Home — Live Pipeline Dashboard
               </div>
-              <div onClick={() => { navigate("/case-study"); setMobileMenuOpen(false); }} style={{ padding: "10px 12px", fontWeight: 700, color: "#ff5c35", borderRadius: "var(--radius-sm)", background: "rgba(255,92,53,0.08)", cursor: "pointer" }}>
-                💰 View Pricing & $99 Pilot Audit
+              <div onClick={() => { openOrder("audit-29"); setMobileMenuOpen(false); }} style={{ padding: "10px 12px", fontWeight: 700, color: "#ff5c35", borderRadius: "var(--radius-sm)", background: "rgba(255,92,53,0.08)", cursor: "pointer" }}>
+                🔥 Claim $29 Risk Audit (85% Off)
               </div>
               <div onClick={() => { navigate("/forecast"); setMobileMenuOpen(false); }} style={{ padding: "10px 12px", fontWeight: 600, color: "var(--hs-text)", borderRadius: "var(--radius-sm)", cursor: "pointer" }}>
                 📈 Revenue Forecast & Simulation
@@ -209,7 +256,7 @@ export const LandingPage: React.FC = () => {
           >
             <DealSenseIcon size={16} />
             <span style={{ fontSize: "11.5px", fontWeight: 700, color: "#ff5c35", letterSpacing: "0.03em" }}>
-              NATIVE HUBSPOT APP · ZERO LLM HALLUCINATIONS
+              NATIVE HUBSPOT REVENUE INTELLIGENCE ENGINE
             </span>
           </motion.div>
 
@@ -227,7 +274,7 @@ export const LandingPage: React.FC = () => {
               margin: "0 0 18px",
             }}
           >
-            Where HubSpot revenue <br /> teams go to <span style={{ color: "#ff5c35" }}>scale</span>.
+            Stop letting $100K+ deals <br /> slip to <span style={{ color: "#ff5c35" }}>silent buyers</span>.
           </motion.h1>
 
           <motion.p
@@ -242,10 +289,10 @@ export const LandingPage: React.FC = () => {
               margin: "0 auto 34px",
             }}
           >
-            Stop losing $100K+ deals to silent buyers and stalled pipeline. DealSense connects directly to your HubSpot CRM, evaluates deal health across 7 deterministic risk signals in 180ms, and alerts your team before slippage happens.
+            Why risk losing $150,000 in quarterly revenue to hidden pipeline slippage? DealSense plugs into your HubSpot in 2 minutes, scores every active deal 0–100 with zero hallucinations, and alerts reps before buyers go cold.
           </motion.p>
 
-          {/* Dual High-Impact Action CTAs (Direct to App & Direct to Pricing) */}
+          {/* Dual Action CTAs with Unbeatable $29 FOMO Hook */}
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
@@ -253,7 +300,7 @@ export const LandingPage: React.FC = () => {
             className="landing-hero-btns"
           >
             <button
-              onClick={() => navigate("/pipeline")}
+              onClick={() => openOrder("audit-29")}
               style={{
                 padding: "14px 32px",
                 background: "linear-gradient(180deg, #ff6b48 0%, #ff5c35 100%)",
@@ -270,11 +317,11 @@ export const LandingPage: React.FC = () => {
                 transition: "all 0.2s cubic-bezier(0.16, 1, 0.3, 1)",
               }}
             >
-              <span>⚡ Explore Live App Demo</span>
+              <span>🚀 Claim $29 Risk Audit (Save $100K+)</span>
               <span>→</span>
             </button>
             <button
-              onClick={() => navigate("/case-study")}
+              onClick={() => navigate("/pipeline")}
               style={{
                 padding: "14px 28px",
                 background: "#ffffff",
@@ -288,21 +335,21 @@ export const LandingPage: React.FC = () => {
                 transition: "all 0.2s ease",
               }}
             >
-              💰 View Pricing & ROI ($99 Audit)
+              ⚡ Explore Live App Demo
             </button>
           </motion.div>
 
           <div style={{ marginTop: 18, fontSize: "12px", color: "var(--hs-text-muted)", fontWeight: 500, display: "flex", justifyContent: "center", gap: 16, flexWrap: "wrap" }}>
-            <span>🔒 100% Money-Back Guarantee</span>
+            <span>🛡️ 100% "Find $25K Or It's Free" Guarantee</span>
             <span>•</span>
-            <span>⚡ 2-Minute HubSpot OAuth</span>
+            <span>⚡ 24h Turnaround</span>
             <span>•</span>
-            <span>🛡️ SOC 2 Compliant</span>
+            <span>🔒 No Credit Card To Test Live Demo</span>
           </div>
         </div>
       </section>
 
-      {/* ── 3. Live HubSpot Deal Card Ingestion Showcase ─────────────── */}
+      {/* ── 3. Live HubSpot Deal Card Preview ─────────────────────────── */}
       <section style={{ padding: "0 clamp(16px, 4vw, 24px) 64px", maxWidth: 1000, margin: "-12px auto 0" }}>
         <motion.div
           initial={{ opacity: 0, y: 16 }}
@@ -325,7 +372,7 @@ export const LandingPage: React.FC = () => {
               <span style={{ fontSize: "12px", color: "var(--hs-text-muted)" }}>HubSpot Portal #48921820</span>
             </div>
             <span style={{ fontSize: "12px", fontWeight: 700, color: "var(--hs-primary)" }}>
-              Interactive Deal Risk Evaluation
+              Interactive Deal Risk Diagnosis
             </span>
           </div>
 
@@ -347,7 +394,7 @@ export const LandingPage: React.FC = () => {
                 <strong>Detected Risk:</strong> Economic Buyer (CFO) silent for 18 days with zero stage movement. Close date pushed 2x.
               </p>
               <div style={{ padding: "10px 14px", background: "rgba(255, 92, 53, 0.08)", border: "1px solid rgba(255, 92, 53, 0.25)", borderRadius: "var(--radius-sm)", fontSize: "12px", color: "var(--hs-heading)", fontWeight: 600 }}>
-                ⚡ <strong>DealSense Action:</strong> Auto-triggered peer-to-peer executive alignment sequence with Forrester ROI benchmark.
+                ⚡ <strong>DealSense Action:</strong> Auto-triggered peer-to-peer executive alignment sequence to CFO.
               </div>
             </div>
 
@@ -356,7 +403,7 @@ export const LandingPage: React.FC = () => {
                 Quick Platform Actions:
               </div>
               <button
-                onClick={() => navigate("/deals")}
+                onClick={() => openOrder("audit-29")}
                 style={{
                   padding: "11px 16px",
                   background: "#ff5c35",
@@ -372,11 +419,11 @@ export const LandingPage: React.FC = () => {
                   alignItems: "center",
                 }}
               >
-                <span>Inspect Full Deal Dossier</span>
+                <span>Audit Your Pipeline for $29</span>
                 <span>→</span>
               </button>
               <button
-                onClick={() => navigate("/case-study")}
+                onClick={() => navigate("/pipeline")}
                 style={{
                   padding: "11px 16px",
                   background: "#ffffff",
@@ -391,7 +438,7 @@ export const LandingPage: React.FC = () => {
                   alignItems: "center",
                 }}
               >
-                <span>View $99 Audit & Pricing Options</span>
+                <span>Explore Live Dossier in App</span>
                 <span>↗</span>
               </button>
             </div>
@@ -403,7 +450,7 @@ export const LandingPage: React.FC = () => {
       <section style={{ borderTop: "1px solid var(--hs-border-dark)", borderBottom: "1px solid var(--hs-border-dark)", padding: "20px 16px", background: "var(--hs-surface)" }}>
         <div style={{ maxWidth: 1100, margin: "0 auto", textAlign: "center" }}>
           <div style={{ fontSize: "10.5px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--hs-text-muted)", marginBottom: 12 }}>
-            POWERING REVENUE & REVOPS LEADERS SCALING MILLION-DOLLAR HUBSPOT PIPELINES
+            TRUSTED BY REVENUE TEAMS SCALING MULTI-MILLION DOLLAR HUBSPOT PIPELINES
           </div>
           <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "20px 36px", flexWrap: "wrap", opacity: 0.9 }}>
             <span style={{ fontSize: "14px", fontWeight: 800, color: "var(--hs-primary)" }}>TechCorp Inc.</span>
@@ -518,7 +565,7 @@ export const LandingPage: React.FC = () => {
             </div>
 
             <button
-              onClick={() => navigate("/pipeline")}
+              onClick={() => openOrder("audit-29")}
               style={{
                 width: "100%",
                 padding: "12px",
@@ -532,112 +579,123 @@ export const LandingPage: React.FC = () => {
                 boxShadow: "0 2px 8px rgba(255,92,53,0.3)",
               }}
             >
-              Test Live App on Sample Deals →
+              Get This Scorecard For Your Pipeline ($29) →
             </button>
           </div>
         </div>
       </section>
 
-      {/* ── 6. Direct Pricing & Plans Overview Cards ─────────────────── */}
-      <section style={{ padding: "clamp(48px, 6vw, 84px) clamp(16px, 4vw, 24px)", background: "var(--hs-surface)", borderTop: "1px solid var(--hs-border-dark)" }}>
+      {/* ── 6. Irresistible No-Brainer FOMO Pricing Section ───────────── */}
+      <section id="fomo-pricing" style={{ padding: "clamp(48px, 6vw, 84px) clamp(16px, 4vw, 24px)", background: "var(--hs-surface)", borderTop: "1px solid var(--hs-border-dark)" }}>
         <div style={{ maxWidth: 1160, margin: "0 auto" }}>
           <div style={{ textAlign: "center", marginBottom: 44 }}>
             <span style={{ fontSize: "11.5px", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em", color: "#ff5c35" }}>
-              TRANSPARENT VALUE-BASED PACKAGES
+              🔥 INSANE FOUNDER LAUNCH DEALS
             </span>
             <h2 style={{ fontSize: "clamp(26px, 4.5vw, 42px)", fontWeight: 800, letterSpacing: "-0.03em", color: "var(--hs-heading)", margin: "8px 0 12px" }}>
-              Start with a $99 Pilot. Deploy when ready.
+              Pricing so low that passing on it is pure insanity.
             </h2>
-            <p style={{ fontSize: "14.5px", color: "var(--hs-text-muted)", maxWidth: 640, margin: "0 auto", lineHeight: 1.55 }}>
-              No recurring hidden subscriptions. Guaranteed ROI with 100% money-back risk protection.
+            <p style={{ fontSize: "14.5px", color: "var(--hs-text-muted)", maxWidth: 660, margin: "0 auto", lineHeight: 1.55 }}>
+              Catch a single $50,000+ slipping deal in your HubSpot portal for less than the cost of lunch. 100% money-back guarantee.
             </p>
           </div>
 
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(290px, 1fr))", gap: 24, alignItems: "stretch" }}>
-            {/* Tier 1: $99 */}
-            <div style={{ background: "#ffffff", borderRadius: "var(--radius-lg)", padding: "32px 24px", border: "2px solid #ff5c35", boxShadow: "0 12px 32px rgba(255, 92, 53, 0.15)", display: "flex", flexDirection: "column", justifyContent: "space-between", position: "relative" }}>
-              <span style={{ position: "absolute", top: -12, left: "50%", transform: "translateX(-50%)", background: "#ff5c35", color: "#fff", padding: "4px 12px", borderRadius: "var(--radius-pill)", fontSize: "10.5px", fontWeight: 700, letterSpacing: "0.05em", textTransform: "uppercase" }}>
-                Fastest ROI · 24h Turnaround
+            {/* Tier 1: $29 Audit */}
+            <div style={{ background: "#ffffff", borderRadius: "var(--radius-lg)", padding: "32px 24px", border: "2px solid #ff5c35", boxShadow: "0 12px 32px rgba(255, 92, 53, 0.18)", display: "flex", flexDirection: "column", justifyContent: "space-between", position: "relative" }}>
+              <span style={{ position: "absolute", top: -12, left: "50%", transform: "translateX(-50%)", background: "#ff5c35", color: "#fff", padding: "4px 14px", borderRadius: "var(--radius-pill)", fontSize: "10.5px", fontWeight: 800, letterSpacing: "0.05em", textTransform: "uppercase" }}>
+                🔥 85% OFF · 3 SLOTS LEFT TODAY
               </span>
               <div>
                 <div style={{ fontSize: "11.5px", fontWeight: 700, color: "#ff5c35", textTransform: "uppercase", marginBottom: 4 }}>
-                  Pilot Deal Risk Audit
+                  Instant Pipeline Risk Audit
                 </div>
-                <div style={{ display: "flex", alignItems: "baseline", gap: 6, margin: "8px 0 14px" }}>
-                  <span style={{ fontSize: "36px", fontWeight: 800, color: "var(--hs-heading)", letterSpacing: "-0.03em" }}>$99</span>
+                <div style={{ display: "flex", alignItems: "baseline", gap: 8, margin: "8px 0 10px" }}>
+                  <span style={{ fontSize: "38px", fontWeight: 800, color: "var(--hs-heading)", letterSpacing: "-0.03em" }}>$29</span>
+                  <span style={{ fontSize: "15px", color: "var(--hs-text-muted)", textDecoration: "line-through" }}>$199</span>
                   <span style={{ fontSize: "12px", color: "var(--hs-text-muted)" }}>/ one-time</span>
                 </div>
-                <p style={{ fontSize: "13px", color: "var(--hs-text-muted)", lineHeight: 1.5, marginBottom: 20 }}>
-                  Complete 0–100 health scoring across 50 active HubSpot deals. Catches hidden slippage and delivers an executive PDF report.
+                <p style={{ fontSize: "13px", color: "var(--hs-text-muted)", lineHeight: 1.5, marginBottom: 18 }}>
+                  Complete 0–100 health scoring across 50 active HubSpot deals. Identifies silent CFOs, ghost deals, and delivers an executive PDF report in 24 hours.
                 </p>
                 <div style={{ display: "flex", flexDirection: "column", gap: 9, marginBottom: 24, borderTop: "1px solid var(--hs-border-dark)", paddingTop: 16 }}>
-                  <div style={{ fontSize: "12.5px", color: "var(--hs-text)" }}>✓ Snapshot scoring up to 50 deals</div>
+                  <div style={{ fontSize: "12.5px", color: "var(--hs-text)" }}>✓ Full snapshot scoring on up to 50 deals</div>
                   <div style={{ fontSize: "12.5px", color: "var(--hs-text)" }}>✓ Silent economic buyer detection</div>
                   <div style={{ fontSize: "12.5px", color: "var(--hs-text)" }}>✓ Board-ready PDF briefing summary</div>
-                  <div style={{ fontSize: "12.5px", color: "var(--hs-text)" }}>✓ 100% Money-Back Guarantee</div>
+                  <div style={{ fontSize: "12.5px", fontWeight: 700, color: "var(--risk-healthy)" }}>
+                    ✓ 100% "Find $25K Or It's Free" Guarantee
+                  </div>
                 </div>
               </div>
               <button
-                onClick={() => navigate("/case-study")}
-                style={{ width: "100%", padding: "13px", background: "linear-gradient(180deg, #ff6b48 0%, #ff5c35 100%)", color: "#fff", fontSize: "14px", fontWeight: 700, border: "none", borderRadius: "var(--radius-sm)", cursor: "pointer", boxShadow: "0 4px 14px rgba(255, 92, 53, 0.35)" }}
+                onClick={() => openOrder("audit-29")}
+                style={{ width: "100%", padding: "14px", background: "linear-gradient(180deg, #ff6b48 0%, #ff5c35 100%)", color: "#fff", fontSize: "14.5px", fontWeight: 800, border: "none", borderRadius: "var(--radius-sm)", cursor: "pointer", boxShadow: "0 4px 14px rgba(255, 92, 53, 0.4)" }}
               >
-                Order $99 Deal Audit →
+                Claim $29 Audit Slot Now →
               </button>
             </div>
 
-            {/* Tier 2: $1,500 */}
-            <div style={{ background: "#ffffff", borderRadius: "var(--radius-lg)", padding: "32px 24px", border: "1px solid var(--hs-border-dark)", boxShadow: "var(--shadow-sm)", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+            {/* Tier 2: $299 Lifetime Deployment */}
+            <div style={{ background: "#ffffff", borderRadius: "var(--radius-lg)", padding: "32px 24px", border: "1px solid var(--hs-border-dark)", boxShadow: "var(--shadow-sm)", display: "flex", flexDirection: "column", justifyContent: "space-between", position: "relative" }}>
+              <span style={{ position: "absolute", top: -12, left: "50%", transform: "translateX(-50%)", background: "var(--hs-primary)", color: "#fff", padding: "4px 12px", borderRadius: "var(--radius-pill)", fontSize: "10.5px", fontWeight: 700, letterSpacing: "0.05em", textTransform: "uppercase" }}>
+                ⚡ LIFETIME FOUNDER LICENSE · 88% OFF
+              </span>
               <div>
                 <div style={{ fontSize: "11.5px", fontWeight: 700, color: "var(--hs-text-muted)", textTransform: "uppercase", marginBottom: 4 }}>
-                  Full RevOps Deployment
+                  Full RevOps AI Deployment
                 </div>
-                <div style={{ display: "flex", alignItems: "baseline", gap: 6, margin: "8px 0 14px" }}>
-                  <span style={{ fontSize: "36px", fontWeight: 800, color: "var(--hs-heading)", letterSpacing: "-0.03em" }}>$1,500</span>
-                  <span style={{ fontSize: "12px", color: "var(--hs-text-muted)" }}>/ one-time setup</span>
+                <div style={{ display: "flex", alignItems: "baseline", gap: 8, margin: "8px 0 10px" }}>
+                  <span style={{ fontSize: "38px", fontWeight: 800, color: "var(--hs-heading)", letterSpacing: "-0.03em" }}>$299</span>
+                  <span style={{ fontSize: "15px", color: "var(--hs-text-muted)", textDecoration: "line-through" }}>$2,500</span>
+                  <span style={{ fontSize: "12px", color: "var(--hs-text-muted)" }}>/ lifetime ownership</span>
                 </div>
-                <p style={{ fontSize: "13px", color: "var(--hs-text-muted)", lineHeight: 1.5, marginBottom: 20 }}>
-                  Complete self-hosted FastAPI + PostgreSQL + Redis deployment with real-time bi-directional HubSpot webhooks and all 15 modules.
+                <p style={{ fontSize: "13px", color: "var(--hs-text-muted)", lineHeight: 1.5, marginBottom: 18 }}>
+                  Complete production FastAPI + PostgreSQL + Redis stack deployed into your infrastructure. Real-time bi-directional HubSpot webhooks and zero monthly fees.
                 </p>
                 <div style={{ display: "flex", flexDirection: "column", gap: 9, marginBottom: 24, borderTop: "1px solid var(--hs-border-dark)", paddingTop: 16 }}>
-                  <div style={{ fontSize: "12.5px", color: "var(--hs-text)" }}>✓ Full production stack deployment</div>
+                  <div style={{ fontSize: "12.5px", color: "var(--hs-text)" }}>✓ Full self-hosted production stack</div>
                   <div style={{ fontSize: "12.5px", color: "var(--hs-text)" }}>✓ Sub-200ms bi-directional webhooks</div>
                   <div style={{ fontSize: "12.5px", color: "var(--hs-text)" }}>✓ Full source code & database ownership</div>
-                  <div style={{ fontSize: "12.5px", color: "var(--hs-text)" }}>✓ 30 days engineering support</div>
+                  <div style={{ fontSize: "12.5px", color: "var(--hs-text)" }}>✓ 30 days dedicated engineering support</div>
                 </div>
               </div>
               <button
-                onClick={() => navigate("/case-study")}
-                style={{ width: "100%", padding: "13px", background: "var(--hs-primary)", color: "#fff", fontSize: "14px", fontWeight: 700, border: "none", borderRadius: "var(--radius-sm)", cursor: "pointer" }}
+                onClick={() => openOrder("deploy-299")}
+                style={{ width: "100%", padding: "14px", background: "var(--hs-primary)", color: "#fff", fontSize: "14px", fontWeight: 700, border: "none", borderRadius: "var(--radius-sm)", cursor: "pointer" }}
               >
-                View Deployment Details →
+                Deploy Full Stack ($299) →
               </button>
             </div>
 
-            {/* Tier 3: $3,500 */}
-            <div style={{ background: "#ffffff", borderRadius: "var(--radius-lg)", padding: "32px 24px", border: "1px solid var(--hs-border-dark)", boxShadow: "var(--shadow-sm)", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+            {/* Tier 3: $699 Agency Fleet */}
+            <div style={{ background: "#ffffff", borderRadius: "var(--radius-lg)", padding: "32px 24px", border: "1px solid var(--hs-border-dark)", boxShadow: "var(--shadow-sm)", display: "flex", flexDirection: "column", justifyContent: "space-between", position: "relative" }}>
+              <span style={{ position: "absolute", top: -12, left: "50%", transform: "translateX(-50%)", background: "#00a4bd", color: "#fff", padding: "4px 12px", borderRadius: "var(--radius-pill)", fontSize: "10.5px", fontWeight: 700, letterSpacing: "0.05em", textTransform: "uppercase" }}>
+                👑 UNLIMITED AGENCY FLEET · 86% OFF
+              </span>
               <div>
                 <div style={{ fontSize: "11.5px", fontWeight: 700, color: "var(--hs-text-muted)", textTransform: "uppercase", marginBottom: 4 }}>
-                  Agency White-Label Fleet
+                  White-Label Agency Fleet
                 </div>
-                <div style={{ display: "flex", alignItems: "baseline", gap: 6, margin: "8px 0 14px" }}>
-                  <span style={{ fontSize: "36px", fontWeight: 800, color: "var(--hs-heading)", letterSpacing: "-0.03em" }}>$3,500</span>
-                  <span style={{ fontSize: "12px", color: "var(--hs-text-muted)" }}>/ multi-portal</span>
+                <div style={{ display: "flex", alignItems: "baseline", gap: 8, margin: "8px 0 10px" }}>
+                  <span style={{ fontSize: "38px", fontWeight: 800, color: "var(--hs-heading)", letterSpacing: "-0.03em" }}>$699</span>
+                  <span style={{ fontSize: "15px", color: "var(--hs-text-muted)", textDecoration: "line-through" }}>$5,000</span>
+                  <span style={{ fontSize: "12px", color: "var(--hs-text-muted)" }}>/ unlimited fleet</span>
                 </div>
-                <p style={{ fontSize: "13px", color: "var(--hs-text-muted)", lineHeight: 1.5, marginBottom: 20 }}>
-                  Multi-tenant revenue platform for HubSpot agencies to deploy across 10+ client portals with custom branding and scoring weights.
+                <p style={{ fontSize: "13px", color: "var(--hs-text-muted)", lineHeight: 1.5, marginBottom: 18 }}>
+                  Deploy across all your agency client portals with custom branding, logo, and domain. Charge clients $500/mo and keep 100% recurring profit.
                 </p>
                 <div style={{ display: "flex", flexDirection: "column", gap: 9, marginBottom: 24, borderTop: "1px solid var(--hs-border-dark)", paddingTop: 16 }}>
-                  <div style={{ fontSize: "12.5px", color: "var(--hs-text)" }}>✓ Multi-tenant client fleet dashboard</div>
-                  <div style={{ fontSize: "12.5px", color: "var(--hs-text)" }}>✓ Custom white-label branding & domain</div>
+                  <div style={{ fontSize: "12.5px", color: "var(--hs-text)" }}>✓ Unlimited client portal fleet licenses</div>
+                  <div style={{ fontSize: "12.5px", color: "var(--hs-text)" }}>✓ 100% white-label (your logo & domain)</div>
                   <div style={{ fontSize: "12.5px", color: "var(--hs-text)" }}>✓ Custom scoring weights per industry</div>
-                  <div style={{ fontSize: "12.5px", color: "var(--hs-text)" }}>✓ Priority agency SLA & Slack channel</div>
+                  <div style={{ fontSize: "12.5px", color: "var(--hs-text)" }}>✓ Priority agency engineering Slack SLA</div>
                 </div>
               </div>
               <button
-                onClick={() => navigate("/case-study")}
-                style={{ width: "100%", padding: "13px", background: "var(--hs-primary)", color: "#fff", fontSize: "14px", fontWeight: 700, border: "none", borderRadius: "var(--radius-sm)", cursor: "pointer" }}
+                onClick={() => openOrder("agency-699")}
+                style={{ width: "100%", padding: "14px", background: "var(--hs-primary)", color: "#fff", fontSize: "14px", fontWeight: 700, border: "none", borderRadius: "var(--radius-sm)", cursor: "pointer" }}
               >
-                View Agency Fleet Model →
+                Lock In Agency Fleet ($699) →
               </button>
             </div>
           </div>
@@ -666,12 +724,12 @@ export const LandingPage: React.FC = () => {
             Make impossible pipeline growth feel impossibly easy.
           </h2>
           <p style={{ fontSize: "14.5px", color: "rgba(255, 255, 255, 0.85)", maxWidth: 640, margin: "0 auto 32px", lineHeight: 1.6 }}>
-            Ready to upgrade your revenue governance? Test the live interactive platform or explore our transparent deployment packages.
+            Ready to upgrade your revenue governance? Test the live interactive platform or lock in our $29 founder launch audit.
           </p>
 
           <div style={{ display: "flex", justifyContent: "center", gap: 14, flexWrap: "wrap" }}>
             <button
-              onClick={() => navigate("/pipeline")}
+              onClick={() => openOrder("audit-29")}
               style={{
                 padding: "14px 30px",
                 background: "linear-gradient(180deg, #ff6b48 0%, #ff5c35 100%)",
@@ -684,10 +742,10 @@ export const LandingPage: React.FC = () => {
                 boxShadow: "0 4px 16px rgba(255, 92, 53, 0.45)",
               }}
             >
-              Launch Live App Demo →
+              Claim $29 Audit Slot Now →
             </button>
             <button
-              onClick={() => navigate("/case-study")}
+              onClick={() => navigate("/pipeline")}
               style={{
                 padding: "14px 24px",
                 background: "#ffffff",
@@ -699,7 +757,7 @@ export const LandingPage: React.FC = () => {
                 cursor: "pointer",
               }}
             >
-              View Full Pricing & Case Study ($99)
+              Launch Live App Demo
             </button>
           </div>
         </div>
@@ -707,6 +765,110 @@ export const LandingPage: React.FC = () => {
 
       {/* ── 8. Global SaaS Multi-Column Footer ───────────────────────── */}
       <Footer />
+
+      {/* ── 9. Interactive Founding Rate Order Modal ─────────────────── */}
+      <AnimatePresence>
+        {orderModalOpen && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setOrderModalOpen(false)}
+              style={{ position: "fixed", inset: 0, background: "rgba(18, 69, 72, 0.55)", backdropFilter: "blur(4px)", zIndex: 2000 }}
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 15 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 15 }}
+              style={{
+                position: "fixed",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                width: "90%",
+                maxWidth: 480,
+                background: "#ffffff",
+                borderRadius: "var(--radius-lg)",
+                padding: "28px 24px",
+                boxShadow: "var(--shadow-xl)",
+                zIndex: 2001,
+                border: "1px solid var(--hs-border-dark)",
+                borderTop: "4px solid #ff5c35",
+              }}
+            >
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <DealSenseIcon size={24} />
+                  <span style={{ fontSize: "16px", fontWeight: 800, color: "var(--hs-primary)" }}>
+                    {selectedTier === "audit-29"
+                      ? "🚀 Claim $29 Deal Risk Audit"
+                      : selectedTier === "deploy-299"
+                      ? "⚡ Deploy Full AI Stack ($299)"
+                      : "👑 Lock In Agency Fleet ($699)"}
+                  </span>
+                </div>
+                <button onClick={() => setOrderModalOpen(false)} style={{ border: "none", background: "none", fontSize: "18px", cursor: "pointer", color: "var(--hs-text-muted)" }}>✕</button>
+              </div>
+
+              {orderSuccess ? (
+                <div style={{ textAlign: "center", padding: "24px 0" }}>
+                  <div style={{ fontSize: "36px", marginBottom: 8 }}>🎉</div>
+                  <h4 style={{ fontSize: "18px", fontWeight: 800, color: "var(--risk-healthy)" }}>Founder Slot Reserved!</h4>
+                  <p style={{ fontSize: "13px", color: "var(--hs-text-muted)", marginTop: 6 }}>
+                    Our engineering team has received your portal details. You will receive an onboarding link and report within 24 hours.
+                  </p>
+                </div>
+              ) : (
+                <form onSubmit={handleOrderSubmit} style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                  <div>
+                    <label style={{ display: "block", fontSize: "11.5px", fontWeight: 700, color: "var(--hs-heading)", marginBottom: 4 }}>Full Name *</label>
+                    <input required type="text" placeholder="Sarah Miller" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} style={{ width: "100%", padding: "9px 12px", border: "1px solid var(--hs-border-dark)", borderRadius: "var(--radius-sm)", fontSize: "13px" }} />
+                  </div>
+
+                  <div>
+                    <label style={{ display: "block", fontSize: "11.5px", fontWeight: 700, color: "var(--hs-heading)", marginBottom: 4 }}>Work Email *</label>
+                    <input required type="email" placeholder="sarah@agency.com" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} style={{ width: "100%", padding: "9px 12px", border: "1px solid var(--hs-border-dark)", borderRadius: "var(--radius-sm)", fontSize: "13px" }} />
+                  </div>
+
+                  <div>
+                    <label style={{ display: "block", fontSize: "11.5px", fontWeight: 700, color: "var(--hs-heading)", marginBottom: 4 }}>Company / Agency *</label>
+                    <input required type="text" placeholder="Apex Revenue Ops" value={formData.company} onChange={(e) => setFormData({ ...formData, company: e.target.value })} style={{ width: "100%", padding: "9px 12px", border: "1px solid var(--hs-border-dark)", borderRadius: "var(--radius-sm)", fontSize: "13px" }} />
+                  </div>
+
+                  <div>
+                    <label style={{ display: "block", fontSize: "11.5px", fontWeight: 700, color: "var(--hs-heading)", marginBottom: 4 }}>HubSpot Portal ID (Optional)</label>
+                    <input type="text" placeholder="e.g. #48921820" value={formData.portalId} onChange={(e) => setFormData({ ...formData, portalId: e.target.value })} style={{ width: "100%", padding: "9px 12px", border: "1px solid var(--hs-border-dark)", borderRadius: "var(--radius-sm)", fontSize: "13px" }} />
+                  </div>
+
+                  <div style={{ padding: "8px 12px", background: "var(--hs-surface)", borderRadius: "var(--radius-sm)", border: "1px solid var(--hs-border-dark)", fontSize: "11px", color: "var(--hs-text-muted)" }}>
+                    🔒 <strong>100% Risk-Free:</strong> 100% money-back guarantee if we don't catch at least $25K in at-risk pipeline.
+                  </div>
+
+                  <button
+                    type="submit"
+                    style={{
+                      width: "100%",
+                      padding: "12px",
+                      background: "#ff5c35",
+                      color: "#fff",
+                      fontSize: "14px",
+                      fontWeight: 700,
+                      border: "none",
+                      borderRadius: "var(--radius-sm)",
+                      cursor: "pointer",
+                      boxShadow: "0 4px 12px rgba(255, 92, 53, 0.35)",
+                      marginTop: 4,
+                    }}
+                  >
+                    🚀 {selectedTier === "audit-29" ? "Lock In $29 Founder Audit" : selectedTier === "deploy-299" ? "Confirm $299 Lifetime Setup" : "Confirm $699 Agency Fleet"}
+                  </button>
+                </form>
+              )}
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
