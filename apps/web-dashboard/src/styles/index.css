@@ -121,6 +121,12 @@ html {
   scroll-behavior: smooth;
 }
 
+section[id],
+div[id],
+article[id] {
+  scroll-margin-top: 80px;
+}
+
 body {
   width: 100%;
   max-width: 100vw;

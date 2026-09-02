@@ -25,6 +25,8 @@ import { CompetitiveIntelligence } from "./pages/CompetitiveIntelligence";
 import { CaseStudy } from "./pages/CaseStudy";
 import { LandingPage } from "./pages/LandingPage";
 import { AgencyFleet } from "./pages/AgencyFleet";
+import { NavTestPage } from "./pages/NavTestPage";
+import { ScrollToTop } from "./components/ScrollToTop";
 import { Footer } from "./components/Footer";
 import { DealWarRoom } from "./pages/DealWarRoom";
 import { RevOpsPlaybooks } from "./pages/RevOpsPlaybooks";
@@ -60,6 +62,7 @@ const PAGE_TITLES: Record<string, { title: string; breadcrumb: string }> = {
   "/portfolio": { title: "Executive Architecture Case Study", breadcrumb: "Portfolio" },
   "/audit": { title: "Audit & Compliance Trail", breadcrumb: "Audit" },
   "/settings": { title: "Settings & Scoring Weights", breadcrumb: "Settings" },
+  "/nav-test": { title: "Navigation & CTA Test Suite", breadcrumb: "Dev / QA" },
 };
 
 const SEARCHABLE_DEALS = [
@@ -155,6 +158,7 @@ export const App: React.FC = () => {
   if (isLandingPage) {
     return (
       <div className="landing-layout" style={{ minHeight: "100vh", background: "#ffffff" }}>
+        <ScrollToTop />
         {/* Top Telemetry Loading Bar on Navigation */}
         <AnimatePresence>
           {isNavigating && (
@@ -184,6 +188,7 @@ export const App: React.FC = () => {
 
   return (
     <div className="layout">
+      <ScrollToTop />
       {/* Loading Screen Overlay removed per user request */}
 
       {/* Mobile Sidebar Backdrop */}
@@ -275,6 +280,7 @@ export const App: React.FC = () => {
                 <Route path="/portfolio" element={<CaseStudy />} />
                 <Route path="/audit" element={<AuditLog />} />
                 <Route path="/settings" element={<Settings />} />
+                <Route path="/nav-test" element={<NavTestPage />} />
               </Routes>
             </motion.div>
           </AnimatePresence>
