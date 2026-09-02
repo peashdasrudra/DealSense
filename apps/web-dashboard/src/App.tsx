@@ -24,6 +24,7 @@ import { MutualActionPlan } from "./pages/MutualActionPlan";
 import { CompetitiveIntelligence } from "./pages/CompetitiveIntelligence";
 import { CaseStudy } from "./pages/CaseStudy";
 import { LandingPage } from "./pages/LandingPage";
+import { AgencyFleet } from "./pages/AgencyFleet";
 import { Footer } from "./components/Footer";
 import { DealWarRoom } from "./pages/DealWarRoom";
 import { RevOpsPlaybooks } from "./pages/RevOpsPlaybooks";
@@ -37,6 +38,9 @@ const PAGE_TITLES: Record<string, { title: string; breadcrumb: string }> = {
   "/": { title: "DealSense Platform", breadcrumb: "Landing" },
   "/landing": { title: "DealSense Revenue Platform", breadcrumb: "Landing" },
   "/welcome": { title: "Welcome & Onboarding", breadcrumb: "Welcome" },
+  "/agency": { title: "HubSpot Agency Fleet & Arbitrage", breadcrumb: "Agency Fleet" },
+  "/partners": { title: "HubSpot Agency Fleet & Arbitrage", breadcrumb: "Partners" },
+  "/agency-fleet": { title: "HubSpot Agency Fleet & Arbitrage", breadcrumb: "Agency Fleet" },
   "/pipeline": { title: "Home — Revenue Intelligence", breadcrumb: "Home" },
   "/overview": { title: "Home — Revenue Intelligence", breadcrumb: "Home" },
   "/forecast": { title: "Revenue Forecast & Simulation", breadcrumb: "Forecast" },
@@ -145,7 +149,8 @@ export const App: React.FC = () => {
     setSidebarOpen(false);
   };
 
-  const isLandingPage = location.pathname === "/" || location.pathname === "/landing" || location.pathname === "/welcome";
+  const isAgencyPage = location.pathname === "/agency" || location.pathname === "/partners" || location.pathname === "/agency-fleet";
+  const isLandingPage = location.pathname === "/" || location.pathname === "/landing" || location.pathname === "/welcome" || isAgencyPage;
 
   if (isLandingPage) {
     return (
@@ -172,7 +177,7 @@ export const App: React.FC = () => {
             />
           )}
         </AnimatePresence>
-        <LandingPage />
+        {isAgencyPage ? <AgencyFleet /> : <LandingPage />}
       </div>
     );
   }
@@ -262,6 +267,9 @@ export const App: React.FC = () => {
                 <Route path="/reps" element={<RepPerformance />} />
                 <Route path="/clients" element={<ClientHealth />} />
                 <Route path="/case-study" element={<CaseStudy />} />
+                <Route path="/agency" element={<AgencyFleet />} />
+                <Route path="/partners" element={<AgencyFleet />} />
+                <Route path="/agency-fleet" element={<AgencyFleet />} />
                 <Route path="/landing" element={<LandingPage />} />
                 <Route path="/welcome" element={<LandingPage />} />
                 <Route path="/portfolio" element={<CaseStudy />} />
