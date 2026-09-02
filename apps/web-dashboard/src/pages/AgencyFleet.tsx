@@ -25,6 +25,7 @@ export const AgencyFleet: React.FC = () => {
   const [clientCount, setClientCount] = useState<number>(5);
   const [retainerPrice, setRetainerPrice] = useState<number>(2500);
   const [activePortalTab, setActivePortalTab] = useState<number>(0);
+  const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
 
   // Order Modal State
   const [orderModalOpen, setOrderModalOpen] = useState(false);
@@ -1411,31 +1412,55 @@ export const AgencyFleet: React.FC = () => {
               margin: "0 auto",
             }}
           >
-            {/* Avatar Lockup */}
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 10, marginBottom: 20 }}>
-              <div
-                style={{
-                  width: 52,
-                  height: 52,
-                  borderRadius: "14px",
-                  background: "linear-gradient(135deg, #092124 0%, #124548 100%)",
-                  color: "#ffffff",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontWeight: 900,
-                  fontSize: "18px",
-                  boxShadow: "0 4px 12px rgba(9, 33, 36, 0.25)",
-                }}
-              >
-                PR
-              </div>
-              <div>
-                <div style={{ fontSize: "17px", fontWeight: 900, color: "#092124", letterSpacing: "-0.02em", fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}>
-                  Peash Das Rudra
+            {/* Avatar Lockup with Glowing Luxury Halo & Live Status */}
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12, marginBottom: 20 }}>
+              <div style={{ position: "relative" }}>
+                <div
+                  style={{
+                    width: 58,
+                    height: 58,
+                    borderRadius: "16px",
+                    background: "linear-gradient(135deg, #092124 0%, #124548 100%)",
+                    color: "#ffffff",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontWeight: 900,
+                    fontSize: "20px",
+                    boxShadow: "0 0 0 3px #ffffff, 0 0 0 6px rgba(255, 92, 53, 0.3), 0 8px 24px rgba(9, 33, 36, 0.25)",
+                    letterSpacing: "-0.02em",
+                  }}
+                >
+                  PR
                 </div>
-                <div style={{ fontSize: "13px", color: "#64748b", marginTop: 2 }}>
-                  Lead AI Architect · AiXpert Labs (Creator of DealSense)
+                {/* Live Online Status Dot */}
+                <div
+                  style={{
+                    position: "absolute",
+                    bottom: -2,
+                    right: -2,
+                    width: 14,
+                    height: 14,
+                    borderRadius: "50%",
+                    background: "#10b981",
+                    border: "2.5px solid #ffffff",
+                    boxShadow: "0 0 10px rgba(16, 185, 129, 0.9)",
+                  }}
+                  title="Lead Architect Online"
+                />
+              </div>
+
+              <div>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
+                  <span style={{ fontSize: "18px", fontWeight: 900, color: "#092124", letterSpacing: "-0.02em", fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}>
+                    Peash Das Rudra
+                  </span>
+                  <span style={{ fontSize: "10px", fontWeight: 800, color: "#065f46", background: "#d1fae5", border: "1px solid #a7f3d0", padding: "1px 7px", borderRadius: "9999px" }}>
+                    CREATOR
+                  </span>
+                </div>
+                <div style={{ fontSize: "13px", color: "#64748b", marginTop: 3 }}>
+                  Lead AI Architect · AiXpert Labs (Creator & Monorepo Author)
                 </div>
               </div>
             </div>
@@ -1556,7 +1581,7 @@ export const AgencyFleet: React.FC = () => {
         </div>
       </section>
 
-      {/* ── 8.5. Agency Partner FAQ Section ───────────────────────────── */}
+      {/* ── 8.5. Agency Partner Interactive FAQ Accordion ───────────────── */}
       <section id="faq" style={{ padding: "84px clamp(16px, 4vw, 24px)", background: "#f8fafc", borderTop: "1px solid #e2e8f0" }}>
         <div style={{ maxWidth: 840, margin: "0 auto" }}>
           <div style={{ textAlign: "center", marginBottom: 44 }}>
@@ -1583,11 +1608,11 @@ export const AgencyFleet: React.FC = () => {
               Frequently Asked Questions
             </h2>
             <p style={{ fontSize: "16px", color: "#64748b", margin: 0 }}>
-              Everything HubSpot Solutions Partners need to know before deploying their AI fleet.
+              Click any question below to see detailed answers for HubSpot Solutions Partners.
             </p>
           </div>
 
-          <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
             {[
               {
                 q: "Do my clients ever see 'DealSense' or know it's a 3rd party tool?",
@@ -1613,26 +1638,88 @@ export const AgencyFleet: React.FC = () => {
                 q: "Do we get full access to the source code?",
                 a: "Yes. Both the Single Portal and Agency Fleet tiers include complete source code handover (FastAPI backend, React 18 frontend, PostgreSQL 16 schema, Redis Streams, Docker compose, and HubSpot Canvas SDK extension) with lifetime commercial usage rights.",
               },
-            ].map((item, idx) => (
-              <div
-                key={idx}
-                style={{
-                  background: "#ffffff",
-                  border: "1px solid #e2e8f0",
-                  borderRadius: "14px",
-                  padding: "20px 24px",
-                  boxShadow: "0 2px 8px rgba(9, 33, 36, 0.04)",
-                  transition: "all 0.2s ease",
-                }}
-              >
-                <h4 style={{ fontSize: "16px", fontWeight: 800, color: "#092124", margin: "0 0 8px", letterSpacing: "-0.01em" }}>
-                  {item.q}
-                </h4>
-                <p style={{ fontSize: "14px", color: "#475569", lineHeight: 1.6, margin: 0 }}>
-                  {item.a}
-                </p>
-              </div>
-            ))}
+            ].map((item, idx) => {
+              const isOpen = openFaqIndex === idx;
+              return (
+                <div
+                  key={idx}
+                  style={{
+                    background: "#ffffff",
+                    border: isOpen ? "1.5px solid #ff5c35" : "1px solid #e2e8f0",
+                    borderRadius: "14px",
+                    boxShadow: isOpen ? "0 8px 24px -4px rgba(255, 92, 53, 0.12)" : "0 2px 6px rgba(9, 33, 36, 0.03)",
+                    transition: "all 0.25s cubic-bezier(0.16, 1, 0.3, 1)",
+                    overflow: "hidden",
+                  }}
+                >
+                  <button
+                    onClick={() => setOpenFaqIndex(isOpen ? null : idx)}
+                    style={{
+                      width: "100%",
+                      padding: "18px 22px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      gap: 16,
+                      background: "none",
+                      border: "none",
+                      cursor: "pointer",
+                      textAlign: "left",
+                    }}
+                  >
+                    <h4
+                      style={{
+                        fontSize: "15.5px",
+                        fontWeight: 800,
+                        color: isOpen ? "#ff5c35" : "#092124",
+                        margin: 0,
+                        letterSpacing: "-0.015em",
+                        fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif",
+                        transition: "color 0.2s ease",
+                      }}
+                    >
+                      {item.q}
+                    </h4>
+                    <div
+                      style={{
+                        width: 28,
+                        height: 28,
+                        borderRadius: "8px",
+                        background: isOpen ? "rgba(255, 92, 53, 0.12)" : "rgba(15, 23, 42, 0.04)",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        color: isOpen ? "#ff5c35" : "#64748b",
+                        flexShrink: 0,
+                        transform: isOpen ? "rotate(180deg)" : "rotate(0deg)",
+                        transition: "all 0.25s cubic-bezier(0.16, 1, 0.3, 1)",
+                      }}
+                    >
+                      <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
+                        <polyline points="6 9 12 15 18 9" />
+                      </svg>
+                    </div>
+                  </button>
+
+                  <AnimatePresence>
+                    {isOpen && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        exit={{ opacity: 0, height: 0 }}
+                        transition={{ duration: 0.25, ease: "easeInOut" }}
+                      >
+                        <div style={{ padding: "0 22px 20px", borderTop: "1px solid rgba(226, 232, 240, 0.6)" }}>
+                          <p style={{ fontSize: "14px", color: "#475569", lineHeight: 1.65, margin: "12px 0 0" }}>
+                            {item.a}
+                          </p>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
