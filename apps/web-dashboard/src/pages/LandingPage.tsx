@@ -308,40 +308,260 @@ export const LandingPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Mobile Dropdown Menu */}
+        {/* Mobile Dropdown Menu — Luxury Enterprise App Style */}
         <AnimatePresence>
           {mobileMenuOpen && (
             <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
+              initial={{ height: 0, opacity: 0, y: -6 }}
+              animate={{ height: "auto", opacity: 1, y: 0 }}
+              exit={{ height: 0, opacity: 0, y: -6 }}
+              transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
               style={{
                 overflow: "hidden",
                 borderTop: "1px solid #e2e8f0",
                 marginTop: "12px",
                 paddingTop: "14px",
+                paddingBottom: "8px",
                 display: "flex",
                 flexDirection: "column",
                 gap: "8px",
               }}
             >
-              <div onClick={() => { navigate("/pipeline"); setMobileMenuOpen(false); }} style={{ padding: "10px 14px", fontWeight: 700, color: "#092124", borderRadius: "8px", background: "#f8fafc", cursor: "pointer" }}>
-                📊 Platform Pipeline Dashboard
+              {/* 1. Pipeline Command Center */}
+              <div
+                onClick={() => { navigate("/pipeline"); setMobileMenuOpen(false); }}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  padding: "10px 12px",
+                  borderRadius: "12px",
+                  background: "#f8fafc",
+                  border: "1px solid #e2e8f0",
+                  cursor: "pointer",
+                  transition: "all 0.15s ease",
+                }}
+              >
+                <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                  <div style={{ width: 32, height: 32, borderRadius: "8px", background: "rgba(18,69,72,0.08)", border: "1px solid rgba(18,69,72,0.15)", display: "flex", alignItems: "center", justifyContent: "center", color: "#124548" }}>
+                    <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+                      <rect width="18" height="18" x="3" y="3" rx="2" /><path d="M3 9h18" /><path d="M9 21V9" />
+                    </svg>
+                  </div>
+                  <div>
+                    <div style={{ fontSize: "13.5px", fontWeight: 800, color: "#092124", lineHeight: 1.2 }}>Pipeline Command Center</div>
+                    <div style={{ fontSize: "11px", color: "#64748b" }}>180ms deterministic deal triage & CRM sync</div>
+                  </div>
+                </div>
+                <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M9 18l6-6-6-6" />
+                </svg>
               </div>
-              <div onClick={() => { navigate("/agency"); setMobileMenuOpen(false); }} style={{ padding: "10px 14px", fontWeight: 800, color: "#ff5c35", borderRadius: "8px", background: "rgba(255,92,53,0.08)", cursor: "pointer" }}>
-                👑 Agency Partner Fleet
+
+              {/* 2. Agency Partner Fleet (Featured Card) */}
+              <div
+                onClick={() => { navigate("/agency"); setMobileMenuOpen(false); }}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  padding: "10px 12px",
+                  borderRadius: "12px",
+                  background: "linear-gradient(135deg, rgba(255, 92, 53, 0.08) 0%, rgba(18, 69, 72, 0.05) 100%)",
+                  border: "1.5px solid rgba(255, 92, 53, 0.35)",
+                  boxShadow: "0 2px 10px rgba(255, 92, 53, 0.08)",
+                  cursor: "pointer",
+                  transition: "all 0.15s ease",
+                }}
+              >
+                <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                  <div style={{ width: 32, height: 32, borderRadius: "8px", background: "linear-gradient(135deg, #ff6b48 0%, #ff5c35 100%)", display: "flex", alignItems: "center", justifyContent: "center", color: "#ffffff", boxShadow: "0 2px 6px rgba(255,92,53,0.3)" }}>
+                    <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+                      <path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14" />
+                    </svg>
+                  </div>
+                  <div>
+                    <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                      <span style={{ fontSize: "13.5px", fontWeight: 800, color: "#ff5c35", lineHeight: 1.2 }}>Agency Partner Fleet</span>
+                      <span style={{ fontSize: "9px", fontWeight: 800, background: "rgba(255, 92, 53, 0.15)", color: "#ff5c35", border: "1px solid rgba(255, 92, 53, 0.3)", padding: "1px 5px", borderRadius: "4px" }}>
+                        72% OFF
+                      </span>
+                    </div>
+                    <div style={{ fontSize: "11px", color: "#64748b" }}>Multi-tenant white-label CRM canvas cards</div>
+                  </div>
+                </div>
+                <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke="#ff5c35" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M9 18l6-6-6-6" />
+                </svg>
               </div>
-              <a href="#pricing-matrix" onClick={() => setMobileMenuOpen(false)} style={{ padding: "10px 14px", fontWeight: 700, color: "#334155", borderRadius: "8px", textDecoration: "none", display: "block" }}>
-                💰 Pricing & Deployment Plans
+
+              {/* 3. Pricing & Deployment Plans */}
+              <a
+                href="#pricing-matrix"
+                onClick={() => setMobileMenuOpen(false)}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  padding: "10px 12px",
+                  borderRadius: "12px",
+                  background: "#f8fafc",
+                  border: "1px solid #e2e8f0",
+                  textDecoration: "none",
+                  cursor: "pointer",
+                  transition: "all 0.15s ease",
+                }}
+              >
+                <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                  <div style={{ width: 32, height: 32, borderRadius: "8px", background: "rgba(16, 185, 129, 0.08)", border: "1px solid rgba(16, 185, 129, 0.2)", display: "flex", alignItems: "center", justifyContent: "center", color: "#059669" }}>
+                    <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                    </svg>
+                  </div>
+                  <div>
+                    <div style={{ fontSize: "13.5px", fontWeight: 800, color: "#092124", lineHeight: 1.2 }}>Pricing & Software Ownership</div>
+                    <div style={{ fontSize: "11px", color: "#64748b" }}>Single Portal ($1.5K) & Master Fleet ($3.5K)</div>
+                  </div>
+                </div>
+                <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M9 18l6-6-6-6" />
+                </svg>
               </a>
-              <div onClick={() => { navigate("/forecast"); setMobileMenuOpen(false); }} style={{ padding: "10px 14px", fontWeight: 600, color: "#334155", borderRadius: "8px", cursor: "pointer" }}>
-                📈 Revenue Forecast & Simulation
+
+              {/* 4. Revenue Simulation & Forecast */}
+              <div
+                onClick={() => { navigate("/forecast"); setMobileMenuOpen(false); }}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  padding: "10px 12px",
+                  borderRadius: "12px",
+                  background: "#f8fafc",
+                  border: "1px solid #e2e8f0",
+                  cursor: "pointer",
+                  transition: "all 0.15s ease",
+                }}
+              >
+                <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                  <div style={{ width: 32, height: 32, borderRadius: "8px", background: "rgba(56, 189, 248, 0.1)", border: "1px solid rgba(56, 189, 248, 0.2)", display: "flex", alignItems: "center", justifyContent: "center", color: "#0284c7" }}>
+                    <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="22 7 13.5 15.5 8.5 10.5 2 17" /><polyline points="16 7 22 7 22 13" />
+                    </svg>
+                  </div>
+                  <div>
+                    <div style={{ fontSize: "13.5px", fontWeight: 800, color: "#092124", lineHeight: 1.2 }}>Revenue Simulation & Forecast</div>
+                    <div style={{ fontSize: "11px", color: "#64748b" }}>Monte Carlo probabilities & slippage models</div>
+                  </div>
+                </div>
+                <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M9 18l6-6-6-6" />
+                </svg>
               </div>
-              <div onClick={() => { navigate("/war-room"); setMobileMenuOpen(false); }} style={{ padding: "10px 14px", fontWeight: 600, color: "#334155", borderRadius: "8px", cursor: "pointer" }}>
-                ⚔️ Deal War Room (QBR Decisions)
+
+              {/* 5. Deal War Room */}
+              <div
+                onClick={() => { navigate("/war-room"); setMobileMenuOpen(false); }}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  padding: "10px 12px",
+                  borderRadius: "12px",
+                  background: "#f8fafc",
+                  border: "1px solid #e2e8f0",
+                  cursor: "pointer",
+                  transition: "all 0.15s ease",
+                }}
+              >
+                <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                  <div style={{ width: 32, height: 32, borderRadius: "8px", background: "rgba(139, 92, 246, 0.1)", border: "1px solid rgba(139, 92, 246, 0.2)", display: "flex", alignItems: "center", justifyContent: "center", color: "#7c3aed" }}>
+                    <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+                      <circle cx="12" cy="12" r="10" /><path d="m4.93 4.93 4.24 4.24" /><path d="m14.83 9.17 4.24-4.24" /><path d="m14.83 14.83 4.24 4.24" /><path d="m9.17 14.83-4.24 4.24" />
+                    </svg>
+                  </div>
+                  <div>
+                    <div style={{ fontSize: "13.5px", fontWeight: 800, color: "#092124", lineHeight: 1.2 }}>Deal War Room & QBR</div>
+                    <div style={{ fontSize: "11px", color: "#64748b" }}>MEDDICC scrutiny & AI rep coaching actions</div>
+                  </div>
+                </div>
+                <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M9 18l6-6-6-6" />
+                </svg>
               </div>
-              <div onClick={() => { navigate("/case-study"); setMobileMenuOpen(false); }} style={{ padding: "10px 14px", fontWeight: 600, color: "#334155", borderRadius: "8px", cursor: "pointer" }}>
-                📜 Architecture & Agency Case Study
+
+              {/* 6. Case Study & Architecture Dossier */}
+              <div
+                onClick={() => { navigate("/case-study"); setMobileMenuOpen(false); }}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  padding: "10px 12px",
+                  borderRadius: "12px",
+                  background: "#f8fafc",
+                  border: "1px solid #e2e8f0",
+                  cursor: "pointer",
+                  transition: "all 0.15s ease",
+                }}
+              >
+                <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                  <div style={{ width: 32, height: 32, borderRadius: "8px", background: "rgba(245, 158, 11, 0.1)", border: "1px solid rgba(245, 158, 11, 0.25)", display: "flex", alignItems: "center", justifyContent: "center", color: "#d97706" }}>
+                    <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /><line x1="16" x2="8" y1="13" y2="13" /><line x1="16" x2="8" y1="17" y2="17" /><polyline points="10 9 9 9 8 9" />
+                    </svg>
+                  </div>
+                  <div>
+                    <div style={{ fontSize: "13.5px", fontWeight: 800, color: "#092124", lineHeight: 1.2 }}>Architecture & Case Study</div>
+                    <div style={{ fontSize: "11px", color: "#64748b" }}>Production monorepo technical dossier</div>
+                  </div>
+                </div>
+                <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M9 18l6-6-6-6" />
+                </svg>
+              </div>
+
+              {/* Bottom Quick Action CTAs */}
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px", marginTop: "4px", paddingTop: "8px", borderTop: "1px solid #e2e8f0" }}>
+                <button
+                  onClick={() => { navigate("/agency"); setMobileMenuOpen(false); }}
+                  style={{
+                    padding: "10px 12px",
+                    background: "linear-gradient(135deg, #ff6b48 0%, #ff5c35 100%)",
+                    color: "#ffffff",
+                    fontSize: "12px",
+                    fontWeight: 800,
+                    border: "none",
+                    borderRadius: "8px",
+                    cursor: "pointer",
+                    boxShadow: "0 2px 8px rgba(255, 92, 53, 0.3)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: "4px",
+                  }}
+                >
+                  <span>Agency Discount</span>
+                  <span>→</span>
+                </button>
+                <button
+                  onClick={() => { navigate("/pipeline"); setMobileMenuOpen(false); }}
+                  style={{
+                    padding: "10px 12px",
+                    background: "#ffffff",
+                    color: "#092124",
+                    fontSize: "12px",
+                    fontWeight: 700,
+                    border: "1.5px solid #cbd5e1",
+                    borderRadius: "8px",
+                    cursor: "pointer",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  Launch App Demo
+                </button>
               </div>
             </motion.div>
           )}
