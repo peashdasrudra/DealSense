@@ -150,7 +150,7 @@ const NAV_SECTIONS: NavSection[] = [
     title: "Revenue Intelligence",
     defaultOpen: true,
     items: [
-      { id: "overview", label: "Pipeline Overview", iconKey: "overview", path: "/" },
+      { id: "overview", label: "Pipeline Overview", iconKey: "overview", path: "/pipeline" },
       { id: "forecast", label: "Revenue Forecast", iconKey: "forecast", path: "/forecast" },
       { id: "waterfall", label: "Pipeline Waterfall", iconKey: "waterfall", path: "/waterfall", badge: "New", badgeColor: "#00a4bd" },
       { id: "deals", label: "Deal Inspector", iconKey: "deals", path: "/deals" },
@@ -182,7 +182,7 @@ const NAV_SECTIONS: NavSection[] = [
     title: "Commercial & Showcase",
     defaultOpen: true,
     items: [
-      { id: "landing", label: "Public Landing Page", iconKey: "overview", path: "/landing", badge: "SaaS", badgeColor: "#ff5c35" },
+      { id: "landing", label: "Public Landing Page", iconKey: "overview", path: "/", badge: "SaaS", badgeColor: "#ff5c35" },
       { id: "case-study", label: "Case Study & Pricing", iconKey: "casestudy", path: "/case-study" },
     ],
   },

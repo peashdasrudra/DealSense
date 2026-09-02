@@ -144,7 +144,7 @@ export const LandingPage: React.FC = () => {
 
           {/* Nav Links */}
           <div style={{ display: "flex", alignItems: "center", gap: 28 }} className="desktop-nav-links">
-            <span onClick={() => navigate("/")} style={{ fontSize: "13.5px", fontWeight: 600, color: "var(--hs-heading)", cursor: "pointer" }}>Platform</span>
+            <span onClick={() => navigate("/pipeline")} style={{ fontSize: "13.5px", fontWeight: 600, color: "var(--hs-heading)", cursor: "pointer" }}>Platform</span>
             <span onClick={() => navigate("/forecast")} style={{ fontSize: "13.5px", fontWeight: 600, color: "var(--hs-text)", cursor: "pointer" }}>Forecasting</span>
             <span onClick={() => navigate("/war-room")} style={{ fontSize: "13.5px", fontWeight: 600, color: "var(--hs-text)", cursor: "pointer" }}>War Room</span>
             <span onClick={() => navigate("/case-study")} style={{ fontSize: "13.5px", fontWeight: 600, color: "var(--hs-text)", cursor: "pointer" }}>Case Study</span>
@@ -169,7 +169,7 @@ export const LandingPage: React.FC = () => {
               $99 Pilot Audit
             </button>
             <button
-              onClick={() => navigate("/")}
+              onClick={() => navigate("/pipeline")}
               style={{
                 padding: "8px 18px",
                 background: "linear-gradient(180deg, #ff6b48 0%, #ff5c35 100%)",
@@ -269,7 +269,7 @@ export const LandingPage: React.FC = () => {
             style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 14, flexWrap: "wrap" }}
           >
             <button
-              onClick={() => navigate("/")}
+              onClick={() => navigate("/pipeline")}
               style={{
                 padding: "14px 32px",
                 background: "linear-gradient(180deg, #ff6b48 0%, #ff5c35 100%)",
@@ -402,7 +402,7 @@ export const LandingPage: React.FC = () => {
               ))}
             </div>
             <button
-              onClick={() => navigate("/")}
+              onClick={() => navigate("/pipeline")}
               style={{
                 padding: "10px 20px",
                 background: "var(--hs-primary)",
@@ -466,7 +466,7 @@ export const LandingPage: React.FC = () => {
                 Everything your revenue team needs to inspect stalled opportunities, run executive war rooms, and eliminate pipeline leakage in one unified HubSpot-native suite.
               </p>
               <button
-                onClick={() => navigate("/")}
+                onClick={() => navigate("/pipeline")}
                 style={{
                   padding: "12px 24px",
                   background: "#ff5c35",
@@ -656,7 +656,7 @@ export const LandingPage: React.FC = () => {
 
           <div style={{ display: "flex", justifyContent: "center", gap: 14, flexWrap: "wrap" }}>
             <button
-              onClick={() => navigate("/")}
+              onClick={() => navigate("/pipeline")}
               style={{
                 padding: "14px 32px",
                 background: "linear-gradient(180deg, #ff6b48 0%, #ff5c35 100%)",

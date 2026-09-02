@@ -34,9 +34,11 @@ import { DealDrawer, DealData } from "./components/DealDrawer";
 // ── Page Title Mapping ───────────────────────────────────────────────────────
 
 const PAGE_TITLES: Record<string, { title: string; breadcrumb: string }> = {
+  "/": { title: "DealSense Platform", breadcrumb: "Home" },
   "/landing": { title: "DealSense Revenue Platform", breadcrumb: "Landing" },
   "/welcome": { title: "Welcome & Onboarding", breadcrumb: "Welcome" },
-  "/": { title: "Pipeline Overview", breadcrumb: "Overview" },
+  "/pipeline": { title: "Pipeline Overview", breadcrumb: "Overview" },
+  "/overview": { title: "Pipeline Overview", breadcrumb: "Overview" },
   "/forecast": { title: "Revenue Forecast & Simulation", breadcrumb: "Forecast" },
   "/deals": { title: "Deal Inspector & Dossiers", breadcrumb: "Deals" },
   "/waterfall": { title: "Pipeline Waterfall & Velocity", breadcrumb: "Waterfall" },
@@ -143,6 +145,38 @@ export const App: React.FC = () => {
     setSidebarOpen(false);
   };
 
+  const isLandingPage = location.pathname === "/" || location.pathname === "/landing" || location.pathname === "/welcome";
+
+  if (isLandingPage) {
+    return (
+      <div className="landing-layout" style={{ minHeight: "100vh", background: "#ffffff" }}>
+        {/* Top Telemetry Loading Bar on Navigation */}
+        <AnimatePresence>
+          {isNavigating && (
+            <motion.div
+              initial={{ scaleX: 0, opacity: 1 }}
+              animate={{ scaleX: 1, opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.22, ease: "easeInOut" }}
+              style={{
+                position: "fixed",
+                top: 0,
+                left: 0,
+                right: 0,
+                height: 2.5,
+                background: "linear-gradient(90deg, #ff5c35 0%, #ff7a59 50%, #00a4bd 100%)",
+                transformOrigin: "left",
+                zIndex: 9999,
+                boxShadow: "0 0 8px rgba(255, 92, 53, 0.6)",
+              }}
+            />
+          )}
+        </AnimatePresence>
+        <LandingPage />
+      </div>
+    );
+  }
+
   return (
     <div className="layout">
       {/* Loading Screen Overlay removed per user request */}
@@ -211,7 +245,9 @@ export const App: React.FC = () => {
               transition={{ duration: 0.15 }}
             >
               <Routes location={location}>
-                <Route path="/" element={<PortfolioOverview />} />
+                <Route path="/" element={<LandingPage />} />
+                <Route path="/pipeline" element={<PortfolioOverview />} />
+                <Route path="/overview" element={<PortfolioOverview />} />
                 <Route path="/forecast" element={<RevenueForecast />} />
                 <Route path="/deals" element={<DealExplorer />} />
                 <Route path="/waterfall" element={<PipelineWaterfall />} />
