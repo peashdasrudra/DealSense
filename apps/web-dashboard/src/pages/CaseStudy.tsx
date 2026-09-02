@@ -18,6 +18,7 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { DealSenseIcon } from "../components/DealSenseLogo";
+import { Footer } from "../components/Footer";
 
 /* ────────────────────── DATA ────────────────────── */
 
@@ -614,6 +615,10 @@ export const CaseStudy: React.FC = () => {
           </>
         )}
       </AnimatePresence>
+
+      <div style={{ marginTop: 64, marginInline: "-24px", marginBottom: "-100px" }}>
+        <Footer />
+      </div>
     </div>
   );
 };

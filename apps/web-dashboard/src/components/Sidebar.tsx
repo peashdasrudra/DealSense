@@ -179,9 +179,10 @@ const NAV_SECTIONS: NavSection[] = [
     ],
   },
   {
-    title: "Portfolio",
+    title: "Commercial & Showcase",
     defaultOpen: true,
     items: [
+      { id: "landing", label: "Public Landing Page", iconKey: "overview", path: "/landing", badge: "SaaS", badgeColor: "#ff5c35" },
       { id: "case-study", label: "Case Study & Pricing", iconKey: "casestudy", path: "/case-study" },
     ],
   },

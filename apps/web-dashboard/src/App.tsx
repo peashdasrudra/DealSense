@@ -23,6 +23,8 @@ import { Settings } from "./pages/Settings";
 import { MutualActionPlan } from "./pages/MutualActionPlan";
 import { CompetitiveIntelligence } from "./pages/CompetitiveIntelligence";
 import { CaseStudy } from "./pages/CaseStudy";
+import { LandingPage } from "./pages/LandingPage";
+import { Footer } from "./components/Footer";
 import { DealWarRoom } from "./pages/DealWarRoom";
 import { RevOpsPlaybooks } from "./pages/RevOpsPlaybooks";
 import { PipelineWaterfall } from "./pages/PipelineWaterfall";
@@ -32,6 +34,8 @@ import { DealDrawer, DealData } from "./components/DealDrawer";
 // ── Page Title Mapping ───────────────────────────────────────────────────────
 
 const PAGE_TITLES: Record<string, { title: string; breadcrumb: string }> = {
+  "/landing": { title: "DealSense Revenue Platform", breadcrumb: "Landing" },
+  "/welcome": { title: "Welcome & Onboarding", breadcrumb: "Welcome" },
   "/": { title: "Pipeline Overview", breadcrumb: "Overview" },
   "/forecast": { title: "Revenue Forecast & Simulation", breadcrumb: "Forecast" },
   "/deals": { title: "Deal Inspector & Dossiers", breadcrumb: "Deals" },
@@ -222,12 +226,20 @@ export const App: React.FC = () => {
                 <Route path="/reps" element={<RepPerformance />} />
                 <Route path="/clients" element={<ClientHealth />} />
                 <Route path="/case-study" element={<CaseStudy />} />
+                <Route path="/landing" element={<LandingPage />} />
+                <Route path="/welcome" element={<LandingPage />} />
                 <Route path="/portfolio" element={<CaseStudy />} />
                 <Route path="/audit" element={<AuditLog />} />
                 <Route path="/settings" element={<Settings />} />
               </Routes>
             </motion.div>
           </AnimatePresence>
+
+          {location.pathname !== "/landing" && location.pathname !== "/welcome" && location.pathname !== "/case-study" && (
+            <div style={{ marginTop: "64px", marginInline: "-24px", marginBottom: "-24px" }}>
+              <Footer />
+            </div>
+          )}
         </div>
       </main>
 
