@@ -130,16 +130,15 @@ export const LandingPage: React.FC = () => {
           {/* Vertical Divider */}
           <span className="telemetry-divider" />
 
-          {/* $99 Starter CTA */}
-          <span
+          {/* Explore Pricing CTA */}
+          <a
+            href="#pricing-matrix"
             className="telemetry-link"
-            onClick={() => openOrder("audit-99")}
-            title="Claim $99 Starter Risk Audit"
-            style={{ display: "inline-flex", alignItems: "center", gap: 4, cursor: "pointer", color: "#ffffff", fontWeight: 700, fontSize: "11.5px" }}
+            style={{ display: "inline-flex", alignItems: "center", gap: 4, cursor: "pointer", color: "#ffffff", fontWeight: 700, fontSize: "11.5px", textDecoration: "none" }}
           >
-            <span style={{ textDecoration: "underline", textUnderlineOffset: "2px" }}>Claim $99 Pilot Audit</span>
+            <span style={{ textDecoration: "underline", textUnderlineOffset: "2px" }}>Explore Pricing & Plans</span>
             <span style={{ fontSize: "11px" }}>→</span>
-          </span>
+          </a>
 
           {/* Vertical Divider */}
           <span className="telemetry-divider" />
@@ -205,30 +204,31 @@ export const LandingPage: React.FC = () => {
             >
               👑 Agency Fleet
             </span>
-            <a href="#pricing-matrix" style={{ fontSize: "14px", fontWeight: 700, color: "#ff5c35", textDecoration: "none" }}>⚡ $99 Audit</a>
+            <a href="#pricing-matrix" style={{ fontSize: "14px", fontWeight: 600, color: "#475569", textDecoration: "none" }}>Pricing</a>
             <span onClick={() => navigate("/case-study")} style={{ fontSize: "14px", fontWeight: 600, color: "#475569", cursor: "pointer" }}>Case Study</span>
           </div>
 
           {/* CTA Actions */}
           <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            <button
+            <a
+              href="#pricing-matrix"
               className="desktop-cta-btn"
-              onClick={() => openOrder("audit-99")}
               style={{
                 padding: "8px 16px",
                 background: "#ffffff",
-                color: "#ff5c35",
+                color: "#092124",
                 fontSize: "13px",
                 fontWeight: 700,
-                border: "1.5px solid #ff5c35",
+                border: "1.5px solid #cbd5e1",
                 borderRadius: "8px",
                 cursor: "pointer",
-                boxShadow: "0 1px 3px rgba(255, 92, 53, 0.15)",
+                textDecoration: "none",
+                boxShadow: "0 1px 3px rgba(0, 0, 0, 0.04)",
                 transition: "all 0.2s ease",
               }}
             >
-              $99 Pilot Audit
-            </button>
+              View Pricing
+            </a>
             <button
               onClick={() => navigate("/pipeline")}
               style={{
@@ -292,9 +292,12 @@ export const LandingPage: React.FC = () => {
               <div onClick={() => { navigate("/pipeline"); setMobileMenuOpen(false); }} style={{ padding: "10px 14px", fontWeight: 700, color: "#092124", borderRadius: "8px", background: "#f8fafc", cursor: "pointer" }}>
                 📊 Platform Pipeline Dashboard
               </div>
-              <div onClick={() => { openOrder("audit-99"); setMobileMenuOpen(false); }} style={{ padding: "10px 14px", fontWeight: 800, color: "#ff5c35", borderRadius: "8px", background: "rgba(255,92,53,0.08)", cursor: "pointer" }}>
-                🔥 Start $99 Pilot Deal Risk Audit
+              <div onClick={() => { navigate("/agency"); setMobileMenuOpen(false); }} style={{ padding: "10px 14px", fontWeight: 800, color: "#ff5c35", borderRadius: "8px", background: "rgba(255,92,53,0.08)", cursor: "pointer" }}>
+                👑 Agency Partner Fleet
               </div>
+              <a href="#pricing-matrix" onClick={() => setMobileMenuOpen(false)} style={{ padding: "10px 14px", fontWeight: 700, color: "#334155", borderRadius: "8px", textDecoration: "none", display: "block" }}>
+                💰 Pricing & Deployment Plans
+              </a>
               <div onClick={() => { navigate("/forecast"); setMobileMenuOpen(false); }} style={{ padding: "10px 14px", fontWeight: 600, color: "#334155", borderRadius: "8px", cursor: "pointer" }}>
                 📈 Revenue Forecast & Simulation
               </div>
