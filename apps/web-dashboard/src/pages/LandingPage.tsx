@@ -160,7 +160,28 @@ export const LandingPage: React.FC = () => {
             <span onClick={() => navigate("/pipeline")} style={{ fontSize: "14px", fontWeight: 600, color: "#0f172a", cursor: "pointer" }}>Platform</span>
             <span onClick={() => navigate("/forecast")} style={{ fontSize: "14px", fontWeight: 600, color: "#475569", cursor: "pointer" }}>Forecasting</span>
             <span onClick={() => navigate("/war-room")} style={{ fontSize: "14px", fontWeight: 600, color: "#475569", cursor: "pointer" }}>War Room</span>
-            <span onClick={() => navigate("/agency")} style={{ fontSize: "13.5px", fontWeight: 700, color: "#124548", cursor: "pointer", background: "rgba(18,69,72,0.08)", padding: "4px 10px", borderRadius: "6px" }}>👑 Agency Fleet</span>
+            <span
+              onClick={() => navigate("/agency")}
+              style={{
+                fontSize: "13px",
+                fontWeight: 800,
+                color: "#ff5c35",
+                cursor: "pointer",
+                background: "linear-gradient(135deg, rgba(255, 92, 53, 0.1) 0%, rgba(255, 123, 87, 0.18) 100%)",
+                border: "1.2px solid rgba(255, 92, 53, 0.35)",
+                padding: "4px 10px",
+                borderRadius: "8px",
+                boxShadow: "0 2px 8px rgba(255, 92, 53, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.9)",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "5px",
+                fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif",
+                letterSpacing: "-0.01em",
+              }}
+            >
+              <span>👑 Agency Fleet</span>
+              <span style={{ fontSize: "9.5px", background: "#ff5c35", color: "#ffffff", padding: "1px 5px", borderRadius: "9999px", fontWeight: 900 }}>PARTNERS</span>
+            </span>
             <a href="#pricing-matrix" style={{ fontSize: "14px", fontWeight: 700, color: "#ff5c35", textDecoration: "none" }}>⚡ $99 Audit</a>
             <span onClick={() => navigate("/case-study")} style={{ fontSize: "14px", fontWeight: 600, color: "#475569", cursor: "pointer" }}>Case Study</span>
           </div>
