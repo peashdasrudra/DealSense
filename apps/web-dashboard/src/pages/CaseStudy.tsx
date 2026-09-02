@@ -17,6 +17,7 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import { DealSenseIcon } from "../components/DealSenseLogo";
 
 /* ────────────────────── DATA ────────────────────── */
 
@@ -185,6 +186,12 @@ export const CaseStudy: React.FC = () => {
         <div style={{ position: "absolute", top: -80, right: -80, width: 300, height: 300, borderRadius: "50%", background: "radial-gradient(circle, rgba(255,92,53,0.2) 0%, transparent 70%)", pointerEvents: "none" }} />
 
         <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 18, flexWrap: "wrap" }}>
+          <div style={{ display: "inline-flex", alignItems: "center", gap: 7, background: "rgba(255,255,255,0.12)", border: "1px solid rgba(255,255,255,0.25)", padding: "4px 12px 4px 8px", borderRadius: "var(--radius-pill)" }}>
+            <DealSenseIcon size={18} />
+            <span style={{ fontSize: "11.5px", fontWeight: 800, letterSpacing: "-0.01em" }}>
+              Deal<span style={{ color: "#ff5c35" }}>Sense</span> <span style={{ color: "rgba(255,255,255,0.7)", fontWeight: 500, marginLeft: 4 }}>Enterprise Platform</span>
+            </span>
+          </div>
           <span style={{ background: "rgba(5,150,105,0.25)", color: "#6ee7b7", border: "1px solid rgba(5,150,105,0.4)", padding: "4px 12px", borderRadius: "var(--radius-pill)", fontSize: "11px", fontWeight: 700 }}>● 48/48 Tests Passing · Production Ready</span>
           <span style={{ background: "rgba(255,92,53,0.2)", color: "#fbbf24", border: "1px solid rgba(255,92,53,0.3)", padding: "4px 12px", borderRadius: "var(--radius-pill)", fontSize: "11px", fontWeight: 700 }}>15-Module Revenue Intelligence Platform</span>
         </div>

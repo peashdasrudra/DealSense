@@ -14,6 +14,12 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.5-3178C6?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org)
 [![Vercel Deployed](https://img.shields.io/badge/Production-dealsense.peash.tech-000000?style=for-the-badge&logo=vercel)](https://dealsense.peash.tech)
 
+<br />
+
+<img src="docs/assets/dealsense_showcase_banner.jpg" alt="DealSense Autonomous Revenue Intelligence Platform Showcase" width="100%" style="border-radius: 12px; box-shadow: 0 12px 36px rgba(0,0,0,0.3);" />
+
+<br /><br />
+
 [🌐 Live Web Dashboard](https://dealsense.peash.tech) • [🧩 HubSpot Sidebar Card](https://hubspot-extension-dealsense.vercel.app) • [✨ Executive Case Study](https://dealsense.peash.tech/case-study) • [🏛️ Architecture](#-system-architecture) • [🧪 48/48 Test Suites](#-automated-verification-suites-4848-passing) • [⚡ Quick Start](#-quick-start)
 
 ---
