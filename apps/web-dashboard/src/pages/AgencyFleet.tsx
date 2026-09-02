@@ -508,18 +508,28 @@ export const AgencyFleet: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Client Portal Selector */}
-                <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                {/* Client Portal Selector (Horizontal Touch-Scroll on Mobile) */}
+                <div
+                  className="no-scrollbar"
+                  style={{
+                    display: "flex",
+                    gap: 8,
+                    overflowX: "auto",
+                    WebkitOverflowScrolling: "touch",
+                    maxWidth: "100%",
+                    paddingBottom: 4,
+                  }}
+                >
                   {[
-                    { name: "TechCorp Inc. (HubSpot #49102)", score: 82, band: "Healthy" },
-                    { name: "FinanceGo Ltd. (HubSpot #38204)", score: 31, band: "Critical" },
+                    { name: "TechCorp (HubSpot #49102)", score: 82, band: "Healthy" },
+                    { name: "FinanceGo (HubSpot #38204)", score: 31, band: "Critical" },
                     { name: "RetailMax (HubSpot #29188)", score: 58, band: "Moderate" },
                   ].map((portal, idx) => (
                     <button
                       key={idx}
                       onClick={() => setActivePortalTab(idx)}
                       style={{
-                        padding: "7px 14px",
+                        padding: "7px 13px",
                         fontSize: "12px",
                         fontWeight: 700,
                         borderRadius: "8px",
@@ -528,6 +538,8 @@ export const AgencyFleet: React.FC = () => {
                         background: activePortalTab === idx ? "rgba(255,92,53,0.18)" : "rgba(255,255,255,0.05)",
                         color: activePortalTab === idx ? "#ff8c6b" : "#cbd5e1",
                         cursor: "pointer",
+                        whiteSpace: "nowrap",
+                        flexShrink: 0,
                         transition: "all 0.2s ease",
                       }}
                     >
@@ -538,46 +550,44 @@ export const AgencyFleet: React.FC = () => {
               </div>
 
               {/* Active Portal Intelligence Details */}
-              <div style={{ padding: "28px" }}>
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16, marginBottom: 24 }}>
-                  <div style={{ background: "#f8fafc", padding: "18px 16px", borderRadius: "14px", border: "1px solid #e2e8f0" }}>
-                    <div style={{ fontSize: "11px", fontWeight: 700, color: "#64748b", textTransform: "uppercase" }}>Active Pipeline Value</div>
-                    <div style={{ fontSize: "24px", fontWeight: 900, color: "#092124", margin: "4px 0" }}>$1,850,000</div>
-                    <div style={{ fontSize: "11.5px", color: "#059669", fontWeight: 600 }}>● 24 Active Deals Evaluated</div>
+              <div style={{ padding: "clamp(16px, 3vw, 28px)" }}>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(135px, 1fr))", gap: 12, marginBottom: 20 }}>
+                  <div style={{ background: "#f8fafc", padding: "14px 12px", borderRadius: "12px", border: "1px solid #e2e8f0" }}>
+                    <div style={{ fontSize: "10.5px", fontWeight: 700, color: "#64748b", textTransform: "uppercase" }}>Active Pipeline</div>
+                    <div style={{ fontSize: "clamp(18px, 3.5vw, 24px)", fontWeight: 900, color: "#092124", margin: "3px 0" }}>$1,850,000</div>
+                    <div style={{ fontSize: "11px", color: "#059669", fontWeight: 600 }}>● 24 Active Deals</div>
                   </div>
-                  <div style={{ background: "#f8fafc", padding: "18px 16px", borderRadius: "14px", border: "1px solid #e2e8f0" }}>
-                    <div style={{ fontSize: "11px", fontWeight: 700, color: "#64748b", textTransform: "uppercase" }}>Calculated Deal Health</div>
-                    <div style={{ fontSize: "24px", fontWeight: 900, color: activePortalTab === 1 ? "#dc2626" : activePortalTab === 2 ? "#d97706" : "#059669", margin: "4px 0" }}>
+                  <div style={{ background: "#f8fafc", padding: "14px 12px", borderRadius: "12px", border: "1px solid #e2e8f0" }}>
+                    <div style={{ fontSize: "10.5px", fontWeight: 700, color: "#64748b", textTransform: "uppercase" }}>Deal Health</div>
+                    <div style={{ fontSize: "clamp(18px, 3.5vw, 24px)", fontWeight: 900, color: activePortalTab === 1 ? "#dc2626" : activePortalTab === 2 ? "#d97706" : "#059669", margin: "3px 0" }}>
                       {activePortalTab === 1 ? "31/100 · Critical" : activePortalTab === 2 ? "58/100 · Moderate" : "82/100 · Healthy"}
                     </div>
-                    <div style={{ fontSize: "11.5px", color: "#64748b" }}>7-Vector Deterministic Engine</div>
+                    <div style={{ fontSize: "11px", color: "#64748b" }}>7-Vector Deterministic</div>
                   </div>
-                  <div style={{ background: "#f8fafc", padding: "18px 16px", borderRadius: "14px", border: "1px solid #e2e8f0" }}>
-                    <div style={{ fontSize: "11px", fontWeight: 700, color: "#64748b", textTransform: "uppercase" }}>Identified Slippage Leakage</div>
-                    <div style={{ fontSize: "24px", fontWeight: 900, color: "#dc2626", margin: "4px 0" }}>
+                  <div style={{ background: "#f8fafc", padding: "14px 12px", borderRadius: "12px", border: "1px solid #e2e8f0" }}>
+                    <div style={{ fontSize: "10.5px", fontWeight: 700, color: "#64748b", textTransform: "uppercase" }}>Slippage Leakage</div>
+                    <div style={{ fontSize: "clamp(18px, 3.5vw, 24px)", fontWeight: 900, color: "#dc2626", margin: "3px 0" }}>
                       {activePortalTab === 1 ? "$480,000" : activePortalTab === 2 ? "$190,000" : "$45,000"}
                     </div>
-                    <div style={{ fontSize: "11.5px", color: "#dc2626", fontWeight: 600 }}>⚠️ Requires Executive Outreach</div>
+                    <div style={{ fontSize: "11px", color: "#dc2626", fontWeight: 600 }}>⚠️ Stalled Risk</div>
                   </div>
-                  <div style={{ background: "#f8fafc", padding: "18px 16px", borderRadius: "14px", border: "1px solid #e2e8f0" }}>
-                    <div style={{ fontSize: "11px", fontWeight: 700, color: "#64748b", textTransform: "uppercase" }}>Monthly Agency Retainer</div>
-                    <div style={{ fontSize: "24px", fontWeight: 900, color: "#124548", margin: "4px 0" }}>$2,500/mo</div>
-                    <div style={{ fontSize: "11.5px", color: "#16a34a", fontWeight: 700 }}>95% Retainer Net Margin</div>
+                  <div style={{ background: "#f8fafc", padding: "14px 12px", borderRadius: "12px", border: "1px solid #e2e8f0" }}>
+                    <div style={{ fontSize: "10.5px", fontWeight: 700, color: "#64748b", textTransform: "uppercase" }}>Agency Retainer</div>
+                    <div style={{ fontSize: "clamp(18px, 3.5vw, 24px)", fontWeight: 900, color: "#124548", margin: "3px 0" }}>$2,500/mo</div>
+                    <div style={{ fontSize: "11px", color: "#16a34a", fontWeight: 700 }}>95% Net Margin</div>
                   </div>
                 </div>
 
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 14, background: "rgba(18,69,72,0.04)", padding: "16px 20px", borderRadius: "12px", border: "1px solid rgba(18,69,72,0.12)" }}>
-                  <div style={{ fontSize: "13.5px", color: "#092124", fontWeight: 600 }}>
-                    ⚡ <strong>Agency Action Ready:</strong> 1-Click Executive PDF Briefing generated for Friday's Client QBR.
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12, background: "rgba(18,69,72,0.04)", padding: "14px 16px", borderRadius: "12px", border: "1px solid rgba(18,69,72,0.12)" }}>
+                  <div style={{ fontSize: "13px", color: "#092124", fontWeight: 600 }}>
+                    ⚡ <strong>Agency Action Ready:</strong> 1-Click Executive PDF Briefing ready for Client QBR.
                   </div>
-                  <div style={{ display: "flex", gap: 10 }}>
-                    <button
-                      onClick={() => openOrder("agency-1500")}
-                      style={{ padding: "9px 20px", background: "#ff5c35", color: "#ffffff", borderRadius: "8px", border: "none", fontSize: "13px", fontWeight: 800, cursor: "pointer", boxShadow: "0 2px 8px rgba(255,92,53,0.3)" }}
-                    >
-                      Export Client QBR Dossier (Demo) →
-                    </button>
-                  </div>
+                  <button
+                    onClick={() => openOrder("agency-1500")}
+                    style={{ padding: "9px 18px", background: "#ff5c35", color: "#ffffff", borderRadius: "8px", border: "none", fontSize: "13px", fontWeight: 800, cursor: "pointer", boxShadow: "0 2px 8px rgba(255,92,53,0.3)", width: "100%", maxWidth: 300 }}
+                  >
+                    Export Client QBR Dossier →
+                  </button>
                 </div>
               </div>
             </div>

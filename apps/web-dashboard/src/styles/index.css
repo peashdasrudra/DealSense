@@ -1825,5 +1825,28 @@ tr:hover td {
   background-size: 24px 24px;
 }
 
+/* ── Mobile-First Responsive Polish for Agency & Landing Pages ──────────── */
+@media (max-width: 640px) {
+  .landing-hero-btns {
+    flex-direction: column !important;
+    width: 100% !important;
+    gap: 10px !important;
+  }
+  .landing-hero-btns button,
+  .landing-hero-btns a {
+    width: 100% !important;
+    justify-content: center !important;
+  }
+  .enterprise-card {
+    padding: 20px 16px !important;
+  }
+}
 
-
+/* Smooth horizontal tab scroll without ugly scrollbar */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
