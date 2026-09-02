@@ -462,10 +462,11 @@ export const LandingPage: React.FC = () => {
             className="landing-hero-btns"
             style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 12, flexWrap: "wrap", maxWidth: 680, margin: "0 auto" }}
           >
+            {/* 1. Orange Button: Claim Agency Discount */}
             <button
               className="hero-btn-primary"
-              onClick={() => openOrder("audit-99")}
-              id="hero-get-started-btn"
+              onClick={() => navigate("/agency")}
+              id="hero-claim-discount-btn"
               style={{
                 padding: "14px 28px",
                 fontSize: "14.5px",
@@ -476,16 +477,20 @@ export const LandingPage: React.FC = () => {
                 gap: "8px",
                 borderRadius: "12px",
                 boxShadow: "0 8px 24px rgba(255, 92, 53, 0.42), inset 0 1px 0 rgba(255,255,255,0.3)",
+                cursor: "pointer",
               }}
             >
-              <span>Start $99 Pilot Audit</span>
+              <span>Claim Agency Discount</span>
               <svg width={17} height={17} viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
                 <path d="M5 12h14M12 5l7 7-7 7" />
               </svg>
             </button>
+
+            {/* 2. Secondary Button: Get Started Free */}
             <button
               className="hero-btn-secondary"
               onClick={() => navigate("/pipeline")}
+              id="hero-get-started-btn"
               style={{
                 padding: "14px 26px",
                 fontSize: "14.5px",
@@ -499,32 +504,13 @@ export const LandingPage: React.FC = () => {
                 justifyContent: "center",
                 gap: "8px",
                 boxShadow: "0 2px 8px rgba(9, 33, 36, 0.04), inset 0 1px 0 #ffffff",
+                cursor: "pointer",
               }}
             >
               <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="#124548" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
                 <polygon points="5 3 19 12 5 21 5 3" />
               </svg>
-              <span style={{ color: "#124548", fontWeight: 700, fontSize: "14.5px" }}>See Live Demo</span>
-            </button>
-            <button
-              className="hero-btn-secondary"
-              onClick={() => navigate("/agency")}
-              id="hero-agency-fleet-btn"
-              title="White-Label Revenue Intelligence for HubSpot Partners & Agencies"
-              style={{
-                padding: "14px 22px",
-                background: "rgba(18, 69, 72, 0.06)",
-                color: "#124548",
-                border: "1.5px solid rgba(18, 69, 72, 0.2)",
-                borderRadius: "12px",
-                display: "inline-flex",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: "8px",
-                boxShadow: "0 2px 8px rgba(18, 69, 72, 0.04)",
-              }}
-            >
-              <span style={{ color: "#124548", fontWeight: 800, fontSize: "14px" }}>👑 Agency Fleet →</span>
+              <span style={{ color: "#124548", fontWeight: 700, fontSize: "14.5px" }}>Get Started Free</span>
             </button>
           </motion.div>
 
