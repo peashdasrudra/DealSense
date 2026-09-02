@@ -1581,6 +1581,37 @@ tr:hover td {
   text-align: center;
 }
 
+.banner-desktop {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: nowrap;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.banner-mobile {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 2px 0;
+  margin: 0 auto;
+  text-align: center;
+  width: 100%;
+}
+
+@media (max-width: 680px) {
+  .banner-desktop {
+    display: none !important;
+  }
+  .banner-mobile {
+    display: flex !important;
+  }
+}
+
 .telemetry-beacon-container {
   position: relative;
   display: inline-flex;

@@ -92,7 +92,8 @@ export const LandingPage: React.FC = () => {
     <div style={{ background: "#ffffff", color: "#0f172a", fontFamily: "var(--font-sans)", overflowX: "hidden" }}>
       {/* ── 0. Top Enterprise Founder Discount & Telemetry Ticker ──────────────── */}
       <div className="top-telemetry-banner">
-        <div className="telemetry-inner-wrapper">
+        {/* Desktop PC Layout: Single Clean Centered Horizontal Line */}
+        <div className="banner-desktop">
           {/* Live Status Beacon */}
           <div className="telemetry-beacon-container" title="Live Webhook Streaming">
             <span className="telemetry-beacon-ring" />
@@ -108,8 +109,10 @@ export const LandingPage: React.FC = () => {
           <span className="telemetry-divider" />
 
           {/* Founder Discount Pill */}
-          <span
+          <a
+            href="#pricing-matrix"
             style={{
+              textDecoration: "none",
               fontSize: "10.5px",
               fontWeight: 800,
               color: "#ff8c6b",
@@ -125,7 +128,7 @@ export const LandingPage: React.FC = () => {
           >
             <span>🔥</span>
             <span>FOUNDER DISCOUNT: UP TO 98% OFF</span>
-          </span>
+          </a>
 
           {/* Vertical Divider */}
           <span className="telemetry-divider" />
@@ -135,6 +138,52 @@ export const LandingPage: React.FC = () => {
             <span style={{ color: "#38bdf8", fontSize: "10px" }}>⚡</span>
             <span>0.2s sync · $0 SaaS tax</span>
           </div>
+        </div>
+
+        {/* Mobile Layout: Top Row Side-by-Side (HubSpot Native + 0.2s sync), Bottom Row Centered Founder Discount */}
+        <div className="banner-mobile">
+          {/* Top Row: HubSpot Native Platform + 0.2s sync Side-by-Side */}
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 7, flexWrap: "nowrap" }}>
+            <div className="telemetry-beacon-container" title="Live Webhook Streaming">
+              <span className="telemetry-beacon-ring" />
+              <span className="telemetry-beacon-dot" />
+            </div>
+
+            <span style={{ letterSpacing: "0.04em", textTransform: "uppercase", fontSize: "10.5px", fontWeight: 800, color: "#f1f5f9", lineHeight: 1, whiteSpace: "nowrap" }}>
+              HubSpot Native Platform
+            </span>
+
+            <span className="telemetry-divider" />
+
+            <div className="telemetry-cta-pill" title="0.2s Real-Time Webhook Processing" style={{ padding: "2px 7px" }}>
+              <span style={{ color: "#38bdf8", fontSize: "9.5px" }}>⚡</span>
+              <span style={{ fontSize: "10px" }}>0.2s sync · $0 SaaS tax</span>
+            </div>
+          </div>
+
+          {/* Bottom Row: Founder Discount Centered in Middle Below Them */}
+          <a
+            href="#pricing-matrix"
+            style={{
+              textDecoration: "none",
+              fontSize: "10px",
+              fontWeight: 800,
+              color: "#ff8c6b",
+              background: "rgba(255, 92, 53, 0.18)",
+              border: "1px solid rgba(255, 92, 53, 0.4)",
+              padding: "2px 10px",
+              borderRadius: "9999px",
+              letterSpacing: "0.03em",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 4,
+              boxShadow: "0 2px 6px rgba(255, 92, 53, 0.15)",
+            }}
+          >
+            <span>🔥</span>
+            <span>FOUNDER DISCOUNT: UP TO 98% OFF</span>
+            <span style={{ color: "#ffffff", marginLeft: 2, fontSize: "9px" }}>→</span>
+          </a>
         </div>
       </div>
 
