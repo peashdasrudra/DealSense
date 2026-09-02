@@ -116,29 +116,27 @@ export const AgencyFleet: React.FC = () => {
               <DealSenseIcon size={19} />
             </div>
             <div style={{ display: "flex", alignItems: "center", gap: 6, whiteSpace: "nowrap" }}>
-              <span style={{ fontSize: "19px", fontWeight: 800, color: "#092124", letterSpacing: "-0.035em" }}>
+              <span style={{ fontSize: "19px", fontWeight: 800, color: "#092124", letterSpacing: "-0.035em", lineHeight: 1 }}>
                 Deal<span style={{ color: "#ff5c35" }}>Sense</span>
               </span>
               <span
                 style={{
-                  fontSize: "10px",
-                  fontWeight: 900,
-                  background: "linear-gradient(135deg, rgba(255, 92, 53, 0.12) 0%, rgba(255, 123, 87, 0.22) 100%)",
+                  fontSize: "9px",
+                  fontWeight: 800,
+                  background: "rgba(255, 92, 53, 0.08)",
                   color: "#ff5c35",
-                  border: "1.2px solid rgba(255, 92, 53, 0.4)",
-                  padding: "2.5px 8px",
-                  borderRadius: "6px",
-                  letterSpacing: "0.06em",
+                  border: "1px solid rgba(255, 92, 53, 0.3)",
+                  padding: "2px 6px",
+                  borderRadius: "4px",
+                  letterSpacing: "0.04em",
                   whiteSpace: "nowrap",
-                  boxShadow: "0 2px 8px rgba(255, 92, 53, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.9)",
+                  lineHeight: 1,
                   display: "inline-flex",
                   alignItems: "center",
-                  gap: "4px",
                   fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif",
                 }}
               >
-                <span style={{ fontSize: "10px" }}>👑</span>
-                <span>AGENCY FLEET</span>
+                AGENCY FLEET
               </span>
             </div>
           </div>

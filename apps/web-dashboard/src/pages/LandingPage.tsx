@@ -164,23 +164,21 @@ export const LandingPage: React.FC = () => {
               onClick={() => navigate("/agency")}
               style={{
                 fontSize: "13px",
-                fontWeight: 800,
+                fontWeight: 700,
                 color: "#ff5c35",
                 cursor: "pointer",
-                background: "linear-gradient(135deg, rgba(255, 92, 53, 0.1) 0%, rgba(255, 123, 87, 0.18) 100%)",
-                border: "1.2px solid rgba(255, 92, 53, 0.35)",
-                padding: "4px 10px",
-                borderRadius: "8px",
-                boxShadow: "0 2px 8px rgba(255, 92, 53, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.9)",
+                background: "rgba(255, 92, 53, 0.08)",
+                border: "1px solid rgba(255, 92, 53, 0.25)",
+                padding: "3px 9px",
+                borderRadius: "6px",
                 display: "inline-flex",
                 alignItems: "center",
-                gap: "5px",
-                fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif",
-                letterSpacing: "-0.01em",
+                gap: "4px",
+                whiteSpace: "nowrap",
+                lineHeight: 1,
               }}
             >
-              <span>👑 Agency Fleet</span>
-              <span style={{ fontSize: "9.5px", background: "#ff5c35", color: "#ffffff", padding: "1px 5px", borderRadius: "9999px", fontWeight: 900 }}>PARTNERS</span>
+              👑 Agency Fleet
             </span>
             <a href="#pricing-matrix" style={{ fontSize: "14px", fontWeight: 700, color: "#ff5c35", textDecoration: "none" }}>⚡ $99 Audit</a>
             <span onClick={() => navigate("/case-study")} style={{ fontSize: "14px", fontWeight: 600, color: "#475569", cursor: "pointer" }}>Case Study</span>
