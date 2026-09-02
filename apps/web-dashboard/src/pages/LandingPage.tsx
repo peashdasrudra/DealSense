@@ -130,19 +130,6 @@ export const LandingPage: React.FC = () => {
           {/* Vertical Divider */}
           <span className="telemetry-divider" />
 
-          {/* Explore Pricing CTA */}
-          <a
-            href="#pricing-matrix"
-            className="telemetry-link"
-            style={{ display: "inline-flex", alignItems: "center", gap: 4, cursor: "pointer", color: "#ffffff", fontWeight: 700, fontSize: "11.5px", textDecoration: "none" }}
-          >
-            <span style={{ textDecoration: "underline", textUnderlineOffset: "2px" }}>Explore Pricing & Plans</span>
-            <span style={{ fontSize: "11px" }}>→</span>
-          </a>
-
-          {/* Vertical Divider */}
-          <span className="telemetry-divider" />
-
           {/* Telemetry Metric Chip */}
           <div className="telemetry-cta-pill" title="0.2s Real-Time Webhook Processing">
             <span style={{ color: "#38bdf8", fontSize: "10px" }}>⚡</span>
