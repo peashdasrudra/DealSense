@@ -135,13 +135,6 @@ export const PortfolioOverview: React.FC = () => {
 
   const AT_RISK_DEALS = [...atRiskDeals].sort((a, b) => a.score - b.score).slice(0, 8);
 
-  const [syncStatusMsg, setSyncStatusMsg] = useState<string | null>(null);
-
-  const handleForceSync = () => {
-    setSyncStatusMsg("✓ HubSpot CRM webhook synced (20 deals updated in 180ms)");
-    setTimeout(() => setSyncStatusMsg(null), 3500);
-  };
-
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "var(--sp-6)" }}>
       {/* ── Top Row: Onboarding + Health Trend ─────────────────────── */}
@@ -191,25 +184,17 @@ export const PortfolioOverview: React.FC = () => {
               <span>Get Started</span>
               <span>→</span>
             </button>
-            <button
-              onClick={handleForceSync}
-              style={{
-                padding: "8px 14px", background: "#ffffff", color: "var(--hs-text)", fontSize: "12.5px", fontWeight: 600,
-                border: "1px solid var(--hs-border-dark)", borderRadius: "var(--radius-sm)", cursor: "pointer", transition: "all 0.2s ease",
-                boxShadow: "var(--shadow-sm)"
-              }}
-            >
-              ↻ Force Sync
-            </button>
             <a
               href="/case-study"
               style={{
-                padding: "8px 14px", background: "#f8f9fa", color: "var(--hs-text)", fontSize: "12px", fontWeight: 600,
+                padding: "8px 16px", background: "#ffffff", color: "var(--hs-text)", fontSize: "12.5px", fontWeight: 600,
                 border: "1px solid var(--hs-border-dark)", borderRadius: "var(--radius-sm)", cursor: "pointer",
-                textDecoration: "none", display: "inline-block"
+                textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 6, transition: "all 0.2s ease",
+                boxShadow: "var(--shadow-sm)"
               }}
             >
-              Read Case Study ↗
+              <span>Read Case Study</span>
+              <span>↗</span>
             </a>
           </div>
         </motion.div>
@@ -255,24 +240,6 @@ export const PortfolioOverview: React.FC = () => {
           </div>
         </motion.div>
       </div>
-
-      {syncStatusMsg && (
-        <motion.div
-          initial={{ opacity: 0, y: -6 }}
-          animate={{ opacity: 1, y: 0 }}
-          style={{
-            background: "var(--risk-healthy-bg)",
-            color: "var(--risk-healthy)",
-            padding: "8px 16px",
-            borderRadius: "var(--radius-sm)",
-            fontSize: "12px",
-            fontWeight: 600,
-            border: "1px solid var(--risk-healthy-border)",
-          }}
-        >
-          {syncStatusMsg}
-        </motion.div>
-      )}
 
       {/* ── KPI Grid ─────────────────────────────────────────────────── */}
       <div className="kpi-grid">
