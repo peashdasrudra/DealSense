@@ -150,7 +150,7 @@ const NAV_SECTIONS: NavSection[] = [
     title: "Revenue Intelligence",
     defaultOpen: true,
     items: [
-      { id: "overview", label: "Pipeline Overview", iconKey: "overview", path: "/pipeline" },
+      { id: "overview", label: "Home", iconKey: "overview", path: "/pipeline" },
       { id: "forecast", label: "Revenue Forecast", iconKey: "forecast", path: "/forecast" },
       { id: "waterfall", label: "Pipeline Waterfall", iconKey: "waterfall", path: "/waterfall", badge: "New", badgeColor: "#00a4bd" },
       { id: "deals", label: "Deal Inspector", iconKey: "deals", path: "/deals" },
@@ -211,7 +211,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ onClose, onNavigateHome }) => 
   );
 
   const isActive = (path: string) => {
-    if (path === "/") return location.pathname === "/";
+    if (path === "/") return location.pathname === "/" || location.pathname === "/landing";
     return location.pathname.startsWith(path);
   };
 
@@ -222,7 +222,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ onClose, onNavigateHome }) => 
 
   const handleLogoClick = () => {
     if (onNavigateHome) onNavigateHome();
-    else handleNav("/");
+    else handleNav("/pipeline");
     if (onClose) onClose();
   };
 

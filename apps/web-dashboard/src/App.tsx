@@ -34,11 +34,11 @@ import { DealDrawer, DealData } from "./components/DealDrawer";
 // ── Page Title Mapping ───────────────────────────────────────────────────────
 
 const PAGE_TITLES: Record<string, { title: string; breadcrumb: string }> = {
-  "/": { title: "DealSense Platform", breadcrumb: "Home" },
+  "/": { title: "DealSense Platform", breadcrumb: "Landing" },
   "/landing": { title: "DealSense Revenue Platform", breadcrumb: "Landing" },
   "/welcome": { title: "Welcome & Onboarding", breadcrumb: "Welcome" },
-  "/pipeline": { title: "Pipeline Overview", breadcrumb: "Overview" },
-  "/overview": { title: "Pipeline Overview", breadcrumb: "Overview" },
+  "/pipeline": { title: "Home — Revenue Intelligence", breadcrumb: "Home" },
+  "/overview": { title: "Home — Revenue Intelligence", breadcrumb: "Home" },
   "/forecast": { title: "Revenue Forecast & Simulation", breadcrumb: "Forecast" },
   "/deals": { title: "Deal Inspector & Dossiers", breadcrumb: "Deals" },
   "/waterfall": { title: "Pipeline Waterfall & Velocity", breadcrumb: "Waterfall" },
@@ -141,7 +141,7 @@ export const App: React.FC = () => {
   };
 
   const handleNavigateHome = () => {
-    navigate("/");
+    navigate("/pipeline");
     setSidebarOpen(false);
   };
 

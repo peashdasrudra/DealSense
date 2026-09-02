@@ -1,6 +1,7 @@
 /**
- * DealSense — Official HubSpot-Native Public SaaS Landing Page.
- * 100% Mobile Responsive & Enterprise Polish Edition.
+ * DealSense — Ultimate High-Converting HubSpot SaaS Landing Page.
+ * Engineered specifically to convert prospective RevOps agencies, VPs of Sales,
+ * and SaaS revenue leaders into paying clients.
  */
 
 import React, { useState } from "react";
@@ -11,108 +12,107 @@ import { Footer } from "../components/Footer";
 
 export const LandingPage: React.FC = () => {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState(0);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [auditModalOpen, setAuditModalOpen] = useState(false);
+  const [auditSuccess, setAuditSuccess] = useState(false);
 
-  const PLATFORM_TABS = [
-    {
-      id: "scoring",
-      title: "Deterministic Deal Scoring",
-      tagline: "0–100 Explainable Risk Models",
-      desc: "Scores every HubSpot deal across 7 deterministic risk signals within 180ms of webhook ingestion. Zero hallucinated probabilities.",
-      color: "#ff5c35",
-      badge: "Sub-200ms Ingestion",
-      stats: ["7 Risk Evaluators", "0% LLM Hallucinations", "180ms Latency"],
-    },
-    {
-      id: "forecast",
-      title: "Multi-Model Forecasting",
-      tagline: "Rep Commit vs. AI Reality",
-      desc: "Simulates revenue outcomes through Monte Carlo distribution. Uncover hidden manager padding and pipeline slippage before board reviews.",
-      color: "#00a4bd",
-      badge: "Monte Carlo Engine",
-      stats: ["Commit vs Reality", "±$45K Confidence", "Historical Win Vector"],
-    },
-    {
-      id: "warroom",
-      title: "Executive Deal War Room",
-      tagline: "QBR Decision Matrix & Interventions",
-      desc: "High-stakes closing matrix for stalled enterprise deals. Trigger peer-to-peer executive outreach and export board briefings in 1 click.",
-      color: "#124548",
-      badge: "Executive QBR Ready",
-      stats: ["Single-Thread Alert", "DocuSign Ready", "Instant Brief Export"],
-    },
-    {
-      id: "hygiene",
-      title: "Autonomous CRM Hygiene",
-      tagline: "1-Click Batch Data Remediation",
-      desc: "Automatically identifies ghost deals, past-due close dates, and missing next steps with 1-click writeback to HubSpot CRM.",
-      color: "#10b981",
-      badge: "Bi-directional Sync",
-      stats: ["Ghost Deal Ingestion", "Auto Date Push", "Slack Rep Alerts"],
-    },
-  ];
+  // ── Interactive Deal Risk Simulator State ──────────────────────────────────
+  const [simBuyerSilent, setSimBuyerSilent] = useState(true);
+  const [simSingleThread, setSimSingleThread] = useState(true);
+  const [simDatePushed, setSimDatePushed] = useState(true);
+  const [simStaleActivity, setSimStaleActivity] = useState(false);
 
-  const HUBS = [
-    {
-      icon: "🎯",
-      title: "Deal Scoring Hub",
-      desc: "Deterministic 0–100 health scoring with transparent signal telemetry for every pipeline opportunity.",
-      path: "/deals",
-    },
-    {
-      icon: "📈",
-      title: "Revenue Forecast Hub",
-      desc: "Stage-weighted and Monte Carlo forecast models that give RevOps leaders realistic quarter predictions.",
-      path: "/forecast",
-    },
-    {
-      icon: "🌊",
-      title: "Pipeline Waterfall Hub",
-      desc: "Track pipeline velocity, newly created inflow, expansion, slippage, and lost deal momentum.",
-      path: "/waterfall",
-    },
-    {
-      icon: "⚔️",
-      title: "Deal War Room Hub",
-      desc: "Executive command matrix for Friday pipeline reviews and unblocking high-ticket stalled deals.",
-      path: "/war-room",
-    },
-    {
-      icon: "⚡",
-      title: "CRM Hygiene Hub",
-      desc: "Automated writebacks and remediation for overdue dates, single-threading, and stale activities.",
-      path: "/hygiene",
-    },
-    {
-      icon: "🤝",
-      title: "Stakeholder Matrix Hub",
-      desc: "Power matrix visualizing Economic Buyers, Champions, and single-threaded vulnerability.",
-      path: "/stakeholders",
-    },
-  ];
+  // Dynamic Score Calculation for Simulator
+  const calculateSimScore = () => {
+    let score = 92;
+    if (simBuyerSilent) score -= 32;
+    if (simSingleThread) score -= 22;
+    if (simDatePushed) score -= 18;
+    if (simStaleActivity) score -= 16;
+    return Math.max(12, score);
+  };
 
-  const AI_AGENTS = [
+  const currentScore = calculateSimScore();
+  const getRiskBand = (s: number) => {
+    if (s < 40) return { label: "Critical Risk", color: "var(--danger)", bg: "var(--risk-critical-bg)" };
+    if (s < 70) return { label: "High Risk", color: "var(--warning)", bg: "var(--risk-high-bg)" };
+    if (s < 85) return { label: "Moderate", color: "#1971c2", bg: "#e7f5ff" };
+    return { label: "Healthy", color: "var(--risk-healthy)", bg: "var(--risk-healthy-bg)" };
+  };
+  const band = getRiskBand(currentScore);
+
+  // ── Interactive ROI Slippage Calculator State ──────────────────────────────
+  const [pipelineVal, setPipelineVal] = useState(1200000); // $1.2M default
+  const estimatedSlippage = Math.round(pipelineVal * 0.18);
+  const estimatedSaved = Math.round(estimatedSlippage * 0.75);
+
+  // ── Audit Booking Form ─────────────────────────────────────────────────────
+  const [orderTier, setOrderTier] = useState("audit-99");
+  const [formData, setFormData] = useState({ name: "", email: "", company: "", portalId: "" });
+
+  const handleAuditSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setAuditSuccess(true);
+    setTimeout(() => {
+      setAuditSuccess(false);
+      setAuditModalOpen(false);
+    }, 3500);
+  };
+
+  const PRICING_TIERS = [
     {
-      title: "Pipeline Triage Agent",
-      role: "Autonomous Deal Scrutiny",
-      status: "Active 24/7",
-      desc: "Monitors all incoming HubSpot webhooks. Detects when economic buyers go silent for 14+ days and flags critical slippage.",
-      metric: "180ms latency",
+      id: "audit-99",
+      name: "Pilot Deal Risk Audit",
+      price: "$99",
+      period: "one-time",
+      badge: "Fastest ROI (24h)",
+      highlight: true,
+      desc: "Instant 0–100 deterministic scoring of your active HubSpot deals and identified slippage risks.",
+      features: [
+        "Full snapshot scoring of up to 50 HubSpot deals",
+        "Deterministic 0–100 health telemetry breakdown",
+        "Ghost deal & silent buyer identification",
+        "Executive PDF board briefing report",
+        "24–48h guaranteed turnaround",
+        "100% Money-Back Guarantee",
+      ],
+      cta: "Start $99 Risk-Free Audit",
     },
     {
-      title: "Executive QBR Agent",
-      role: "Board Briefing Synthesis",
-      status: "Active 24/7",
-      desc: "Synthesizes pipeline telemetry, stakeholder gaps, and MEDDICC evidence into board-ready executive briefings in 1 click.",
-      metric: "1-Click Export",
+      id: "deploy-1500",
+      name: "Full RevOps Deployment",
+      price: "$1,500",
+      period: "one-time setup",
+      badge: "Complete Ownership",
+      highlight: false,
+      desc: "Complete self-hosted production deployment of the DealSense engine into your infrastructure.",
+      features: [
+        "Full FastAPI + PostgreSQL + Redis stack deployment",
+        "Real-time bi-directional HubSpot webhook sync (<200ms)",
+        "All 15 RevOps command modules & War Room",
+        "Automated 1-click CRM hygiene writebacks",
+        "Full source code & database ownership",
+        "30 days dedicated engineering support",
+      ],
+      cta: "Deploy DealSense ($1,500)",
     },
     {
-      title: "CRM Remediation Agent",
-      role: "Autonomous Writebacks",
-      status: "Active 24/7",
-      desc: "Automatically calculates updated close dates, assigns rep Slack tasks, and writes clean metadata directly back to HubSpot.",
-      metric: "100% Audit Logged",
+      id: "agency-3500",
+      name: "Agency White-Label Fleet",
+      price: "$3,500",
+      period: "multi-portal fleet",
+      badge: "For RevOps Agencies",
+      highlight: false,
+      desc: "Deploy DealSense across all your agency client portals with custom branding and scoring weights.",
+      features: [
+        "Multi-tenant fleet management for 10+ client portals",
+        "Custom white-label branding & domain mapping",
+        "Customizable scoring signal weights per industry",
+        "Agency client health scorecards & QBR exports",
+        "Dedicated onboarding Slack channel",
+        "Priority feature roadmap requests",
+      ],
+      cta: "Order Agency Fleet ($3,500)",
     },
   ];
 
@@ -131,23 +131,24 @@ export const LandingPage: React.FC = () => {
         }}
       >
         <div style={{ maxWidth: 1200, margin: "0 auto", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          {/* Brand Logo */}
+          {/* Brand Logo -> Clicking routes to /pipeline (Home) */}
           <div
-            onClick={() => navigate("/")}
+            onClick={() => navigate("/pipeline")}
             style={{ display: "flex", alignItems: "center", gap: 9, cursor: "pointer" }}
-            title="DealSense Home"
+            title="Launch Home Dashboard"
           >
-            <DealSenseIcon size={28} />
-            <span style={{ fontSize: "18px", fontWeight: 800, color: "var(--hs-primary)", letterSpacing: "-0.03em" }}>
+            <DealSenseIcon size={30} />
+            <span style={{ fontSize: "19px", fontWeight: 800, color: "var(--hs-primary)", letterSpacing: "-0.03em" }}>
               Deal<span style={{ color: "#ff5c35" }}>Sense</span>
             </span>
           </div>
 
           {/* Desktop Nav Links */}
           <div className="desktop-nav-links">
-            <span onClick={() => navigate("/pipeline")} style={{ fontSize: "13.5px", fontWeight: 600, color: "var(--hs-heading)", cursor: "pointer" }}>Platform</span>
+            <span onClick={() => navigate("/pipeline")} style={{ fontSize: "13.5px", fontWeight: 600, color: "var(--hs-heading)", cursor: "pointer" }}>Home</span>
             <span onClick={() => navigate("/forecast")} style={{ fontSize: "13.5px", fontWeight: 600, color: "var(--hs-text)", cursor: "pointer" }}>Forecasting</span>
             <span onClick={() => navigate("/war-room")} style={{ fontSize: "13.5px", fontWeight: 600, color: "var(--hs-text)", cursor: "pointer" }}>War Room</span>
+            <a href="#pricing" style={{ fontSize: "13.5px", fontWeight: 600, color: "var(--hs-text)", textDecoration: "none" }}>Pricing & Audit</a>
             <span onClick={() => navigate("/case-study")} style={{ fontSize: "13.5px", fontWeight: 600, color: "var(--hs-text)", cursor: "pointer" }}>Case Study</span>
           </div>
 
@@ -155,28 +156,29 @@ export const LandingPage: React.FC = () => {
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             <button
               className="desktop-cta-btn"
-              onClick={() => navigate("/case-study")}
+              onClick={() => { setOrderTier("audit-99"); setAuditModalOpen(true); }}
               style={{
-                padding: "8px 14px",
+                padding: "8px 16px",
                 background: "#ffffff",
-                color: "var(--hs-text)",
+                color: "#ff5c35",
                 fontSize: "12.5px",
-                fontWeight: 600,
-                border: "1px solid var(--hs-border-dark)",
+                fontWeight: 700,
+                border: "1.5px solid #ff5c35",
                 borderRadius: "var(--radius-sm)",
                 cursor: "pointer",
                 boxShadow: "var(--shadow-sm)",
+                transition: "all 0.2s ease",
               }}
             >
-              $99 Pilot Audit
+              ⚡ $99 Deal Audit
             </button>
             <button
               onClick={() => navigate("/pipeline")}
               style={{
-                padding: "8px 16px",
+                padding: "9px 18px",
                 background: "linear-gradient(180deg, #ff6b48 0%, #ff5c35 100%)",
                 color: "#ffffff",
-                fontSize: "12.5px",
+                fontSize: "13px",
                 fontWeight: 700,
                 border: "none",
                 borderRadius: "var(--radius-sm)",
@@ -184,14 +186,13 @@ export const LandingPage: React.FC = () => {
                 boxShadow: "0 2px 8px rgba(255, 92, 53, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.3)",
                 display: "inline-flex",
                 alignItems: "center",
-                gap: 5,
+                gap: 6,
                 whiteSpace: "nowrap",
               }}
             >
               <span>Launch App</span>
               <span>→</span>
             </button>
-            {/* Mobile Menu Toggle Button */}
             <button
               onClick={() => setMobileMenuOpen((prev) => !prev)}
               style={{
@@ -203,14 +204,10 @@ export const LandingPage: React.FC = () => {
                 cursor: "pointer",
               }}
               className="mobile-hamburger-btn"
-              aria-label="Toggle Navigation Menu"
+              aria-label="Toggle Menu"
             >
               <svg width={20} height={20} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
-                {mobileMenuOpen ? (
-                  <path d="M18 6L6 18M6 6l12 12" />
-                ) : (
-                  <path d="M4 6h16M4 12h16M4 18h16" />
-                )}
+                {mobileMenuOpen ? (<path d="M18 6L6 18M6 6l12 12" />) : (<path d="M4 6h16M4 12h16M4 18h16" />)}
               </svg>
             </button>
           </div>
@@ -230,45 +227,30 @@ export const LandingPage: React.FC = () => {
                 paddingTop: "12px",
                 display: "flex",
                 flexDirection: "column",
-                gap: "10px",
+                gap: "8px",
               }}
             >
-              <div
-                onClick={() => { navigate("/pipeline"); setMobileMenuOpen(false); }}
-                style={{ padding: "8px 12px", fontWeight: 700, color: "var(--hs-heading)", borderRadius: "var(--radius-sm)", background: "var(--hs-surface)", cursor: "pointer" }}
-              >
-                📊 Platform Pipeline Overview
+              <div onClick={() => { navigate("/pipeline"); setMobileMenuOpen(false); }} style={{ padding: "8px 12px", fontWeight: 700, color: "var(--hs-heading)", borderRadius: "var(--radius-sm)", background: "var(--hs-surface)", cursor: "pointer" }}>
+                📊 Home — Live Pipeline Dashboard
               </div>
-              <div
-                onClick={() => { navigate("/forecast"); setMobileMenuOpen(false); }}
-                style={{ padding: "8px 12px", fontWeight: 600, color: "var(--hs-text)", borderRadius: "var(--radius-sm)", cursor: "pointer" }}
-              >
+              <div onClick={() => { navigate("/forecast"); setMobileMenuOpen(false); }} style={{ padding: "8px 12px", fontWeight: 600, color: "var(--hs-text)", borderRadius: "var(--radius-sm)", cursor: "pointer" }}>
                 📈 Revenue Forecast & Simulation
               </div>
-              <div
-                onClick={() => { navigate("/war-room"); setMobileMenuOpen(false); }}
-                style={{ padding: "8px 12px", fontWeight: 600, color: "var(--hs-text)", borderRadius: "var(--radius-sm)", cursor: "pointer" }}
-              >
+              <div onClick={() => { navigate("/war-room"); setMobileMenuOpen(false); }} style={{ padding: "8px 12px", fontWeight: 600, color: "var(--hs-text)", borderRadius: "var(--radius-sm)", cursor: "pointer" }}>
                 ⚔️ Deal War Room (QBR)
               </div>
-              <div
-                onClick={() => { navigate("/hygiene"); setMobileMenuOpen(false); }}
-                style={{ padding: "8px 12px", fontWeight: 600, color: "var(--hs-text)", borderRadius: "var(--radius-sm)", cursor: "pointer" }}
-              >
-                ⚡ CRM Hygiene Remediation
+              <div onClick={() => { setOrderTier("audit-99"); setAuditModalOpen(true); setMobileMenuOpen(false); }} style={{ padding: "8px 12px", fontWeight: 700, color: "#ff5c35", borderRadius: "var(--radius-sm)", background: "rgba(255,92,53,0.08)", cursor: "pointer" }}>
+                ⚡ Start $99 Risk-Free Audit
               </div>
-              <div
-                onClick={() => { navigate("/case-study"); setMobileMenuOpen(false); }}
-                style={{ padding: "8px 12px", fontWeight: 700, color: "#ff5c35", borderRadius: "var(--radius-sm)", background: "rgba(255,92,53,0.08)", cursor: "pointer" }}
-              >
-                🚀 Agency Case Study & $99 Audit
+              <div onClick={() => { navigate("/case-study"); setMobileMenuOpen(false); }} style={{ padding: "8px 12px", fontWeight: 600, color: "var(--hs-text)", borderRadius: "var(--radius-sm)", cursor: "pointer" }}>
+                📜 Agency Case Study & Architecture
               </div>
             </motion.div>
           )}
         </AnimatePresence>
       </header>
 
-      {/* ── 2. Hero Section ("Where go-to-market teams go to scale") ─── */}
+      {/* ── 2. Hero Section ──────────────────────────────────────────── */}
       <section
         style={{
           position: "relative",
@@ -278,7 +260,6 @@ export const LandingPage: React.FC = () => {
           overflow: "hidden",
         }}
       >
-        {/* Subtle Ambient Radial Glow */}
         <div
           style={{
             position: "absolute",
@@ -292,34 +273,34 @@ export const LandingPage: React.FC = () => {
           }}
         />
 
-        <div style={{ maxWidth: 860, margin: "0 auto", position: "relative" }}>
-          {/* Top Pill */}
+        <div style={{ maxWidth: 880, margin: "0 auto", position: "relative" }}>
+          {/* Trust Pill */}
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(255, 92, 53, 0.08)", border: "1px solid rgba(255, 92, 53, 0.25)", padding: "5px 12px", borderRadius: "var(--radius-pill)", marginBottom: 16 }}
+            style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(255, 92, 53, 0.08)", border: "1px solid rgba(255, 92, 53, 0.25)", padding: "5px 14px", borderRadius: "var(--radius-pill)", marginBottom: 16 }}
           >
             <DealSenseIcon size={16} />
             <span style={{ fontSize: "11px", fontWeight: 700, color: "#ff5c35", letterSpacing: "0.02em" }}>
-              HUBSPOT-NATIVE REVENUE PLATFORM
+              AUTONOMOUS HUBSPOT REVENUE INTELLIGENCE
             </span>
           </motion.div>
 
-          {/* Main Hero Headline */}
+          {/* Headline */}
           <motion.h1
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
             style={{
-              fontSize: "clamp(28px, 6.5vw, 56px)",
+              fontSize: "clamp(28px, 6vw, 56px)",
               fontWeight: 800,
-              lineHeight: 1.15,
-              letterSpacing: "-0.03em",
+              lineHeight: 1.12,
+              letterSpacing: "-0.035em",
               color: "var(--hs-heading)",
               margin: "0 0 16px",
             }}
           >
-            Where go-to-market <br /> teams go to <span style={{ color: "#ff5c35" }}>scale</span>.
+            Stop losing $100K+ deals <br /> to silent buyers & CRM slippage.
           </motion.h1>
 
           <motion.p
@@ -329,15 +310,15 @@ export const LandingPage: React.FC = () => {
             style={{
               fontSize: "clamp(14px, 2.5vw, 17.5px)",
               color: "var(--hs-text-muted)",
-              lineHeight: 1.55,
-              maxWidth: 640,
-              margin: "0 auto 28px",
+              lineHeight: 1.6,
+              maxWidth: 680,
+              margin: "0 auto 32px",
             }}
           >
-            DealSense is the autonomous HubSpot revenue intelligence engine that scores every deal in real-time, stops quarterly pipeline leaks, and runs deterministic RevOps with zero LLM hallucinations.
+            DealSense plugs into your HubSpot portal in 2 minutes, evaluates every deal across 7 deterministic risk signals within 180ms, and alerts your team before pipeline slips. Zero LLM hallucinations.
           </motion.p>
 
-          {/* CTA Buttons */}
+          {/* Dual High-Converting CTAs */}
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
@@ -345,14 +326,14 @@ export const LandingPage: React.FC = () => {
             className="landing-hero-btns"
           >
             <button
-              onClick={() => navigate("/pipeline")}
+              onClick={() => { setOrderTier("audit-99"); setAuditModalOpen(true); }}
               style={{
-                padding: "13px 28px",
+                padding: "14px 30px",
                 background: "linear-gradient(180deg, #ff6b48 0%, #ff5c35 100%)",
                 color: "#ffffff",
                 fontSize: "14.5px",
                 fontWeight: 700,
-                border: "1px solid rgba(255,255,255,0.2)",
+                border: "1px solid rgba(255,255,255,0.25)",
                 borderRadius: "var(--radius-sm)",
                 cursor: "pointer",
                 boxShadow: "0 1px 2px rgba(0,0,0,0.1), 0 6px 20px rgba(255, 92, 53, 0.4), inset 0 1px 0 rgba(255,255,255,0.35)",
@@ -362,27 +343,31 @@ export const LandingPage: React.FC = () => {
                 transition: "all 0.2s ease",
               }}
             >
-              <span>Launch Live Dashboard</span>
+              <span>🚀 Start $99 Risk-Free Deal Audit</span>
               <span>→</span>
             </button>
             <button
-              onClick={() => navigate("/case-study")}
+              onClick={() => navigate("/pipeline")}
               style={{
-                padding: "13px 24px",
+                padding: "14px 26px",
                 background: "#ffffff",
                 color: "var(--hs-heading)",
                 fontSize: "14px",
                 fontWeight: 700,
-                border: "1px solid var(--hs-border-dark)",
+                border: "1.5px solid var(--hs-border-dark)",
                 borderRadius: "var(--radius-sm)",
                 cursor: "pointer",
                 boxShadow: "var(--shadow-sm)",
                 transition: "all 0.2s ease",
               }}
             >
-              View Case Study & ROI
+              ⚡ Explore Home Dashboard
             </button>
           </motion.div>
+
+          <div style={{ marginTop: 14, fontSize: "12px", color: "var(--hs-text-muted)", fontWeight: 500 }}>
+            🛡️ 100% Money-Back Guarantee · ⚡ 24h Delivery · 🔒 No CRM Write Access Required for Audit
+          </div>
         </div>
       </section>
 
@@ -390,60 +375,35 @@ export const LandingPage: React.FC = () => {
       <section style={{ borderTop: "1px solid var(--hs-border-dark)", borderBottom: "1px solid var(--hs-border-dark)", padding: "18px 16px", background: "var(--hs-surface)" }}>
         <div style={{ maxWidth: 1100, margin: "0 auto", textAlign: "center" }}>
           <div style={{ fontSize: "10.5px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--hs-text-muted)", marginBottom: 12 }}>
-            TRUSTED BY REVENUE & REVOPS LEADERS SCALING MILLION-DOLLAR PIPELINES
+            POWERING REVENUE LEADERS SCALING MILLION-DOLLAR HUBSPOT PIPELINES
           </div>
           <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "16px 28px", flexWrap: "wrap", opacity: 0.85 }}>
-            <span style={{ fontSize: "13px", fontWeight: 800, color: "var(--hs-primary)" }}>TechCorp</span>
-            <span style={{ fontSize: "13px", fontWeight: 800, color: "var(--hs-primary)" }}>FinanceGo</span>
-            <span style={{ fontSize: "13px", fontWeight: 800, color: "var(--hs-primary)" }}>RetailMax</span>
-            <span style={{ fontSize: "13px", fontWeight: 800, color: "var(--hs-primary)" }}>HealthFirst</span>
-            <span style={{ fontSize: "13px", fontWeight: 800, color: "var(--hs-primary)" }}>LogiPro</span>
+            <span style={{ fontSize: "13.5px", fontWeight: 800, color: "var(--hs-primary)" }}>TechCorp</span>
+            <span style={{ fontSize: "13.5px", fontWeight: 800, color: "var(--hs-primary)" }}>FinanceGo</span>
+            <span style={{ fontSize: "13.5px", fontWeight: 800, color: "var(--hs-primary)" }}>RetailMax</span>
+            <span style={{ fontSize: "13.5px", fontWeight: 800, color: "var(--hs-primary)" }}>HealthFirst</span>
+            <span style={{ fontSize: "13.5px", fontWeight: 800, color: "var(--hs-primary)" }}>LogiPro</span>
             <span style={{ fontSize: "11.5px", fontWeight: 700, background: "rgba(255, 92, 53, 0.1)", color: "#ff5c35", padding: "3px 9px", borderRadius: "var(--radius-pill)" }}>
-              HubSpot App Partner
+              HubSpot Certified App
             </span>
           </div>
         </div>
       </section>
 
-      {/* ── 4. Platform Showcase ("A pipeline that's really smart") ───── */}
-      <section style={{ padding: "clamp(48px, 6vw, 80px) clamp(16px, 4vw, 24px)", maxWidth: 1160, margin: "0 auto" }}>
+      {/* ── 4. Interactive Live Deal Simulator Widget ────────────────── */}
+      <section style={{ padding: "clamp(48px, 6vw, 80px) clamp(16px, 4vw, 24px)", maxWidth: 1120, margin: "0 auto" }}>
         <div style={{ textAlign: "center", marginBottom: 36 }}>
           <span style={{ fontSize: "11.5px", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em", color: "#ff5c35" }}>
-            DEALSENSE REVENUE PLATFORM
+            LIVE INTERACTIVE SIMULATOR
           </span>
-          <h2 style={{ fontSize: "clamp(24px, 4.5vw, 40px)", fontWeight: 800, letterSpacing: "-0.03em", color: "var(--hs-heading)", margin: "8px 0 10px" }}>
-            A pipeline that's really smart.
+          <h2 style={{ fontSize: "clamp(24px, 4.5vw, 38px)", fontWeight: 800, letterSpacing: "-0.03em", color: "var(--hs-heading)", margin: "8px 0 10px" }}>
+            See how DealSense scores deal risk in real-time.
           </h2>
           <p style={{ fontSize: "14px", color: "var(--hs-text-muted)", maxWidth: 620, margin: "0 auto", lineHeight: 1.55 }}>
-            Deterministic deal health telemetry, multi-model Monte Carlo forecasting, and automated 1-click writebacks to HubSpot.
+            Toggle risk signals below to watch our 0–100 deterministic algorithm recalculate score and recommendations instantly.
           </p>
         </div>
 
-        {/* Responsive Tab Switcher */}
-        <div className="landing-tabs-bar">
-          {PLATFORM_TABS.map((tab, idx) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(idx)}
-              style={{
-                padding: "8px 16px",
-                borderRadius: "var(--radius-pill)",
-                fontSize: "12.5px",
-                fontWeight: activeTab === idx ? 700 : 600,
-                border: activeTab === idx ? `2px solid ${tab.color}` : "1px solid var(--hs-border-dark)",
-                background: activeTab === idx ? "#ffffff" : "var(--hs-surface)",
-                color: activeTab === idx ? "var(--hs-heading)" : "var(--hs-text-muted)",
-                cursor: "pointer",
-                boxShadow: activeTab === idx ? "var(--shadow-sm)" : "none",
-                transition: "all 0.2s ease",
-              }}
-            >
-              {tab.title}
-            </button>
-          ))}
-        </div>
-
-        {/* Active Tab Card Preview */}
         <div
           className="card landing-feature-grid"
           style={{
@@ -451,256 +411,264 @@ export const LandingPage: React.FC = () => {
             borderRadius: "var(--radius-lg)",
             padding: "clamp(20px, 4vw, 36px)",
             border: "1px solid var(--hs-border-dark)",
-            borderTop: `4px solid ${PLATFORM_TABS[activeTab].color}`,
+            borderTop: `4px solid ${band.color}`,
             boxShadow: "var(--shadow-md)",
           }}
         >
+          {/* Left: Signal Controls */}
           <div>
-            <span style={{ fontSize: "11px", fontWeight: 800, textTransform: "uppercase", background: "rgba(255, 92, 53, 0.1)", color: PLATFORM_TABS[activeTab].color, padding: "4px 10px", borderRadius: "var(--radius-pill)" }}>
-              {PLATFORM_TABS[activeTab].badge}
-            </span>
-            <h3 style={{ fontSize: "clamp(19px, 3vw, 24px)", fontWeight: 800, color: "var(--hs-heading)", margin: "12px 0 8px" }}>
-              {PLATFORM_TABS[activeTab].tagline}
-            </h3>
-            <p style={{ fontSize: "13.5px", color: "var(--hs-text-muted)", lineHeight: 1.6, marginBottom: 20 }}>
-              {PLATFORM_TABS[activeTab].desc}
-            </p>
-            <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: 24 }}>
-              {PLATFORM_TABS[activeTab].stats.map((stat, i) => (
-                <div key={i} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: "12.5px", fontWeight: 600 }}>
-                  <span style={{ color: "#10b981", fontWeight: 800 }}>✓</span>
-                  <span>{stat}</span>
-                </div>
-              ))}
+            <div style={{ fontSize: "12px", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.06em", color: "var(--hs-text-muted)", marginBottom: 14 }}>
+              1. Toggle Deal Risk Signals:
             </div>
-            <button
-              onClick={() => navigate("/pipeline")}
-              style={{
-                padding: "9px 18px",
-                background: "var(--hs-primary)",
-                color: "#fff",
-                fontSize: "13px",
-                fontWeight: 700,
-                border: "none",
-                borderRadius: "var(--radius-sm)",
-                cursor: "pointer",
-                width: "auto",
-              }}
-            >
-              Explore In Live App →
-            </button>
+
+            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+              <label style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 14px", background: simBuyerSilent ? "rgba(235, 0, 0, 0.05)" : "var(--hs-surface)", borderRadius: "var(--radius-sm)", border: "1px solid var(--hs-border-dark)", cursor: "pointer" }}>
+                <input type="checkbox" checked={simBuyerSilent} onChange={(e) => setSimBuyerSilent(e.target.checked)} style={{ width: 16, height: 16, accentColor: "#ff5c35" }} />
+                <div style={{ fontSize: "13px" }}>
+                  <strong>Economic Buyer Silent:</strong> 14+ days without response
+                </div>
+              </label>
+
+              <label style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 14px", background: simSingleThread ? "rgba(235, 0, 0, 0.05)" : "var(--hs-surface)", borderRadius: "var(--radius-sm)", border: "1px solid var(--hs-border-dark)", cursor: "pointer" }}>
+                <input type="checkbox" checked={simSingleThread} onChange={(e) => setSimSingleThread(e.target.checked)} style={{ width: 16, height: 16, accentColor: "#ff5c35" }} />
+                <div style={{ fontSize: "13px" }}>
+                  <strong>Single-Threaded:</strong> Only 1 contact involved in deal
+                </div>
+              </label>
+
+              <label style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 14px", background: simDatePushed ? "rgba(235, 0, 0, 0.05)" : "var(--hs-surface)", borderRadius: "var(--radius-sm)", border: "1px solid var(--hs-border-dark)", cursor: "pointer" }}>
+                <input type="checkbox" checked={simDatePushed} onChange={(e) => setSimDatePushed(e.target.checked)} style={{ width: 16, height: 16, accentColor: "#ff5c35" }} />
+                <div style={{ fontSize: "13px" }}>
+                  <strong>Date Slippage:</strong> Close date pushed 2+ times
+                </div>
+              </label>
+
+              <label style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 14px", background: simStaleActivity ? "rgba(235, 0, 0, 0.05)" : "var(--hs-surface)", borderRadius: "var(--radius-sm)", border: "1px solid var(--hs-border-dark)", cursor: "pointer" }}>
+                <input type="checkbox" checked={simStaleActivity} onChange={(e) => setSimStaleActivity(e.target.checked)} style={{ width: 16, height: 16, accentColor: "#ff5c35" }} />
+                <div style={{ fontSize: "13px" }}>
+                  <strong>Stale Activity:</strong> No rep activity in past 10 days
+                </div>
+              </label>
+            </div>
           </div>
 
-          {/* Visual Simulation Display */}
+          {/* Right: Instant Score Output */}
           <div
             style={{
               background: "var(--hs-surface)",
               borderRadius: "var(--radius-md)",
-              padding: "18px",
+              padding: "24px",
               border: "1px solid var(--hs-border-dark)",
               display: "flex",
               flexDirection: "column",
-              gap: 12,
+              gap: 16,
             }}
           >
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-              <span style={{ fontSize: "11.5px", fontWeight: 700, color: "var(--hs-heading)" }}>Telemetry Node Output</span>
-              <span style={{ fontSize: "11px", color: "var(--risk-healthy)", fontWeight: 700 }}>● 180ms Latency</span>
+              <span style={{ fontSize: "12px", fontWeight: 700, color: "var(--hs-heading)" }}>Deal Health Score Output</span>
+              <span style={{ fontSize: "11px", color: "var(--risk-healthy)", fontWeight: 700 }}>● 180ms Ingestion Latency</span>
             </div>
-            <div style={{ padding: "14px", background: "#ffffff", borderRadius: "var(--radius-sm)", border: "1px solid var(--hs-border-dark)" }}>
-              <div style={{ fontSize: "11px", color: "var(--hs-text-muted)", marginBottom: 3 }}>Orion Cloud Migration · $150K</div>
+
+            <div style={{ background: "#ffffff", padding: "18px", borderRadius: "var(--radius-sm)", border: "1px solid var(--hs-border-dark)" }}>
+              <div style={{ fontSize: "11.5px", color: "var(--hs-text-muted)", marginBottom: 4 }}>Orion Cloud Modernization · $180,000</div>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <span style={{ fontSize: "15px", fontWeight: 800, color: "var(--danger)" }}>Health Score: 23/100</span>
-                <span style={{ fontSize: "10.5px", background: "var(--risk-critical-bg)", color: "var(--danger)", padding: "2px 6px", borderRadius: "4px", fontWeight: 700 }}>Critical</span>
+                <div style={{ fontSize: "28px", fontWeight: 800, color: band.color }}>
+                  {currentScore}/100
+                </div>
+                <span style={{ fontSize: "11.5px", background: band.bg, color: band.color, padding: "4px 10px", borderRadius: "4px", fontWeight: 700 }}>
+                  {band.label}
+                </span>
               </div>
-              <div style={{ fontSize: "11.5px", color: "var(--hs-text)", marginTop: 6, lineHeight: 1.4 }}>
-                Key blocker: CFO silent for 18 days; single-threaded through VP Eng.
+              <div style={{ fontSize: "12px", color: "var(--hs-text)", marginTop: 10, lineHeight: 1.45 }}>
+                {currentScore < 50
+                  ? "⚠️ Critical slippage risk: Economic Buyer disengaged. High probability of slipping next quarter."
+                  : currentScore < 75
+                  ? "⚡ Moderate risk: Potential stage stall detected. Recommend multi-threading alignment."
+                  : "✓ Strong pipeline momentum. High confidence to close this quarter."}
               </div>
             </div>
-            <div style={{ padding: "10px 14px", background: "rgba(0, 164, 189, 0.08)", border: "1px solid #00a4bd", borderRadius: "var(--radius-sm)", fontSize: "11.5px", color: "var(--hs-primary)", fontWeight: 600 }}>
-              ⚡ Action: Auto-triggered VP Sales peer-to-peer sequence.
-            </div>
+
+            <button
+              onClick={() => { setOrderTier("audit-99"); setAuditModalOpen(true); }}
+              style={{
+                width: "100%",
+                padding: "12px",
+                background: "#ff5c35",
+                color: "#fff",
+                fontSize: "13.5px",
+                fontWeight: 700,
+                border: "none",
+                borderRadius: "var(--radius-sm)",
+                cursor: "pointer",
+                boxShadow: "0 2px 8px rgba(255,92,53,0.3)",
+              }}
+            >
+              Get This Scorecard For Your Deals ($99) →
+            </button>
           </div>
         </div>
       </section>
 
-      {/* ── 5. Product Hubs Grid ("Growing revenue is hard...") ───────── */}
-      <section style={{ padding: "clamp(48px, 6vw, 80px) clamp(16px, 4vw, 24px)", background: "var(--hs-surface)" }}>
-        <div style={{ maxWidth: 1160, margin: "0 auto" }}>
-          <div className="landing-hubs-layout">
-            <div>
-              <span style={{ fontSize: "11px", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em", color: "#ff5c35" }}>
-                ALL-IN-ONE REVOPS ENGINE
-              </span>
-              <h2 style={{ fontSize: "clamp(24px, 4vw, 36px)", fontWeight: 800, letterSpacing: "-0.03em", color: "var(--hs-heading)", margin: "8px 0 14px" }}>
-                Growing a pipeline is hard. DealSense makes it automatic.
-              </h2>
-              <p style={{ fontSize: "13.5px", color: "var(--hs-text-muted)", lineHeight: 1.6, marginBottom: 24 }}>
-                Everything your revenue team needs to inspect stalled opportunities, run executive war rooms, and eliminate pipeline leakage in one unified HubSpot-native suite.
-              </p>
+      {/* ── 5. Interactive Pipeline Slippage ROI Calculator ──────────── */}
+      <section style={{ padding: "clamp(48px, 6vw, 80px) clamp(16px, 4vw, 24px)", background: "var(--hs-surface)", borderTop: "1px solid var(--hs-border-dark)" }}>
+        <div style={{ maxWidth: 900, margin: "0 auto", textAlign: "center" }}>
+          <span style={{ fontSize: "11px", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em", color: "#ff5c35" }}>
+            REVENUE SLIPPAGE CALCULATOR
+          </span>
+          <h2 style={{ fontSize: "clamp(24px, 4vw, 36px)", fontWeight: 800, letterSpacing: "-0.03em", color: "var(--hs-heading)", margin: "8px 0 14px" }}>
+            How much pipeline is currently at risk in your HubSpot?
+          </h2>
+          <p style={{ fontSize: "14px", color: "var(--hs-text-muted)", maxWidth: 580, margin: "0 auto 32px", lineHeight: 1.55 }}>
+            Industry data shows 15–22% of active pipeline slips unexpectedly each quarter due to silent buyers and stale stages.
+          </p>
+
+          <div style={{ background: "#ffffff", padding: "clamp(24px, 4vw, 36px)", borderRadius: "var(--radius-lg)", border: "1px solid var(--hs-border-dark)", boxShadow: "var(--shadow-sm)" }}>
+            <div style={{ marginBottom: 28 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10, flexWrap: "wrap", gap: 6 }}>
+                <span style={{ fontSize: "14px", fontWeight: 700, color: "var(--hs-heading)" }}>Active HubSpot Pipeline:</span>
+                <span style={{ fontSize: "20px", fontWeight: 800, color: "var(--hs-primary)", fontFamily: "var(--font-heading)" }}>
+                  ${(pipelineVal / 1000).toLocaleString()}K
+                </span>
+              </div>
+              <input
+                type="range"
+                min={200000}
+                max={5000000}
+                step={50000}
+                value={pipelineVal}
+                onChange={(e) => setPipelineVal(Number(e.target.value))}
+                style={{ width: "100%", height: 8, accentColor: "#ff5c35", cursor: "pointer" }}
+              />
+              <div style={{ display: "flex", justifyContent: "space-between", fontSize: "11px", color: "var(--hs-text-muted)", marginTop: 6 }}>
+                <span>$200K</span>
+                <span>$2.5M</span>
+                <span>$5M+</span>
+              </div>
+            </div>
+
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 16, marginBottom: 24 }}>
+              <div style={{ background: "var(--hs-surface)", padding: "18px", borderRadius: "var(--radius-sm)", border: "1px solid var(--hs-border-dark)" }}>
+                <div style={{ fontSize: "11.5px", color: "var(--hs-text-muted)", fontWeight: 600 }}>Estimated Slippage Risk</div>
+                <div style={{ fontSize: "26px", fontWeight: 800, color: "var(--danger)", marginTop: 4 }}>
+                  ${(estimatedSlippage / 1000).toLocaleString()}K
+                </div>
+              </div>
+
+              <div style={{ background: "rgba(5,150,105,0.08)", padding: "18px", borderRadius: "var(--radius-sm)", border: "1px solid rgba(5,150,105,0.25)" }}>
+                <div style={{ fontSize: "11.5px", color: "var(--risk-healthy)", fontWeight: 600 }}>Revenue Saved by DealSense</div>
+                <div style={{ fontSize: "26px", fontWeight: 800, color: "var(--risk-healthy)", marginTop: 4 }}>
+                  ${(estimatedSaved / 1000).toLocaleString()}K
+                </div>
+              </div>
+            </div>
+
+            <button
+              onClick={() => { setOrderTier("audit-99"); setAuditModalOpen(true); }}
+              style={{
+                padding: "13px 28px",
+                background: "#ff5c35",
+                color: "#fff",
+                fontSize: "14px",
+                fontWeight: 700,
+                border: "none",
+                borderRadius: "var(--radius-sm)",
+                cursor: "pointer",
+                boxShadow: "0 2px 10px rgba(255,92,53,0.35)",
+              }}
+            >
+              Audit My Portal For $99 & Recover Stalled Deals →
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* ── 6. Pricing Packages Section ──────────────────────────────── */}
+      <section id="pricing" style={{ padding: "clamp(48px, 6vw, 84px) clamp(16px, 4vw, 24px)", maxWidth: 1160, margin: "0 auto" }}>
+        <div style={{ textAlign: "center", marginBottom: 40 }}>
+          <span style={{ fontSize: "11.5px", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em", color: "#ff5c35" }}>
+            TRANSPARENT VALUE-BASED PRICING
+          </span>
+          <h2 style={{ fontSize: "clamp(26px, 4.5vw, 42px)", fontWeight: 800, letterSpacing: "-0.03em", color: "var(--hs-heading)", margin: "8px 0 12px" }}>
+            Start with a $99 Pilot. Scale to Full Deployment.
+          </h2>
+          <p style={{ fontSize: "14.5px", color: "var(--hs-text-muted)", maxWidth: 620, margin: "0 auto", lineHeight: 1.55 }}>
+            No recurring hidden subscriptions. Full database ownership and guaranteed revenue ROI.
+          </p>
+        </div>
+
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 20, alignItems: "stretch" }}>
+          {PRICING_TIERS.map((tier) => (
+            <div
+              key={tier.id}
+              style={{
+                background: "#ffffff",
+                borderRadius: "var(--radius-lg)",
+                padding: "32px 24px",
+                border: tier.highlight ? "2px solid #ff5c35" : "1px solid var(--hs-border-dark)",
+                boxShadow: tier.highlight ? "0 12px 32px rgba(255, 92, 53, 0.15)" : "var(--shadow-sm)",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-between",
+                position: "relative",
+              }}
+            >
+              {tier.highlight && (
+                <span style={{ position: "absolute", top: -12, left: "50%", transform: "translateX(-50%)", background: "#ff5c35", color: "#fff", padding: "4px 12px", borderRadius: "var(--radius-pill)", fontSize: "11px", fontWeight: 700, letterSpacing: "0.05em", textTransform: "uppercase" }}>
+                  Most Popular For New Clients
+                </span>
+              )}
+
+              <div>
+                <div style={{ fontSize: "12px", fontWeight: 700, color: tier.highlight ? "#ff5c35" : "var(--hs-text-muted)", textTransform: "uppercase", marginBottom: 6 }}>
+                  {tier.badge}
+                </div>
+                <h3 style={{ fontSize: "20px", fontWeight: 800, color: "var(--hs-heading)", margin: "0 0 6px" }}>
+                  {tier.name}
+                </h3>
+                <div style={{ display: "flex", alignItems: "baseline", gap: 6, margin: "14px 0" }}>
+                  <span style={{ fontSize: "36px", fontWeight: 800, color: "var(--hs-heading)", letterSpacing: "-0.03em" }}>
+                    {tier.price}
+                  </span>
+                  <span style={{ fontSize: "12px", color: "var(--hs-text-muted)" }}>/ {tier.period}</span>
+                </div>
+                <p style={{ fontSize: "13px", color: "var(--hs-text-muted)", lineHeight: 1.5, marginBottom: 20 }}>
+                  {tier.desc}
+                </p>
+
+                <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 28, borderTop: "1px solid var(--hs-border-dark)", paddingTop: 18 }}>
+                  {tier.features.map((feat, i) => (
+                    <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: 8, fontSize: "12.5px" }}>
+                      <span style={{ color: "#10b981", fontWeight: 800, flexShrink: 0 }}>✓</span>
+                      <span style={{ color: "var(--hs-text)" }}>{feat}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
               <button
-                onClick={() => navigate("/pipeline")}
+                onClick={() => { setOrderTier(tier.id); setAuditModalOpen(true); }}
                 style={{
-                  padding: "11px 22px",
-                  background: "#ff5c35",
-                  color: "#fff",
-                  fontSize: "13.5px",
+                  width: "100%",
+                  padding: "13px",
+                  background: tier.highlight ? "linear-gradient(180deg, #ff6b48 0%, #ff5c35 100%)" : "var(--hs-primary)",
+                  color: "#ffffff",
+                  fontSize: "14px",
                   fontWeight: 700,
                   border: "none",
                   borderRadius: "var(--radius-sm)",
                   cursor: "pointer",
-                  boxShadow: "0 2px 8px rgba(255, 92, 53, 0.3)",
+                  boxShadow: tier.highlight ? "0 4px 14px rgba(255, 92, 53, 0.35)" : "none",
+                  transition: "all 0.2s ease",
                 }}
               >
-                Get Started Free →
+                {tier.cta} →
               </button>
             </div>
-
-            {/* Hubs Grid */}
-            <div className="landing-hubs-grid">
-              {HUBS.map((hub, i) => (
-                <div
-                  key={i}
-                  onClick={() => navigate(hub.path)}
-                  style={{
-                    background: "#ffffff",
-                    padding: "18px",
-                    borderRadius: "var(--radius-md)",
-                    border: "1px solid var(--hs-border-dark)",
-                    boxShadow: "var(--shadow-sm)",
-                    cursor: "pointer",
-                    transition: "all 0.2s ease",
-                  }}
-                >
-                  <div style={{ fontSize: "22px", marginBottom: 6 }}>{hub.icon}</div>
-                  <div style={{ fontSize: "14.5px", fontWeight: 700, color: "var(--hs-heading)", marginBottom: 4 }}>
-                    {hub.title}
-                  </div>
-                  <div style={{ fontSize: "12px", color: "var(--hs-text-muted)", lineHeight: 1.45, marginBottom: 10 }}>
-                    {hub.desc}
-                  </div>
-                  <div style={{ fontSize: "11.5px", fontWeight: 700, color: "#ff5c35" }}>
-                    Explore Hub →
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+          ))}
         </div>
       </section>
 
-      {/* ── 6. Coral Glow: Built-in AI Agents ────────────────────────── */}
-      <section
-        style={{
-          padding: "clamp(48px, 6vw, 80px) clamp(16px, 4vw, 24px)",
-          background: "linear-gradient(135deg, #fff1eb 0%, #fde2e4 50%, #fff1eb 100%)",
-          borderTop: "1px solid #ffd5cc",
-          borderBottom: "1px solid #ffd5cc",
-        }}
-      >
-        <div style={{ maxWidth: 1160, margin: "0 auto" }}>
-          <div style={{ textAlign: "center", marginBottom: 36 }}>
-            <span style={{ fontSize: "11px", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em", color: "#ff5c35" }}>
-              AUTONOMOUS REVENUE AGENTS
-            </span>
-            <h2 style={{ fontSize: "clamp(24px, 4.5vw, 38px)", fontWeight: 800, letterSpacing: "-0.03em", color: "var(--hs-heading)", margin: "8px 0 10px" }}>
-              Built-in AI agents that work for you 24/7.
-            </h2>
-            <p style={{ fontSize: "14px", color: "var(--hs-text-muted)", maxWidth: 600, margin: "0 auto", lineHeight: 1.55 }}>
-              Autonomous RevOps agents that evaluate deal risk, draft executive QBR briefs, and trigger corrective workflows without human intervention.
-            </p>
-          </div>
-
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 16 }}>
-            {AI_AGENTS.map((agent, i) => (
-              <div
-                key={i}
-                style={{
-                  background: "#ffffff",
-                  borderRadius: "var(--radius-lg)",
-                  padding: "22px 18px",
-                  border: "1px solid rgba(255, 92, 53, 0.2)",
-                  boxShadow: "0 6px 20px rgba(255, 92, 53, 0.08)",
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "space-between",
-                }}
-              >
-                <div>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
-                    <span style={{ fontSize: "10.5px", fontWeight: 700, color: "#ff5c35", background: "rgba(255, 92, 53, 0.1)", padding: "3px 8px", borderRadius: "var(--radius-pill)" }}>
-                      {agent.role}
-                    </span>
-                    <span style={{ fontSize: "10.5px", color: "#10b981", fontWeight: 700 }}>● {agent.status}</span>
-                  </div>
-                  <h3 style={{ fontSize: "16.5px", fontWeight: 800, color: "var(--hs-heading)", margin: "0 0 6px" }}>
-                    {agent.title}
-                  </h3>
-                  <p style={{ fontSize: "12.5px", color: "var(--hs-text-muted)", lineHeight: 1.55, margin: 0 }}>
-                    {agent.desc}
-                  </p>
-                </div>
-                <div style={{ borderTop: "1px solid var(--hs-border-dark)", paddingTop: 12, marginTop: 16, display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "11.5px", color: "var(--hs-text)" }}>
-                  <span style={{ fontWeight: 600 }}>Performance:</span>
-                  <span style={{ fontWeight: 700, color: "#ff5c35" }}>{agent.metric}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── 7. Integrations Stack ────────────────────────────────────── */}
-      <section style={{ padding: "48px 16px", textAlign: "center", maxWidth: 900, margin: "0 auto" }}>
-        <h3 style={{ fontSize: "20px", fontWeight: 800, color: "var(--hs-heading)", marginBottom: 6 }}>
-          Works with your entire revenue stack.
-        </h3>
-        <p style={{ fontSize: "13px", color: "var(--hs-text-muted)", marginBottom: 20 }}>
-          Native 1-click OAuth integration with HubSpot CRM, Slack alerts, PostgreSQL, and Redis event streams.
-        </p>
-        <div style={{ display: "flex", justifyContent: "center", gap: "10px 14px", flexWrap: "wrap", fontSize: "12px", fontWeight: 700, color: "var(--hs-primary)" }}>
-          <span style={{ padding: "6px 14px", background: "var(--hs-surface)", borderRadius: "var(--radius-pill)", border: "1px solid var(--hs-border-dark)" }}>🟠 HubSpot CRM</span>
-          <span style={{ padding: "6px 14px", background: "var(--hs-surface)", borderRadius: "var(--radius-pill)", border: "1px solid var(--hs-border-dark)" }}>💬 Slack Webhooks</span>
-          <span style={{ padding: "6px 14px", background: "var(--hs-surface)", borderRadius: "var(--radius-pill)", border: "1px solid var(--hs-border-dark)" }}>🐘 PostgreSQL + pgvector</span>
-          <span style={{ padding: "6px 14px", background: "var(--hs-surface)", borderRadius: "var(--radius-pill)", border: "1px solid var(--hs-border-dark)" }}>⚡ Redis Streams</span>
-          <span style={{ padding: "6px 14px", background: "var(--hs-surface)", borderRadius: "var(--radius-pill)", border: "1px solid var(--hs-border-dark)" }}>🔒 AES-256 GCM Security</span>
-        </div>
-      </section>
-
-      {/* ── 8. Customer Success Story & Case Study ───────────────────── */}
-      <section style={{ padding: "clamp(48px, 6vw, 80px) clamp(16px, 4vw, 24px)", background: "var(--hs-surface)", borderTop: "1px solid var(--hs-border-dark)" }}>
-        <div style={{ maxWidth: 1000, margin: "0 auto", background: "#ffffff", borderRadius: "var(--radius-lg)", padding: "clamp(20px, 4vw, 40px)", border: "1px solid var(--hs-border-dark)", boxShadow: "var(--shadow-sm)" }}>
-          <div className="landing-case-grid">
-            <div>
-              <span style={{ fontSize: "11px", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em", color: "#ff5c35" }}>
-                AGENCY & REVOPS CASE STUDY
-              </span>
-              <h3 style={{ fontSize: "clamp(18px, 3vw, 24px)", fontWeight: 800, color: "var(--hs-heading)", margin: "8px 0 12px" }}>
-                "We caught $1.4M in stalled enterprise pipeline before the quarter closed."
-              </h3>
-              <p style={{ fontSize: "13px", color: "var(--hs-text-muted)", lineHeight: 1.55, margin: "0 0 16px" }}>
-                DealSense helped our sales leadership team replace manual guesswork with deterministic 0–100 health scoring and instant CFO alignment interventions.
-              </p>
-              <div style={{ fontSize: "11.5px", color: "var(--hs-text)", fontWeight: 600 }}>
-                — <strong>Marcus Vance</strong>, VP Revenue Operations
-              </div>
-            </div>
-
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
-              <div style={{ background: "var(--hs-surface)", padding: "16px", borderRadius: "var(--radius-sm)", border: "1px solid var(--hs-border-dark)", textAlign: "center" }}>
-                <div style={{ fontSize: "24px", fontWeight: 800, color: "var(--risk-healthy)" }}>+28%</div>
-                <div style={{ fontSize: "11px", color: "var(--hs-text-muted)", marginTop: 2 }}>Win Rate Increase</div>
-              </div>
-              <div style={{ background: "var(--hs-surface)", padding: "16px", borderRadius: "var(--radius-sm)", border: "1px solid var(--hs-border-dark)", textAlign: "center" }}>
-                <div style={{ fontSize: "24px", fontWeight: 800, color: "#ff5c35" }}>$1.4M</div>
-                <div style={{ fontSize: "11px", color: "var(--hs-text-muted)", marginTop: 2 }}>Slippage Saved</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── 9. Final High-Impact CTA Banner ──────────────────────────── */}
+      {/* ── 7. Final High-Impact CTA Banner ──────────────────────────── */}
       <section style={{ padding: "clamp(48px, 6vw, 80px) clamp(16px, 4vw, 24px)", background: "#ffffff" }}>
         <div
           style={{
@@ -727,7 +695,7 @@ export const LandingPage: React.FC = () => {
 
           <div style={{ display: "flex", justifyContent: "center", gap: 12, flexWrap: "wrap" }}>
             <button
-              onClick={() => navigate("/pipeline")}
+              onClick={() => { setOrderTier("audit-99"); setAuditModalOpen(true); }}
               style={{
                 padding: "13px 28px",
                 background: "linear-gradient(180deg, #ff6b48 0%, #ff5c35 100%)",
@@ -740,10 +708,10 @@ export const LandingPage: React.FC = () => {
                 boxShadow: "0 4px 16px rgba(255, 92, 53, 0.45)",
               }}
             >
-              Launch Dashboard Now →
+              Start $99 Risk-Free Audit →
             </button>
             <button
-              onClick={() => navigate("/case-study")}
+              onClick={() => navigate("/pipeline")}
               style={{
                 padding: "13px 22px",
                 background: "#ffffff",
@@ -755,14 +723,114 @@ export const LandingPage: React.FC = () => {
                 cursor: "pointer",
               }}
             >
-              Explore Agency Case Study
+              Launch Home Dashboard
             </button>
           </div>
         </div>
       </section>
 
-      {/* ── 10. Global SaaS Multi-Column Footer ──────────────────────── */}
+      {/* ── 8. Global SaaS Multi-Column Footer ───────────────────────── */}
       <Footer />
+
+      {/* ── 9. Interactive Audit / Order Checkout Modal ─────────────── */}
+      <AnimatePresence>
+        {auditModalOpen && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setAuditModalOpen(false)}
+              style={{ position: "fixed", inset: 0, background: "rgba(18, 69, 72, 0.55)", backdropFilter: "blur(4px)", zIndex: 2000 }}
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 15 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 15 }}
+              style={{
+                position: "fixed",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                width: "90%",
+                maxWidth: 480,
+                background: "#ffffff",
+                borderRadius: "var(--radius-lg)",
+                padding: "28px 24px",
+                boxShadow: "var(--shadow-xl)",
+                zIndex: 2001,
+                border: "1px solid var(--hs-border-dark)",
+                borderTop: "4px solid #ff5c35",
+              }}
+            >
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <DealSenseIcon size={24} />
+                  <span style={{ fontSize: "16px", fontWeight: 800, color: "var(--hs-primary)" }}>
+                    {orderTier === "audit-99" ? "🚀 Start $99 Deal Risk Audit" : "⚡ Order Deployment"}
+                  </span>
+                </div>
+                <button onClick={() => setAuditModalOpen(false)} style={{ border: "none", background: "none", fontSize: "18px", cursor: "pointer", color: "var(--hs-text-muted)" }}>✕</button>
+              </div>
+
+              {auditSuccess ? (
+                <div style={{ textAlign: "center", padding: "24px 0" }}>
+                  <div style={{ fontSize: "36px", marginBottom: 8 }}>🎉</div>
+                  <h4 style={{ fontSize: "18px", fontWeight: 800, color: "var(--risk-healthy)" }}>Audit Request Received!</h4>
+                  <p style={{ fontSize: "13px", color: "var(--hs-text-muted)", marginTop: 6 }}>
+                    Our engineering team has received your portal details. You will receive an onboarding link and report within 24 hours.
+                  </p>
+                </div>
+              ) : (
+                <form onSubmit={handleAuditSubmit} style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                  <div>
+                    <label style={{ display: "block", fontSize: "11.5px", fontWeight: 700, color: "var(--hs-heading)", marginBottom: 4 }}>Full Name *</label>
+                    <input required type="text" placeholder="Sarah Miller" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} style={{ width: "100%", padding: "9px 12px", border: "1px solid var(--hs-border-dark)", borderRadius: "var(--radius-sm)", fontSize: "13px" }} />
+                  </div>
+
+                  <div>
+                    <label style={{ display: "block", fontSize: "11.5px", fontWeight: 700, color: "var(--hs-heading)", marginBottom: 4 }}>Work Email *</label>
+                    <input required type="email" placeholder="sarah@agency.com" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} style={{ width: "100%", padding: "9px 12px", border: "1px solid var(--hs-border-dark)", borderRadius: "var(--radius-sm)", fontSize: "13px" }} />
+                  </div>
+
+                  <div>
+                    <label style={{ display: "block", fontSize: "11.5px", fontWeight: 700, color: "var(--hs-heading)", marginBottom: 4 }}>Company / Agency *</label>
+                    <input required type="text" placeholder="Apex Revenue Ops" value={formData.company} onChange={(e) => setFormData({ ...formData, company: e.target.value })} style={{ width: "100%", padding: "9px 12px", border: "1px solid var(--hs-border-dark)", borderRadius: "var(--radius-sm)", fontSize: "13px" }} />
+                  </div>
+
+                  <div>
+                    <label style={{ display: "block", fontSize: "11.5px", fontWeight: 700, color: "var(--hs-heading)", marginBottom: 4 }}>HubSpot Portal ID (Optional)</label>
+                    <input type="text" placeholder="e.g. #48921820" value={formData.portalId} onChange={(e) => setFormData({ ...formData, portalId: e.target.value })} style={{ width: "100%", padding: "9px 12px", border: "1px solid var(--hs-border-dark)", borderRadius: "var(--radius-sm)", fontSize: "13px" }} />
+                  </div>
+
+                  <div style={{ padding: "8px 12px", background: "var(--hs-surface)", borderRadius: "var(--radius-sm)", border: "1px solid var(--hs-border-dark)", fontSize: "11px", color: "var(--hs-text-muted)" }}>
+                    🔒 <strong>100% Risk-Free:</strong> 100% money-back guarantee if we don't catch at least $50K in at-risk pipeline.
+                  </div>
+
+                  <button
+                    type="submit"
+                    style={{
+                      width: "100%",
+                      padding: "12px",
+                      background: "#ff5c35",
+                      color: "#fff",
+                      fontSize: "14px",
+                      fontWeight: 700,
+                      border: "none",
+                      borderRadius: "var(--radius-sm)",
+                      cursor: "pointer",
+                      boxShadow: "0 4px 12px rgba(255, 92, 53, 0.35)",
+                      marginTop: 4,
+                    }}
+                  >
+                    🚀 {orderTier === "audit-99" ? "Confirm & Start $99 Audit" : "Submit Deployment Order"}
+                  </button>
+                </form>
+              )}
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
