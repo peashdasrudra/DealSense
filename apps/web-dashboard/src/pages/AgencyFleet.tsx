@@ -897,29 +897,30 @@ export const AgencyFleet: React.FC = () => {
                   What’s Included:
                 </div>
                 
-                <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 9, fontSize: "12.5px", color: "#334155" }}>
+                <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 7.5, fontSize: "12px", color: "#334155" }}>
                   {[
-                    { bold: "Manage up to 3 Client Portals", text: "with multi-portal isolation" },
-                    { bold: "7-Vector Scoring Engine", text: "deterministic risk modeling" },
-                    { bold: "Agency-Branded PDF Reports", text: "for executive QBRs" },
-                    { bold: "14-Day Action Queue", text: "and stalled deal alerts" },
-                    { bold: "Find $25K Or It's Free", text: "100% money-back guarantee" },
+                    { bold: "Manage up to 3 Client Portals", text: "multi-tenant workspace isolation" },
+                    { bold: "7-Vector Scoring Engine", text: "deterministic revenue risk modeling" },
+                    { bold: "Agency-Branded PDF Reports", text: "for board-level executive QBRs" },
+                    { bold: "14-Day Action Queue", text: "stalled deal triage & ghosting alerts" },
+                    { bold: "Full Handoff Kit & Docs", text: "instant 1-click portal onboarding" },
+                    { bold: "Find $25K Or It's Free", text: "100% no-risk money-back guarantee" },
                   ].map((item, idx) => (
-                    <li key={idx} style={{ display: "flex", alignItems: "flex-start", gap: 8, lineHeight: 1.35 }}>
-                      <div style={{ width: 16, height: 16, borderRadius: "50%", background: "rgba(16, 185, 129, 0.12)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, marginTop: 1 }}>
-                        <svg width={10} height={10} viewBox="0 0 24 24" fill="none" stroke="#059669" strokeWidth={3} strokeLinecap="round" strokeLinejoin="round">
+                    <li key={idx} style={{ display: "flex", alignItems: "flex-start", gap: 8, lineHeight: 1.3 }}>
+                      <div style={{ width: 15, height: 15, borderRadius: "50%", background: "rgba(16, 185, 129, 0.12)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, marginTop: 1 }}>
+                        <svg width={9} height={9} viewBox="0 0 24 24" fill="none" stroke="#059669" strokeWidth={3} strokeLinecap="round" strokeLinejoin="round">
                           <polyline points="20 6 9 17 4 12" />
                         </svg>
                       </div>
                       <div>
-                        <strong style={{ color: "#092124" }}>{item.bold}</strong> <span style={{ color: "#64748b" }}>{item.text}</span>
+                        <strong style={{ color: "#092124" }}>{item.bold}</strong> <span style={{ color: "#64748b" }}>({item.text})</span>
                       </div>
                     </li>
                   ))}
                 </ul>
               </div>
               
-              <div style={{ marginTop: 20 }}>
+              <div style={{ marginTop: 16 }}>
                 <div style={{ background: "rgba(16, 185, 129, 0.08)", border: "1px solid rgba(16, 185, 129, 0.2)", borderRadius: "8px", padding: "6px 10px", fontSize: "11px", color: "#065f46", fontWeight: 700, textAlign: "center", marginBottom: 10 }}>
                   💰 Bill 3 clients $1,500/mo = $54,000/yr ARR (180x ROI)
                 </div>
@@ -927,12 +928,12 @@ export const AgencyFleet: React.FC = () => {
                   onClick={() => openOrder("starter-299")}
                   style={{
                     width: "100%",
-                    padding: "13px 18px",
+                    padding: "12px 18px",
                     background: "#092124",
                     color: "#ffffff",
                     border: "1px solid rgba(255, 255, 255, 0.1)",
                     borderRadius: "10px",
-                    fontSize: "14px",
+                    fontSize: "13.5px",
                     fontWeight: 800,
                     fontFamily: "'Outfit', 'Plus Jakarta Sans', -apple-system, sans-serif",
                     letterSpacing: "-0.02em",
@@ -959,7 +960,7 @@ export const AgencyFleet: React.FC = () => {
                 background: "linear-gradient(180deg, #ffffff 0%, #fff7f4 100%)",
                 border: "2px solid #ff5c35",
                 borderRadius: "18px",
-                padding: "24px 20px 22px",
+                padding: "22px 20px 20px",
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "space-between",
@@ -1032,29 +1033,30 @@ export const AgencyFleet: React.FC = () => {
                   Complete Fleet Arsenal:
                 </div>
                 
-                <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 9, fontSize: "12.5px", color: "#092124" }}>
+                <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 7.5, fontSize: "12px", color: "#092124" }}>
                   {[
-                    { bold: "Manage up to 15 Client Portals", text: "with master switcher" },
-                    { bold: "100% Agency White-Label", text: "(revops.youragency.com + logo)" },
-                    { bold: "Embedded HubSpot Canvas Card", text: "lives inside CRM records" },
-                    { bold: "Sub-200ms Webhook Stream", text: "Redis Streams event engine" },
-                    { bold: "1-Click Executive QBR Dossier", text: "saves 80+ staff hours/mo" },
+                    { bold: "Manage up to 15 Client Portals", text: "master switcher cockpit" },
+                    { bold: "100% Agency White-Label", text: "revops.youragency.com + custom logo" },
+                    { bold: "Embedded HubSpot Canvas Card", text: "lives inside client CRM records" },
+                    { bold: "Sub-200ms Webhook Stream", text: "Redis Streams real-time event engine" },
+                    { bold: "1-Click Executive QBR Dossier", text: "automated board-ready PDF briefing" },
+                    { bold: "1-Click Batch CRM Hygiene", text: "auto-remediation writebacks to HubSpot" },
                   ].map((item, idx) => (
-                    <li key={idx} style={{ display: "flex", alignItems: "flex-start", gap: 8, lineHeight: 1.35 }}>
-                      <div style={{ width: 16, height: 16, borderRadius: "50%", background: "rgba(255, 92, 53, 0.15)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, marginTop: 1 }}>
-                        <svg width={10} height={10} viewBox="0 0 24 24" fill="none" stroke="#ff5c35" strokeWidth={3} strokeLinecap="round" strokeLinejoin="round">
+                    <li key={idx} style={{ display: "flex", alignItems: "flex-start", gap: 8, lineHeight: 1.3 }}>
+                      <div style={{ width: 15, height: 15, borderRadius: "50%", background: "rgba(255, 92, 53, 0.15)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, marginTop: 1 }}>
+                        <svg width={9} height={9} viewBox="0 0 24 24" fill="none" stroke="#ff5c35" strokeWidth={3} strokeLinecap="round" strokeLinejoin="round">
                           <polyline points="20 6 9 17 4 12" />
                         </svg>
                       </div>
                       <div>
-                        <strong style={{ color: "#092124" }}>{item.bold}</strong> <span style={{ color: "#475569" }}>{item.text}</span>
+                        <strong style={{ color: "#092124" }}>{item.bold}</strong> <span style={{ color: "#475569" }}>({item.text})</span>
                       </div>
                     </li>
                   ))}
                 </ul>
               </div>
               
-              <div style={{ marginTop: 20 }}>
+              <div style={{ marginTop: 16 }}>
                 <div style={{ background: "rgba(255, 92, 53, 0.1)", border: "1px solid rgba(255, 92, 53, 0.25)", borderRadius: "8px", padding: "6px 10px", fontSize: "11px", color: "#e04a25", fontWeight: 800, textAlign: "center", marginBottom: 10 }}>
                   🔥 Bill 10 clients $2,500/mo = $300,000/yr ARR (200x ROI)
                 </div>
@@ -1062,12 +1064,12 @@ export const AgencyFleet: React.FC = () => {
                   onClick={() => openOrder("agency-1500")}
                   style={{
                     width: "100%",
-                    padding: "13px 18px",
+                    padding: "12px 18px",
                     background: "linear-gradient(180deg, #ff6b48 0%, #ff5c35 100%)",
                     color: "#ffffff",
                     border: "none",
                     borderRadius: "10px",
-                    fontSize: "14.5px",
+                    fontSize: "14px",
                     fontWeight: 800,
                     fontFamily: "'Outfit', 'Plus Jakarta Sans', -apple-system, sans-serif",
                     letterSpacing: "-0.02em",
@@ -1088,13 +1090,13 @@ export const AgencyFleet: React.FC = () => {
               </div>
             </div>
 
-            {/* Tier 3: Elite Partner Master Fleet Tier (DARK LUXURY) */}
+            {/* Tier 3: Elite Partner Master Fleet Tier (DARK LUXURY - $100K APP DELIVERABLES) */}
             <div
               style={{
                 background: "linear-gradient(180deg, #092124 0%, #0d2c30 100%)",
                 border: "1.5px solid rgba(52, 211, 153, 0.4)",
                 borderRadius: "18px",
-                padding: "22px 20px",
+                padding: "22px 20px 20px",
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "space-between",
@@ -1137,32 +1139,33 @@ export const AgencyFleet: React.FC = () => {
                 </div>
 
                 <div style={{ fontSize: "11px", fontWeight: 800, color: "#ffffff", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 10 }}>
-                  Enterprise Master Deliverables:
+                  Enterprise $100K Deliverables:
                 </div>
                 
-                <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 9, fontSize: "12.5px", color: "#f1f5f9" }}>
+                <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 7.5, fontSize: "12px", color: "#f1f5f9" }}>
                   {[
-                    { bold: "UNLIMITED Multi-Tenant Client Portals", text: "zero caps" },
-                    { bold: "100% Monorepo Source Code", text: "(FastAPI, React, Postgres 16)" },
-                    { bold: "Private Cloud VPC Deployment", text: "AWS, GCP, Vercel" },
-                    { bold: "Row-Level Security (RLS)", text: "tenant data isolation" },
-                    { bold: "1-on-1 Architect Slack SLA", text: "direct senior lead access" },
+                    { bold: "UNLIMITED Multi-Tenant Portals", text: "zero client or volume caps" },
+                    { bold: "100% Monorepo Source Code", text: "FastAPI, React 18, Postgres 16, Redis" },
+                    { bold: "Private Cloud VPC Deployment", text: "AWS, GCP, DigitalOcean, or On-Prem" },
+                    { bold: "Row-Level Security (RLS)", text: "strict tenant isolation partition engine" },
+                    { bold: "Custom Canvas Extension SDK", text: "build bespoke HubSpot CRM widgets" },
+                    { bold: "1-on-1 Architect Slack SLA", text: "direct 1-hour senior lead response" },
                   ].map((item, idx) => (
-                    <li key={idx} style={{ display: "flex", alignItems: "flex-start", gap: 8, lineHeight: 1.35 }}>
-                      <div style={{ width: 16, height: 16, borderRadius: "50%", background: "rgba(52, 211, 153, 0.2)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, marginTop: 1 }}>
-                        <svg width={10} height={10} viewBox="0 0 24 24" fill="none" stroke="#34d399" strokeWidth={3} strokeLinecap="round" strokeLinejoin="round">
+                    <li key={idx} style={{ display: "flex", alignItems: "flex-start", gap: 8, lineHeight: 1.3 }}>
+                      <div style={{ width: 15, height: 15, borderRadius: "50%", background: "rgba(52, 211, 153, 0.2)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, marginTop: 1 }}>
+                        <svg width={9} height={9} viewBox="0 0 24 24" fill="none" stroke="#34d399" strokeWidth={3} strokeLinecap="round" strokeLinejoin="round">
                           <polyline points="20 6 9 17 4 12" />
                         </svg>
                       </div>
                       <div>
-                        <strong style={{ color: "#ffffff" }}>{item.bold}</strong> <span style={{ color: "#94a3b8" }}>{item.text}</span>
+                        <strong style={{ color: "#ffffff" }}>{item.bold}</strong> <span style={{ color: "#94a3b8" }}>({item.text})</span>
                       </div>
                     </li>
                   ))}
                 </ul>
               </div>
               
-              <div style={{ marginTop: 20 }}>
+              <div style={{ marginTop: 16 }}>
                 <div style={{ background: "rgba(52, 211, 153, 0.1)", border: "1px solid rgba(52, 211, 153, 0.25)", borderRadius: "8px", padding: "6px 10px", fontSize: "11px", color: "#34d399", fontWeight: 800, textAlign: "center", marginBottom: 10 }}>
                   💎 Unlimited Scale: Build a $500K+ ARR RevOps Practice
                 </div>
@@ -1170,12 +1173,12 @@ export const AgencyFleet: React.FC = () => {
                   onClick={() => openOrder("elite-3500")}
                   style={{
                     width: "100%",
-                    padding: "13px 18px",
+                    padding: "12px 18px",
                     background: "#ffffff",
                     color: "#092124",
                     border: "none",
                     borderRadius: "10px",
-                    fontSize: "14px",
+                    fontSize: "13.5px",
                     fontWeight: 800,
                     fontFamily: "'Outfit', 'Plus Jakarta Sans', -apple-system, sans-serif",
                     letterSpacing: "-0.02em",
