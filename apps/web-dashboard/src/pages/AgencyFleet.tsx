@@ -1561,6 +1561,87 @@ export const AgencyFleet: React.FC = () => {
         </div>
       </section>
 
+      {/* ── 8.5. Agency Partner FAQ Section ───────────────────────────── */}
+      <section id="faq" style={{ padding: "84px clamp(16px, 4vw, 24px)", background: "#f8fafc", borderTop: "1px solid #e2e8f0" }}>
+        <div style={{ maxWidth: 840, margin: "0 auto" }}>
+          <div style={{ textAlign: "center", marginBottom: 44 }}>
+            <div
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 8,
+                background: "rgba(18, 69, 72, 0.08)",
+                border: "1px solid rgba(18, 69, 72, 0.25)",
+                padding: "4px 14px",
+                borderRadius: "9999px",
+                marginBottom: 14,
+                fontSize: "11px",
+                fontWeight: 800,
+                color: "#124548",
+                letterSpacing: "0.05em",
+                textTransform: "uppercase",
+              }}
+            >
+              <span>❓ AGENCY PARTNER FAQ</span>
+            </div>
+            <h2 style={{ fontSize: "clamp(26px, 4vw, 38px)", fontWeight: 900, color: "#092124", letterSpacing: "-0.03em", margin: "0 0 12px", fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}>
+              Frequently Asked Questions
+            </h2>
+            <p style={{ fontSize: "16px", color: "#64748b", margin: 0 }}>
+              Everything HubSpot Solutions Partners need to know before deploying their AI fleet.
+            </p>
+          </div>
+
+          <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+            {[
+              {
+                q: "Do my clients ever see 'DealSense' or know it's a 3rd party tool?",
+                a: "No. With the Agency Fleet and Master tiers, DealSense is 100% white-labeled under your domain (e.g. revops.youragency.com). The embedded HubSpot CRM Canvas sidebar card displays your agency logo, signature brand colors, and company name. Your clients view this as your proprietary in-house AI technology.",
+              },
+              {
+                q: "How does the $0 monthly platform tax work?",
+                a: "Unlike legacy SaaS platforms (Gong, Clari, BoostUp) that charge $1,200–$2,400/rep/year, DealSense gives you lifetime commercial ownership of the monorepo deployment for a one-time flat license. You bill your clients $2,500–$5,000/mo retainer and keep 100% of the margins forever.",
+              },
+              {
+                q: "How long does it take to onboard a client portal?",
+                a: "Under 2 minutes. Your client simply authorizes the connection via HubSpot OAuth 2.0. DealSense immediately starts streaming webhook events and computes 0–100 deterministic risk scores across all active pipeline deals in 180ms. Zero engineering or IT setup required by your client.",
+              },
+              {
+                q: "How does the 'Find $25K Or It's Free' guarantee work?",
+                a: "If DealSense’s 7-vector scoring engine does not uncover at least $25,000 in at-risk pipeline slippage or hidden buyer ghosting on your first client audit, simply email us and you receive an immediate, no-questions-asked 100% refund.",
+              },
+              {
+                q: "Can we customize scoring algorithms per industry vertical?",
+                a: "Yes. In the Master Cockpit, you can adjust the weights of the 7 deterministic vectors (stage velocity decay, single-threaded buyer risk, MEDDICC completeness, sentiment drift, etc.) tailored to B2B SaaS, professional services, healthcare, or manufacturing clients.",
+              },
+              {
+                q: "Do we get full access to the source code?",
+                a: "Yes. Both the Single Portal and Agency Fleet tiers include complete source code handover (FastAPI backend, React 18 frontend, PostgreSQL 16 schema, Redis Streams, Docker compose, and HubSpot Canvas SDK extension) with lifetime commercial usage rights.",
+              },
+            ].map((item, idx) => (
+              <div
+                key={idx}
+                style={{
+                  background: "#ffffff",
+                  border: "1px solid #e2e8f0",
+                  borderRadius: "14px",
+                  padding: "20px 24px",
+                  boxShadow: "0 2px 8px rgba(9, 33, 36, 0.04)",
+                  transition: "all 0.2s ease",
+                }}
+              >
+                <h4 style={{ fontSize: "16px", fontWeight: 800, color: "#092124", margin: "0 0 8px", letterSpacing: "-0.01em" }}>
+                  {item.q}
+                </h4>
+                <p style={{ fontSize: "14px", color: "#475569", lineHeight: 1.6, margin: 0 }}>
+                  {item.a}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ── 9. Order & Checkout Modal ───────────────────────────────────── */}
       <AnimatePresence>
         {orderModalOpen && (
