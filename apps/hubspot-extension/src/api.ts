@@ -1,5 +1,6 @@
 // apps/hubspot-extension/src/api.ts
-export const API_BASE = "/api/v1";
+export const API_BASE =
+  (import.meta as any).env?.VITE_API_BASE_URL || "https://dealsense-api-6o2h.onrender.com/api/v1";
 
 // For development without a real HubSpot token exchange, we use a fixed mock Tenant ID
 export const MOCK_TENANT_ID = "00000000-0000-0000-0000-000000000001";
@@ -14,6 +15,27 @@ export async function fetchDealSnapshot(dealId: string = MOCK_DEAL_ID, tenantId:
 
   if (!response.ok) {
     throw new Error(`Failed to fetch deal snapshot: ${response.statusText}`);
+  }
+
+  return response.json();
+}
+
+export async function triggerDealEvaluation(dealId: string = MOCK_DEAL_ID, tenantId: string = MOCK_TENANT_ID, portalId?: string) {
+  const response = await fetch(`${API_BASE}/deals/${dealId}/score`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-Tenant-ID": tenantId,
+    },
+    body: JSON.stringify({
+      deal_id: dealId,
+      portal_id: portalId,
+      properties: {},
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to evaluate deal: ${response.statusText}`);
   }
 
   return response.json();

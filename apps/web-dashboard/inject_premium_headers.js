@@ -81,7 +81,7 @@ const pages = [
   }
 ];
 
-const basePath = "c:/Users/USER/Desktop/AiXpertLabs/DealSense/apps/web-dashboard/src/pages";
+const basePath = path.resolve(__dirname, "src/pages");
 
 const generateHeader = (badgeSub, title, desc) => `
       {/* ── Enterprise Header ─────────────────────────────────────────── */}

@@ -1,7 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 
-const basePath = "c:/Users/USER/Desktop/AiXpertLabs/DealSense/apps/web-dashboard/src/pages";
+const basePath = path.resolve(__dirname, "src/pages");
 
 const premiumWhiteStyle = `style={{
           background: "#ffffff",

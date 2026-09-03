@@ -12,7 +12,7 @@ import { MeddiccMatrix } from "./components/MeddiccMatrix";
 import { RiskSignals } from "./components/RiskSignals";
 import { ActionCards } from "./components/ActionCards";
 import { SkeletonLoader } from "./components/SkeletonLoader";
-import { fetchDealSnapshot, submitActionDecision } from "./api";
+import { fetchDealSnapshot, submitActionDecision, triggerDealEvaluation } from "./api";
 
 const SAMPLE_SNAPSHOT = {
   id: "snap-001",
@@ -108,9 +108,14 @@ export const DealSenseCard: React.FC = () => {
   const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
   const [isLive, setIsLive] = useState(false);
 
+  // Extract HubSpot CRM context from URL query params (passed by HubSpot iframe / UI Extensions SDK)
+  const searchParams = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : new URLSearchParams();
+  const currentDealId = searchParams.get("hs_object_id") || searchParams.get("dealId") || "deal-001";
+  const currentPortalId = searchParams.get("portalId") || "982341";
+
   const loadSnapshot = async () => {
     try {
-      const data = await fetchDealSnapshot();
+      const data = await fetchDealSnapshot(currentDealId);
       if (data && data.health_score !== undefined) {
         if (!data.meddicc_status) {
           data.meddicc_status = SAMPLE_SNAPSHOT.meddicc_status;
@@ -131,15 +136,25 @@ export const DealSenseCard: React.FC = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       loadSnapshot();
-    }, 600);
+    }, 400);
     return () => clearTimeout(timer);
-  }, []);
+  }, [currentDealId]);
 
   const handleRefresh = useCallback(async () => {
     setState("refreshing");
-    await new Promise((r) => setTimeout(r, 800));
+    await new Promise((r) => setTimeout(r, 600));
     await loadSnapshot();
-  }, []);
+  }, [currentDealId]);
+
+  const handleReAudit = async () => {
+    setState("refreshing");
+    try {
+      await triggerDealEvaluation(currentDealId, undefined, currentPortalId);
+      await loadSnapshot();
+    } catch {
+      await loadSnapshot();
+    }
+  };
 
   const handleApprove = async (id: string) => {
     try {
@@ -176,6 +191,38 @@ export const DealSenseCard: React.FC = () => {
   return (
     <div className="ds-container">
       {/* ── Header ──────────────────────────────────────────────────── */}
+      {/* HubSpot Native Record Extension Context Bar */}
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          padding: "6px 12px",
+          background: "#f5f8fa",
+          border: "1px solid #cbd6e2",
+          borderRadius: "var(--radius-sm)",
+          fontSize: 11,
+          color: "#33475b",
+          marginBottom: "var(--sp-3)",
+        }}
+      >
+        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+          <span
+            style={{
+              width: 8,
+              height: 8,
+              borderRadius: "50%",
+              background: "#00a38d",
+              display: "inline-block",
+            }}
+          />
+          <span>HubSpot CRM Record Tab &bull; <strong>Deal #{currentDealId}</strong></span>
+        </div>
+        <div>
+          <span>Portal: <strong>{currentPortalId}</strong></span>
+        </div>
+      </div>
+
       <motion.div
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
@@ -209,19 +256,29 @@ export const DealSenseCard: React.FC = () => {
               DealSense Intelligence
             </div>
             <div style={{ fontSize: "12px", color: "var(--hs-text-muted)" }}>
-              Updated {formatTime(lastUpdated)}
+              Updated {formatTime(lastUpdated)} &bull; {isLive ? "🟢 Cloud Synced" : "🟡 Offline Fallback"}
             </div>
           </div>
         </div>
 
-        <button
-          className="btn btn-secondary btn-sm"
-          onClick={handleRefresh}
-          disabled={state === "refreshing" || state === "loading"}
-          style={{ opacity: state === "refreshing" ? 0.6 : 1 }}
-        >
-          {state === "refreshing" ? "↻ Analyzing..." : "↻ Refresh"}
-        </button>
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <button
+            className="btn btn-secondary btn-sm"
+            onClick={handleReAudit}
+            disabled={state === "refreshing" || state === "loading"}
+            style={{ fontSize: "12px" }}
+          >
+            ⚡ Re-Score Deal
+          </button>
+          <button
+            className="btn btn-secondary btn-sm"
+            onClick={handleRefresh}
+            disabled={state === "refreshing" || state === "loading"}
+            style={{ opacity: state === "refreshing" ? 0.6 : 1, fontSize: "12px" }}
+          >
+            {state === "refreshing" ? "↻ Analyzing..." : "↻ Refresh"}
+          </button>
+        </div>
       </motion.div>
 
       {/* ── Content Area ────────────────────────────────────────────── */}

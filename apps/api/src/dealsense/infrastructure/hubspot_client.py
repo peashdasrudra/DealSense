@@ -22,6 +22,7 @@ logger = structlog.get_logger(__name__)
 HUBSPOT_API_BASE_URL = "https://api.hubapi.com"
 DEFAULT_TIMEOUT = 15.0
 MAX_RETRIES = 3
+HUBSPOT_BATCH_SIZE = 100
 
 
 class HubSpotClientError(DealSenseError):
@@ -177,6 +178,49 @@ class HubSpotClient:
             f"/crm/v3/objects/deals/{deal_id}",
             json_data={"properties": properties},
         )
+
+    async def batch_update_deals(
+        self, deal_updates: list[dict[str, Any]]
+    ) -> list[dict[str, Any]]:
+        """Batch update properties across multiple HubSpot deals.
+
+        HubSpot limits batch requests to 100 objects per call.
+        This method automatically partitions inputs into 100-item chunks,
+        executes requests with rate-limiting backoff, and aggregates the results.
+
+        Args:
+            deal_updates: List of dicts, each formatted as:
+                          {"id": "<deal_id>", "properties": {"prop": "val"}}
+
+        Returns:
+            Aggregated list of updated deal records from HubSpot CRM.
+        """
+        if not deal_updates:
+            return []
+
+        results: list[dict[str, Any]] = []
+
+        for i in range(0, len(deal_updates), HUBSPOT_BATCH_SIZE):
+            chunk = deal_updates[i : i + HUBSPOT_BATCH_SIZE]
+            payload = {"inputs": chunk}
+
+            logger.info(
+                "hubspot_batch_update_deals_chunk",
+                chunk_index=i // HUBSPOT_BATCH_SIZE + 1,
+                chunk_size=len(chunk),
+                total_items=len(deal_updates),
+            )
+
+            res = await self._request(
+                "POST",
+                "/crm/v3/objects/deals/batch/update",
+                json_data=payload,
+            )
+
+            chunk_results = res.get("results", [])
+            results.extend(chunk_results)
+
+        return results
 
     async def delete_deal(self, deal_id: str) -> dict[str, Any]:
         """Archive/delete a deal in HubSpot CRM."""

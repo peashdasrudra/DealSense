@@ -1,0 +1,6 @@
+{
+  "name": "dealsense-intelligence-extension",
+  "srcDir": "src",
+  "platformVersion": "2023.2",
+  "description": "DealSense HubSpot Native CRM UI Extension — Deal Record Intelligence Tab & Sidebar Card"
+}

@@ -186,13 +186,13 @@ export const TopBar: React.FC<TopBarProps> = ({
               {/* User Account Info */}
               <div className="profile-menu-header">
                 <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                  <div className="profile-large-avatar">AX</div>
+                  <div className="profile-large-avatar">HL</div>
                   <div>
                     <div style={{ fontWeight: 700, fontSize: "13px", color: "var(--hs-primary)" }}>
                       Alex Morgan
                     </div>
                     <div style={{ fontSize: "11px", color: "var(--hs-text-muted)" }}>
-                      alex@aixpertlabs.com
+                      alex@hubailab.com
                     </div>
                   </div>
                 </div>

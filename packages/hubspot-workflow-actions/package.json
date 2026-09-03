@@ -1,0 +1,30 @@
+{
+  "name": "@dealsense/hubspot-workflow-actions",
+  "version": "1.0.0",
+  "description": "Production-grade Node.js Custom Code Actions for HubSpot Workflows with serverless timeout guards and bi-directional CRM write-back",
+  "main": "src/deal_scoring_action.js",
+  "scripts": {
+    "test": "jest --verbose",
+    "test:coverage": "jest --coverage"
+  },
+  "keywords": [
+    "hubspot",
+    "workflow",
+    "custom-code-action",
+    "serverless",
+    "revops",
+    "dealsense"
+  ],
+  "author": "Peash Das Rudra <peash@peash.tech>",
+  "license": "MIT",
+  "dependencies": {
+    "@hubspot/api-client": "^11.2.0",
+    "axios": "^1.7.9"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

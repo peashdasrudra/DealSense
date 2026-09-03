@@ -9,7 +9,9 @@
 
 <br />
 
-[![CI/CD Pipeline](https://img.shields.io/badge/CI%2FCD-48%2F48%20Passing%20(100%25)-success?style=for-the-badge&logo=github-actions&logoColor=white)](https://github.com/peashdasrudra/DealSense/actions)
+[![CI/CD Pipeline](https://img.shields.io/badge/CI%2FCD-56%2F56%20Passing%20(100%25)-success?style=for-the-badge&logo=github-actions&logoColor=white)](https://github.com/peashdasrudra/DealSense/actions)
+[![Node.js Custom Code Actions](https://img.shields.io/badge/HubSpot-Node.js%20Workflow%20Actions-33475B?style=for-the-badge&logo=nodedotjs&logoColor=white)](packages/hubspot-workflow-actions)
+[![Webhook v3 HMAC](https://img.shields.io/badge/Security-v3%20HMAC--SHA256-00A38D?style=for-the-badge&logo=hubspot&logoColor=white)](apps/api/src/dealsense/security/webhook_signature.py)
 [![Python 3.14+](https://img.shields.io/badge/Python-3.14%2B-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115%2B-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
 [![Redis Streams](https://img.shields.io/badge/Streaming-Redis%20Streams-DC382D?style=for-the-badge&logo=redis&logoColor=white)](https://redis.io)
@@ -216,7 +218,7 @@ Every API endpoint, scoring algorithm, webhook pipeline, and security guardrail 
 ```
 ============================= test session starts =============================
 platform win32 -- Python 3.14.0, pytest-9.1.1, pluggy-1.6.0
-rootdir: C:\Users\USER\Desktop\AiXpertLabs\DealSense
+rootdir: C:\Users\USER\Desktop\HubAiLab\DealSense
 configfile: pyproject.toml
 testpaths: apps/api/src/tests, apps/worker/src/tests, packages/scoring/tests
 
@@ -293,9 +295,10 @@ DealSense/
 │   ├── web-dashboard/        # React 18 / TypeScript 5 RevOps Command Center
 │   └── hubspot-extension/    # Embedded HubSpot Canvas CRM Sidebar Card
 ├── packages/
-│   ├── scoring/              # 7-Vector deterministic mathematical scoring engine
-│   ├── contracts/            # TypeScript / Python shared schema contracts
-│   └── prompts/              # Strict evidence extraction & MEDDICC prompt guardrails
+│   ├── hubspot-workflow-actions/ # Node.js Workflow Custom Code Actions (128MB / 20s serverless optimized)
+│   ├── scoring/                  # 7-Vector deterministic mathematical scoring engine
+│   ├── contracts/                # TypeScript / Python shared schema contracts
+│   └── prompts/                  # Strict evidence extraction & MEDDICC prompt guardrails
 ├── infrastructure/
 │   └── docker/               # Docker compose, PostgreSQL 16 pgvector init scripts
 └── docs/                     # Architectural Decision Records (ADRs), specs & visual assets

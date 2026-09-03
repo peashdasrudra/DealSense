@@ -13,6 +13,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from dealsense.api.deps import get_db
 from dealsense.api.schemas.webhooks import WebhookIngestResponse
+from dealsense.domain.exceptions import WebhookValidationError
 from dealsense.services.webhook_service import process_incoming_webhooks
 
 logger = structlog.get_logger(__name__)
@@ -57,6 +58,8 @@ async def hubspot_webhook(
             timestamp_header=x_hubspot_request_timestamp,
             events_payload=events_payload,
             db=db,
+            http_method=request.method,
+            request_url=str(request.url),
         )
         return WebhookIngestResponse(
             status="received",
@@ -64,6 +67,9 @@ async def hubspot_webhook(
             events_queued=result["events_queued"],
             events_skipped_duplicate=result["events_skipped_duplicate"],
         )
+    except WebhookValidationError:
+        # Re-raise authentication / replay errors to return 401 Unauthorized
+        raise
     except Exception as exc:
         logger.warning("webhook_ingest_graceful_recovery", error=str(exc))
         return WebhookIngestResponse(

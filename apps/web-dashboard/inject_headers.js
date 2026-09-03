@@ -25,7 +25,7 @@ const files = [
   }
 ];
 
-const basePath = "c:/Users/USER/Desktop/AiXpertLabs/DealSense/apps/web-dashboard/src/pages";
+const basePath = path.resolve(__dirname, "src/pages");
 
 for (const file of files) {
   const filePath = path.join(basePath, file.name);

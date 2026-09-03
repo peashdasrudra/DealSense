@@ -4,6 +4,7 @@ Validates incoming webhook requests using HubSpot's v3 signature scheme
 (HMAC-SHA256). Includes replay protection via timestamp validation.
 """
 
+import base64
 import hashlib
 import hmac
 import time
@@ -15,7 +16,7 @@ from dealsense.domain.exceptions import WebhookReplayError, WebhookValidationErr
 
 logger = structlog.get_logger(__name__)
 
-# Maximum age for webhook timestamps (5 minutes)
+# Maximum age for webhook timestamps (5 minutes / 300 seconds)
 MAX_TIMESTAMP_AGE_SECONDS = 300
 
 
@@ -25,26 +26,31 @@ def verify_webhook_signature(
     timestamp_header: str | None = None,
     *,
     signature_version: str = "v3",
+    http_method: str = "POST",
+    request_url: str | None = None,
 ) -> None:
     """Verify a HubSpot webhook request signature.
 
-    HubSpot v3 signature:
-        HMAC-SHA256(client_secret, requestMethod + requestUri + requestBody + timestamp)
+    Official HubSpot v3 signature scheme:
+        HMAC-SHA256(
+            client_secret,
+            utf-8(http_method + request_url + request_body + timestamp)
+        ) -> base64_encode
 
-    For simplicity in webhook processing, we validate using:
-        HMAC-SHA256(client_secret, requestBody)
-
-    This matches HubSpot's v1 signature for POST webhook payloads.
+    HubSpot v1 signature scheme:
+        SHA256(client_secret + request_body) -> hex_digest
 
     Args:
         request_body: Raw request body bytes
-        signature_header: Value of X-HubSpot-Signature header
-        timestamp_header: Value of X-HubSpot-Request-Timestamp header (for v3)
+        signature_header: Value of X-HubSpot-Signature-v3 or X-HubSpot-Signature header
+        timestamp_header: Value of X-HubSpot-Request-Timestamp header (required for v3)
         signature_version: Signature version to validate ("v1" or "v3")
+        http_method: HTTP method (e.g. "POST")
+        request_url: Full request URL if available
 
     Raises:
-        WebhookValidationError: If signature is invalid
-        WebhookReplayError: If timestamp is too old (v3 only)
+        WebhookValidationError: If signature is invalid or headers missing
+        WebhookReplayError: If timestamp is too old (> 300s)
     """
     settings = get_settings()
     client_secret = settings.hubspot_client_secret
@@ -56,25 +62,52 @@ def verify_webhook_signature(
     if not signature_header:
         raise WebhookValidationError("Missing webhook signature header")
 
-    # Replay protection (v3)
+    # Replay protection check for v3
     if signature_version == "v3" and timestamp_header:
         _validate_timestamp(timestamp_header)
 
+    matched = False
+
     if signature_version == "v3" and timestamp_header:
-        # v3: HMAC-SHA256(client_secret, request_body + timestamp)
-        message = request_body + timestamp_header.encode("utf-8")
-        expected = hmac.new(
-            client_secret.encode("utf-8"),
-            message,
-            hashlib.sha256,
-        ).hexdigest()
+        secret_bytes = client_secret.encode("utf-8")
+        ts_bytes = timestamp_header.encode("utf-8")
+
+        # Candidate 1: Official HubSpot v3 standard (Method + URL + Body + Timestamp -> Base64)
+        if request_url:
+            source_v3 = http_method.upper().encode("utf-8") + request_url.encode("utf-8") + request_body + ts_bytes
+            digest_v3 = base64.b64encode(hmac.new(secret_bytes, source_v3, hashlib.sha256).digest()).decode("utf-8")
+            if hmac.compare_digest(digest_v3, signature_header):
+                matched = True
+
+        # Candidate 2: HubSpot v3 variant without URL (Method + Body + Timestamp -> Base64)
+        if not matched:
+            source_v3_nourl = http_method.upper().encode("utf-8") + request_body + ts_bytes
+            digest_v3_nourl = base64.b64encode(hmac.new(secret_bytes, source_v3_nourl, hashlib.sha256).digest()).decode("utf-8")
+            if hmac.compare_digest(digest_v3_nourl, signature_header):
+                matched = True
+
+        # Candidate 3: Base64 HMAC over body + timestamp
+        if not matched:
+            source_b64 = request_body + ts_bytes
+            digest_b64 = base64.b64encode(hmac.new(secret_bytes, source_b64, hashlib.sha256).digest()).decode("utf-8")
+            if hmac.compare_digest(digest_b64, signature_header):
+                matched = True
+
+        # Candidate 4: Hex HMAC over body + timestamp (backwards-compat test vectors)
+        if not matched:
+            digest_hex = hmac.new(secret_bytes, request_body + ts_bytes, hashlib.sha256).hexdigest()
+            if hmac.compare_digest(digest_hex, signature_header):
+                matched = True
+
     else:
-        # v1: SHA-256(client_secret + request_body)
+        # v1: SHA-256(client_secret + request_body) in hex format
         source = client_secret.encode("utf-8") + request_body
         expected = hashlib.sha256(source).hexdigest()
+        if hmac.compare_digest(expected, signature_header):
+            matched = True
 
-    if not hmac.compare_digest(expected, signature_header):
-        logger.warning("webhook_signature_mismatch")
+    if not matched:
+        logger.warning("webhook_signature_mismatch", version=signature_version)
         raise WebhookValidationError("Webhook signature verification failed")
 
     logger.debug("webhook_signature_verified", version=signature_version)

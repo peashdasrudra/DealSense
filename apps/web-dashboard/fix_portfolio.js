@@ -1,6 +1,7 @@
 const fs = require("fs");
+const path = require("path");
 
-const filePath = "c:/Users/USER/Desktop/AiXpertLabs/DealSense/apps/web-dashboard/src/pages/PortfolioOverview.tsx";
+const filePath = path.resolve(__dirname, "src/pages/PortfolioOverview.tsx");
 let content = fs.readFileSync(filePath, "utf-8");
 
 // Fix banner flex

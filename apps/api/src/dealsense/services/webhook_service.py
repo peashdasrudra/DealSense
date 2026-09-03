@@ -27,6 +27,9 @@ async def process_incoming_webhooks(
     timestamp_header: str | None,
     events_payload: list[dict[str, Any]],
     db: AsyncSession,
+    *,
+    http_method: str = "POST",
+    request_url: str | None = None,
 ) -> dict[str, int]:
     """Validate, deduplicate, persist, and queue a batch of HubSpot webhook events.
 
@@ -36,6 +39,8 @@ async def process_incoming_webhooks(
         timestamp_header: HubSpot timestamp header value (v3)
         events_payload: Parsed JSON array of webhook events
         db: AsyncSession
+        http_method: HTTP Method ("POST")
+        request_url: Full request URL for v3 signature verification
 
     Returns:
         Dict with metrics (received, queued, skipped)
@@ -48,6 +53,8 @@ async def process_incoming_webhooks(
             signature_header=signature_header,
             timestamp_header=timestamp_header,
             signature_version=version,
+            http_method=http_method,
+            request_url=request_url,
         )
 
     events_received = len(events_payload)
@@ -94,6 +101,21 @@ async def process_incoming_webhooks(
         if not tenant:
             # Hubspot test events use mock portal IDs (e.g. 0 or unregistered)
             logger.info("webhook_portal_test_event_accepted", portal_id=portal_id)
+            events_queued += 1
+            continue
+
+        # 3.1 Handle HubSpot App Marketplace Lifecycle & GDPR Erasure Events
+        if subscription_type == "app.uninstall":
+            logger.info("hubspot_app_uninstall_event_received", portal_id=portal_id, tenant_id=str(tenant.id))
+            from dealsense.services.oauth_service import disconnect_tenant
+            await disconnect_tenant(tenant.id, db, actor=f"hubspot:{portal_id}:uninstall")
+            events_queued += 1
+            continue
+
+        if subscription_type == "contact.privacy.deletion":
+            logger.info("hubspot_gdpr_contact_privacy_deletion_received", portal_id=portal_id, object_id=object_id)
+            from dealsense.infrastructure.redis_client import cache_delete
+            await cache_delete(f"contact:pii:{portal_id}:{object_id}")
             events_queued += 1
             continue
 
