@@ -25,6 +25,7 @@ import { CompetitiveIntelligence } from "./pages/CompetitiveIntelligence";
 import { CaseStudy } from "./pages/CaseStudy";
 import { LandingPage } from "./pages/LandingPage";
 import { AgencyFleet } from "./pages/AgencyFleet";
+import { CheckoutPage } from "./pages/CheckoutPage";
 import { NavTestPage } from "./pages/NavTestPage";
 import { ScrollToTop } from "./components/ScrollToTop";
 import { Footer } from "./components/Footer";
@@ -43,6 +44,8 @@ const PAGE_TITLES: Record<string, { title: string; breadcrumb: string }> = {
   "/agency": { title: "HubSpot Agency Fleet & Arbitrage", breadcrumb: "Agency Fleet" },
   "/partners": { title: "HubSpot Agency Fleet & Arbitrage", breadcrumb: "Partners" },
   "/agency-fleet": { title: "HubSpot Agency Fleet & Arbitrage", breadcrumb: "Agency Fleet" },
+  "/checkout": { title: "Secure Checkout & Software Handover", breadcrumb: "Checkout" },
+  "/payment": { title: "Secure Checkout & Software Handover", breadcrumb: "Payment" },
   "/pipeline": { title: "Home — Revenue Intelligence", breadcrumb: "Home" },
   "/overview": { title: "Home — Revenue Intelligence", breadcrumb: "Home" },
   "/forecast": { title: "Revenue Forecast & Simulation", breadcrumb: "Forecast" },
@@ -152,8 +155,9 @@ export const App: React.FC = () => {
     setSidebarOpen(false);
   };
 
+  const isCheckoutPage = location.pathname === "/checkout" || location.pathname === "/payment";
   const isAgencyPage = location.pathname === "/agency" || location.pathname === "/partners" || location.pathname === "/agency-fleet";
-  const isLandingPage = location.pathname === "/" || location.pathname === "/landing" || location.pathname === "/welcome" || isAgencyPage;
+  const isLandingPage = location.pathname === "/" || location.pathname === "/landing" || location.pathname === "/welcome" || isAgencyPage || isCheckoutPage;
 
   if (isLandingPage) {
     return (
@@ -181,7 +185,7 @@ export const App: React.FC = () => {
             />
           )}
         </AnimatePresence>
-        {isAgencyPage ? <AgencyFleet /> : <LandingPage />}
+        {isCheckoutPage ? <CheckoutPage /> : isAgencyPage ? <AgencyFleet /> : <LandingPage />}
       </div>
     );
   }
@@ -280,6 +284,8 @@ export const App: React.FC = () => {
                 <Route path="/portfolio" element={<CaseStudy />} />
                 <Route path="/audit" element={<AuditLog />} />
                 <Route path="/settings" element={<Settings />} />
+                <Route path="/checkout" element={<CheckoutPage />} />
+                <Route path="/payment" element={<CheckoutPage />} />
                 <Route path="/nav-test" element={<NavTestPage />} />
               </Routes>
             </motion.div>

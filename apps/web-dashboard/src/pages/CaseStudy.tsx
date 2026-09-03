@@ -58,63 +58,60 @@ const ARCH_LAYERS = [
 const PACKAGES = [
   {
     id: "micro_audit",
-    name: "Complete Pipeline Risk Audit + 14-Day Pilot",
+    name: "Pilot Deal Risk Audit Dossier",
     price: "$99",
     crossed: "$5,000",
     timeline: "24–48h",
-    tagline: "What consultants charge $5,000 for",
+    tagline: "What enterprise consultancies charge $5,000 for",
     guarantee: "If we don't find $25K+ in at-risk pipeline → instant 100% refund",
     features: [
-      "1-Click HubSpot OAuth ingestion (zero dev setup)",
-      "Instant 0–100 risk score on every active deal",
-      "Revenue Leak Audit Report (PDF + live dashboard)",
-      "14-day full access to Action Queue & CRM Hygiene",
-      "30-min executive strategy call with senior architect",
-      "BONUS: Property Schema Health Diagnostic ($1,500 value)",
-      "BONUS: 3 Custom RevOps Playbooks configured ($1,200 value)",
+      "50 Active Deals Scored (full 7-vector deterministic breakdown)",
+      "CFO Ghosting Detection (identifies unengaged economic buyers)",
+      "Executive PDF Dossier (board-ready deal triage briefing)",
+      "10-Min Loom Walkthrough (senior architect strategic review)",
+      "48-Hour SLA Turnaround (guaranteed fast audit delivery)",
+      "Find $25K Or It's Free (100% no-risk money-back guarantee)",
     ],
-    cta: "Start $99 Audit →",
+    cta: "Start $99 Risk Audit",
     highlight: false,
   },
   {
     id: "agency_single",
-    name: "Single Portal Full AI Deployment",
+    name: "HubSpot Agency Fleet",
     price: "$1,500",
-    crossed: "$3,500",
-    timeline: "5 days",
-    tagline: "Charge your client $2,500/mo → $30K/yr (61× ROI)",
-    guarantee: "30-day performance guarantee + complete code handover",
+    crossed: "$8,500",
+    timeline: "24h SLA",
+    tagline: "Bill 10 clients $2,500/mo = $300,000/yr ARR (200x ROI)",
+    guarantee: "100% White-Label · 0 Monthly Platform Tax Forever",
     features: [
-      "Everything in the $99 Audit tier",
-      "Native HubSpot CRM sidebar card (Canvas SDK)",
-      "Monte Carlo revenue forecaster",
-      "Mutual Action Plan generator with buyer links",
-      "Competitive Battlecard & Objection Killer engine",
-      "Slack / Teams real-time alert digest",
-      "30-day white-glove optimization support",
+      "Manage up to 15 Client Portals (master switcher cockpit)",
+      "100% Agency White-Label (revops.youragency.com + custom logo)",
+      "Embedded HubSpot Canvas Card (lives native inside client CRM)",
+      "Sub-200ms Webhook Stream (Redis Streams real-time event engine)",
+      "1-Click Executive QBR Dossier (automated board-ready PDF briefing)",
+      "1-Click Batch CRM Hygiene (auto-remediation writebacks to HubSpot)",
     ],
-    cta: "Deploy Full Stack ($1,500) →",
-    highlight: true,
+    cta: "Deploy Partner Fleet ($1,500)",
+    highlight: false,
   },
   {
     id: "agency_fleet",
-    name: "White-Label Agency Fleet",
+    name: "Elite Master Fleet & Monorepo",
     price: "$3,500",
-    crossed: "$9,000",
-    timeline: "10 days",
-    tagline: "10 clients × $2K/mo = $240K/yr recurring (161× ROI)",
-    guarantee: "Full source code ownership + 60-day priority engineering SLA",
+    crossed: "$24,000",
+    timeline: "Instant Handover",
+    tagline: "Build a $500K+ ARR RevOps Practice on 95% Margin",
+    guarantee: "100% Full Monorepo Source Ownership + 1-Hr Architect SLA",
     features: [
-      "Everything in Single Portal tier",
-      "Deploy to unlimited client HubSpot portals",
-      "100% agency white-labeling (your logo, domain, brand)",
-      "Custom property schema mapping per client",
-      "PostgreSQL pgvector RAG with evidence citations",
-      "AES-256 token encryption + automated key rotation",
-      "Complete source code handover + architecture docs",
+      "UNLIMITED Multi-Tenant Portals (zero client or volume caps)",
+      "100% Monorepo Source Code (FastAPI, React 18, Postgres 16, Redis)",
+      "Private Cloud VPC Deployment (AWS, GCP, DigitalOcean, or On-Prem)",
+      "Row-Level Security (RLS) partition engine (GDPR & UK DPA compliant)",
+      "Custom Canvas Extension SDK (build bespoke HubSpot CRM widgets)",
+      "1-on-1 Architect Slack SLA (direct 1-hour senior lead response)",
     ],
-    cta: "Lock In Agency Fleet ($3,500) →",
-    highlight: false,
+    cta: "Claim Elite Master Fleet ($3,500)",
+    highlight: true,
   },
 ];
 
@@ -145,9 +142,12 @@ export const CaseStudy: React.FC = () => {
   const roi = Math.round(annualRevenue / deploymentCost);
 
   const handleOpenOrder = (pkgId: string) => {
-    setSelectedPkg(pkgId);
-    setOrderForm((prev) => ({ ...prev, tier: pkgId }));
-    setOrderModalOpen(true);
+    const tierMap: Record<string, string> = {
+      micro_audit: "audit-99",
+      agency_single: "deploy-1500",
+      agency_fleet: "agency-3500",
+    };
+    navigate(`/checkout?tier=${tierMap[pkgId] || "audit-99"}`);
   };
 
   const handleSubmitOrder = (e: React.FormEvent) => {

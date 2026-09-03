@@ -13,62 +13,28 @@ interface LogoProps {
   theme?: "light" | "dark";
 }
 
-export const DealSenseIcon: React.FC<{ size?: number; className?: string }> = ({
+export const DealSenseIcon: React.FC<{ size?: number; className?: string; style?: React.CSSProperties }> = ({
   size = 32,
   className = "",
+  style = {},
 }) => {
   return (
-    <svg
+    <img
+      src="/logo_icon.png"
+      alt="DealSense"
       width={size}
       height={size}
-      viewBox="0 0 44 44"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
       className={className}
-      style={{ flexShrink: 0 }}
-    >
-      {/* HubSpot Iconic Sprocket Geometry */}
-      {/* Top Vertical Spoke */}
-      <path
-        d="M22 10V22"
-        stroke="#ff5c35"
-        strokeWidth="3.2"
-        strokeLinecap="round"
-      />
-      {/* Bottom-Right Spoke (120 deg) */}
-      <path
-        d="M22 22L32.5 28.5"
-        stroke="#ff5c35"
-        strokeWidth="3.2"
-        strokeLinecap="round"
-      />
-      {/* Bottom-Left Spoke (240 deg) */}
-      <path
-        d="M22 22L11.5 28.5"
-        stroke="#ff5c35"
-        strokeWidth="3.2"
-        strokeLinecap="round"
-      />
-
-      {/* Central Sprocket Ring */}
-      <circle
-        cx="22"
-        cy="22"
-        r="6.5"
-        fill="#ffffff"
-        stroke="#ff5c35"
-        strokeWidth="3.2"
-      />
-
-      {/* Top Orbit Node */}
-      <circle cx="22" cy="7.5" r="4.2" fill="#ff5c35" />
-
-      {/* Bottom-Right Orbit Node */}
-      <circle cx="34.5" cy="29.5" r="4.2" fill="#ff5c35" />
-
-      {/* Bottom-Left Orbit Node */}
-      <circle cx="9.5" cy="29.5" r="4.2" fill="#ff5c35" />
-    </svg>
+      style={{
+        width: size,
+        height: size,
+        borderRadius: Math.max(6, Math.round(size * 0.22)),
+        objectFit: "contain",
+        flexShrink: 0,
+        filter: "drop-shadow(0 2px 6px rgba(255, 92, 53, 0.22))",
+        ...style,
+      }}
+    />
   );
 };
 

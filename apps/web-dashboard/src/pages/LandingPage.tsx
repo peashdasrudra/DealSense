@@ -14,7 +14,7 @@ export const LandingPage: React.FC = () => {
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [orderModalOpen, setOrderModalOpen] = useState(false);
-  const [selectedTier, setSelectedTier] = useState<"audit-99" | "deploy-1500" | "agency-3500">("audit-99");
+  const [selectedTier] = useState<"audit-99" | "deploy-1500" | "agency-3500">("audit-99");
   const [orderSuccess, setOrderSuccess] = useState(false);
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
 
@@ -68,9 +68,8 @@ export const LandingPage: React.FC = () => {
     }, 3800);
   };
 
-  const openOrder = (tier: "audit-99" | "deploy-1500" | "agency-3500") => {
-    setSelectedTier(tier);
-    setOrderModalOpen(true);
+  const openOrder = (tier: "audit-99" | "deploy-1500" | "agency-3500" | "custom-app") => {
+    navigate(`/checkout?tier=${tier}`);
   };
 
   const HUBS = [
@@ -1249,11 +1248,18 @@ export const LandingPage: React.FC = () => {
         </div>
       </section>
 
-      {/* ── 9. Authoritative 3-Tier Pricing Section ───────────────────── */}
-      <section id="pricing-matrix" style={{ padding: "clamp(48px, 6vw, 76px) clamp(16px, 4vw, 24px) 48px", background: "#ffffff", borderTop: "1px solid #e2e8f0" }}>
+      <section
+        id="pricing-matrix"
+        style={{
+          scrollMarginTop: "76px",
+          padding: "clamp(24px, 3.5vw, 36px) clamp(16px, 4vw, 24px) 44px",
+          background: "#ffffff",
+          borderTop: "1px solid #e2e8f0",
+        }}
+      >
         <div style={{ maxWidth: 1180, margin: "0 auto" }}>
           {/* Header & Market Delta Dock */}
-          <div style={{ textAlign: "center", marginBottom: 28 }}>
+          <div style={{ textAlign: "center", marginBottom: 16 }}>
             {/* Top Urgency Capsule */}
             <div
               style={{
@@ -1451,7 +1457,7 @@ export const LandingPage: React.FC = () => {
               </div>
             </div>
 
-            {/* Tier 2: $1,500 Full Stack AI Deployment */}
+            {/* Tier 2: $1,500 HubSpot Agency Fleet */}
             <div
               style={{
                 background: "#ffffff",
@@ -1467,58 +1473,58 @@ export const LandingPage: React.FC = () => {
             >
               <div>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
-                  <span style={{ fontSize: "10.5px", fontWeight: 800, color: "#124548", letterSpacing: "0.06em", textTransform: "uppercase" }}>
-                    TIER 2 · SINGLE ENTERPRISE PORTAL
+                  <span style={{ fontSize: "10.5px", fontWeight: 800, color: "#ff5c35", letterSpacing: "0.06em", textTransform: "uppercase" }}>
+                    TIER 2 · SCALING HUBSPOT AGENCY
                   </span>
-                  <span style={{ fontSize: "10.5px", fontWeight: 800, color: "#16a34a", background: "#f0fdf4", border: "1px solid #bbf7d0", padding: "2px 8px", borderRadius: "9999px" }}>
-                    FLAT FEE
+                  <span style={{ fontSize: "10.5px", fontWeight: 800, color: "#ff5c35", background: "rgba(255,92,53,0.12)", border: "1px solid rgba(255,92,53,0.3)", padding: "2px 8px", borderRadius: "9999px" }}>
+                    82% DISCOUNT
                   </span>
                 </div>
                 <h3 style={{ fontSize: "20px", fontWeight: 900, color: "#092124", margin: "0 0 4px", letterSpacing: "-0.02em" }}>
-                  Full Stack AI Deployment
+                  HubSpot Agency Fleet
                 </h3>
                 <p style={{ fontSize: "12.5px", color: "#64748b", margin: "0 0 14px", lineHeight: 1.4 }}>
-                  FastAPI + PostgreSQL + Redis deployment with sub-200ms bi-directional webhooks and 15 modules.
+                  For scaling HubSpot partners managing up to 15 client portals under their own brand.
                 </p>
                 
-                <div style={{ background: "#f8fafc", padding: "12px 16px", borderRadius: "12px", border: "1px solid #e2e8f0", marginBottom: 16 }}>
+                <div style={{ background: "rgba(255, 92, 53, 0.05)", padding: "12px 16px", borderRadius: "12px", border: "1px solid rgba(255, 92, 53, 0.2)", marginBottom: 16 }}>
                   <div style={{ fontSize: "12px", color: "#94a3b8", textDecoration: "line-through", fontWeight: 700 }}>
-                    Standard: $3,500
+                    Standard: $8,500
                   </div>
                   <div style={{ display: "flex", alignItems: "baseline", gap: 5, marginTop: 1 }}>
                     <span style={{ fontSize: "34px", fontWeight: 900, color: "#092124", letterSpacing: "-0.03em", lineHeight: 1, fontFamily: "'Outfit', sans-serif" }}>
                       $1,500
                     </span>
                     <span style={{ fontSize: "12px", fontWeight: 600, color: "#64748b" }}>
-                      / one-time setup
+                      / one-time flat fee
                     </span>
                   </div>
-                  <div style={{ fontSize: "11px", fontWeight: 700, color: "#124548", marginTop: 3 }}>
-                    ⚡ 100% Code & Database Ownership
+                  <div style={{ fontSize: "11px", fontWeight: 700, color: "#ff5c35", marginTop: 3 }}>
+                    🔥 100% White-Label · 0 Monthly Platform Tax
                   </div>
                 </div>
 
                 <div style={{ fontSize: "11px", fontWeight: 800, color: "#092124", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 10 }}>
-                  Deployment Deliverables:
+                  Complete Fleet Arsenal:
                 </div>
                 
-                <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 7.5, fontSize: "12px", color: "#334155" }}>
+                <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 7.5, fontSize: "12px", color: "#092124" }}>
                   {[
-                    { bold: "FastAPI + PostgreSQL Stack", text: "full backend service handover" },
-                    { bold: "Sub-200ms Webhook Engine", text: "real-time Redis Streams pipeline" },
-                    { bold: "All 15 Intelligence Modules", text: "deal triage, hygiene, & QBR tools" },
-                    { bold: "Monte Carlo Engine", text: "10,000-run simulation forecast" },
-                    { bold: "30 Days Lead SLA Support", text: "dedicated engineering handoff" },
-                    { bold: "Zero Monthly SaaS Tax", text: "100% permanent source code ownership" },
+                    { bold: "Manage up to 15 Client Portals", text: "master switcher cockpit" },
+                    { bold: "100% Agency White-Label", text: "revops.youragency.com + custom logo" },
+                    { bold: "Embedded HubSpot Canvas Card", text: "lives inside client CRM records" },
+                    { bold: "Sub-200ms Webhook Stream", text: "Redis Streams real-time event engine" },
+                    { bold: "1-Click Executive QBR Dossier", text: "automated board-ready PDF briefing" },
+                    { bold: "1-Click Batch CRM Hygiene", text: "auto-remediation writebacks to HubSpot" },
                   ].map((item, idx) => (
                     <li key={idx} style={{ display: "flex", alignItems: "flex-start", gap: 8, lineHeight: 1.3 }}>
-                      <div style={{ width: 15, height: 15, borderRadius: "50%", background: "rgba(18, 69, 72, 0.12)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, marginTop: 1 }}>
-                        <svg width={9} height={9} viewBox="0 0 24 24" fill="none" stroke="#124548" strokeWidth={3} strokeLinecap="round" strokeLinejoin="round">
+                      <div style={{ width: 15, height: 15, borderRadius: "50%", background: "rgba(255, 92, 53, 0.15)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, marginTop: 1 }}>
+                        <svg width={9} height={9} viewBox="0 0 24 24" fill="none" stroke="#ff5c35" strokeWidth={3} strokeLinecap="round" strokeLinejoin="round">
                           <polyline points="20 6 9 17 4 12" />
                         </svg>
                       </div>
                       <div>
-                        <strong style={{ color: "#092124" }}>{item.bold}</strong> <span style={{ color: "#64748b" }}>({item.text})</span>
+                        <strong style={{ color: "#092124" }}>{item.bold}</strong> <span style={{ color: "#475569" }}>({item.text})</span>
                       </div>
                     </li>
                   ))}
@@ -1526,8 +1532,8 @@ export const LandingPage: React.FC = () => {
               </div>
               
               <div style={{ marginTop: 16 }}>
-                <div style={{ background: "rgba(18, 69, 72, 0.08)", border: "1px solid rgba(18, 69, 72, 0.2)", borderRadius: "8px", padding: "6px 10px", fontSize: "11px", color: "#124548", fontWeight: 700, textAlign: "center", marginBottom: 10 }}>
-                  ⚡ Deploy in 5 Days · Complete Stack Handover
+                <div style={{ background: "rgba(255, 92, 53, 0.08)", border: "1px solid rgba(255, 92, 53, 0.2)", borderRadius: "8px", padding: "6px 10px", fontSize: "11px", color: "#e04a25", fontWeight: 800, textAlign: "center", marginBottom: 10 }}>
+                  🔥 Bill 10 clients $2,500/mo = $300,000/yr ARR (200x ROI)
                 </div>
                 <button
                   onClick={() => openOrder("deploy-1500")}
@@ -1551,7 +1557,7 @@ export const LandingPage: React.FC = () => {
                     transition: "all 0.2s ease",
                   }}
                 >
-                  <span>Deploy Full Stack ($1,500)</span>
+                  <span>Deploy Partner Fleet ($1,500)</span>
                   <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
                     <path d="M5 12h14M12 5l7 7-7 7" />
                   </svg>
@@ -1559,7 +1565,7 @@ export const LandingPage: React.FC = () => {
               </div>
             </div>
 
-            {/* Tier 3: $3,500 White-Label Partner Fleet */}
+            {/* Tier 3: $3,500 Elite Master Fleet (Hero High-Ticket) */}
             <div
               style={{
                 background: "linear-gradient(180deg, #092124 0%, #0d2c30 100%)",
@@ -1577,22 +1583,22 @@ export const LandingPage: React.FC = () => {
               <div>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
                   <span style={{ fontSize: "10.5px", fontWeight: 800, color: "#34d399", letterSpacing: "0.06em", textTransform: "uppercase" }}>
-                    TIER 3 · WHITE-LABEL AGENCY FLEET
+                    TIER 3 · MASTER FLEET & MONOREPO
                   </span>
                   <span style={{ fontSize: "10.5px", fontWeight: 800, color: "#34d399", background: "rgba(52, 211, 153, 0.15)", border: "1px solid rgba(52, 211, 153, 0.35)", padding: "2px 8px", borderRadius: "9999px" }}>
-                    UNLIMITED
+                    85% DISCOUNT
                   </span>
                 </div>
                 <h3 style={{ fontSize: "20px", fontWeight: 900, color: "#ffffff", margin: "0 0 4px", letterSpacing: "-0.02em" }}>
-                  White-Label Partner Fleet
+                  Elite Master Fleet
                 </h3>
                 <p style={{ fontSize: "12.5px", color: "#94a3b8", margin: "0 0 14px", lineHeight: 1.4 }}>
-                  Unlimited client portals under your agency brand. Charge clients $2.5K/mo on 95% margin.
+                  For Elite HubSpot partners & consultancies demanding 100% code ownership & unlimited scale.
                 </p>
                 
                 <div style={{ background: "rgba(255, 255, 255, 0.05)", padding: "12px 16px", borderRadius: "12px", border: "1px solid rgba(255, 255, 255, 0.12)", marginBottom: 16 }}>
                   <div style={{ fontSize: "12px", color: "#64748b", textDecoration: "line-through", fontWeight: 700 }}>
-                    Standard: $18,000
+                    Standard: $24,000
                   </div>
                   <div style={{ display: "flex", alignItems: "baseline", gap: 5, marginTop: 1 }}>
                     <span style={{ fontSize: "34px", fontWeight: 900, color: "#ffffff", letterSpacing: "-0.03em", lineHeight: 1, fontFamily: "'Outfit', sans-serif" }}>
@@ -1614,11 +1620,11 @@ export const LandingPage: React.FC = () => {
                 <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 7.5, fontSize: "12px", color: "#f1f5f9" }}>
                   {[
                     { bold: "UNLIMITED Multi-Tenant Portals", text: "zero client or volume caps" },
-                    { bold: "100% Agency White-Label", text: "revops.youragency.com + custom logo" },
-                    { bold: "Embedded HubSpot Canvas Card", text: "lives inside client CRM records" },
-                    { bold: "1-Click Executive QBR Exporter", text: "board-ready client briefings" },
-                    { bold: "Private Cloud VPC Deployment", text: "AWS, GCP, DigitalOcean, On-Prem" },
-                    { bold: "1-on-1 Senior Architect SLA", text: "direct 1-hour Slack channel access" },
+                    { bold: "100% Monorepo Source Code", text: "FastAPI, React 18, Postgres 16, Redis" },
+                    { bold: "Private Cloud VPC Deployment", text: "AWS, GCP, DigitalOcean, or On-Prem" },
+                    { bold: "Row-Level Security (RLS)", text: "strict tenant isolation partition engine" },
+                    { bold: "Custom Canvas Extension SDK", text: "build bespoke HubSpot CRM widgets" },
+                    { bold: "1-on-1 Architect Slack SLA", text: "direct 1-hour senior lead response" },
                   ].map((item, idx) => (
                     <li key={idx} style={{ display: "flex", alignItems: "flex-start", gap: 8, lineHeight: 1.3 }}>
                       <div style={{ width: 15, height: 15, borderRadius: "50%", background: "rgba(52, 211, 153, 0.2)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, marginTop: 1 }}>
@@ -1639,7 +1645,7 @@ export const LandingPage: React.FC = () => {
                   💎 Unlimited Scale: Build a $500K+ ARR RevOps Practice
                 </div>
                 <button
-                  onClick={() => navigate("/agency")}
+                  onClick={() => openOrder("agency-3500")}
                   style={{
                     width: "100%",
                     padding: "12px 18px",
@@ -1660,7 +1666,7 @@ export const LandingPage: React.FC = () => {
                     transition: "all 0.2s ease",
                   }}
                 >
-                  <span>Explore Agency Fleet ($3,500)</span>
+                  <span>Claim Elite Master Fleet ($3,500)</span>
                   <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke="#092124" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
                     <path d="M5 12h14M12 5l7 7-7 7" />
                   </svg>
