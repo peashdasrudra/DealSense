@@ -147,39 +147,39 @@ interface NavSection {
 
 const NAV_SECTIONS: NavSection[] = [
   {
-    title: "Pipeline & Deals",
+    title: "Core MVP (Free Marketplace)",
     defaultOpen: true,
     items: [
       { id: "overview", label: "Pipeline Overview", iconKey: "overview", path: "/pipeline" },
-      { id: "deals", label: "Deal Inspector", iconKey: "deals", path: "/deals" },
+      { id: "deals", label: "Deal Inspector", iconKey: "deals", path: "/deals", badge: "Live" },
       { id: "actions", label: "Action Queue", iconKey: "actions", path: "/actions" },
-      { id: "agency", label: "Agency Fleet", iconKey: "clients", path: "/agency" },
+      { id: "agency", label: "Agency Fleet Partner", iconKey: "clients", path: "/agency", badge: "Retainer" },
     ],
   },
   {
-    title: "Intelligence & Labs",
-    defaultOpen: true,
-    items: [
-      { id: "forecast", label: "Revenue Forecast", iconKey: "forecast", path: "/forecast", badge: "Beta" },
-      { id: "waterfall", label: "Pipeline Waterfall", iconKey: "waterfall", path: "/waterfall", badge: "Beta" },
-      { id: "warroom", label: "Deal War Room", iconKey: "warroom", path: "/war-room", badge: "Beta" },
-      { id: "stakeholders", label: "Stakeholder Matrix", iconKey: "stakeholders", path: "/stakeholders", badge: "Beta" },
-      { id: "heatmap", label: "Risk Heatmap", iconKey: "heatmap", path: "/heatmap", badge: "Beta" },
-      { id: "map", label: "Mutual Action Plans", iconKey: "map", path: "/map", badge: "Beta" },
-      { id: "battlecards", label: "Battlecards", iconKey: "battlecards", path: "/battlecards", badge: "Beta" },
-      { id: "playbooks", label: "RevOps Playbooks", iconKey: "playbooks", path: "/playbooks", badge: "Beta" },
-      { id: "hygiene", label: "CRM Hygiene", iconKey: "hygiene", path: "/hygiene", badge: "Beta" },
-      { id: "reps", label: "Rep Coaching", iconKey: "reps", path: "/reps", badge: "Beta" },
-      { id: "clients", label: "Client Health", iconKey: "clients", path: "/clients", badge: "Beta" },
-    ],
-  },
-  {
-    title: "Platform",
+    title: "Enterprise Pro (Paid / Beta)",
     defaultOpen: false,
     items: [
+      { id: "forecast", label: "Revenue Forecast", iconKey: "forecast", path: "/forecast", badge: "Pro" },
+      { id: "waterfall", label: "Pipeline Waterfall", iconKey: "waterfall", path: "/waterfall", badge: "Pro" },
+      { id: "warroom", label: "Deal War Room", iconKey: "warroom", path: "/war-room", badge: "Pro" },
+      { id: "stakeholders", label: "Stakeholder Matrix", iconKey: "stakeholders", path: "/stakeholders", badge: "Pro" },
+      { id: "heatmap", label: "Risk Heatmap", iconKey: "heatmap", path: "/heatmap", badge: "Pro" },
+      { id: "map", label: "Mutual Action Plans", iconKey: "map", path: "/map", badge: "Pro" },
+      { id: "battlecards", label: "Battlecards", iconKey: "battlecards", path: "/battlecards", badge: "Pro" },
+      { id: "playbooks", label: "RevOps Playbooks", iconKey: "playbooks", path: "/playbooks", badge: "Pro" },
+      { id: "hygiene", label: "CRM Hygiene", iconKey: "hygiene", path: "/hygiene", badge: "Pro" },
+      { id: "reps", label: "Rep Coaching", iconKey: "reps", path: "/reps", badge: "Pro" },
+      { id: "clients", label: "Client Health", iconKey: "clients", path: "/clients", badge: "Pro" },
+    ],
+  },
+  {
+    title: "Platform & Compliance",
+    defaultOpen: true,
+    items: [
       { id: "case-study", label: "Architecture Case Study", iconKey: "casestudy", path: "/case-study" },
-      { id: "audit", label: "Audit Log", iconKey: "audit", path: "/audit" },
-      { id: "settings", label: "Settings", iconKey: "settings", path: "/settings" },
+      { id: "audit", label: "Audit Log & Telemetry", iconKey: "audit", path: "/audit" },
+      { id: "settings", label: "HubSpot Integration Hub", iconKey: "settings", path: "/settings" },
     ],
   },
 ];

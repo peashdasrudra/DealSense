@@ -6,6 +6,8 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { DealSenseIcon } from "./DealSenseLogo";
+import { ConnectHubSpotModal } from "./ConnectHubSpotModal";
+import { AccountAuthModal } from "./AccountAuthModal";
 
 interface TopBarProps {
   breadcrumb?: string;
@@ -25,6 +27,8 @@ export const TopBar: React.FC<TopBarProps> = ({
   const [notificationOpen, setNotificationOpen] = useState(false);
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const [syncStatusMsg, setSyncStatusMsg] = useState<string | null>(null);
+  const [isConnectModalOpen, setIsConnectModalOpen] = useState(false);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
   const handleLogoClick = () => {
     if (onNavigateHome) {
@@ -34,19 +38,26 @@ export const TopBar: React.FC<TopBarProps> = ({
     }
   };
 
+  const [currentUser, setCurrentUser] = useState({
+    name: "Peash Das Rudra",
+    email: "peashdasrudra@gmail.com",
+    role: "Lead RevOps Architect & Creator",
+    initials: "PR",
+  });
+
   const [selectedPortal, setSelectedPortal] = useState({
-    id: "48921820",
-    name: "AiXpert Labs Workspace",
+    id: "48920193",
+    name: "HubAiLab Production Fleet",
     tier: "Diamond Partner",
     deals: 20,
     latency: "0.18s",
   });
 
-  const PORTALS = [
-    { id: "48921820", name: "AiXpert Labs Workspace", tier: "Diamond Partner", deals: 20, latency: "0.18s" },
-    { id: "19284711", name: "TechCorp Global", tier: "Enterprise Portal", deals: 12, latency: "0.22s" },
-    { id: "88210943", name: "FinanceGo Production", tier: "Client Workspace", deals: 8, latency: "0.19s" },
-  ];
+  const [portals, setPortals] = useState([
+    { id: "48920193", name: "HubAiLab Production Fleet", tier: "Diamond Partner", deals: 20, latency: "0.18s" },
+    { id: "29481023", name: "HubXpert Client Portal (Sandbox)", tier: "Agency Client", deals: 16, latency: "0.19s" },
+    { id: "19284711", name: "TechCorp Global Enterprise", tier: "Enterprise Portal", deals: 12, latency: "0.22s" },
+  ]);
 
   const profileRef = useRef<HTMLDivElement>(null);
   const notifRef = useRef<HTMLDivElement>(null);
@@ -175,9 +186,10 @@ export const TopBar: React.FC<TopBarProps> = ({
               setProfileMenuOpen(!profileMenuOpen);
               setNotificationOpen(false);
             }}
-            title={`HubSpot Portal #${selectedPortal.id}`}
+            title={`HubSpot Operator: ${currentUser.name} (Portal #${selectedPortal.id})`}
+            style={{ display: "flex", alignItems: "center", justifyContent: "center", background: "#ff5c35", color: "#ffffff", fontWeight: 700 }}
           >
-            <span className="avatar-initials">AX</span>
+            <span className="avatar-initials">{currentUser.initials}</span>
             <span className="avatar-live-indicator" />
           </div>
 
@@ -186,13 +198,18 @@ export const TopBar: React.FC<TopBarProps> = ({
               {/* User Account Info */}
               <div className="profile-menu-header">
                 <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                  <div className="profile-large-avatar">HL</div>
+                  <div className="profile-large-avatar" style={{ background: "#00a4bd", color: "#ffffff", fontWeight: 800 }}>
+                    {currentUser.initials}
+                  </div>
                   <div>
                     <div style={{ fontWeight: 700, fontSize: "13px", color: "var(--hs-primary)" }}>
-                      Alex Morgan
+                      {currentUser.name}
                     </div>
                     <div style={{ fontSize: "11px", color: "var(--hs-text-muted)" }}>
-                      alex@hubailab.com
+                      {currentUser.email}
+                    </div>
+                    <div style={{ fontSize: "10px", color: "#ff5c35", fontWeight: 700, marginTop: 2 }}>
+                      {currentUser.role}
                     </div>
                   </div>
                 </div>
@@ -232,7 +249,7 @@ export const TopBar: React.FC<TopBarProps> = ({
                 <div style={{ fontSize: "10px", fontWeight: 700, textTransform: "uppercase", color: "var(--hs-text-muted)", padding: "4px 6px" }}>
                   Switch Portal
                 </div>
-                {PORTALS.map((portal) => (
+                {portals.map((portal) => (
                   <div
                     key={portal.id}
                     onClick={() => {
@@ -255,6 +272,32 @@ export const TopBar: React.FC<TopBarProps> = ({
                     )}
                   </div>
                 ))}
+
+                {/* Connect New Portal Button */}
+                <button
+                  onClick={() => {
+                    setIsConnectModalOpen(true);
+                    setProfileMenuOpen(false);
+                  }}
+                  style={{
+                    width: "100%",
+                    marginTop: 6,
+                    padding: "7px 10px",
+                    background: "rgba(255, 122, 89, 0.08)",
+                    border: "1px dashed #ff7a59",
+                    borderRadius: "var(--radius-sm)",
+                    color: "#ff5c35",
+                    fontSize: "11.5px",
+                    fontWeight: 700,
+                    cursor: "pointer",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: 6,
+                  }}
+                >
+                  <span>+</span> Connect New HubSpot Portal
+                </button>
               </div>
 
               {/* Action Links */}
@@ -274,7 +317,16 @@ export const TopBar: React.FC<TopBarProps> = ({
                     setProfileMenuOpen(false);
                   }}
                 >
-                  ⚙️ Portal Settings & Calibration
+                  ⚙️ Integration & App Settings
+                </button>
+                <button
+                  className="profile-link-btn"
+                  onClick={() => {
+                    setIsAuthModalOpen(true);
+                    setProfileMenuOpen(false);
+                  }}
+                >
+                  👤 Switch Operator / Evaluator Mode
                 </button>
                 <button
                   className="profile-link-btn"
@@ -286,11 +338,39 @@ export const TopBar: React.FC<TopBarProps> = ({
                 >
                   ✨ Case Study & $49 Audit Pilot
                 </button>
+                <button
+                  className="profile-link-btn"
+                  onClick={() => {
+                    setIsConnectModalOpen(true);
+                    setProfileMenuOpen(false);
+                  }}
+                  style={{ color: "#e11d48", fontSize: "11px" }}
+                >
+                  🚪 Disconnect Portal (Revoke OAuth)
+                </button>
               </div>
             </div>
           )}
         </div>
       </div>
+
+      {/* Connect HubSpot OAuth Modal */}
+      <ConnectHubSpotModal
+        isOpen={isConnectModalOpen}
+        onClose={() => setIsConnectModalOpen(false)}
+        onConnected={(newPortal) => {
+          setPortals((prev) => [newPortal, ...prev.filter(p => p.id !== newPortal.id)]);
+          setSelectedPortal(newPortal);
+        }}
+      />
+
+      {/* Operator Session / Auth Modal */}
+      <AccountAuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+        currentUser={currentUser}
+        onUserSwitch={(newUser) => setCurrentUser(newUser)}
+      />
     </header>
   );
 };
