@@ -81,7 +81,7 @@ export const AgencyFleet: React.FC = () => {
           href="#pricing"
           onClick={(e) => {
             e.preventDefault();
-            scrollToSection("pricing", 76);
+            scrollToSection("pricing", 54);
           }}
           style={{
             display: "inline-flex",
@@ -162,7 +162,7 @@ export const AgencyFleet: React.FC = () => {
               href="#pricing"
               onClick={(e) => {
                 e.preventDefault();
-                scrollToSection("pricing", 76);
+                scrollToSection("pricing", 54);
               }}
               style={{
                 display: "inline-flex",
@@ -746,21 +746,21 @@ export const AgencyFleet: React.FC = () => {
       </section>
 
       {/* ── 6. Complete White-Label Arsenal ─────────────────────────────── */}
-      <section id="features" style={{ padding: "84px clamp(16px, 4vw, 24px)", background: "#ffffff" }}>
+      <section id="features" style={{ padding: "64px clamp(16px, 4vw, 24px) 16px", background: "#ffffff" }}>
         <div style={{ maxWidth: 1140, margin: "0 auto" }}>
-          <div style={{ textAlign: "center", maxWidth: 760, margin: "0 auto 56px" }}>
+          <div style={{ textAlign: "center", maxWidth: 760, margin: "0 auto 40px" }}>
             <span style={{ fontSize: "12px", fontWeight: 800, color: "#ff5c35", letterSpacing: "0.08em", textTransform: "uppercase" }}>
               ENTERPRISE PLATFORM ARSENAL
             </span>
-            <h2 style={{ fontSize: "clamp(28px, 4.5vw, 42px)", fontWeight: 900, color: "#092124", letterSpacing: "-0.03em", margin: "12px 0 16px" }}>
+            <h2 style={{ fontSize: "clamp(26px, 4vw, 38px)", fontWeight: 900, color: "#092124", letterSpacing: "-0.03em", margin: "10px 0 12px" }}>
               Everything You Need to Be the #1 HubSpot Agency in Your Market
             </h2>
-            <p style={{ fontSize: "16px", color: "#64748b", lineHeight: 1.6 }}>
+            <p style={{ fontSize: "15px", color: "#64748b", lineHeight: 1.5, margin: 0 }}>
               A complete production-grade technical moat. Zero developer hiring required.
             </p>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 24 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 20 }}>
             {[
               {
                 icon: "🏢",
@@ -797,12 +797,12 @@ export const AgencyFleet: React.FC = () => {
                 key={i}
                 className="enterprise-card"
                 style={{
-                  padding: "30px 26px",
+                  padding: "24px 22px",
                 }}
               >
-                <div style={{ fontSize: "32px", marginBottom: 14 }}>{feat.icon}</div>
-                <h3 style={{ fontSize: "18px", fontWeight: 800, color: "#092124", margin: "0 0 8px" }}>{feat.title}</h3>
-                <p style={{ fontSize: "14px", color: "#64748b", lineHeight: 1.6, margin: 0 }}>{feat.desc}</p>
+                <div style={{ fontSize: "28px", marginBottom: 10 }}>{feat.icon}</div>
+                <h3 style={{ fontSize: "17px", fontWeight: 800, color: "#092124", margin: "0 0 6px" }}>{feat.title}</h3>
+                <p style={{ fontSize: "13.5px", color: "#64748b", lineHeight: 1.55, margin: 0 }}>{feat.desc}</p>
               </div>
             ))}
           </div>
@@ -813,27 +813,27 @@ export const AgencyFleet: React.FC = () => {
       <section
         id="pricing"
         style={{
-          scrollMarginTop: "76px",
-          padding: "clamp(18px, 2.5vw, 28px) clamp(16px, 4vw, 24px) clamp(24px, 3.5vw, 36px)",
+          scrollMarginTop: "54px",
+          padding: "10px clamp(16px, 4vw, 24px) clamp(20px, 3vw, 32px)",
           background: "#f8fafc",
         }}
       >
         <div style={{ maxWidth: 1200, margin: "0 auto" }}>
-          <div style={{ textAlign: "center", maxWidth: 840, margin: "0 auto 14px" }}>
+          <div style={{ textAlign: "center", maxWidth: 840, margin: "0 auto 12px" }}>
             {/* Top Urgency Capsule */}
             <div
               style={{
                 display: "inline-flex",
                 alignItems: "center",
-                gap: 8,
+                gap: 7,
                 background: "linear-gradient(135deg, rgba(255, 92, 53, 0.07) 0%, rgba(255, 123, 87, 0.12) 100%)",
                 border: "1px solid rgba(255, 92, 53, 0.28)",
-                padding: "3px 12px",
+                padding: "2px 10px",
                 borderRadius: "9999px",
-                marginBottom: 6,
+                marginBottom: 4,
                 boxShadow: "0 2px 8px rgba(255, 92, 53, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.9)",
                 whiteSpace: "nowrap",
-                fontSize: "11px",
+                fontSize: "10.5px",
                 fontWeight: 700,
                 color: "#092124",
                 letterSpacing: "-0.01em",
@@ -843,10 +843,10 @@ export const AgencyFleet: React.FC = () => {
               <span>Limited Q1 Allocation <span style={{ color: "#cbd5e1" }}>·</span> <strong style={{ color: "#ff5c35", fontWeight: 800 }}>Only 3 Partner Licenses Left</strong></span>
             </div>
 
-            <h2 style={{ fontSize: "clamp(22px, 2.8vw, 30px)", fontWeight: 900, color: "#092124", letterSpacing: "-0.035em", margin: "0 0 4px", fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}>
+            <h2 style={{ fontSize: "clamp(20px, 2.4vw, 26px)", fontWeight: 900, color: "#092124", letterSpacing: "-0.035em", margin: "0 0 2px", fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif" }}>
               Specialized Agency & Partner Pricing
             </h2>
-            <p style={{ fontSize: "13.5px", color: "#64748b", lineHeight: 1.45, maxWidth: 680, margin: "0 auto 10px" }}>
+            <p style={{ fontSize: "12.5px", color: "#64748b", lineHeight: 1.4, maxWidth: 640, margin: "0 auto 8px" }}>
               Competitor platforms cost <strong>$30,000–$60,000/yr</strong> with 0% white-labeling. Deploy your agency's AI fleet with <strong>zero monthly SaaS tax</strong>.
             </p>
 
@@ -856,40 +856,40 @@ export const AgencyFleet: React.FC = () => {
               style={{
                 background: "linear-gradient(180deg, #092124 0%, #0c272a 100%)",
                 border: "1px solid rgba(255, 255, 255, 0.1)",
-                borderRadius: "12px",
-                padding: "6px 10px",
-                boxShadow: "0 6px 20px -6px rgba(9, 33, 36, 0.25), inset 0 1px 0 rgba(255,255,255,0.1)",
+                borderRadius: "10px",
+                padding: "4px 8px",
+                boxShadow: "0 4px 16px -4px rgba(9, 33, 36, 0.25), inset 0 1px 0 rgba(255,255,255,0.1)",
               }}
             >
               {/* Option 1 */}
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 6, padding: "6px 10px", background: "rgba(255,255,255,0.03)", borderRadius: "8px", border: "1px solid rgba(255,255,255,0.06)" }}>
-                <span style={{ color: "#94a3b8", fontSize: "11px", fontWeight: 600 }}>In-House Dev:</span>
-                <span style={{ color: "#f87171", textDecoration: "line-through", fontSize: "11.5px", fontWeight: 700, whiteSpace: "nowrap" }}>$58K+ & 8 Mos</span>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 6, padding: "4px 8px", background: "rgba(255,255,255,0.03)", borderRadius: "6px", border: "1px solid rgba(255,255,255,0.06)" }}>
+                <span style={{ color: "#94a3b8", fontSize: "10.5px", fontWeight: 600 }}>In-House Dev:</span>
+                <span style={{ color: "#f87171", textDecoration: "line-through", fontSize: "11px", fontWeight: 700, whiteSpace: "nowrap" }}>$58K+ & 8 Mos</span>
               </div>
 
               {/* Option 2 */}
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 6, padding: "6px 10px", background: "rgba(255,255,255,0.03)", borderRadius: "8px", border: "1px solid rgba(255,255,255,0.06)" }}>
-                <span style={{ color: "#94a3b8", fontSize: "11px", fontWeight: 600 }}>Gong / Clari:</span>
-                <span style={{ color: "#f87171", textDecoration: "line-through", fontSize: "11.5px", fontWeight: 700, whiteSpace: "nowrap" }}>$45K/yr (0% Brand)</span>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 6, padding: "4px 8px", background: "rgba(255,255,255,0.03)", borderRadius: "6px", border: "1px solid rgba(255,255,255,0.06)" }}>
+                <span style={{ color: "#94a3b8", fontSize: "10.5px", fontWeight: 600 }}>Gong / Clari:</span>
+                <span style={{ color: "#f87171", textDecoration: "line-through", fontSize: "11px", fontWeight: 700, whiteSpace: "nowrap" }}>$45K/yr (0% Brand)</span>
               </div>
 
               {/* Option 3 (Winner) */}
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 6, padding: "6px 10px", background: "rgba(16, 185, 129, 0.12)", borderRadius: "8px", border: "1px solid rgba(16, 185, 129, 0.35)", boxShadow: "0 0 14px rgba(16, 185, 129, 0.15)" }}>
-                <span style={{ color: "#34d399", fontSize: "11px", fontWeight: 800 }}>DealSense Fleet:</span>
-                <span style={{ color: "#ffffff", fontSize: "11.5px", fontWeight: 900, whiteSpace: "nowrap" }}>$99–$3,500 (100% Owned)</span>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 6, padding: "4px 8px", background: "rgba(16, 185, 129, 0.12)", borderRadius: "6px", border: "1px solid rgba(16, 185, 129, 0.35)", boxShadow: "0 0 14px rgba(16, 185, 129, 0.15)" }}>
+                <span style={{ color: "#34d399", fontSize: "10.5px", fontWeight: 800 }}>DealSense Fleet:</span>
+                <span style={{ color: "#ffffff", fontSize: "11px", fontWeight: 900, whiteSpace: "nowrap" }}>$99–$3,500 (100% Owned)</span>
               </div>
             </div>
           </div>
 
           {/* 3 Top-Class Agency Pricing Cards (Single-Screen Optimized) */}
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 20, alignItems: "stretch" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(290px, 1fr))", gap: 16, alignItems: "stretch" }}>
             {/* Tier 1: Pilot Deal Risk Audit ($99) */}
             <div
               style={{
                 background: "#ffffff",
                 border: "2px solid #ff5c35",
-                borderRadius: "18px",
-                padding: "24px 20px 20px",
+                borderRadius: "16px",
+                padding: "18px 18px 16px",
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "space-between",
@@ -902,14 +902,14 @@ export const AgencyFleet: React.FC = () => {
               <div
                 style={{
                   position: "absolute",
-                  top: -13,
+                  top: -12,
                   left: "50%",
                   transform: "translateX(-50%)",
                   background: "linear-gradient(135deg, #ff6b48 0%, #ff5c35 100%)",
                   color: "#ffffff",
-                  padding: "4px 16px",
+                  padding: "3px 14px",
                   borderRadius: "9999px",
-                  fontSize: "10.5px",
+                  fontSize: "10px",
                   fontWeight: 800,
                   letterSpacing: "0.05em",
                   textTransform: "uppercase",
@@ -925,43 +925,43 @@ export const AgencyFleet: React.FC = () => {
               </div>
 
               <div>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8, marginTop: 4 }}>
-                  <span style={{ fontSize: "10.5px", fontWeight: 800, color: "#ff5c35", letterSpacing: "0.06em", textTransform: "uppercase" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6, marginTop: 2 }}>
+                  <span style={{ fontSize: "10px", fontWeight: 800, color: "#ff5c35", letterSpacing: "0.06em", textTransform: "uppercase" }}>
                     TIER 1 · TEST-DRIVE AUDIT
                   </span>
-                  <span style={{ fontSize: "10.5px", fontWeight: 800, color: "#ff5c35", background: "rgba(255,92,53,0.12)", border: "1px solid rgba(255,92,53,0.3)", padding: "2px 8px", borderRadius: "9999px" }}>
+                  <span style={{ fontSize: "10px", fontWeight: 800, color: "#ff5c35", background: "rgba(255,92,53,0.12)", border: "1px solid rgba(255,92,53,0.3)", padding: "1px 7px", borderRadius: "9999px" }}>
                     98% SAVINGS
                   </span>
                 </div>
-                <h3 style={{ fontSize: "22px", fontWeight: 900, color: "#092124", margin: "0 0 6px", letterSpacing: "-0.02em", fontFamily: "'Outfit', sans-serif" }}>
+                <h3 style={{ fontSize: "20px", fontWeight: 900, color: "#092124", margin: "0 0 4px", letterSpacing: "-0.02em", fontFamily: "'Outfit', sans-serif" }}>
                   Pilot Deal Risk Audit
                 </h3>
-                <p style={{ fontSize: "12.5px", color: "#64748b", margin: "0 0 14px", lineHeight: 1.45 }}>
+                <p style={{ fontSize: "12px", color: "#64748b", margin: "0 0 10px", lineHeight: 1.4 }}>
                   Deterministic 0–100 health scoring across 50 active deals. Catches hidden slippage in 48 hours.
                 </p>
                 
-                <div style={{ background: "rgba(255, 92, 53, 0.05)", padding: "12px 16px", borderRadius: "12px", border: "1px solid rgba(255, 92, 53, 0.2)", marginBottom: 16 }}>
-                  <div style={{ fontSize: "12px", color: "#94a3b8", textDecoration: "line-through", fontWeight: 700 }}>
+                <div style={{ background: "rgba(255, 92, 53, 0.05)", padding: "10px 14px", borderRadius: "10px", border: "1px solid rgba(255, 92, 53, 0.2)", marginBottom: 12 }}>
+                  <div style={{ fontSize: "11px", color: "#94a3b8", textDecoration: "line-through", fontWeight: 700 }}>
                     Standard: $5,000
                   </div>
                   <div style={{ display: "flex", alignItems: "baseline", gap: 5, marginTop: 1 }}>
-                    <span style={{ fontSize: "38px", fontWeight: 900, color: "#092124", letterSpacing: "-0.03em", lineHeight: 1, fontFamily: "'Outfit', sans-serif" }}>
+                    <span style={{ fontSize: "32px", fontWeight: 900, color: "#092124", letterSpacing: "-0.03em", lineHeight: 1, fontFamily: "'Outfit', sans-serif" }}>
                       $99
                     </span>
-                    <span style={{ fontSize: "12px", fontWeight: 600, color: "#64748b" }}>
+                    <span style={{ fontSize: "11.5px", fontWeight: 600, color: "#64748b" }}>
                       / one-time flat fee
                     </span>
                   </div>
-                  <div style={{ fontSize: "11px", fontWeight: 700, color: "#ff5c35", marginTop: 3 }}>
+                  <div style={{ fontSize: "10.5px", fontWeight: 700, color: "#ff5c35", marginTop: 2 }}>
                     🔥 100% 'Find $25K Or Free' Guarantee
                   </div>
                 </div>
 
-                <div style={{ fontSize: "11px", fontWeight: 800, color: "#092124", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 10 }}>
+                <div style={{ fontSize: "10.5px", fontWeight: 800, color: "#092124", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 6 }}>
                   AUDIT DELIVERABLES:
                 </div>
                 
-                <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 8, fontSize: "12px", color: "#334155" }}>
+                <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 5.5, fontSize: "11.5px", color: "#334155" }}>
                   {[
                     { bold: "50 Active Deals Scored", text: "full 7–vector deterministic breakdown" },
                     { bold: "CFO Ghosting Detection", text: "identifies unengaged economic buyers" },
@@ -970,9 +970,9 @@ export const AgencyFleet: React.FC = () => {
                     { bold: "48–Hour SLA Turnaround", text: "guaranteed fast audit delivery" },
                     { bold: "Find $25K Or It's Free", text: "100% no-risk money-back guarantee" },
                   ].map((item, idx) => (
-                    <li key={idx} style={{ display: "flex", alignItems: "flex-start", gap: 8, lineHeight: 1.35 }}>
-                      <div style={{ width: 16, height: 16, borderRadius: "50%", background: "rgba(255, 92, 53, 0.15)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, marginTop: 1 }}>
-                        <svg width={10} height={10} viewBox="0 0 24 24" fill="none" stroke="#ff5c35" strokeWidth={3} strokeLinecap="round" strokeLinejoin="round">
+                    <li key={idx} style={{ display: "flex", alignItems: "flex-start", gap: 7, lineHeight: 1.3 }}>
+                      <div style={{ width: 14, height: 14, borderRadius: "50%", background: "rgba(255, 92, 53, 0.15)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, marginTop: 1 }}>
+                        <svg width={9} height={9} viewBox="0 0 24 24" fill="none" stroke="#ff5c35" strokeWidth={3} strokeLinecap="round" strokeLinejoin="round">
                           <polyline points="20 6 9 17 4 12" />
                         </svg>
                       </div>
@@ -984,20 +984,20 @@ export const AgencyFleet: React.FC = () => {
                 </ul>
               </div>
               
-              <div style={{ marginTop: 16 }}>
-                <div style={{ background: "rgba(255, 92, 53, 0.08)", border: "1px solid rgba(255, 92, 53, 0.2)", borderRadius: "8px", padding: "7px 10px", fontSize: "11px", color: "#e04a25", fontWeight: 800, textAlign: "center", marginBottom: 10 }}>
+              <div style={{ marginTop: 12 }}>
+                <div style={{ background: "rgba(255, 92, 53, 0.08)", border: "1px solid rgba(255, 92, 53, 0.2)", borderRadius: "7px", padding: "5px 8px", fontSize: "10.5px", color: "#e04a25", fontWeight: 800, textAlign: "center", marginBottom: 8 }}>
                   🎯 Find $25,000 In Slippage Or You Pay $0
                 </div>
                 <button
                   onClick={() => openOrder("audit-99")}
                   style={{
                     width: "100%",
-                    padding: "13px 18px",
+                    padding: "11px 16px",
                     background: "linear-gradient(135deg, #ff6b48 0%, #ff5c35 100%)",
                     color: "#ffffff",
                     border: "none",
-                    borderRadius: "10px",
-                    fontSize: "14px",
+                    borderRadius: "9px",
+                    fontSize: "13.5px",
                     fontWeight: 800,
                     fontFamily: "'Outfit', 'Plus Jakarta Sans', -apple-system, sans-serif",
                     letterSpacing: "-0.01em",
@@ -1006,12 +1006,12 @@ export const AgencyFleet: React.FC = () => {
                     display: "inline-flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    gap: "8px",
+                    gap: "7px",
                     transition: "all 0.2s ease",
                   }}
                 >
                   <span>Start $99 Risk Audit</span>
-                  <svg width={15} height={15} viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+                  <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
                     <path d="M5 12h14M12 5l7 7-7 7" />
                   </svg>
                 </button>
@@ -1023,14 +1023,14 @@ export const AgencyFleet: React.FC = () => {
               style={{
                 background: "linear-gradient(180deg, #ffffff 0%, #fff7f4 100%)",
                 border: "2px solid #ff5c35",
-                borderRadius: "18px",
-                padding: "22px 20px 20px",
+                borderRadius: "16px",
+                padding: "18px 18px 16px",
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "space-between",
                 position: "relative",
                 boxShadow: "0 16px 40px -8px rgba(255, 92, 53, 0.24), 0 4px 16px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255, 255, 255, 1)",
-                transform: "scale(1.02)",
+                transform: "scale(1.01)",
                 zIndex: 2,
               }}
             >
@@ -1038,14 +1038,14 @@ export const AgencyFleet: React.FC = () => {
               <div
                 style={{
                   position: "absolute",
-                  top: -13,
+                  top: -12,
                   left: "50%",
                   transform: "translateX(-50%)",
                   background: "linear-gradient(135deg, #ff6b48 0%, #ff5c35 100%)",
                   color: "#ffffff",
-                  padding: "4px 16px",
+                  padding: "3px 14px",
                   borderRadius: "9999px",
-                  fontSize: "10.5px",
+                  fontSize: "10px",
                   fontWeight: 800,
                   letterSpacing: "0.05em",
                   textTransform: "uppercase",
@@ -1061,43 +1061,43 @@ export const AgencyFleet: React.FC = () => {
               </div>
 
               <div>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
-                  <span style={{ fontSize: "10.5px", fontWeight: 800, color: "#ff5c35", letterSpacing: "0.06em", textTransform: "uppercase" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6, marginTop: 2 }}>
+                  <span style={{ fontSize: "10px", fontWeight: 800, color: "#ff5c35", letterSpacing: "0.06em", textTransform: "uppercase" }}>
                     TIER 2 · SCALING HUBSPOT AGENCY
                   </span>
-                  <span style={{ fontSize: "10.5px", fontWeight: 800, color: "#ff5c35", background: "rgba(255,92,53,0.12)", border: "1px solid rgba(255,92,53,0.3)", padding: "2px 8px", borderRadius: "9999px" }}>
+                  <span style={{ fontSize: "10px", fontWeight: 800, color: "#ff5c35", background: "rgba(255,92,53,0.12)", border: "1px solid rgba(255,92,53,0.3)", padding: "1px 7px", borderRadius: "9999px" }}>
                     82% DISCOUNT
                   </span>
                 </div>
-                <h3 style={{ fontSize: "21px", fontWeight: 900, color: "#092124", margin: "0 0 4px", letterSpacing: "-0.02em" }}>
+                <h3 style={{ fontSize: "20px", fontWeight: 900, color: "#092124", margin: "0 0 4px", letterSpacing: "-0.02em" }}>
                   HubSpot Agency Fleet
                 </h3>
-                <p style={{ fontSize: "12.5px", color: "#64748b", margin: "0 0 14px", lineHeight: 1.4 }}>
+                <p style={{ fontSize: "12px", color: "#64748b", margin: "0 0 10px", lineHeight: 1.4 }}>
                   For scaling HubSpot partners managing up to 15 client portals under their own brand.
                 </p>
                 
-                <div style={{ background: "rgba(255, 92, 53, 0.06)", padding: "12px 16px", borderRadius: "12px", border: "1px solid rgba(255, 92, 53, 0.25)", marginBottom: 16 }}>
-                  <div style={{ fontSize: "12px", color: "#94a3b8", textDecoration: "line-through", fontWeight: 700 }}>
+                <div style={{ background: "rgba(255, 92, 53, 0.06)", padding: "10px 14px", borderRadius: "10px", border: "1px solid rgba(255, 92, 53, 0.25)", marginBottom: 12 }}>
+                  <div style={{ fontSize: "11px", color: "#94a3b8", textDecoration: "line-through", fontWeight: 700 }}>
                     Standard: $8,500
                   </div>
                   <div style={{ display: "flex", alignItems: "baseline", gap: 5, marginTop: 1 }}>
-                    <span style={{ fontSize: "38px", fontWeight: 900, color: "#092124", letterSpacing: "-0.03em", lineHeight: 1, fontFamily: "'Outfit', sans-serif" }}>
+                    <span style={{ fontSize: "32px", fontWeight: 900, color: "#092124", letterSpacing: "-0.03em", lineHeight: 1, fontFamily: "'Outfit', sans-serif" }}>
                       $1,500
                     </span>
-                    <span style={{ fontSize: "12px", fontWeight: 600, color: "#64748b" }}>
+                    <span style={{ fontSize: "11.5px", fontWeight: 600, color: "#64748b" }}>
                       / one-time flat fee
                     </span>
                   </div>
-                  <div style={{ fontSize: "11px", fontWeight: 700, color: "#ff5c35", marginTop: 3 }}>
+                  <div style={{ fontSize: "10.5px", fontWeight: 700, color: "#ff5c35", marginTop: 2 }}>
                     🔥 100% White-Label · 0 Monthly Platform Tax
                   </div>
                 </div>
 
-                <div style={{ fontSize: "11px", fontWeight: 800, color: "#092124", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 10 }}>
+                <div style={{ fontSize: "10.5px", fontWeight: 800, color: "#092124", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 6 }}>
                   Complete Fleet Arsenal:
                 </div>
                 
-                <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 7.5, fontSize: "12px", color: "#092124" }}>
+                <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 5.5, fontSize: "11.5px", color: "#092124" }}>
                   {[
                     { bold: "Manage up to 15 Client Portals", text: "master switcher cockpit" },
                     { bold: "100% Agency White-Label", text: "revops.youragency.com + custom logo" },
@@ -1106,8 +1106,8 @@ export const AgencyFleet: React.FC = () => {
                     { bold: "1-Click Executive QBR Dossier", text: "automated board-ready PDF briefing" },
                     { bold: "1-Click Batch CRM Hygiene", text: "auto-remediation writebacks to HubSpot" },
                   ].map((item, idx) => (
-                    <li key={idx} style={{ display: "flex", alignItems: "flex-start", gap: 8, lineHeight: 1.3 }}>
-                      <div style={{ width: 15, height: 15, borderRadius: "50%", background: "rgba(255, 92, 53, 0.15)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, marginTop: 1 }}>
+                    <li key={idx} style={{ display: "flex", alignItems: "flex-start", gap: 7, lineHeight: 1.3 }}>
+                      <div style={{ width: 14, height: 14, borderRadius: "50%", background: "rgba(255, 92, 53, 0.15)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, marginTop: 1 }}>
                         <svg width={9} height={9} viewBox="0 0 24 24" fill="none" stroke="#ff5c35" strokeWidth={3} strokeLinecap="round" strokeLinejoin="round">
                           <polyline points="20 6 9 17 4 12" />
                         </svg>
@@ -1120,34 +1120,34 @@ export const AgencyFleet: React.FC = () => {
                 </ul>
               </div>
               
-              <div style={{ marginTop: 16 }}>
-                <div style={{ background: "rgba(255, 92, 53, 0.1)", border: "1px solid rgba(255, 92, 53, 0.25)", borderRadius: "8px", padding: "6px 10px", fontSize: "11px", color: "#e04a25", fontWeight: 800, textAlign: "center", marginBottom: 10 }}>
+              <div style={{ marginTop: 12 }}>
+                <div style={{ background: "rgba(255, 92, 53, 0.1)", border: "1px solid rgba(255, 92, 53, 0.25)", borderRadius: "7px", padding: "5px 8px", fontSize: "10.5px", color: "#e04a25", fontWeight: 800, textAlign: "center", marginBottom: 8 }}>
                   🔥 Bill 10 clients $2,500/mo = $300,000/yr ARR (200x ROI)
                 </div>
                 <button
                   onClick={() => openOrder("deploy-1500")}
                   style={{
                     width: "100%",
-                    padding: "12px 18px",
-                    background: "linear-gradient(180deg, #ff6b48 0%, #ff5c35 100%)",
+                    padding: "11px 16px",
+                    background: "linear-gradient(135deg, #ff6b48 0%, #ff5c35 100%)",
                     color: "#ffffff",
                     border: "none",
-                    borderRadius: "10px",
-                    fontSize: "14px",
+                    borderRadius: "9px",
+                    fontSize: "13.5px",
                     fontWeight: 800,
                     fontFamily: "'Outfit', 'Plus Jakarta Sans', -apple-system, sans-serif",
-                    letterSpacing: "-0.02em",
+                    letterSpacing: "-0.01em",
                     cursor: "pointer",
                     boxShadow: "0 6px 20px rgba(255, 92, 53, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.35)",
                     display: "inline-flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    gap: "8px",
+                    gap: "7px",
                     transition: "all 0.2s ease",
                   }}
                 >
                   <span>Deploy Agency Fleet ($1,500)</span>
-                  <svg width={15} height={15} viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+                  <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
                     <path d="M5 12h14M12 5l7 7-7 7" />
                   </svg>
                 </button>
@@ -1159,8 +1159,8 @@ export const AgencyFleet: React.FC = () => {
               style={{
                 background: "linear-gradient(180deg, #092124 0%, #0d2c30 100%)",
                 border: "1.5px solid rgba(52, 211, 153, 0.4)",
-                borderRadius: "18px",
-                padding: "22px 20px 20px",
+                borderRadius: "16px",
+                padding: "18px 18px 16px",
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "space-between",
@@ -1170,43 +1170,43 @@ export const AgencyFleet: React.FC = () => {
               }}
             >
               <div>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
-                  <span style={{ fontSize: "10.5px", fontWeight: 800, color: "#34d399", letterSpacing: "0.06em", textTransform: "uppercase" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
+                  <span style={{ fontSize: "10px", fontWeight: 800, color: "#34d399", letterSpacing: "0.06em", textTransform: "uppercase" }}>
                     TIER 3 · MASTER FLEET & CODEBASE
                   </span>
-                  <span style={{ fontSize: "10.5px", fontWeight: 800, color: "#34d399", background: "rgba(52, 211, 153, 0.15)", border: "1px solid rgba(52, 211, 153, 0.35)", padding: "2px 8px", borderRadius: "9999px" }}>
+                  <span style={{ fontSize: "10px", fontWeight: 800, color: "#34d399", background: "rgba(52, 211, 153, 0.15)", border: "1px solid rgba(52, 211, 153, 0.35)", padding: "1px 7px", borderRadius: "9999px" }}>
                     85% DISCOUNT
                   </span>
                 </div>
                 <h3 style={{ fontSize: "20px", fontWeight: 900, color: "#ffffff", margin: "0 0 4px", letterSpacing: "-0.02em" }}>
                   Elite Master Fleet
                 </h3>
-                <p style={{ fontSize: "12.5px", color: "#94a3b8", margin: "0 0 14px", lineHeight: 1.4 }}>
+                <p style={{ fontSize: "12px", color: "#94a3b8", margin: "0 0 10px", lineHeight: 1.4 }}>
                   For Elite HubSpot partners and RevOps consultancies with full code ownership.
                 </p>
                 
-                <div style={{ background: "rgba(255, 255, 255, 0.05)", padding: "12px 16px", borderRadius: "12px", border: "1px solid rgba(255, 255, 255, 0.12)", marginBottom: 16 }}>
-                  <div style={{ fontSize: "12px", color: "#64748b", textDecoration: "line-through", fontWeight: 700 }}>
+                <div style={{ background: "rgba(255, 255, 255, 0.05)", padding: "10px 14px", borderRadius: "10px", border: "1px solid rgba(255, 255, 255, 0.12)", marginBottom: 12 }}>
+                  <div style={{ fontSize: "11px", color: "#64748b", textDecoration: "line-through", fontWeight: 700 }}>
                     Standard: $24,000
                   </div>
                   <div style={{ display: "flex", alignItems: "baseline", gap: 5, marginTop: 1 }}>
-                    <span style={{ fontSize: "34px", fontWeight: 900, color: "#ffffff", letterSpacing: "-0.03em", lineHeight: 1, fontFamily: "'Outfit', sans-serif" }}>
+                    <span style={{ fontSize: "32px", fontWeight: 900, color: "#ffffff", letterSpacing: "-0.03em", lineHeight: 1, fontFamily: "'Outfit', sans-serif" }}>
                       $3,500
                     </span>
-                    <span style={{ fontSize: "12px", fontWeight: 600, color: "#94a3b8" }}>
+                    <span style={{ fontSize: "11.5px", fontWeight: 600, color: "#94a3b8" }}>
                       / one-time flat fee
                     </span>
                   </div>
-                  <div style={{ fontSize: "11px", fontWeight: 700, color: "#34d399", marginTop: 3 }}>
+                  <div style={{ fontSize: "10.5px", fontWeight: 700, color: "#34d399", marginTop: 2 }}>
                     💎 100% Full Monorepo Source Ownership
                   </div>
                 </div>
 
-                <div style={{ fontSize: "11px", fontWeight: 800, color: "#ffffff", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 10 }}>
+                <div style={{ fontSize: "10.5px", fontWeight: 800, color: "#ffffff", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 6 }}>
                   Enterprise $100K Deliverables:
                 </div>
                 
-                <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 7.5, fontSize: "12px", color: "#f1f5f9" }}>
+                <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 5.5, fontSize: "11.5px", color: "#f1f5f9" }}>
                   {[
                     { bold: "UNLIMITED Multi-Tenant Portals", text: "zero client or volume caps" },
                     { bold: "100% Monorepo Source Code", text: "FastAPI, React 18, Postgres 16, Redis" },
@@ -1215,8 +1215,8 @@ export const AgencyFleet: React.FC = () => {
                     { bold: "Custom Canvas Extension SDK", text: "build bespoke HubSpot CRM widgets" },
                     { bold: "1-on-1 Architect Slack SLA", text: "direct 1-hour senior lead response" },
                   ].map((item, idx) => (
-                    <li key={idx} style={{ display: "flex", alignItems: "flex-start", gap: 8, lineHeight: 1.3 }}>
-                      <div style={{ width: 15, height: 15, borderRadius: "50%", background: "rgba(52, 211, 153, 0.2)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, marginTop: 1 }}>
+                    <li key={idx} style={{ display: "flex", alignItems: "flex-start", gap: 7, lineHeight: 1.3 }}>
+                      <div style={{ width: 14, height: 14, borderRadius: "50%", background: "rgba(52, 211, 153, 0.2)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, marginTop: 1 }}>
                         <svg width={9} height={9} viewBox="0 0 24 24" fill="none" stroke="#34d399" strokeWidth={3} strokeLinecap="round" strokeLinejoin="round">
                           <polyline points="20 6 9 17 4 12" />
                         </svg>
@@ -1229,29 +1229,29 @@ export const AgencyFleet: React.FC = () => {
                 </ul>
               </div>
               
-              <div style={{ marginTop: 16 }}>
-                <div style={{ background: "rgba(52, 211, 153, 0.1)", border: "1px solid rgba(52, 211, 153, 0.25)", borderRadius: "8px", padding: "6px 10px", fontSize: "11px", color: "#34d399", fontWeight: 800, textAlign: "center", marginBottom: 10 }}>
+              <div style={{ marginTop: 12 }}>
+                <div style={{ background: "rgba(52, 211, 153, 0.1)", border: "1px solid rgba(52, 211, 153, 0.25)", borderRadius: "7px", padding: "5px 8px", fontSize: "10.5px", color: "#34d399", fontWeight: 800, textAlign: "center", marginBottom: 8 }}>
                   💎 Unlimited Scale: Build a $500K+ ARR RevOps Practice
                 </div>
                 <button
                   onClick={() => openOrder("agency-3500")}
                   style={{
                     width: "100%",
-                    padding: "12px 18px",
+                    padding: "11px 16px",
                     background: "#ffffff",
                     color: "#092124",
                     border: "none",
-                    borderRadius: "10px",
+                    borderRadius: "9px",
                     fontSize: "13.5px",
                     fontWeight: 800,
                     fontFamily: "'Outfit', 'Plus Jakarta Sans', -apple-system, sans-serif",
-                    letterSpacing: "-0.02em",
+                    letterSpacing: "-0.01em",
                     cursor: "pointer",
                     boxShadow: "0 6px 18px rgba(0, 0, 0, 0.3), inset 0 1px 0 #ffffff",
                     display: "inline-flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    gap: "8px",
+                    gap: "7px",
                     transition: "all 0.2s ease",
                   }}
                 >

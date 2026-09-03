@@ -1249,8 +1249,8 @@ export const LandingPage: React.FC = () => {
       <section
         id="pricing-matrix"
         style={{
-          scrollMarginTop: "76px",
-          padding: "clamp(24px, 3.5vw, 36px) clamp(16px, 4vw, 24px) 44px",
+          scrollMarginTop: "54px",
+          padding: "clamp(16px, 2.5vw, 28px) clamp(16px, 4vw, 24px) 36px",
           background: "#ffffff",
           borderTop: "1px solid #e2e8f0",
         }}

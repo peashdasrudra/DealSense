@@ -17,11 +17,11 @@ export const ScrollToTop: React.FC = () => {
       const cleanId = hash.replace("#", "");
       // Allow slight delay for page component mount / animation
       const timer = setTimeout(() => {
-        const scrolled = scrollToSection(cleanId, 74);
+        const scrolled = scrollToSection(cleanId, 54);
         if (!scrolled) {
           // Retry once if DOM elements are lazy-mounted
           setTimeout(() => {
-            scrollToSection(cleanId, 74);
+            scrollToSection(cleanId, 54);
           }, 120);
         }
       }, 50);

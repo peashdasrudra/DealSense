@@ -351,7 +351,7 @@ export const ALL_NAV_ITEMS: NavLinkItem[] = [
  * Smoothly scrolls to an element on the current page with top header offset compensation.
  * If target element is not found, smoothly scrolls to top.
  */
-export function scrollToSection(elementId: string, headerOffset = 74): boolean {
+export function scrollToSection(elementId: string, headerOffset = 54): boolean {
   const cleanId = elementId.replace(/^#/, "");
   const target = document.getElementById(cleanId);
 
