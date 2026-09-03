@@ -16,7 +16,7 @@
 
 <br />
 
-<img src="docs/assets/dealsense_showcase_banner.jpg" alt="DealSense Autonomous Revenue Intelligence Platform Showcase" width="100%" style="border-radius: 12px; box-shadow: 0 12px 36px rgba(0,0,0,0.3);" />
+<img src="docs/assets/Landing.png" alt="DealSense Autonomous Revenue Intelligence Platform Showcase" width="100%" style="border-radius: 12px; box-shadow: 0 12px 36px rgba(0,0,0,0.3);" />
 
 <br /><br />
 
