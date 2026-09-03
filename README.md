@@ -301,8 +301,7 @@ DealSense/
 └── docs/                     # Architectural Decision Records (ADRs), specs & visual assets
     └── assets/
         ├── logo_icon.png     # Official DealSense Emblem
-        ├── architecture.gif  # Dynamic streaming ingestion & telemetry GIF
-        └── Landing.png       # High-resolution platform showcase
+        └── architecture.gif  # Dynamic streaming ingestion & telemetry GIF
 ```
 
 ---
