@@ -73,6 +73,8 @@ export const DealDrawer: React.FC<DealDrawerProps> = ({
   if (!deal) return null;
 
   const band = (deal.band || "Moderate").charAt(0).toUpperCase() + (deal.band || "Moderate").slice(1).toLowerCase();
+  const isCritical = ["Critical", "critical"].includes(deal.band);
+  const isHigh = ["High", "high"].includes(deal.band);
   const contacts = deal.contacts || SAMPLE_CONTACTS;
 
   const handleSendCopilot = (e: React.FormEvent) => {
@@ -145,43 +147,105 @@ export const DealDrawer: React.FC<DealDrawerProps> = ({
             {/* Header */}
             <div
               style={{
-                padding: "16px 20px",
-                borderBottom: "1px solid var(--hs-border-dark)",
-                background: "var(--hs-surface)",
+                padding: "20px 24px 16px",
+                borderBottom: "1px solid #cbd6e2",
+                background: "#ffffff",
                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "flex-start",
-                gap: 10,
+                gap: 16,
               }}
             >
-              <div>
-                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4, flexWrap: "wrap" }}>
-                  <span className="badge badge-outline" style={{ fontSize: "11px", fontWeight: 700 }}>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                {/* Breadcrumb */}
+                <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: "11px", color: "#7c98b6", marginBottom: 6 }}>
+                  <span>Sales Hub</span>
+                  <span>/</span>
+                  <span style={{ color: "#00a4bd" }}>Deals</span>
+                  <span>/</span>
+                  <span style={{ color: "#33475b", fontWeight: 600 }}>#{deal.id.slice(-6)}</span>
+                </div>
+
+                {/* Badges Row */}
+                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8, flexWrap: "wrap" }}>
+                  <span
+                    style={{
+                      background: "#edf1f5",
+                      color: "#33475b",
+                      border: "1px solid #cbd6e2",
+                      borderRadius: "3px",
+                      fontSize: "11px",
+                      fontWeight: 700,
+                      padding: "2px 8px",
+                      letterSpacing: "0.03em",
+                      textTransform: "uppercase",
+                    }}
+                  >
                     {deal.stage}
                   </span>
+
+                  {/* Authentic HubSpot Risk Pill */}
                   <span
-                    className="risk-pill"
-                    data-band={band}
-                    style={{ fontSize: "11px", padding: "2px 8px" }}
+                    style={{
+                      background: isCritical ? "#fbeae9" : isHigh ? "#fff6e6" : "#e5f8f6",
+                      color: isCritical ? "#c8372d" : isHigh ? "#b76e00" : "#007a70",
+                      border: `1px solid ${isCritical ? "#f5c6c4" : isHigh ? "#fde1b0" : "#b2ede5"}`,
+                      borderRadius: "3px",
+                      fontSize: "11px",
+                      fontWeight: 700,
+                      padding: "2px 8px",
+                      letterSpacing: "0.02em",
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: 5,
+                    }}
                   >
-                    Score: {deal.score} · {band} Risk
+                    <span style={{ width: 6, height: 6, borderRadius: "50%", background: isCritical ? "#c8372d" : isHigh ? "#b76e00" : "#007a70" }} />
+                    SCORE: {deal.score} · {band.toUpperCase()} RISK
                   </span>
-                  <span style={{ fontSize: "12px", color: "var(--hs-text-muted)" }}>
-                    Owner: {deal.owner}
+
+                  <span style={{ fontSize: "12px", color: "#516f90", display: "inline-flex", alignItems: "center", gap: 6 }}>
+                    <span style={{ width: 20, height: 20, borderRadius: "50%", background: "#eaf0f6", color: "#2d3e50", fontSize: "10px", fontWeight: 700, display: "inline-flex", alignItems: "center", justifyContent: "center" }}>
+                      {deal.owner.split(" ").map((n: string) => n[0]).join("").slice(0, 2) || "OW"}
+                    </span>
+                    Owner: <strong style={{ color: "#33475b" }}>{deal.owner}</strong>
                   </span>
                 </div>
-                <h2 style={{ fontSize: "18px", fontWeight: 700, color: "var(--hs-primary)", margin: 0, lineHeight: 1.3 }}>
+
+                {/* Deal Title */}
+                <h2 style={{ fontSize: "20px", fontWeight: 700, color: "#33475b", margin: "4px 0 3px", lineHeight: 1.25, letterSpacing: "-0.02em" }}>
                   {deal.name}
                 </h2>
-                <div style={{ fontSize: "12.5px", color: "var(--hs-text-muted)", marginTop: 2 }}>
-                  Account: <strong>{deal.client}</strong> · Pipeline Value: <strong>${(deal.value / 1000).toFixed(0)}K</strong>
+
+                {/* Deal Details Subtitle */}
+                <div style={{ fontSize: "12.5px", color: "#516f90", display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+                  <span>Account: <strong style={{ color: "#33475b" }}>{deal.client}</strong></span>
+                  <span style={{ color: "#cbd6e2" }}>·</span>
+                  <span>Pipeline Value: <strong style={{ color: "#ff7a59" }}>${(deal.value || 0).toLocaleString()}</strong></span>
+                  <span style={{ color: "#cbd6e2" }}>·</span>
+                  <span style={{ color: "#00a4bd", fontWeight: 600 }}>HubSpot REST v3</span>
                 </div>
               </div>
 
+              {/* Close Button */}
               <button
                 onClick={onClose}
-                className="btn btn-secondary btn-sm"
-                style={{ borderRadius: "50%", width: 32, height: 32, padding: 0, fontSize: "16px", flexShrink: 0 }}
+                style={{
+                  width: 32,
+                  height: 32,
+                  borderRadius: "4px",
+                  border: "1px solid #cbd6e2",
+                  background: "#ffffff",
+                  color: "#516f90",
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: "13px",
+                  transition: "all 0.15s ease",
+                  flexShrink: 0,
+                }}
+                title="Close Drawer (Esc)"
               >
                 ✕
               </button>
@@ -193,12 +257,12 @@ export const DealDrawer: React.FC<DealDrawerProps> = ({
                 initial={{ opacity: 0, y: -8 }}
                 animate={{ opacity: 1, y: 0 }}
                 style={{
-                  background: "var(--risk-healthy-bg)",
-                  color: "var(--risk-healthy)",
+                  background: "#e5f8f6",
+                  color: "#007a70",
                   padding: "8px 20px",
                   fontSize: "12.5px",
                   fontWeight: 600,
-                  borderBottom: "1px solid var(--risk-healthy-border)",
+                  borderBottom: "1px solid #b2ede5",
                 }}
               >
                 {actionSuccessMsg}
@@ -209,21 +273,82 @@ export const DealDrawer: React.FC<DealDrawerProps> = ({
             <div
               style={{
                 display: "flex",
-                borderBottom: "1px solid var(--hs-border-dark)",
+                borderBottom: "1px solid #cbd6e2",
                 background: "#ffffff",
-                padding: "0 16px",
-                gap: 12,
+                padding: "0 20px",
+                gap: 20,
                 overflowX: "auto",
                 whiteSpace: "nowrap",
               }}
             >
               {[
-                { id: "signals", label: "Signals", icon: "📊" },
-                { id: "meddicc", label: "MEDDICC", icon: "🎯" },
-                { id: "stakeholders", label: "Stakeholders", icon: "👥" },
-                { id: "map", label: "Mutual Action Plan", icon: "🗺️" },
-                { id: "battlecards", label: "Battlecards", icon: "⚔️" },
-                { id: "copilot", label: "AI Copilot", icon: "🤖" },
+                {
+                  id: "signals",
+                  label: "Signals",
+                  icon: (
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <line x1="18" y1="20" x2="18" y2="10" />
+                      <line x1="12" y1="20" x2="12" y2="4" />
+                      <line x1="6" y1="20" x2="6" y2="14" />
+                    </svg>
+                  ),
+                },
+                {
+                  id: "meddicc",
+                  label: "MEDDICC",
+                  icon: (
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <circle cx="12" cy="12" r="10" />
+                      <circle cx="12" cy="12" r="6" />
+                      <circle cx="12" cy="12" r="2" />
+                    </svg>
+                  ),
+                },
+                {
+                  id: "stakeholders",
+                  label: "Stakeholders",
+                  icon: (
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                      <circle cx="9" cy="7" r="4" />
+                      <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                      <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                    </svg>
+                  ),
+                },
+                {
+                  id: "map",
+                  label: "Mutual Action Plan",
+                  icon: (
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                      <line x1="16" y1="2" x2="16" y2="6" />
+                      <line x1="8" y1="2" x2="8" y2="6" />
+                      <line x1="3" y1="10" x2="21" y2="10" />
+                    </svg>
+                  ),
+                },
+                {
+                  id: "battlecards",
+                  label: "Battlecards",
+                  icon: (
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                      <polyline points="14 2 14 8 20 8" />
+                      <line x1="16" y1="13" x2="8" y2="13" />
+                      <line x1="16" y1="17" x2="8" y2="17" />
+                    </svg>
+                  ),
+                },
+                {
+                  id: "copilot",
+                  label: "AI Copilot",
+                  icon: (
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                    </svg>
+                  ),
+                },
               ].map((tab) => {
                 const isActive = activeTab === tab.id;
                 return (
@@ -231,22 +356,24 @@ export const DealDrawer: React.FC<DealDrawerProps> = ({
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id as any)}
                     style={{
-                      padding: "12px 4px",
+                      padding: "12px 2px",
                       background: "none",
                       border: "none",
-                      borderBottom: `3px solid ${isActive ? "var(--hs-primary)" : "transparent"}`,
-                      color: isActive ? "var(--hs-primary)" : "var(--hs-text-muted)",
+                      borderBottom: isActive ? "2px solid #ff7a59" : "2px solid transparent",
+                      color: isActive ? "#33475b" : "#516f90",
                       fontWeight: isActive ? 700 : 500,
                       fontSize: "13px",
                       cursor: "pointer",
                       display: "flex",
                       alignItems: "center",
-                      gap: 4,
-                      transition: "all 0.15s",
+                      gap: 6,
+                      transition: "all 0.15s ease",
                       flexShrink: 0,
                     }}
                   >
-                    <span>{tab.icon}</span>
+                    <span style={{ color: isActive ? "#ff7a59" : "#7c98b6", display: "flex", alignItems: "center" }}>
+                      {tab.icon}
+                    </span>
                     <span>{tab.label}</span>
                   </button>
                 );
@@ -308,13 +435,17 @@ export const DealDrawer: React.FC<DealDrawerProps> = ({
                             gap: 10,
                           }}
                         >
-                          <span style={{ color: "var(--danger)", fontSize: "16px", lineHeight: 1 }}>⚠️</span>
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#c8372d" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginTop: 2 }}>
+                            <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                            <line x1="12" y1="9" x2="12" y2="13" />
+                            <line x1="12" y1="17" x2="12.01" y2="17" />
+                          </svg>
                           <div>
-                            <div style={{ fontSize: "13px", fontWeight: 600, color: "var(--hs-text)" }}>
+                            <div style={{ fontSize: "13px", fontWeight: 600, color: "#33475b" }}>
                               {risk}
                             </div>
-                            <div style={{ fontSize: "11.5px", color: "var(--hs-text-muted)", marginTop: 2 }}>
-                              Source: HubSpot Activity Stream & Historical Tenant Benchmarks
+                            <div style={{ fontSize: "11.5px", color: "#516f90", marginTop: 2 }}>
+                              Source: HubSpot Activity Stream &amp; Historical Tenant Benchmarks
                             </div>
                           </div>
                         </div>
@@ -325,28 +456,50 @@ export const DealDrawer: React.FC<DealDrawerProps> = ({
                   {/* AI Next Best Action Recommendation */}
                   <div
                     style={{
-                      padding: "18px",
-                      borderRadius: "var(--radius-md)",
-                      border: "1px solid var(--hs-border-dark)",
-                      background: "var(--hs-surface)",
+                      padding: "18px 20px",
+                      borderRadius: "4px",
+                      border: "1px solid #cbd6e2",
+                      borderLeft: "3px solid #ff7a59",
+                      background: "#ffffff",
                     }}
                   >
-                    <div style={{ fontSize: "12px", fontWeight: 700, color: "var(--hs-primary)", textTransform: "uppercase", marginBottom: 6 }}>
-                      ⚡ Recommended RevOps Remediation
+                    <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: "11px", fontWeight: 700, color: "#ff7a59", textTransform: "uppercase", letterSpacing: "0.04em", marginBottom: 6 }}>
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+                      </svg>
+                      <span>Recommended RevOps Remediation</span>
                     </div>
-                    <p style={{ fontSize: "13.5px", color: "var(--hs-text)", lineHeight: 1.5, margin: 0 }}>
+                    <p style={{ fontSize: "13.5px", color: "#33475b", lineHeight: 1.5, margin: 0 }}>
                       {deal.recommendation || "Schedule an executive alignment call with the Economic Buyer within 48h to unblock procurement liability terms."}
                     </p>
-                    <div style={{ display: "flex", gap: 10, marginTop: 16 }}>
+                    <div style={{ display: "flex", gap: 10, marginTop: 14, flexWrap: "wrap" }}>
                       <button
-                        className="btn btn-primary btn-sm"
                         onClick={() => handleExecuteAction("Create Follow-Up Task in HubSpot")}
+                        style={{
+                          padding: "8px 14px",
+                          background: "#ff7a59",
+                          color: "#ffffff",
+                          border: "none",
+                          borderRadius: "3px",
+                          fontSize: "12px",
+                          fontWeight: 600,
+                          cursor: "pointer",
+                        }}
                       >
-                        ⚡ Create HubSpot Task
+                        Create HubSpot Task
                       </button>
                       <button
-                        className="btn btn-secondary btn-sm"
                         onClick={() => handleExecuteAction("Send Re-Engagement Package")}
+                        style={{
+                          padding: "8px 14px",
+                          background: "#ffffff",
+                          color: "#33475b",
+                          border: "1px solid #cbd6e2",
+                          borderRadius: "3px",
+                          fontSize: "12px",
+                          fontWeight: 600,
+                          cursor: "pointer",
+                        }}
                       >
                         Draft Exec Re-Engagement Email
                       </button>
