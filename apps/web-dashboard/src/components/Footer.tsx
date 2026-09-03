@@ -259,11 +259,11 @@ export const Footer: React.FC = () => {
           <div style={{ display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap" }}>
             <span>© 2026 DealSense Inc. Engineered by <strong style={{ color: "#ffffff" }}>Peash Das Rudra</strong>.</span>
             <span>•</span>
-            <span style={{ cursor: "pointer", color: "rgba(255, 255, 255, 0.75)" }}>Privacy Policy</span>
+            <Link to="/privacy" style={{ color: "rgba(255, 255, 255, 0.75)", textDecoration: "none" }}>Privacy Policy</Link>
             <span>•</span>
-            <span style={{ cursor: "pointer", color: "rgba(255, 255, 255, 0.75)" }}>Terms of Service</span>
+            <Link to="/terms" style={{ color: "rgba(255, 255, 255, 0.75)", textDecoration: "none" }}>Terms of Service</Link>
             <span>•</span>
-            <span style={{ cursor: "pointer", color: "rgba(255, 255, 255, 0.75)" }}>Security Disclosures</span>
+            <span style={{ color: "rgba(255, 255, 255, 0.75)" }}>Security Disclosures</span>
           </div>
 
           <div style={{ display: "flex", alignItems: "center", gap: 12 }}>

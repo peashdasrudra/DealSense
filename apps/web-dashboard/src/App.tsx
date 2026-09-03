@@ -35,6 +35,8 @@ import { PipelineWaterfall } from "./pages/PipelineWaterfall";
 import { StakeholderMatrix } from "./pages/StakeholderMatrix";
 import { DealDrawer, DealData } from "./components/DealDrawer";
 import { BetaNotice } from "./components/BetaNotice";
+import { PrivacyPolicy } from "./pages/PrivacyPolicy";
+import { TermsOfService } from "./pages/TermsOfService";
 
 // ── Beta / Roadmap Route Mapping ─────────────────────────────────────────────
 const BETA_ROUTES: Record<string, string> = {
@@ -83,6 +85,8 @@ const PAGE_TITLES: Record<string, { title: string; breadcrumb: string }> = {
   "/portfolio": { title: "Executive Architecture Case Study", breadcrumb: "Portfolio" },
   "/audit": { title: "Audit & Compliance Trail", breadcrumb: "Audit" },
   "/settings": { title: "Settings & Scoring Weights", breadcrumb: "Settings" },
+  "/privacy": { title: "Privacy Policy & GDPR", breadcrumb: "Privacy" },
+  "/terms": { title: "Terms of Service", breadcrumb: "Terms" },
   "/nav-test": { title: "Navigation & CTA Test Suite", breadcrumb: "Dev / QA" },
 };
 
@@ -307,6 +311,8 @@ export const App: React.FC = () => {
                 <Route path="/settings" element={<Settings />} />
                 <Route path="/checkout" element={<CheckoutPage />} />
                 <Route path="/payment" element={<CheckoutPage />} />
+                <Route path="/privacy" element={<PrivacyPolicy />} />
+                <Route path="/terms" element={<TermsOfService />} />
                 <Route path="/nav-test" element={<NavTestPage />} />
               </Routes>
             </motion.div>
