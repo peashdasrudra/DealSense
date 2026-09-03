@@ -254,7 +254,7 @@ async def create_deal(
 
 @router.patch("/{deal_id}", response_model=DealDashboardSchema)
 async def update_deal(
-    deal_id: UUID,
+    deal_id: str,
     body: DealUpdateRequest,
     tenant_id: UUID = require_permission(Permission.DEAL_READ),
     db: AsyncSession = Depends(get_db),
@@ -265,13 +265,13 @@ async def update_deal(
     # Find deal in memory or database
     target: DealDashboardSchema | None = None
     for d in _DEMO_DEALS:
-        if d.id == deal_id or (d.hubspot_id and d.hubspot_id == str(deal_id)):
+        if str(d.id) == str(deal_id) or (d.hubspot_id and d.hubspot_id == str(deal_id)):
             target = d
             break
 
     if not target:
         target = DealDashboardSchema(
-            id=deal_id,
+            id=uuid4(),
             name=body.name or "Updated Deal",
             client=body.client or "Acme Client",
             score=70,
@@ -279,6 +279,7 @@ async def update_deal(
             owner=body.owner or "Peash Rudra",
             stage=body.stage or "Qualified",
             band="Moderate",
+            hubspot_id=deal_id if deal_id.isdigit() else None,
         )
         _DEMO_DEALS.insert(0, target)
 
@@ -300,8 +301,8 @@ async def update_deal(
     if body.owner is not None:
         target.owner = body.owner
 
-    # If HubSpot is connected and deal has hubspot_id, update HubSpot CRM!
-    if settings.hubspot_access_token and target.hubspot_id:
+    target_hs_id = target.hubspot_id or (deal_id if deal_id.isdigit() else None)
+    if settings.hubspot_access_token and target_hs_id:
         try:
             client = HubSpotClient(tenant_id=tenant_id, db=db)
             hs_update_props: dict[str, str] = {}
@@ -313,8 +314,8 @@ async def update_deal(
                 hs_update_props["dealstage"] = body.stage
 
             if hs_update_props:
-                await client.update_deal_properties(target.hubspot_id, hs_update_props)
-                logger.info("hubspot_deal_updated_live", hubspot_id=target.hubspot_id)
+                await client.update_deal_properties(target_hs_id, hs_update_props)
+                logger.info("hubspot_deal_updated_live", hubspot_id=target_hs_id)
         except Exception as hs_err:
             logger.warning("hubspot_update_deal_skipped", error=str(hs_err))
 
@@ -323,7 +324,7 @@ async def update_deal(
 
 @router.delete("/{deal_id}")
 async def delete_deal(
-    deal_id: UUID,
+    deal_id: str,
     tenant_id: UUID = require_permission(Permission.DEAL_READ),
     db: AsyncSession = Depends(get_db),
 ) -> dict[str, str]:
@@ -333,23 +334,24 @@ async def delete_deal(
     # Find and remove from memory store
     hubspot_id: str | None = None
     for i, d in enumerate(_DEMO_DEALS):
-        if d.id == deal_id or (d.hubspot_id and d.hubspot_id == str(deal_id)):
+        if str(d.id) == str(deal_id) or (d.hubspot_id and d.hubspot_id == str(deal_id)):
             hubspot_id = d.hubspot_id
             _DEMO_DEALS.pop(i)
             break
 
-    # If HubSpot is connected, delete/archive on HubSpot!
-    if settings.hubspot_access_token and hubspot_id:
+    target_hs_id = hubspot_id or (deal_id if deal_id.isdigit() else None)
+    if settings.hubspot_access_token and target_hs_id:
         try:
             client = HubSpotClient(tenant_id=tenant_id, db=db)
-            await client.delete_deal(hubspot_id)
-            logger.info("hubspot_deal_deleted_live", hubspot_id=hubspot_id)
+            await client.delete_deal(target_hs_id)
+            logger.info("hubspot_deal_deleted_live", hubspot_id=target_hs_id)
         except Exception as hs_err:
             logger.warning("hubspot_delete_deal_skipped", error=str(hs_err))
 
-    # Also remove from DB if present
+    # Also remove from DB if valid UUID
     try:
-        stmt = select(Deal).where(Deal.id == deal_id)
+        deal_uuid = UUID(deal_id)
+        stmt = select(Deal).where(Deal.id == deal_uuid)
         res = await db.execute(stmt)
         db_deal = res.scalar_one_or_none()
         if db_deal:
