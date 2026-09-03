@@ -55,27 +55,11 @@ async def get_access_token(
     tenant_id: UUID,
     db: AsyncSession,
 ) -> str:
-    """Get a valid HubSpot access token for a tenant.
+    """Get a valid HubSpot access token for a tenant."""
+    settings = get_settings()
+    if settings.hubspot_access_token:
+        return settings.hubspot_access_token
 
-    Flow:
-    1. Check Redis cache for a valid token
-    2. If cached, return immediately
-    3. If not cached, load from DB, check expiry
-    4. If expired, refresh the token
-    5. Cache the new token and return
-
-    Args:
-        tenant_id: The tenant's UUID
-        db: Active database session
-
-    Returns:
-        A valid HubSpot access token string
-
-    Raises:
-        TenantNotFoundError: If no connection exists for the tenant
-        OAuthTokenRefreshError: If token refresh fails
-        OAuthTokenExpiredError: If tokens cannot be refreshed
-    """
     # 1. Check cache first
     cached = await cache_get(_cache_key(tenant_id))
     if cached:

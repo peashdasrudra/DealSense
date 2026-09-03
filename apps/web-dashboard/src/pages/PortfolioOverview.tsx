@@ -19,7 +19,7 @@ import {
   Bar,
   Cell,
 } from "recharts";
-import { fetchDeals } from "../api";
+import { fetchDeals, syncHubSpotDeals } from "../api";
 
 import { DealDrawer, DealData } from "../components/DealDrawer";
 
@@ -92,8 +92,9 @@ export const PortfolioOverview: React.FC = () => {
   const navigate = useNavigate();
   const [deals, setDeals] = useState<any[]>(SAMPLE_DEALS);
   const [selectedDrawerDeal, setSelectedDrawerDeal] = useState<DealData | null>(null);
+  const [isSyncing, setIsSyncing] = useState(false);
 
-  useEffect(() => {
+  const loadDeals = () => {
     fetchDeals()
       .then((data) => {
         if (data && data.length > 0) {
@@ -103,7 +104,23 @@ export const PortfolioOverview: React.FC = () => {
       .catch((err) => {
         console.warn("Backend deal endpoint not yet seeded, displaying active sample intelligence:", err);
       });
+  };
+
+  useEffect(() => {
+    loadDeals();
   }, []);
+
+  const handleSync = async () => {
+    setIsSyncing(true);
+    try {
+      await syncHubSpotDeals();
+      loadDeals();
+    } catch (e) {
+      console.warn("HubSpot sync fallback:", e);
+    } finally {
+      setIsSyncing(false);
+    }
+  };
 
   // Compute KPIs
   const pipelineValue = deals.reduce((sum, d) => sum + (d.value || 0), 0);
@@ -183,6 +200,18 @@ export const PortfolioOverview: React.FC = () => {
             >
               <span>Get Started</span>
               <span>→</span>
+            </button>
+            <button
+              onClick={handleSync}
+              disabled={isSyncing}
+              style={{
+                padding: "8px 16px", background: "#f5f8fa", color: "#ff7a59", fontSize: "12.5px", fontWeight: 700,
+                border: "1px solid #cbd6e2", borderRadius: "var(--radius-sm)", cursor: "pointer",
+                display: "inline-flex", alignItems: "center", gap: 6, transition: "all 0.2s ease",
+                boxShadow: "var(--shadow-sm)"
+              }}
+            >
+              <span>{isSyncing ? "⏳ Syncing..." : "🔄 Sync HubSpot"}</span>
             </button>
             <a
               href="/case-study"

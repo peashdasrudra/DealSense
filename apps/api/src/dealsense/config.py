@@ -56,6 +56,7 @@ class Settings(BaseSettings):
     hubspot_redirect_uri: str = "http://localhost:8000/api/v1/oauth/callback"
     hubspot_scopes: str = "crm.objects.deals.read,crm.objects.contacts.read"
     hubspot_app_id: str = ""
+    hubspot_access_token: str = ""
 
     # ---- Encryption ----
     encryption_key: str = ""

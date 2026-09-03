@@ -73,5 +73,28 @@ class DealDashboardSchema(BaseModel):
     owner: str
     stage: str
     band: str
+    hubspot_id: str | None = None
 
     model_config = {"from_attributes": True}
+
+
+class DealCreateRequest(BaseModel):
+    """Payload to create a new deal."""
+
+    name: str
+    amount: float = 0.0
+    stage: str = "appointmentscheduled"
+    close_date: str | None = None
+    client: str = "Acme Corp"
+    owner: str = "Peash Rudra"
+
+
+class DealUpdateRequest(BaseModel):
+    """Payload to update an existing deal."""
+
+    name: str | None = None
+    amount: float | None = None
+    stage: str | None = None
+    close_date: str | None = None
+    client: str | None = None
+    owner: str | None = None

@@ -65,3 +65,88 @@ export async function executeAction(actionId: string, tenantId: string = MOCK_TE
 
   return response.json();
 }
+
+export async function createDeal(
+  dealData: { name: string; amount: number; stage: string; client?: string; owner?: string },
+  tenantId: string = MOCK_TENANT_ID
+) {
+  const response = await fetch(`${API_BASE}/deals`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-Tenant-ID": tenantId,
+    },
+    body: JSON.stringify(dealData),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to create deal: ${response.statusText}`);
+  }
+
+  return response.json();
+}
+
+export async function updateDeal(
+  dealId: string,
+  dealData: { name?: string; amount?: number; stage?: string; client?: string; owner?: string },
+  tenantId: string = MOCK_TENANT_ID
+) {
+  const response = await fetch(`${API_BASE}/deals/${dealId}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      "X-Tenant-ID": tenantId,
+    },
+    body: JSON.stringify(dealData),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to update deal: ${response.statusText}`);
+  }
+
+  return response.json();
+}
+
+export async function deleteDeal(dealId: string, tenantId: string = MOCK_TENANT_ID) {
+  const response = await fetch(`${API_BASE}/deals/${dealId}`, {
+    method: "DELETE",
+    headers: {
+      "X-Tenant-ID": tenantId,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to delete deal: ${response.statusText}`);
+  }
+
+  return response.json();
+}
+
+export async function syncHubSpotDeals(tenantId: string = MOCK_TENANT_ID) {
+  const response = await fetch(`${API_BASE}/deals/sync-hubspot`, {
+    method: "POST",
+    headers: {
+      "X-Tenant-ID": tenantId,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to sync HubSpot deals: ${response.statusText}`);
+  }
+
+  return response.json();
+}
+
+export async function fetchDealSnapshot(dealId: string, tenantId: string = MOCK_TENANT_ID) {
+  const response = await fetch(`${API_BASE}/deals/${dealId}/snapshot`, {
+    headers: {
+      "X-Tenant-ID": tenantId,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch deal snapshot: ${response.statusText}`);
+  }
+
+  return response.json();
+}

@@ -139,6 +139,35 @@ class HubSpotClient:
         }
         return await self._request("GET", f"/crm/v3/objects/deals/{deal_id}", params=params)
 
+    async def list_deals(
+        self, limit: int = 50, properties: list[str] | None = None
+    ) -> list[dict[str, Any]]:
+        """List deals from HubSpot CRM."""
+        props = properties or [
+            "dealname",
+            "amount",
+            "dealstage",
+            "pipeline",
+            "closedate",
+            "hubspot_owner_id",
+            "createdate",
+            "hs_lastmodifieddate",
+        ]
+        params = {
+            "limit": limit,
+            "properties": ",".join(props),
+        }
+        res = await self._request("GET", "/crm/v3/objects/deals", params=params)
+        return res.get("results", [])
+
+    async def create_deal(self, properties: dict[str, Any]) -> dict[str, Any]:
+        """Create a deal in HubSpot CRM."""
+        return await self._request(
+            "POST",
+            "/crm/v3/objects/deals",
+            json_data={"properties": properties},
+        )
+
     async def update_deal_properties(
         self, deal_id: str, properties: dict[str, Any]
     ) -> dict[str, Any]:
@@ -148,6 +177,10 @@ class HubSpotClient:
             f"/crm/v3/objects/deals/{deal_id}",
             json_data={"properties": properties},
         )
+
+    async def delete_deal(self, deal_id: str) -> dict[str, Any]:
+        """Archive/delete a deal in HubSpot CRM."""
+        return await self._request("DELETE", f"/crm/v3/objects/deals/{deal_id}")
 
     # ---- Contacts API ----
 
