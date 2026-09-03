@@ -64,7 +64,7 @@ export const SECTION_ANCHORS = {
 
 export const CONTACT_LINKS = {
   ARCHITECT_NAME: "Peash Das Rudra",
-  ARCHITECT_ROLE: "Lead AI Architect · AiXpert Labs",
+  ARCHITECT_ROLE: "Lead AI Architect · HubAiLab",
   EMAIL: "peashdasrudra@gmail.com",
   EMAIL_AUDIT: "mailto:peashdasrudra@gmail.com?subject=DealSense%20Pilot%20Risk%20Audit%20Inquiry",
   EMAIL_AGENCY: "mailto:peashdasrudra@gmail.com?subject=DealSense%20Agency%20Fleet%20Arbitrage%20Inquiry",

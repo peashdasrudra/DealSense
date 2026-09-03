@@ -72,10 +72,9 @@ export const AccountAuthModal: React.FC<AccountAuthModalProps> = ({
           background: "rgba(18, 69, 72, 0.65)",
           backdropFilter: "blur(6px)",
           zIndex: 99999,
+          overflowY: "auto",
           display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          padding: 16,
+          padding: "32px 16px",
         }}
         onClick={onClose}
       >
@@ -85,6 +84,7 @@ export const AccountAuthModal: React.FC<AccountAuthModalProps> = ({
           exit={{ opacity: 0, scale: 0.95, y: 12 }}
           onClick={(e) => e.stopPropagation()}
           style={{
+            margin: "auto",
             background: "#ffffff",
             borderRadius: 14,
             width: "100%",

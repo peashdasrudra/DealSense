@@ -307,15 +307,15 @@ export const Sidebar: React.FC<SidebarProps> = ({ onClose, onNavigateHome }) => 
               flexShrink: 0,
             }}
           >
-            AX
+            HL
           </div>
           <div style={{ minWidth: 0 }}>
-            <div style={{ fontSize: "12px", fontWeight: 600, color: "var(--hs-text)", lineHeight: 1.2, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-              AiXpert Labs
+            <div style={{ fontSize: "12px", fontWeight: 700, color: "var(--hs-text)", lineHeight: 1.2, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+              HubAiLab Fleet
             </div>
             <div style={{ fontSize: "10.5px", color: "var(--hs-text-muted)", display: "flex", alignItems: "center", gap: 4 }}>
               <span style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--risk-healthy)", display: "inline-block" }} />
-              HubSpot Connected
+              HubSpot Portal #48920193
             </div>
           </div>
         </div>

@@ -465,7 +465,7 @@ export const CheckoutPage: React.FC = () => {
                     <span style={{ fontSize: "8.5px", fontWeight: 800, color: "#059669", background: "rgba(16,185,129,0.1)", padding: "1px 5px", borderRadius: "3px" }}>LEAD ARCHITECT</span>
                   </div>
                   <div style={{ fontSize: "10.5px", color: "#64748b", lineHeight: 1.35, marginTop: 1 }}>
-                    AiXpert Labs Author · 100% Guaranteed 24h Setup SLA
+                    HubAiLab Author · 100% Guaranteed 24h Setup SLA
                   </div>
                   <div style={{ marginTop: 2 }}>
                     <a

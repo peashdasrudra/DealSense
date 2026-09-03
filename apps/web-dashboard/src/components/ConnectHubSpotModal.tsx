@@ -58,10 +58,9 @@ export const ConnectHubSpotModal: React.FC<ConnectHubSpotModalProps> = ({
           background: "rgba(18, 69, 72, 0.65)",
           backdropFilter: "blur(6px)",
           zIndex: 99999,
+          overflowY: "auto",
           display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          padding: 16,
+          padding: "32px 16px",
         }}
         onClick={onClose}
       >
@@ -71,10 +70,14 @@ export const ConnectHubSpotModal: React.FC<ConnectHubSpotModalProps> = ({
           exit={{ opacity: 0, scale: 0.95, y: 12 }}
           onClick={(e) => e.stopPropagation()}
           style={{
+            margin: "auto",
             background: "#ffffff",
             borderRadius: 14,
             width: "100%",
-            maxWidth: 540,
+            maxWidth: 500,
+            maxHeight: "92vh",
+            display: "flex",
+            flexDirection: "column",
             boxShadow: "0 20px 45px rgba(0, 0, 0, 0.2)",
             border: "1px solid #cbd6e2",
             overflow: "hidden",
@@ -84,36 +87,37 @@ export const ConnectHubSpotModal: React.FC<ConnectHubSpotModalProps> = ({
           {/* Modal Header */}
           <div
             style={{
-              padding: "20px 24px",
+              padding: "14px 20px",
               background: "linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%)",
               borderBottom: "1px solid #e2e8f0",
               display: "flex",
               alignItems: "center",
               justifyContent: "space-between",
+              flexShrink: 0,
             }}
           >
             <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
               <div
                 style={{
-                  width: 36,
-                  height: 36,
-                  borderRadius: 8,
+                  width: 32,
+                  height: 32,
+                  borderRadius: 6,
                   background: "#ff7a59",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
                   color: "#ffffff",
-                  fontSize: 18,
+                  fontSize: 16,
                   fontWeight: 800,
                 }}
               >
                 🟠
               </div>
               <div>
-                <h3 style={{ margin: 0, fontSize: 16, fontWeight: 700, color: "#2d3e50" }}>
+                <h3 style={{ margin: 0, fontSize: 15, fontWeight: 700, color: "#2d3e50" }}>
                   Connect HubSpot CRM Portal
                 </h3>
-                <p style={{ margin: 0, fontSize: 12, color: "#64748b" }}>
+                <p style={{ margin: 0, fontSize: 11.5, color: "#64748b" }}>
                   Official OAuth 2.0 Webhook v3 Authorization
                 </p>
               </div>
@@ -121,12 +125,14 @@ export const ConnectHubSpotModal: React.FC<ConnectHubSpotModalProps> = ({
             <button
               onClick={onClose}
               style={{
-                background: "transparent",
+                background: "rgba(0,0,0,0.05)",
                 border: "none",
-                fontSize: 18,
+                fontSize: 14,
+                fontWeight: 700,
                 color: "#64748b",
                 cursor: "pointer",
-                padding: 4,
+                padding: "4px 8px",
+                borderRadius: 4,
               }}
             >
               ✕
@@ -134,23 +140,23 @@ export const ConnectHubSpotModal: React.FC<ConnectHubSpotModalProps> = ({
           </div>
 
           {/* Modal Content */}
-          <div style={{ padding: 24 }}>
+          <div style={{ padding: "18px 20px", overflowY: "auto", flex: 1 }}>
             {step === "select" && (
               <div>
-                <p style={{ fontSize: 13, color: "#33475b", margin: "0 0 16px", lineHeight: 1.5 }}>
+                <p style={{ fontSize: 12.5, color: "#33475b", margin: "0 0 14px", lineHeight: 1.45 }}>
                   Select a registered HubSpot portal or enter your Portal ID to initiate the OAuth 2.0 handshake and activate continuous deal risk telemetry:
                 </p>
 
                 {/* Portal List */}
-                <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: 20 }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: 6, marginBottom: 16 }}>
                   {DEMO_PORTALS.map((p) => (
                     <div
                       key={p.id}
                       onClick={() => handleConnect(p)}
                       style={{
                         border: "1px solid #cbd6e2",
-                        borderRadius: 8,
-                        padding: "12px 16px",
+                        borderRadius: 6,
+                        padding: "9px 12px",
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "space-between",
@@ -162,16 +168,16 @@ export const ConnectHubSpotModal: React.FC<ConnectHubSpotModalProps> = ({
                       onMouseLeave={(e) => (e.currentTarget.style.borderColor = "#cbd6e2")}
                     >
                       <div>
-                        <div style={{ fontWeight: 600, fontSize: 13, color: "#2d3e50" }}>{p.name}</div>
-                        <div style={{ fontSize: 11, color: "#7c98b6" }}>Portal #{p.id} • {p.tier} • {p.deals} active deals</div>
+                        <div style={{ fontWeight: 600, fontSize: 12.5, color: "#2d3e50" }}>{p.name}</div>
+                        <div style={{ fontSize: 10.5, color: "#7c98b6" }}>Portal #{p.id} • {p.tier} • {p.deals} active deals</div>
                       </div>
                       <span
                         style={{
-                          fontSize: 12,
+                          fontSize: 11,
                           fontWeight: 700,
                           color: "#ff7a59",
                           background: "rgba(255, 122, 89, 0.1)",
-                          padding: "4px 10px",
+                          padding: "3px 8px",
                           borderRadius: 4,
                         }}
                       >

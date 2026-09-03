@@ -181,7 +181,7 @@ export const PortfolioOverview: React.FC = () => {
           <div>
             <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
               <span style={{ background: "rgba(0, 189, 165, 0.1)", color: "#007a70", border: "1px solid rgba(0, 189, 165, 0.25)", padding: "3px 9px", borderRadius: "10px", fontSize: "10px", fontWeight: 700, textTransform: "uppercase" }}>● HubSpot CRM Connected</span>
-              <span style={{ fontSize: "11.5px", color: "var(--hs-text-muted)" }}>Portal #48921820 · Webhooks Active</span>
+              <span style={{ fontSize: "11.5px", color: "var(--hs-text-muted)" }}>Portal #48920193 · Webhooks Active</span>
             </div>
             <h2 style={{ fontSize: "20px", fontWeight: 800, color: "var(--hs-heading)", margin: "0 0 6px", letterSpacing: "-0.01em" }}>Pipeline Revenue &amp; Slippage Command Center</h2>
             <p style={{ fontSize: "13px", color: "var(--hs-text-muted)", margin: 0, lineHeight: 1.55 }}>

@@ -1651,7 +1651,7 @@ export const AgencyFleet: React.FC = () => {
                   </span>
                 </div>
                 <div style={{ fontSize: "13px", color: "#64748b", marginTop: 3 }}>
-                  Lead AI Architect · AiXpert Labs (Creator & Monorepo Author)
+                  Lead AI Architect · HubAiLab (Creator & Monorepo Author)
                 </div>
               </div>
             </div>

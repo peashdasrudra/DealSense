@@ -1970,7 +1970,7 @@ export const LandingPage: React.FC = () => {
                 </span>
               </div>
               <div style={{ fontSize: "11.5px", color: "#64748b", lineHeight: 1.4, marginBottom: 12 }}>
-                Lead AI Architect · AiXpert Labs<br />
+                Lead AI Architect · HubAiLab<br />
                 <span style={{ color: "#059669", fontWeight: 700 }}>🟢 Lead Architect Online · Monorepo Creator</span>
               </div>
 
