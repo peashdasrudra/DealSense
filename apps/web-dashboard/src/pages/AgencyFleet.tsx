@@ -18,6 +18,7 @@ import { useNavigate } from "react-router-dom";
 import { DealSenseIcon } from "../components/DealSenseLogo";
 import { Footer } from "../components/Footer";
 import { scrollToSection } from "../config/navigation";
+import { HowItWorksVideoSection } from "../components/HowItWorksVideoSection";
 
 export const AgencyFleet: React.FC = () => {
   const navigate = useNavigate();
@@ -27,6 +28,7 @@ export const AgencyFleet: React.FC = () => {
   const [retainerPrice, setRetainerPrice] = useState<number>(2500);
   const [activePortalTab, setActivePortalTab] = useState<number>(0);
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Order Modal State
   const [orderModalOpen, setOrderModalOpen] = useState(false);
@@ -75,6 +77,9 @@ export const AgencyFleet: React.FC = () => {
           alignItems: "center",
           borderBottom: "1px solid rgba(255,255,255,0.08)",
           letterSpacing: "-0.01em",
+          width: "100%",
+          maxWidth: "100vw",
+          overflow: "hidden",
         }}
       >
         <a
@@ -90,10 +95,10 @@ export const AgencyFleet: React.FC = () => {
             gap: "7px",
             color: "#e2e8f0",
             textDecoration: "none",
-            flexWrap: "nowrap",
-            whiteSpace: "nowrap",
-            fontSize: "clamp(11px, 2.5vw, 12px)",
+            flexWrap: "wrap",
+            fontSize: "clamp(10.5px, 2.5vw, 12px)",
             transition: "opacity 0.2s ease",
+            maxWidth: "100%",
           }}
         >
           <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#ff5c35", display: "inline-block", boxShadow: "0 0 8px #ff5c35", flexShrink: 0 }} />
@@ -149,15 +154,16 @@ export const AgencyFleet: React.FC = () => {
           </div>
 
           {/* Quick Nav Links */}
-          <div className="desktop-nav-links" style={{ display: "flex", alignItems: "center", gap: 24, fontSize: "13.5px", fontWeight: 700, color: "#334155" }}>
+          <div className="desktop-nav-links" style={{ alignItems: "center", gap: 24, fontSize: "13.5px", fontWeight: 700, color: "#334155" }}>
             <a href="#the-shift" style={{ textDecoration: "none", color: "#334155", transition: "color 0.2s ease" }}>The Agency Dilemma</a>
+            <a href="#how-it-works" style={{ textDecoration: "none", color: "#334155", transition: "color 0.2s ease" }}>How It Works</a>
             <a href="#trojan-horse" style={{ textDecoration: "none", color: "#334155", transition: "color 0.2s ease" }}>Client Acquisition</a>
             <a href="#calculator" style={{ textDecoration: "none", color: "#334155", transition: "color 0.2s ease" }}>Retainer Arbitrage</a>
             <a href="#features" style={{ textDecoration: "none", color: "#334155", transition: "color 0.2s ease" }}>Fleet Weaponry</a>
           </div>
 
-          {/* Single High-Class Header CTA */}
-          <div style={{ flexShrink: 0 }}>
+          {/* Header Action & Mobile Hamburger */}
+          <div style={{ display: "flex", alignItems: "center", gap: 10, flexShrink: 0 }}>
             <a
               href="#pricing"
               onClick={(e) => {
@@ -168,7 +174,7 @@ export const AgencyFleet: React.FC = () => {
                 display: "inline-flex",
                 alignItems: "center",
                 gap: 6,
-                padding: "8px 18px",
+                padding: "8px 16px",
                 background: "linear-gradient(180deg, #ff6b48 0%, #ff5c35 100%)",
                 color: "#ffffff",
                 fontSize: "13px",
@@ -187,8 +193,119 @@ export const AgencyFleet: React.FC = () => {
                 <path d="M5 12h14M12 5l7 7-7 7" />
               </svg>
             </a>
+
+            {/* Mobile Hamburger Button */}
+            <button
+              onClick={() => setMobileMenuOpen((prev) => !prev)}
+              style={{
+                display: "none",
+                padding: "7px 9px",
+                background: "#f8fafc",
+                border: "1px solid #e2e8f0",
+                borderRadius: "8px",
+                cursor: "pointer",
+              }}
+              className="mobile-hamburger-btn"
+              aria-label="Toggle Navigation Menu"
+            >
+              <svg width={20} height={20} viewBox="0 0 24 24" fill="none" stroke="#092124" strokeWidth={2}>
+                {mobileMenuOpen ? (<path d="M18 6L6 18M6 6l12 12" />) : (<path d="M4 6h16M4 12h16M4 18h16" />)}
+              </svg>
+            </button>
           </div>
         </div>
+
+        {/* Mobile Dropdown Menu — Floating Glassmorphic Overlay */}
+        <AnimatePresence>
+          {mobileMenuOpen && (
+            <>
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                onClick={() => setMobileMenuOpen(false)}
+                style={{
+                  position: "fixed",
+                  inset: 0,
+                  top: 50,
+                  background: "rgba(9, 33, 36, 0.45)",
+                  backdropFilter: "blur(8px)",
+                  WebkitBackdropFilter: "blur(8px)",
+                  zIndex: 1998,
+                }}
+              />
+              <motion.div
+                initial={{ opacity: 0, y: -10, scale: 0.98 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -10, scale: 0.98 }}
+                transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+                style={{
+                  position: "absolute",
+                  top: "calc(100% + 8px)",
+                  left: "12px",
+                  right: "12px",
+                  background: "rgba(255, 255, 255, 0.96)",
+                  backdropFilter: "blur(24px) saturate(190%)",
+                  WebkitBackdropFilter: "blur(24px) saturate(190%)",
+                  border: "1px solid rgba(255, 255, 255, 0.85)",
+                  borderRadius: "18px",
+                  boxShadow: "0 24px 60px -12px rgba(9, 33, 36, 0.35), 0 0 0 1px rgba(226, 232, 240, 0.7)",
+                  padding: "14px 12px 12px",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "7px",
+                  zIndex: 1999,
+                  maxHeight: "calc(88vh - 70px)",
+                  overflowY: "auto",
+                }}
+              >
+                <a
+                  href="#the-shift"
+                  onClick={() => setMobileMenuOpen(false)}
+                  style={{ padding: "10px 14px", borderRadius: "10px", background: "#f8fafc", color: "#092124", textDecoration: "none", fontSize: "13.5px", fontWeight: 700 }}
+                >
+                  The Agency Dilemma
+                </a>
+                <a
+                  href="#how-it-works"
+                  onClick={() => setMobileMenuOpen(false)}
+                  style={{ padding: "10px 14px", borderRadius: "10px", background: "#f8fafc", color: "#092124", textDecoration: "none", fontSize: "13.5px", fontWeight: 700 }}
+                >
+                  ⚡ How It Works (Live Video Tour)
+                </a>
+                <a
+                  href="#trojan-horse"
+                  onClick={() => setMobileMenuOpen(false)}
+                  style={{ padding: "10px 14px", borderRadius: "10px", background: "#f8fafc", color: "#092124", textDecoration: "none", fontSize: "13.5px", fontWeight: 700 }}
+                >
+                  Trojan Horse Acquisition Playbook
+                </a>
+                <a
+                  href="#calculator"
+                  onClick={() => setMobileMenuOpen(false)}
+                  style={{ padding: "10px 14px", borderRadius: "10px", background: "#f8fafc", color: "#092124", textDecoration: "none", fontSize: "13.5px", fontWeight: 700 }}
+                >
+                  Retainer Arbitrage Calculator ($300K ARR)
+                </a>
+                <a
+                  href="#features"
+                  onClick={() => setMobileMenuOpen(false)}
+                  style={{ padding: "10px 14px", borderRadius: "10px", background: "#f8fafc", color: "#092124", textDecoration: "none", fontSize: "13.5px", fontWeight: 700 }}
+                >
+                  Agency Fleet Weaponry
+                </a>
+                <a
+                  href="#pricing"
+                  onClick={() => setMobileMenuOpen(false)}
+                  style={{ padding: "10px 14px", borderRadius: "10px", background: "rgba(255, 92, 53, 0.08)", color: "#ff5c35", border: "1px solid rgba(255,92,53,0.3)", textDecoration: "none", fontSize: "13.5px", fontWeight: 800 }}
+                >
+                  Pricing & Deploy Partner Fleet ($1,500)
+                </a>
+              </motion.div>
+            </>
+          )}
+        </AnimatePresence>
       </header>
 
       {/* ── 2. Hero Section: Top-1% Agency Positioning ──────────────────── */}
@@ -399,9 +516,9 @@ export const AgencyFleet: React.FC = () => {
           </div>
 
           {/* Before vs After Contrast Grid */}
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 28 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 280px), 1fr))", gap: 20 }}>
             {/* The Old Manual Model */}
-            <div style={{ background: "rgba(220, 38, 38, 0.05)", border: "1px solid rgba(220, 38, 38, 0.3)", borderRadius: "18px", padding: "34px 28px", boxShadow: "inset 0 1px 0 rgba(255,255,255,0.05)" }}>
+            <div style={{ background: "rgba(220, 38, 38, 0.05)", border: "1px solid rgba(220, 38, 38, 0.3)", borderRadius: "18px", padding: "clamp(20px, 4vw, 34px) clamp(16px, 3.5vw, 28px)", boxShadow: "inset 0 1px 0 rgba(255,255,255,0.05)" }}>
               <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 20 }}>
                 <span style={{ width: 28, height: 28, borderRadius: "50%", background: "#dc2626", color: "#ffffff", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: "13px" }}>✕</span>
                 <h3 style={{ fontSize: "20px", fontWeight: 800, color: "#fca5a5", margin: 0 }}>The Dying Manual Agency</h3>
@@ -450,6 +567,9 @@ export const AgencyFleet: React.FC = () => {
         </div>
       </section>
 
+      {/* ── 3.5 Interactive Live Flowing Video Tour: How It Works ───────── */}
+      <HowItWorksVideoSection variant="agency" />
+
       {/* ── 4. The Trojan Horse Client Acquisition Playbook ─────────────── */}
       <section id="trojan-horse" style={{ padding: "84px clamp(16px, 4vw, 24px)", background: "#ffffff" }}>
         <div style={{ maxWidth: 1140, margin: "0 auto" }}>
@@ -465,7 +585,7 @@ export const AgencyFleet: React.FC = () => {
             </p>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 24 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 280px), 1fr))", gap: 20 }}>
             {[
               {
                 step: "01",
@@ -518,8 +638,8 @@ export const AgencyFleet: React.FC = () => {
               }}
             >
               {/* Cockpit Top Bar */}
-              <div style={{ background: "#092124", padding: "16px 24px", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12, borderBottom: "1px solid rgba(255,255,255,0.1)" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+              <div style={{ background: "#092124", padding: "16px clamp(14px, 3vw, 24px)", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12, borderBottom: "1px solid rgba(255,255,255,0.1)", minWidth: 0, width: "100%" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 12, minWidth: 0 }}>
                   <DealSenseIcon size={30} />
                   <div>
                     <div style={{ fontSize: "14px", fontWeight: 800, color: "#ffffff" }}>
@@ -540,6 +660,8 @@ export const AgencyFleet: React.FC = () => {
                     overflowX: "auto",
                     WebkitOverflowScrolling: "touch",
                     maxWidth: "100%",
+                    minWidth: 0,
+                    flex: "1 1 auto",
                     paddingBottom: 4,
                   }}
                 >
@@ -638,12 +760,14 @@ export const AgencyFleet: React.FC = () => {
               background: "#ffffff",
               border: "1.5px solid #e2e8f0",
               borderRadius: "22px",
-              padding: "clamp(24px, 4vw, 48px)",
+              padding: "clamp(20px, 4vw, 48px)",
               boxShadow: "0 20px 48px -15px rgba(9, 33, 36, 0.08)",
               display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-              gap: 40,
+              gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 280px), 1fr))",
+              gap: "clamp(20px, 3vw, 40px)",
               alignItems: "center",
+              minWidth: 0,
+              width: "100%",
             }}
           >
             {/* Controls */}
@@ -706,7 +830,7 @@ export const AgencyFleet: React.FC = () => {
 
               <div style={{ margin: "24px 0", height: 1, background: "rgba(255,255,255,0.15)" }} />
 
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12, textAlign: "left" }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 80px), 1fr))", gap: 10, textAlign: "left" }}>
                 <div>
                   <div style={{ fontSize: "11px", color: "#94a3b8", textTransform: "uppercase" }}>One-Time Cost</div>
                   <div style={{ fontSize: "17px", fontWeight: 800, color: "#ff8c6b" }}>$1,500</div>
@@ -760,7 +884,7 @@ export const AgencyFleet: React.FC = () => {
             </p>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 20 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 280px), 1fr))", gap: 18 }}>
             {[
               {
                 icon: "🏢",
@@ -882,7 +1006,7 @@ export const AgencyFleet: React.FC = () => {
           </div>
 
           {/* 3 Top-Class Agency Pricing Cards (Single-Screen Optimized) */}
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(290px, 1fr))", gap: 16, alignItems: "stretch" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 280px), 1fr))", gap: 16, alignItems: "stretch" }}>
             {/* Tier 1: Pilot Deal Risk Audit ($99) */}
             <div
               style={{
@@ -1330,7 +1454,7 @@ export const AgencyFleet: React.FC = () => {
               </p>
 
               {/* 4 Quick Deliverable Badges */}
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 10 }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 150px), 1fr))", gap: 10 }}>
                 {[
                   { icon: "⏱️", text: "5–10 Day Rapid Sprint" },
                   { icon: "💎", text: "100% Code Ownership" },

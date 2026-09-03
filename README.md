@@ -1,51 +1,102 @@
 <div align="center">
 
+<img src="docs/assets/logo_icon.png" alt="DealSense Logo" width="110" style="margin-bottom: 12px; filter: drop-shadow(0 6px 18px rgba(255, 92, 53, 0.4));" />
+
 # 🎯 DealSense
 ### **Autonomous HubSpot-Native Revenue Intelligence & Deal Risk Engine**
 
 *Turn chaotic CRM activity into explainable revenue decisions, verifiable MEDDICC health, and human-approved CRM actions with zero LLM hallucinations.*
 
-[![CI Pipeline](https://img.shields.io/badge/CI%2FCD-48%2F48%20Passing-success?style=for-the-badge&logo=github-actions)](https://github.com/peashdasrudra/DealSense/actions)
-[![Python 3.14+](https://img.shields.io/badge/Python-3.14%2B-blue?style=for-the-badge&logo=python)](https://python.org)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.115+-009688?style=for-the-badge&logo=fastapi)](https://fastapi.tiangolo.com)
-[![Redis Streams](https://img.shields.io/badge/Streaming-Redis%20Streams-DC382D?style=for-the-badge&logo=redis)](https://redis.io)
-[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16%2B%20%7C%20pgvector-336791?style=for-the-badge&logo=postgresql)](https://github.com/pgvector/pgvector)
-[![React 18](https://img.shields.io/badge/React-18.3-61DAFB?style=for-the-badge&logo=react)](https://reactjs.org)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.5-3178C6?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org)
-[![Production Deployed](https://img.shields.io/badge/Production-dealsense.peash.tech-000000?style=for-the-badge&logo=vercel)](https://dealsense.peash.tech)
-
 <br />
 
-<img src="docs/assets/Landing.png" alt="DealSense Autonomous Revenue Intelligence Platform Showcase" width="100%" style="border-radius: 12px; box-shadow: 0 12px 36px rgba(0,0,0,0.3);" />
+[![CI/CD Pipeline](https://img.shields.io/badge/CI%2FCD-48%2F48%20Passing%20(100%25)-success?style=for-the-badge&logo=github-actions&logoColor=white)](https://github.com/peashdasrudra/DealSense/actions)
+[![Python 3.14+](https://img.shields.io/badge/Python-3.14%2B-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.115%2B-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
+[![Redis Streams](https://img.shields.io/badge/Streaming-Redis%20Streams-DC382D?style=for-the-badge&logo=redis&logoColor=white)](https://redis.io)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16%2B%20%7C%20pgvector-336791?style=for-the-badge&logo=postgresql&logoColor=white)](https://github.com/pgvector/pgvector)
+[![React 18](https://img.shields.io/badge/React-18.3-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://reactjs.org)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.5-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org)
+[![HubSpot App Certified](https://img.shields.io/badge/HubSpot-Native%20Canvas%20UI-FF7A59?style=for-the-badge&logo=hubspot&logoColor=white)](https://dealsense.peash.tech/pipeline)
+[![Production Live](https://img.shields.io/badge/Production-dealsense.peash.tech-092124?style=for-the-badge&logo=vercel&logoColor=white)](https://dealsense.peash.tech)
 
 <br /><br />
 
-[🌐 Live Web Dashboard](https://dealsense.peash.tech) • [🧩 HubSpot Native App](https://dealsense.peash.tech/pipeline) • [✨ Executive Case Study](https://dealsense.peash.tech/case-study) • [🏛️ Architecture](#-system-architecture) • [🧪 48/48 Test Suites](#-automated-verification-suites-4848-passing) • [⚡ Quick Start](#-quick-start) • [💬 Developer Outbound](#-creator--lead-architect)
+<!-- Dynamic Live Architecture & Telemetry Banner -->
+<a href="https://www.loom.com/share/36fa0417cc9a47e1b08ef2091a304c5f">
+  <img src="docs/assets/architecture.gif" alt="DealSense Real-Time Architecture & Ingestion Telemetry" width="100%" style="border-radius: 14px; border: 1.5px solid rgba(255, 92, 53, 0.35); box-shadow: 0 16px 48px rgba(9, 33, 36, 0.35);" />
+</a>
+
+<br /><br />
+
+### ⚡ Direct Video Demos & Live Links
+
+| Resource | Direct Link | Description |
+| :--- | :--- | :--- |
+| 🎥 **Platform Walkthrough** | [**Watch on Loom (4 min)**](https://www.loom.com/share/0fa494403b584e51a988e5bf7474b82d) | Full end-to-end product demonstration, HubSpot Canvas deck & live telemetry tour |
+| 🏛️ **Architecture Deep Dive** | [**Watch on Loom (34 sec)**](https://www.loom.com/share/36fa0417cc9a47e1b08ef2091a304c5f) | Sub-200ms Redis Streams, 7-vector deterministic scoring & RLS multi-tenant pipeline |
+| 🌐 **Live Web Application** | [**dealsense.peash.tech**](https://dealsense.peash.tech) | Production RevOps Command Center, Monte Carlo forecasting & deal triage |
+| 🏢 **Agency Fleet Partner** | [**dealsense.peash.tech/agency**](https://dealsense.peash.tech/agency) | Multi-tenant white-label fleet cockpit & $300K ARR retainer arbitrage model |
+| 🧩 **HubSpot Native App** | [**dealsense.peash.tech/pipeline**](https://dealsense.peash.tech/pipeline) | Embedded HubSpot Canvas sidebar card preview inside native deal pipelines |
+
+<br />
+
+[✨ Why DealSense](#-why-dealsense) • [🎥 Video Walkthroughs](#-video-walkthroughs--demonstrations) • [🏛️ System Architecture](#️-system-architecture) • [📊 Value Comparison](#-competitive-value-comparison) • [🧮 7-Signal Scoring Engine](#-7-signal-deterministic-scoring-engine) • [🧪 48/48 Test Suites](#-automated-verification-suites-4848-passing) • [📦 Deployment Packages](#-transparent-deployment-packages) • [⚡ Quick Start](#-quick-start) • [👨‍💻 Architect](#-creator--lead-architect)
 
 ---
 
 </div>
 
+## 🎥 Video Walkthroughs & Demonstrations
+
+Experience DealSense in action through recorded walkthroughs showcasing both user capabilities and low-latency architectural mechanics:
+
+### 1. 🎬 End-to-End System Walkthrough (4 Minutes)
+[![DealSense Full Product Walkthrough](https://img.shields.io/badge/Loom-Watch%20DealSense%20Walkthrough%20(4%20min)-FF5C35?style=for-the-badge&logo=loom&logoColor=white)](https://www.loom.com/share/0fa494403b584e51a988e5bf7474b82d)
+
+> **Key Highlights in Walkthrough:**
+> - **Interactive How It Works Telemetry Tour**: Live 4-stage interactive video flow showing OAuth ingestion, dynamic score calculations, Monte Carlo simulations, and 2-way writeback.
+> - **Multi-Tenant Agency Fleet Command**: Switching between live client portals (`TechCorp`, `FinanceGo`, `RetailMax`) with cross-portal health benchmarking.
+> - **HubSpot Embedded Canvas Card**: Inspecting live 7-vector score breakdowns, ghosting CFO alerts, and 1-click deal rescue writebacks directly inside HubSpot deal records.
+> - **Retainer Arbitrage Calculator**: Real-time ARR simulation proving how agencies scale from $99 pilot audits to $2,500/mo retained revenue.
+
+👉 **Direct Link**: [https://www.loom.com/share/0fa494403b584e51a988e5bf7474b82d](https://www.loom.com/share/0fa494403b584e51a988e5bf7474b82d)
+
+---
+
+### 2. 🏛️ Working System Architecture (34 Seconds)
+[![DealSense Working Architecture](https://img.shields.io/badge/Loom-Watch%20Architecture%20Deep%20Dive-124548?style=for-the-badge&logo=loom&logoColor=white)](https://www.loom.com/share/36fa0417cc9a47e1b08ef2091a304c5f)
+
+> **Key Highlights in Architecture:**
+> - **Sub-200ms Webhook Pipeline**: HMAC-SHA256 authenticated event streaming from HubSpot into distributed Redis Streams.
+> - **Deterministic 7-Vector Math**: Pure mathematical scoring without unconstrained LLM hallucinations.
+> - **Row-Level Security (RLS)**: Cryptographically partitioned PostgreSQL 16 + pgvector storage per agency tenant.
+
+👉 **Direct Link**: [https://www.loom.com/share/36fa0417cc9a47e1b08ef2091a304c5f](https://www.loom.com/share/36fa0417cc9a47e1b08ef2091a304c5f)
+
+---
+
 ## 🌐 Live Production Deployments
 
-| Application | Description | Live Production URL |
-| :--- | :--- | :--- |
-| **🏢 Agency Command Center** | Macro-level RevOps portfolio intelligence, Monte Carlo forecasting, Waterfall & Playbooks | [dealsense.peash.tech](https://dealsense.peash.tech) |
-| **🧩 HubSpot Native Command Deck** | Native HubSpot Canvas UI embedded directly into HubSpot pipelines | [dealsense.peash.tech/pipeline](https://dealsense.peash.tech/pipeline) |
-| **✨ Architecture & Pricing Case Study** | Agency ROI arbitrage calculator, $99 pilot risk audit & technical deep-dive | [dealsense.peash.tech/case-study](https://dealsense.peash.tech/case-study) |
+| Environment | Focus Area | Production URL | Status |
+| :--- | :--- | :--- | :--- |
+| **🏢 Agency Command Center** | Macro portfolio health, Monte Carlo forecasting, Waterfall & Playbooks | [dealsense.peash.tech](https://dealsense.peash.tech) | ![Live](https://img.shields.io/badge/Status-Online-success?style=flat-square) |
+| **🏢 Agency Fleet Partner Hub** | White-label client acquisition, Trojan Horse playbook, $300K ARR calculator | [dealsense.peash.tech/agency](https://dealsense.peash.tech/agency) | ![Live](https://img.shields.io/badge/Status-Online-success?style=flat-square) |
+| **🧩 HubSpot Native Deck** | Embedded HubSpot Canvas UI directly inside CRM pipelines | [dealsense.peash.tech/pipeline](https://dealsense.peash.tech/pipeline) | ![Live](https://img.shields.io/badge/Status-Online-success?style=flat-square) |
+| **✨ Case Study & Audit** | Technical deep-dive, $99 pilot risk audit & direct booking checkout | [dealsense.peash.tech/case-study](https://dealsense.peash.tech/case-study) | ![Live](https://img.shields.io/badge/Status-Online-success?style=flat-square) |
 
 ---
 
 ## 💡 Why DealSense?
 
-Most "AI CRM" tools simply dump generic LLM wrappers on deal properties, hallucinating win probabilities, outputting vague summaries, and creating noise that sales reps ignore.
+Most "AI CRM" tools simply dump generic LLM wrappers on deal records. They hallucinate win probabilities, generate generic summaries reps ignore, and expose sensitive sales data to non-deterministic third-party APIs.
 
-**DealSense is engineered differently:**
+**DealSense is built on a radically different engineering doctrine:**
+
 1. **Deterministic Mathematics Before LLMs**: Health scores (0–100) are computed across **7 measurable mathematical vectors** (stage velocity, engagement half-life decay, economic buyer silence, date slip frequency, MEDDICC completeness), giving 100% reproducible and explainable scores without hallucinations.
 2. **Sub-200ms Webhook Streaming**: Ingests high-frequency HubSpot CRM events via HMAC-SHA256 verified webhooks into distributed Redis Streams for zero-downtime, backpressure-tolerant processing.
-3. **Multi-Threaded Stakeholder Tracking**: Automatically detects single-threaded deals and alerts revenue leaders when the Economic Buyer (CFO/CEO) has been silent for >14 days.
+3. **Multi-Threaded Stakeholder Tracking**: Automatically flags single-threaded deals and alerts revenue leaders when the Economic Buyer (CFO/CEO) has been silent for >14 days.
 4. **Controlled Autonomy & Approval Gates**: 4 distinct action tiers ensure AI never mutates CRM data without human authorization and complete audit logging.
-5. **HubSpot Native Canvas Design**: Designed according to official HubSpot Canvas guidelines with `#124548` deep teal accents, signature `#ff5c35` flame highlights, warm surfaces, and crisp enterprise typography.
+5. **Native HubSpot Canvas UI**: Styled according to official HubSpot Canvas guidelines (`#124548` deep teal, signature `#ff5c35` flame highlights, warm surfaces, and enterprise typography).
 
 ---
 
@@ -58,68 +109,53 @@ Most "AI CRM" tools simply dump generic LLM wrappers on deal properties, halluci
 | **Multi-Tenant Security** | **PostgreSQL Row-Level Security (RLS) + AES-256** | Enterprise Cloud Silos | Shared database tables (Data leakage risk) |
 | **Automated Test Coverage** | **48/48 Passing Pytest Test Suites (100%)** | Enterprise QA | 0 tests (Breaks under webhook load) |
 | **Deployment Speed & Cost** | **60-Second 1-Click OAuth from $99** | $30K–$60K/year contracts | $20K–$40K & 6-month custom dev cycles |
+| **Code Ownership** | **100% Source Code & Database Ownership** | Proprietary locked SaaS ($0 equity) | Fragmented spaghetti code |
 
 ---
 
 ## 🏛️ System Architecture
 
 ```
-                                  HUBSPOT CRM
-         ┌─────────────────────────────┼─────────────────────────────┐
-         │ (OAuth 2.0 Ingest)          │ (v1/v3 Webhook Events)      │ (React Canvas Extension)
-         ▼                             ▼                             ▼
-┌──────────────────┐         ┌──────────────────┐          ┌──────────────────┐
-│   OAuth & Token  │         │ Webhook Gateway  │          │ DealSense Card   │
-│     Manager      │         │ (FastAPI Router) │          │ (HubSpot Sidebar)│
-└────────┬─────────┘         └────────┬─────────┘          └────────┬─────────┘
-         │                            │                             │
-         │ AES-256-GCM                │ HMAC-SHA256 Verification    │ REST / SSE
-         ▼                            ▼                             ▼
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                       TENANT ISOLATION MIDDLEWARE                           │
-└─────────────────────────────────────┬───────────────────────────────────────┘
-                                      │ Redis Streams Queue (Sub-200ms)
-                                      ▼
-                      ┌───────────────────────────────┐
-                      │  Async Celery Processing Hub  │
-                      └───────────────┬───────────────┘
-                                      │
-          ┌───────────────────────────┼───────────────────────────┐
-          ▼                           ▼                           ▼
-┌──────────────────┐        ┌──────────────────┐        ┌──────────────────┐
-│ 7-Vector Scoring │        │ Hybrid Retrieval │        │ LangGraph Agent  │
-│  (Deterministic) │        │ (Vector + RRF)   │        │ (7-Node Dossier) │
-└────────┬─────────┘        └────────┬─────────┘        └────────┬─────────┘
-         │                           │                           │
-         └───────────────────────────┼───────────────────────────┘
-                                     ▼
-                      ┌───────────────────────────────┐
-                      │ PostgreSQL 16 + pgvector HNSW │
-                      │ (Row-Level Security Partitions│
-                      └───────────────────────────────┘
+                                      HUBSPOT CRM
+             ┌─────────────────────────────┼─────────────────────────────┐
+             │ (OAuth 2.0 Ingest)          │ (v1/v3 Webhook Events)      │ (React Canvas Extension)
+             ▼                             ▼                             ▼
+   ┌──────────────────┐          ┌──────────────────┐          ┌──────────────────┐
+   │   OAuth & Token  │          │ Webhook Gateway  │          │ DealSense Card   │
+   │     Manager      │          │ (FastAPI Router) │          │ (HubSpot Sidebar)│
+   └────────┬─────────┘          └────────┬─────────┘          └────────┬─────────┘
+            │                             │                             │
+            │ AES-256-GCM                 │ HMAC-SHA256 Verification    │ REST / SSE
+            ▼                             ▼                             ▼
+   ┌─────────────────────────────────────────────────────────────────────────────┐
+   │                       TENANT ISOLATION MIDDLEWARE                           │
+   └─────────────────────────────────────┬───────────────────────────────────────┘
+                                         │ Redis Streams Queue (Sub-200ms)
+                                         ▼
+                         ┌───────────────────────────────┐
+                         │  Async Celery Processing Hub  │
+                         └───────────────┬───────────────┘
+                                         │
+             ┌───────────────────────────┼───────────────────────────┐
+             ▼                           ▼                           ▼
+   ┌──────────────────┐         ┌──────────────────┐        ┌──────────────────┐
+   │ 7-Vector Scoring │         │ Hybrid Retrieval │        │ LangGraph Agent  │
+   │  (Deterministic) │         │ (Vector + RRF)   │        │ (7-Node Dossier) │
+   └────────┬─────────┘         └────────┬─────────┘        └────────┬─────────┘
+            │                            │                           │
+            └────────────────────────────┼───────────────────────────┘
+                                         ▼
+                         ┌───────────────────────────────┐
+                         │ PostgreSQL 16 + pgvector HNSW │
+                         │ (Row-Level Security Partitions│
+                         └───────────────────────────────┘
 ```
 
----
-
-## ✨ Complete Platform Map (15 Production Modules)
-
-| Module | Route | Key Capabilities |
-| :--- | :--- | :--- |
-| **📊 Pipeline Overview** | `/pipeline` | Macro portfolio health, slip forecast, 0–100 risk scoring & interactive deal drawer |
-| **🔮 Revenue Forecast** | `/forecast` | Monte Carlo revenue simulation (Commit vs Best Case vs AI Reality across 1,000 iterations) |
-| **🌊 Pipeline Waterfall** | `/waterfall` | Inflow/outflow velocity, stage transition analytics & slippage leakage triage |
-| **🎯 Deal Inspector** | `/deals` | Filterable deal dossier table with CSV export, stage velocity & next-step triage |
-| **🛡️ Deal War Room** | `/war-room` | Friday pipeline review hub, stakeholder multi-threading map & instant executive QBR export |
-| **🤝 Stakeholder Matrix** | `/stakeholders` | Power matrix mapping Economic Buyers, Champions, Technical Evaluators & Single-Threading |
-| **🔥 Risk Heatmap** | `/heatmap` | Multi-dimensional matrix mapping deal value by stage and risk severity band |
-| **⚡ Action Approval Queue** | `/actions` | 1-click batch deal rescue approvals with Slack preview and instant HubSpot write-back |
-| **🗺️ Mutual Action Plans** | `/map` | Buyer-seller shared milestone schedules with public interactive client links |
-| **⚔️ Battlecards & Objections** | `/battlecards` | Word-for-word objection killer scripts against Gong, Clari, and Native HubSpot |
-| **🤖 RevOps Playbooks** | `/playbooks` | Conditional trigger engine (e.g. *IF CFO Silent > 14d -> Auto-draft VP outreach*) |
-| **🧹 CRM Hygiene Engine** | `/hygiene` | Automated discrepancy detector with 1-click batch close date slip auto-remediation |
-| **👥 Rep Coaching** | `/reps` | Rep risk index, stage velocity bottleneck analysis, and customized coaching plans |
-| **🏢 Client Health** | `/clients` | Account churn probability, expansion pipeline, and executive sponsor health scorecards |
-| **✨ Architecture & Case Study**| `/case-study`| Live agency arbitrage calculator, $99 / $1,500 / $3,500 packages & direct outbound booking |
+### Architectural Highlights
+- **Distributed Ingestion Gateway**: FastAPI async router validates incoming HubSpot HMAC-SHA256 signatures in <5ms before pushing payloads to an append-only Redis Stream.
+- **Backpressure-Tolerant Workers**: Celery consumer workers pull from Redis Streams in configurable batch sizes, shielding downstream databases from CRM burst spikes.
+- **Strict Row-Level Security (RLS)**: Every SQL query executes with `SET LOCAL app.current_tenant_id = :tenant_id`, guaranteeing multi-tenant data isolation at the engine level.
+- **Deterministic-First Scoring Pipeline**: Raw deal properties are processed through `packages/scoring/signals.py` before any generative AI nodes receive context.
 
 ---
 
@@ -148,6 +184,28 @@ Risk Band Classification:
   75 – 89  ▶ [LOW]      🟢 Strong engagement with healthy stage velocity
   90 – 100 ▶ [HEALTHY]  🌟 Verified Economic Buyer, active Champion, on track
 ```
+
+---
+
+## ✨ Complete Platform Map (15 Production Modules)
+
+| Module | Route | Key Capabilities |
+| :--- | :--- | :--- |
+| **📊 Pipeline Overview** | `/pipeline` | Macro portfolio health, slip forecast, 0–100 risk scoring & interactive deal drawer |
+| **🔮 Revenue Forecast** | `/forecast` | Monte Carlo revenue simulation (Commit vs Best Case vs AI Reality across 10,000 iterations) |
+| **🌊 Pipeline Waterfall** | `/waterfall` | Inflow/outflow velocity, stage transition analytics & slippage leakage triage |
+| **🎯 Deal Inspector** | `/deals` | Filterable deal dossier table with CSV export, stage velocity & next-step triage |
+| **🛡️ Deal War Room** | `/war-room` | Friday pipeline review hub, stakeholder multi-threading map & instant executive QBR export |
+| **🤝 Stakeholder Matrix** | `/stakeholders` | Power matrix mapping Economic Buyers, Champions, Technical Evaluators & Single-Threading |
+| **🔥 Risk Heatmap** | `/heatmap` | Multi-dimensional matrix mapping deal value by stage and risk severity band |
+| **⚡ Action Approval Queue** | `/actions` | 1-click batch deal rescue approvals with Slack preview and instant HubSpot write-back |
+| **🗺️ Mutual Action Plans** | `/map` | Buyer-seller shared milestone schedules with public interactive client links |
+| **⚔️ Battlecards & Objections** | `/battlecards` | Word-for-word objection killer scripts against Gong, Clari, and Native HubSpot |
+| **🤖 RevOps Playbooks** | `/playbooks` | Conditional trigger engine (e.g. *IF CFO Silent > 14d -> Auto-draft VP outreach*) |
+| **🧹 CRM Hygiene Engine** | `/hygiene` | Automated discrepancy detector with 1-click batch close date slip auto-remediation |
+| **👥 Rep Coaching** | `/reps` | Rep risk index, stage velocity bottleneck analysis, and customized coaching plans |
+| **🏢 Client Health** | `/clients` | Account churn probability, expansion pipeline, and executive sponsor health scorecards |
+| **✨ Architecture & Case Study**| `/case-study`| Live agency arbitrage calculator, $99 / $1,500 / $3,500 packages & direct outbound booking |
 
 ---
 
@@ -240,7 +298,11 @@ DealSense/
 │   └── prompts/              # Strict evidence extraction & MEDDICC prompt guardrails
 ├── infrastructure/
 │   └── docker/               # Docker compose, PostgreSQL 16 pgvector init scripts
-└── docs/                     # Architectural Decision Records (ADRs) & specifications
+└── docs/                     # Architectural Decision Records (ADRs), specs & visual assets
+    └── assets/
+        ├── logo_icon.png     # Official DealSense Emblem
+        ├── architecture.gif  # Dynamic streaming ingestion & telemetry GIF
+        └── Landing.png       # High-resolution platform showcase
 ```
 
 ---
@@ -250,7 +312,10 @@ DealSense/
 **Peash Das Rudra** — *Senior AI & Distributed Systems Architect*
 - ✉️ Direct Outbound Email: [peashdasrudra@gmail.com](mailto:peashdasrudra@gmail.com)
 - 📂 GitHub Repository: [github.com/peashdasrudra/DealSense](https://github.com/peashdasrudra/DealSense)
+- 🎥 Walkthrough Video: [https://www.loom.com/share/0fa494403b584e51a988e5bf7474b82d](https://www.loom.com/share/0fa494403b584e51a988e5bf7474b82d)
+- 🏛️ Architecture Video: [https://www.loom.com/share/36fa0417cc9a47e1b08ef2091a304c5f](https://www.loom.com/share/36fa0417cc9a47e1b08ef2091a304c5f)
 - 🌐 Live Application: [dealsense.peash.tech](https://dealsense.peash.tech)
+- 🏢 Agency Fleet Command: [dealsense.peash.tech/agency](https://dealsense.peash.tech/agency)
 - 📜 Architectural Case Study: [dealsense.peash.tech/case-study](https://dealsense.peash.tech/case-study)
 
 ---

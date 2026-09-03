@@ -1437,6 +1437,72 @@ tr:hover td {
 
 /* ── HubSpot SaaS Landing Page Responsive Engine ─────────────────────────── */
 
+.landing-layout {
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden !important;
+  position: relative;
+}
+
+/* Force mobile layout when mobile device is detected (e.g. LinkedIn in-app preview) */
+html.mobile-force .desktop-nav-links,
+body.mobile-force .desktop-nav-links {
+  display: none !important;
+}
+
+html.mobile-force .desktop-cta-btn,
+body.mobile-force .desktop-cta-btn {
+  display: none !important;
+}
+
+html.mobile-force .mobile-hamburger-btn,
+body.mobile-force .mobile-hamburger-btn {
+  display: flex !important;
+}
+
+html.mobile-force .banner-desktop,
+body.mobile-force .banner-desktop {
+  display: none !important;
+}
+
+html.mobile-force .banner-mobile,
+body.mobile-force .banner-mobile {
+  display: flex !important;
+}
+
+html.mobile-force .landing-hero-btns,
+body.mobile-force .landing-hero-btns {
+  flex-direction: column !important;
+  width: 100% !important;
+  gap: 10px !important;
+}
+
+html.mobile-force .landing-hero-btns button,
+html.mobile-force .landing-hero-btns a,
+body.mobile-force .landing-hero-btns button,
+body.mobile-force .landing-hero-btns a {
+  width: 100% !important;
+  justify-content: center !important;
+}
+
+html.mobile-force .landing-feature-grid,
+body.mobile-force .landing-feature-grid {
+  grid-template-columns: 1fr !important;
+  gap: 24px !important;
+}
+
+html.mobile-force .landing-hubs-layout,
+body.mobile-force .landing-hubs-layout {
+  grid-template-columns: 1fr !important;
+  gap: 32px !important;
+}
+
+html.mobile-force .landing-hubs-grid,
+body.mobile-force .landing-hubs-grid {
+  grid-template-columns: 1fr !important;
+  gap: 12px !important;
+}
+
 .desktop-nav-links {
   display: flex;
   align-items: center;
@@ -1566,7 +1632,7 @@ tr:hover td {
   padding: 6px 16px;
   min-height: 34px;
   display: flex;
-  justifyContent: center;
+  justify-content: center;
   align-items: center;
   text-align: center;
   position: relative;
@@ -1578,7 +1644,7 @@ tr:hover td {
 .telemetry-inner-wrapper {
   display: flex;
   align-items: center;
-  justifyContent: center;
+  justify-content: center;
   gap: 8px;
   flex-wrap: wrap;
   margin: 0 auto;
@@ -1620,7 +1686,7 @@ tr:hover td {
   position: relative;
   display: inline-flex;
   align-items: center;
-  justifyContent: center;
+  justify-content: center;
   width: 12px;
   height: 12px;
   flex-shrink: 0;
@@ -2008,3 +2074,175 @@ tr:hover td {
     transform: none;
   }
 }
+
+/* ── Interactive Live Flowing Video "How It Works" Section ─────────────── */
+@keyframes flowStream {
+  0% {
+    stroke-dashoffset: 40;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes packetTravel {
+  0% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+@keyframes pulseGlowHubspot {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(255, 92, 53, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(255, 92, 53, 0);
+  }
+}
+
+@keyframes pulseGlowTeal {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(18, 69, 72, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(18, 69, 72, 0);
+  }
+}
+
+@keyframes radarSweep {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes liveBeaconPing {
+  0% {
+    transform: scale(0.95);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+}
+
+.how-it-works-video-deck {
+  background: linear-gradient(180deg, #092124 0%, #0c2b2e 100%);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 28px 70px -15px rgba(9, 33, 36, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  overflow: hidden;
+  position: relative;
+}
+
+.video-scrubber-track {
+  background: rgba(255, 255, 255, 0.08);
+  height: 4px;
+  border-radius: 9999px;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  transition: height 0.15s ease;
+}
+
+.video-scrubber-track:hover {
+  height: 6px;
+}
+
+.video-scrubber-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #ff5c35 0%, #ff7b57 100%);
+  border-radius: 9999px;
+  box-shadow: 0 0 10px rgba(255, 92, 53, 0.8);
+  transition: width 0.1s linear;
+}
+
+.video-stage-tab {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 12px 14px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.video-stage-tab:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.18);
+  transform: translateY(-2px);
+}
+
+.video-stage-tab.active {
+  background: rgba(255, 92, 53, 0.12);
+  border-color: rgba(255, 92, 53, 0.45);
+  box-shadow: 0 4px 18px rgba(255, 92, 53, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.video-canvas-viewport {
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 16px 40px -10px rgba(9, 33, 36, 0.12);
+  position: relative;
+  overflow: hidden;
+}
+
+.streaming-flow-line {
+  stroke-dasharray: 6, 6;
+  animation: flowStream 1.2s linear infinite;
+}
+
+.hubspot-canvas-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+.pulse-hubspot-dot {
+  animation: pulseGlowHubspot 2s infinite;
+}
+
+.live-beacon-ring-anim {
+  animation: liveBeaconPing 1.8s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+@media (max-width: 900px) {
+  .how-it-works-video-deck {
+    border-radius: 14px;
+  }
+  .video-stage-tabs-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+@media (max-width: 600px) {
+  .video-stage-tabs-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+

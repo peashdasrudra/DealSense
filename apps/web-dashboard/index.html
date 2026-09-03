@@ -2,7 +2,43 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0, viewport-fit=cover" />
+  <meta name="HandheldFriendly" content="true" />
+  <meta name="MobileOptimized" content="width" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="format-detection" content="telephone=no" />
+
+  <!-- Pre-render Viewport Protection for In-App Browsers (LinkedIn, Instagram, Slack, Twitter) -->
+  <script>
+    (function() {
+      var ua = navigator.userAgent || navigator.vendor || window.opera || '';
+      var isMobileUA = /android|iphone|ipad|ipod|blackberry|iemobile|opera mini|mobile|silk/i.test(ua) || /LinkedInApp/i.test(ua);
+      var isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+      var screenW = window.screen ? Math.min(window.screen.width, window.screen.height) : window.innerWidth;
+      var isMobileDevice = isMobileUA || (isTouch && screenW <= 850);
+
+      function lockMobileViewport() {
+        var viewport = document.querySelector('meta[name="viewport"]');
+        if (!viewport) {
+          viewport = document.createElement('meta');
+          viewport.name = 'viewport';
+          document.head.appendChild(viewport);
+        }
+        if (isMobileDevice) {
+          viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0, viewport-fit=cover');
+          document.documentElement.classList.add('mobile-force');
+          if (document.body) document.body.classList.add('mobile-force');
+        }
+      }
+
+      lockMobileViewport();
+      window.addEventListener('DOMContentLoaded', lockMobileViewport);
+      window.addEventListener('load', lockMobileViewport);
+      window.addEventListener('resize', lockMobileViewport);
+      window.addEventListener('orientationchange', lockMobileViewport);
+    })();
+  </script>
   <!-- Primary Meta Tags -->
   <title>DealSense | AI HubSpot App for RevOps by AiXpertLabs & Peash Das Rudra</title>
   <meta name="title" content="DealSense | AI HubSpot App for RevOps by AiXpertLabs & Peash Das Rudra" />

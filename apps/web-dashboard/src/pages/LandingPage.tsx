@@ -9,6 +9,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { DealSenseIcon } from "../components/DealSenseLogo";
 import { Footer } from "../components/Footer";
+import { HowItWorksVideoSection } from "../components/HowItWorksVideoSection";
 
 export const LandingPage: React.FC = () => {
   const navigate = useNavigate();
@@ -215,6 +216,7 @@ export const LandingPage: React.FC = () => {
           {/* Desktop Nav Links */}
           <div className="desktop-nav-links" style={{ display: "flex", alignItems: "center", gap: 24 }}>
             <span onClick={() => navigate("/pipeline")} style={{ fontSize: "14px", fontWeight: 600, color: "#0f172a", cursor: "pointer" }}>Platform</span>
+            <a href="#how-it-works" style={{ fontSize: "14px", fontWeight: 600, color: "#475569", textDecoration: "none", cursor: "pointer" }}>How It Works</a>
             <span onClick={() => navigate("/forecast")} style={{ fontSize: "14px", fontWeight: 600, color: "#475569", cursor: "pointer" }}>Forecasting</span>
             <span onClick={() => navigate("/war-room")} style={{ fontSize: "14px", fontWeight: 600, color: "#475569", cursor: "pointer" }}>War Room</span>
             <span
@@ -1107,6 +1109,9 @@ export const LandingPage: React.FC = () => {
           </div>
         </div>
       </section>
+
+      {/* ── 6.5 Interactive Live Flowing Video Tour: How It Works ───────── */}
+      <HowItWorksVideoSection variant="landing" />
 
       {/* ── 7. Live Interactive Deal Risk Simulator ──────────────────── */}
       <section style={{ padding: "clamp(56px, 7vw, 90px) clamp(16px, 4vw, 24px)", maxWidth: 1140, margin: "0 auto" }}>
