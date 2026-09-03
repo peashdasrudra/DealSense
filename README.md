@@ -3,7 +3,7 @@
 <img src="docs/assets/logo_icon.png" alt="DealSense Logo" width="110" style="margin-bottom: 12px; filter: drop-shadow(0 6px 18px rgba(255, 92, 53, 0.4));" />
 
 # DealSense
-### **Autonomous HubSpot-Native Revenue Intelligence & Deal Risk Engine**
+### **HubSpot-Native AI Revenue Intelligence & Deal Risk Engine**
 
 *Turn chaotic CRM activity into explainable revenue decisions, verifiable MEDDICC health, and human-approved CRM actions with zero LLM hallucinations.*
 
