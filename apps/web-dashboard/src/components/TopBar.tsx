@@ -94,9 +94,27 @@ export const TopBar: React.FC<TopBarProps> = ({
         </div>
 
         {/* Page Title (Always Visible on Both Desktop and Mobile) */}
-        <div className="topbar-title-section">
+        <div className="topbar-title-section" style={{ display: "flex", alignItems: "center", gap: 8 }}>
           <span className="title-divider">/</span>
           <h1 className="header-page-title">{title}</h1>
+          <span
+            style={{
+              background: "rgba(0, 189, 165, 0.12)",
+              color: "#00838f",
+              border: "1px solid rgba(0, 189, 165, 0.3)",
+              fontSize: "10px",
+              fontWeight: 700,
+              padding: "2px 7px",
+              borderRadius: "10px",
+              letterSpacing: "0.03em",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 4,
+            }}
+          >
+            <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#00bda5", display: "inline-block" }} />
+            HUBSPOT LIVE
+          </span>
         </div>
       </div>
 

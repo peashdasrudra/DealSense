@@ -34,6 +34,24 @@ import { RevOpsPlaybooks } from "./pages/RevOpsPlaybooks";
 import { PipelineWaterfall } from "./pages/PipelineWaterfall";
 import { StakeholderMatrix } from "./pages/StakeholderMatrix";
 import { DealDrawer, DealData } from "./components/DealDrawer";
+import { BetaNotice } from "./components/BetaNotice";
+
+// ── Beta / Roadmap Route Mapping ─────────────────────────────────────────────
+const BETA_ROUTES: Record<string, string> = {
+  "/forecast": "Revenue Forecast & Simulation",
+  "/waterfall": "Pipeline Waterfall & Velocity",
+  "/war-room": "Deal War Room (QBR)",
+  "/stakeholders": "Stakeholder Power Matrix",
+  "/heatmap": "Pipeline Risk Heatmap",
+  "/map": "Mutual Action Plans (MAP)",
+  "/battlecards": "Competitive Battlecards",
+  "/playbooks": "RevOps Playbooks",
+  "/hygiene": "CRM Hygiene & Remediation",
+  "/reps": "Rep Risk Profiles & Coaching",
+  "/clients": "Client Health Scorecards",
+  "/audit": "Audit & Compliance Trail",
+  "/settings": "Scoring Settings",
+};
 
 // ── Page Title Mapping ───────────────────────────────────────────────────────
 
@@ -250,6 +268,9 @@ export const App: React.FC = () => {
         />
 
         <div className="page-content">
+          {BETA_ROUTES[location.pathname] && (
+            <BetaNotice moduleName={BETA_ROUTES[location.pathname]} />
+          )}
           <AnimatePresence mode="wait">
             <motion.div
               key={location.pathname}

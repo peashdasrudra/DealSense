@@ -147,51 +147,33 @@ interface NavSection {
 
 const NAV_SECTIONS: NavSection[] = [
   {
-    title: "Revenue Intelligence",
+    title: "⚡ Core MVP (Live & Serving)",
     defaultOpen: true,
     items: [
-      { id: "overview", label: "Home", iconKey: "overview", path: "/pipeline" },
-      { id: "forecast", label: "Revenue Forecast", iconKey: "forecast", path: "/forecast" },
-      { id: "waterfall", label: "Pipeline Waterfall", iconKey: "waterfall", path: "/waterfall", badge: "New", badgeColor: "#00a4bd" },
-      { id: "deals", label: "Deal Inspector", iconKey: "deals", path: "/deals" },
-      { id: "warroom", label: "Deal War Room", iconKey: "warroom", path: "/war-room" },
-      { id: "stakeholders", label: "Stakeholder Map", iconKey: "stakeholders", path: "/stakeholders" },
-      { id: "heatmap", label: "Risk Heatmap", iconKey: "heatmap", path: "/heatmap" },
-    ],
-  },
-  {
-    title: "Sales Execution",
-    defaultOpen: true,
-    items: [
-      { id: "actions", label: "Action Queue", iconKey: "actions", path: "/actions", badge: "5", badgeColor: "#ff5c35" },
-      { id: "map", label: "Mutual Action Plans", iconKey: "map", path: "/map" },
-      { id: "battlecards", label: "Battlecards", iconKey: "battlecards", path: "/battlecards" },
-    ],
-  },
-  {
-    title: "RevOps Automation",
-    defaultOpen: true,
-    items: [
-      { id: "playbooks", label: "Playbooks", iconKey: "playbooks", path: "/playbooks" },
-      { id: "hygiene", label: "CRM Hygiene", iconKey: "hygiene", path: "/hygiene", badge: "6", badgeColor: "var(--warning)" },
-      { id: "reps", label: "Rep Coaching", iconKey: "reps", path: "/reps" },
-      { id: "clients", label: "Client Health", iconKey: "clients", path: "/clients" },
-    ],
-  },
-  {
-    title: "Commercial & Showcase",
-    defaultOpen: true,
-    items: [
-      { id: "agency", label: "Agency Partner Fleet", iconKey: "clients", path: "/agency", badge: "72% OFF", badgeColor: "#ff5c35" },
+      { id: "overview", label: "Pipeline Command Center", iconKey: "overview", path: "/pipeline", badge: "LIVE", badgeColor: "#00bda5" },
+      { id: "deals", label: "Deal Inspector & CRM Hub", iconKey: "deals", path: "/deals", badge: "HUBSPOT CRM", badgeColor: "#ff7a59" },
+      { id: "actions", label: "Action Approval Queue", iconKey: "actions", path: "/actions", badge: "ACTIVE", badgeColor: "#00a4bd" },
+      { id: "agency", label: "Agency Fleet & Retainers", iconKey: "clients", path: "/agency", badge: "COMMERCIAL", badgeColor: "#ff5c35" },
       { id: "case-study", label: "Architecture Case Study", iconKey: "casestudy", path: "/case-study" },
     ],
   },
   {
-    title: "Settings",
+    title: "🧪 Enterprise Roadmap (Beta Preview)",
     defaultOpen: false,
     items: [
-      { id: "audit", label: "Audit Trail", iconKey: "audit", path: "/audit" },
-      { id: "settings", label: "Settings", iconKey: "settings", path: "/settings" },
+      { id: "forecast", label: "Revenue Forecast", iconKey: "forecast", path: "/forecast", badge: "BETA", badgeColor: "#ffab00" },
+      { id: "waterfall", label: "Pipeline Waterfall", iconKey: "waterfall", path: "/waterfall", badge: "BETA", badgeColor: "#ffab00" },
+      { id: "warroom", label: "Deal War Room (QBR)", iconKey: "warroom", path: "/war-room", badge: "BETA", badgeColor: "#ffab00" },
+      { id: "stakeholders", label: "Stakeholder Matrix", iconKey: "stakeholders", path: "/stakeholders", badge: "BETA", badgeColor: "#ffab00" },
+      { id: "heatmap", label: "Risk Heatmap", iconKey: "heatmap", path: "/heatmap", badge: "BETA", badgeColor: "#ffab00" },
+      { id: "map", label: "Mutual Action Plans", iconKey: "map", path: "/map", badge: "BETA", badgeColor: "#ffab00" },
+      { id: "battlecards", label: "Competitive Battlecards", iconKey: "battlecards", path: "/battlecards", badge: "BETA", badgeColor: "#ffab00" },
+      { id: "playbooks", label: "RevOps Playbooks", iconKey: "playbooks", path: "/playbooks", badge: "BETA", badgeColor: "#ffab00" },
+      { id: "hygiene", label: "CRM Hygiene", iconKey: "hygiene", path: "/hygiene", badge: "BETA", badgeColor: "#ffab00" },
+      { id: "reps", label: "Rep Coaching", iconKey: "reps", path: "/reps", badge: "BETA", badgeColor: "#ffab00" },
+      { id: "clients", label: "Client Health", iconKey: "clients", path: "/clients", badge: "BETA", badgeColor: "#ffab00" },
+      { id: "audit", label: "Audit Trail", iconKey: "audit", path: "/audit", badge: "BETA", badgeColor: "#ffab00" },
+      { id: "settings", label: "Scoring Settings", iconKey: "settings", path: "/settings", badge: "BETA", badgeColor: "#ffab00" },
     ],
   },
 ];
