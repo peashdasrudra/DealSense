@@ -1,0 +1,119 @@
+# ============================================================
+# DealSense — Production Turnkey Docker Compose (1-Command Cloud Deployment)
+# ============================================================
+# Usage:
+#   docker compose -f infrastructure/docker/docker-compose.prod.yml up -d --build
+# ============================================================
+
+services:
+  # ---- Caddy Automated Reverse Proxy & SSL ----
+  caddy:
+    image: caddy:2-alpine
+    container_name: dealsense-proxy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - web
+      - api
+
+  # ---- Web Dashboard (React 18 + Vite) ----
+  web:
+    build:
+      context: ../../apps/web-dashboard
+      dockerfile: Dockerfile
+    container_name: dealsense-web
+    restart: unless-stopped
+    expose:
+      - "80"
+
+  # ---- FastAPI High-Throughput Ingestion Engine ----
+  api:
+    build:
+      context: ../../
+      dockerfile: apps/api/Dockerfile
+      target: production
+    container_name: dealsense-api
+    restart: unless-stopped
+    environment:
+      - APP_ENV=production
+      - DEBUG=false
+      - DATABASE_URL=postgresql+asyncpg://${POSTGRES_USER:-dealsense}:${POSTGRES_PASSWORD:-dealsense_secure_pass}@postgres:5432/${POSTGRES_DB:-dealsense}
+      - DATABASE_URL_SYNC=postgresql://${POSTGRES_USER:-dealsense}:${POSTGRES_PASSWORD:-dealsense_secure_pass}@postgres:5432/${POSTGRES_DB:-dealsense}
+      - REDIS_URL=redis://:${REDIS_PASSWORD:-redis_secure_pass}@redis:6379/0
+      - SECRET_KEY=${SECRET_KEY:-dealsense_master_encryption_key_32bytes}
+      - API_HOST=0.0.0.0
+      - API_PORT=8000
+    expose:
+      - "8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  # ---- Celery Distributed Worker Hub ----
+  worker:
+    build:
+      context: ../../
+      dockerfile: apps/worker/Dockerfile
+    container_name: dealsense-worker
+    restart: unless-stopped
+    environment:
+      - APP_ENV=production
+      - DATABASE_URL=postgresql+asyncpg://${POSTGRES_USER:-dealsense}:${POSTGRES_PASSWORD:-dealsense_secure_pass}@postgres:5432/${POSTGRES_DB:-dealsense}
+      - REDIS_URL=redis://:${REDIS_PASSWORD:-redis_secure_pass}@redis:6379/0
+      - SECRET_KEY=${SECRET_KEY:-dealsense_master_encryption_key_32bytes}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  # ---- PostgreSQL 16 + pgvector (Multi-Tenant RLS) ----
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: dealsense-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-dealsense}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-dealsense_secure_pass}
+      POSTGRES_DB: ${POSTGRES_DB:-dealsense}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-db.sql:/docker-entrypoint-initdb.d/01-init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-dealsense} -d ${POSTGRES_DB:-dealsense}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # ---- Redis 7.x Streaming Queue ----
+  redis:
+    image: redis:7-alpine
+    container_name: dealsense-redis
+    restart: unless-stopped
+    command: >
+      redis-server 
+      --requirepass ${REDIS_PASSWORD:-redis_secure_pass} 
+      --appendonly yes 
+      --maxmemory 512mb 
+      --maxmemory-policy allkeys-lru
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD:-redis_secure_pass}", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
+  redis_data:
+  caddy_data:
+  caddy_config:

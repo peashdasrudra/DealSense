@@ -47,6 +47,4 @@ RUN pip install .
 COPY apps/api/src /app/src
 COPY packages /app/packages
 
-EXPOSE 8000
-
-CMD ["uvicorn", "dealsense.main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "4"]
+CMD ["sh", "-c", "uvicorn dealsense.main:app --host 0.0.0.0 --port ${PORT:-8000} --workers 2"]

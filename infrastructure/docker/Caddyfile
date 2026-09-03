@@ -1,0 +1,36 @@
+# ============================================================
+# DealSense — Caddy Automated SSL Reverse Proxy Configuration
+# ============================================================
+# Replace {$DOMAIN:localhost} with your client's custom domain
+# (e.g. dealsense.clientdomain.com or api.clientdomain.com)
+# ============================================================
+
+{$DOMAIN:localhost} {
+    # Route API requests to FastAPI backend
+    handle /api/* {
+        reverse_proxy api:8000
+    }
+
+    # Route OpenAPI docs
+    handle /docs* {
+        reverse_proxy api:8000
+    }
+    handle /openapi.json* {
+        reverse_proxy api:8000
+    }
+
+    # Route everything else to the React Dashboard
+    handle {
+        reverse_proxy web:80
+    }
+
+    # High-security production headers
+    header {
+        Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+        X-Content-Type-Options "nosniff"
+        X-Frame-Options "SAMEORIGIN"
+        Referrer-Policy "strict-origin-when-cross-origin"
+    }
+
+    encode gzip zstd
+}
