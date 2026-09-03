@@ -147,33 +147,39 @@ interface NavSection {
 
 const NAV_SECTIONS: NavSection[] = [
   {
-    title: "⚡ Core MVP (Live & Serving)",
+    title: "Pipeline & Deals",
     defaultOpen: true,
     items: [
-      { id: "overview", label: "Pipeline Command Center", iconKey: "overview", path: "/pipeline", badge: "LIVE", badgeColor: "#00bda5" },
-      { id: "deals", label: "Deal Inspector & CRM Hub", iconKey: "deals", path: "/deals", badge: "HUBSPOT CRM", badgeColor: "#ff7a59" },
-      { id: "actions", label: "Action Approval Queue", iconKey: "actions", path: "/actions", badge: "ACTIVE", badgeColor: "#00a4bd" },
-      { id: "agency", label: "Agency Fleet & Retainers", iconKey: "clients", path: "/agency", badge: "COMMERCIAL", badgeColor: "#ff5c35" },
-      { id: "case-study", label: "Architecture Case Study", iconKey: "casestudy", path: "/case-study" },
+      { id: "overview", label: "Pipeline Overview", iconKey: "overview", path: "/pipeline" },
+      { id: "deals", label: "Deal Inspector", iconKey: "deals", path: "/deals" },
+      { id: "actions", label: "Action Queue", iconKey: "actions", path: "/actions" },
+      { id: "agency", label: "Agency Fleet", iconKey: "clients", path: "/agency" },
     ],
   },
   {
-    title: "🧪 Enterprise Roadmap (Beta Preview)",
+    title: "Intelligence & Labs",
+    defaultOpen: true,
+    items: [
+      { id: "forecast", label: "Revenue Forecast", iconKey: "forecast", path: "/forecast", badge: "Beta" },
+      { id: "waterfall", label: "Pipeline Waterfall", iconKey: "waterfall", path: "/waterfall", badge: "Beta" },
+      { id: "warroom", label: "Deal War Room", iconKey: "warroom", path: "/war-room", badge: "Beta" },
+      { id: "stakeholders", label: "Stakeholder Matrix", iconKey: "stakeholders", path: "/stakeholders", badge: "Beta" },
+      { id: "heatmap", label: "Risk Heatmap", iconKey: "heatmap", path: "/heatmap", badge: "Beta" },
+      { id: "map", label: "Mutual Action Plans", iconKey: "map", path: "/map", badge: "Beta" },
+      { id: "battlecards", label: "Battlecards", iconKey: "battlecards", path: "/battlecards", badge: "Beta" },
+      { id: "playbooks", label: "RevOps Playbooks", iconKey: "playbooks", path: "/playbooks", badge: "Beta" },
+      { id: "hygiene", label: "CRM Hygiene", iconKey: "hygiene", path: "/hygiene", badge: "Beta" },
+      { id: "reps", label: "Rep Coaching", iconKey: "reps", path: "/reps", badge: "Beta" },
+      { id: "clients", label: "Client Health", iconKey: "clients", path: "/clients", badge: "Beta" },
+    ],
+  },
+  {
+    title: "Platform",
     defaultOpen: false,
     items: [
-      { id: "forecast", label: "Revenue Forecast", iconKey: "forecast", path: "/forecast", badge: "BETA", badgeColor: "#ffab00" },
-      { id: "waterfall", label: "Pipeline Waterfall", iconKey: "waterfall", path: "/waterfall", badge: "BETA", badgeColor: "#ffab00" },
-      { id: "warroom", label: "Deal War Room (QBR)", iconKey: "warroom", path: "/war-room", badge: "BETA", badgeColor: "#ffab00" },
-      { id: "stakeholders", label: "Stakeholder Matrix", iconKey: "stakeholders", path: "/stakeholders", badge: "BETA", badgeColor: "#ffab00" },
-      { id: "heatmap", label: "Risk Heatmap", iconKey: "heatmap", path: "/heatmap", badge: "BETA", badgeColor: "#ffab00" },
-      { id: "map", label: "Mutual Action Plans", iconKey: "map", path: "/map", badge: "BETA", badgeColor: "#ffab00" },
-      { id: "battlecards", label: "Competitive Battlecards", iconKey: "battlecards", path: "/battlecards", badge: "BETA", badgeColor: "#ffab00" },
-      { id: "playbooks", label: "RevOps Playbooks", iconKey: "playbooks", path: "/playbooks", badge: "BETA", badgeColor: "#ffab00" },
-      { id: "hygiene", label: "CRM Hygiene", iconKey: "hygiene", path: "/hygiene", badge: "BETA", badgeColor: "#ffab00" },
-      { id: "reps", label: "Rep Coaching", iconKey: "reps", path: "/reps", badge: "BETA", badgeColor: "#ffab00" },
-      { id: "clients", label: "Client Health", iconKey: "clients", path: "/clients", badge: "BETA", badgeColor: "#ffab00" },
-      { id: "audit", label: "Audit Trail", iconKey: "audit", path: "/audit", badge: "BETA", badgeColor: "#ffab00" },
-      { id: "settings", label: "Scoring Settings", iconKey: "settings", path: "/settings", badge: "BETA", badgeColor: "#ffab00" },
+      { id: "case-study", label: "Architecture Case Study", iconKey: "casestudy", path: "/case-study" },
+      { id: "audit", label: "Audit Log", iconKey: "audit", path: "/audit" },
+      { id: "settings", label: "Settings", iconKey: "settings", path: "/settings" },
     ],
   },
 ];
@@ -330,12 +336,15 @@ export const Sidebar: React.FC<SidebarProps> = ({ onClose, onNavigateHome }) => 
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "space-between",
-                  padding: "6px 16px",
+                  padding: "8px 16px 4px",
                   background: "none",
                   border: "none",
+                  outline: "none",
+                  boxShadow: "none",
                   cursor: "pointer",
-                  color: "var(--hs-text-muted)",
+                  color: "#516f90",
                   fontFamily: "var(--font-sans)",
+                  WebkitTapHighlightColor: "transparent",
                 }}
               >
                 <span
@@ -343,7 +352,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ onClose, onNavigateHome }) => 
                     fontSize: "10px",
                     fontWeight: 700,
                     textTransform: "uppercase",
-                    letterSpacing: "0.08em",
+                    letterSpacing: "0.07em",
+                    color: "#516f90",
                   }}
                 >
                   {section.title}
@@ -353,12 +363,12 @@ export const Sidebar: React.FC<SidebarProps> = ({ onClose, onNavigateHome }) => 
                   height={10}
                   viewBox="0 0 24 24"
                   fill="none"
-                  stroke="currentColor"
+                  stroke="#516f90"
                   strokeWidth={2.5}
                   style={{
                     transition: "transform 0.15s ease",
                     transform: isCollapsed ? "rotate(-90deg)" : "rotate(0deg)",
-                    opacity: 0.5,
+                    opacity: 0.6,
                   }}
                 >
                   <polyline points="6 9 12 15 18 9" />
@@ -367,7 +377,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ onClose, onNavigateHome }) => 
 
               {/* Section Items */}
               {!isCollapsed && (
-                <div style={{ padding: "0 8px 4px" }}>
+                <div style={{ padding: "2px 8px 6px" }}>
                   {section.items.map((item) => {
                     const active = isActive(item.path);
                     return (
@@ -381,10 +391,12 @@ export const Sidebar: React.FC<SidebarProps> = ({ onClose, onNavigateHome }) => 
                           gap: 10,
                           padding: "7px 10px",
                           borderRadius: "var(--radius-sm)",
-                          background: active ? "var(--hs-primary-subtle)" : "transparent",
+                          background: active ? "rgba(0, 164, 189, 0.08)" : "transparent",
                           border: "none",
+                          outline: "none",
+                          boxShadow: "none",
                           cursor: "pointer",
-                          color: active ? "var(--hs-primary)" : "var(--hs-text)",
+                          color: active ? "#007a8c" : "#33475b",
                           fontFamily: "var(--font-sans)",
                           fontSize: "13px",
                           fontWeight: active ? 600 : 450,
@@ -392,9 +404,10 @@ export const Sidebar: React.FC<SidebarProps> = ({ onClose, onNavigateHome }) => 
                           transition: "all 0.1s ease",
                           marginBottom: 1,
                           position: "relative",
+                          WebkitTapHighlightColor: "transparent",
                         }}
                         onMouseEnter={(e) => {
-                          if (!active) (e.currentTarget as HTMLElement).style.background = "var(--hs-surface-hover)";
+                          if (!active) (e.currentTarget as HTMLElement).style.background = "#f5f8fa";
                         }}
                         onMouseLeave={(e) => {
                           if (!active) (e.currentTarget as HTMLElement).style.background = "transparent";
@@ -411,12 +424,12 @@ export const Sidebar: React.FC<SidebarProps> = ({ onClose, onNavigateHome }) => 
                               width: 3,
                               height: 16,
                               borderRadius: "0 2px 2px 0",
-                              background: "var(--hs-primary)",
+                              background: "#00a4bd",
                             }}
                           />
                         )}
 
-                        <span style={{ color: active ? "var(--hs-primary)" : "var(--hs-text-muted)", transition: "color 0.1s" }}>
+                        <span style={{ color: active ? "#00a4bd" : "#7c98b6", transition: "color 0.1s" }}>
                           {ICONS[item.iconKey] || null}
                         </span>
                         <span style={{ flex: 1, lineHeight: 1.2 }}>{item.label}</span>
@@ -424,13 +437,16 @@ export const Sidebar: React.FC<SidebarProps> = ({ onClose, onNavigateHome }) => 
                         {item.badge && (
                           <span
                             style={{
-                              fontSize: "10px",
+                              fontSize: "9px",
                               fontWeight: 700,
-                              padding: "1px 6px",
-                              borderRadius: "var(--radius-pill)",
-                              background: `${item.badgeColor || "var(--hs-text-muted)"}14`,
-                              color: item.badgeColor || "var(--hs-text-muted)",
-                              lineHeight: 1.4,
+                              padding: "1px 5px",
+                              borderRadius: "3px",
+                              background: "#edf1f5",
+                              color: "#516f90",
+                              border: "1px solid #cbd6e2",
+                              lineHeight: 1.3,
+                              letterSpacing: "0.04em",
+                              textTransform: "uppercase",
                             }}
                           >
                             {item.badge}

@@ -1,6 +1,6 @@
 /**
- * DealSense Dashboard — Beta Preview Notice Banner.
- * Clearly differentiates Enterprise Roadmap / Beta modules from the 100% Live MVP.
+ * DealSense Dashboard — HubSpot Canvas-Grade Beta Preview Notice.
+ * Clean, enterprise tone without loud emojis or amateur styling.
  */
 
 import React from "react";
@@ -16,45 +16,39 @@ export const BetaNotice: React.FC<BetaNoticeProps> = ({ moduleName }) => {
   return (
     <div
       style={{
-        background: "linear-gradient(90deg, #fffbf0 0%, #ffffff 100%)",
-        border: "1px solid rgba(255, 171, 0, 0.35)",
-        borderLeft: "4px solid #ffab00",
-        borderRadius: "var(--radius-sm)",
+        background: "#ffffff",
+        border: "1px solid #cbd6e2",
+        borderLeft: "4px solid #00a4bd",
+        borderRadius: "4px",
         padding: "12px 18px",
-        marginBottom: "var(--sp-4)",
+        marginBottom: "16px",
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
         flexWrap: "wrap",
         gap: 12,
-        boxShadow: "0 1px 3px rgba(255, 171, 0, 0.08)",
+        boxShadow: "0 1px 2px rgba(0, 0, 0, 0.04)",
       }}
     >
-      <div style={{ display: "flex", alignItems: "flex-start", gap: 12, maxWidth: 760 }}>
-        <div
+      <div style={{ display: "flex", alignItems: "center", gap: 12, maxWidth: 800 }}>
+        <span
           style={{
-            background: "rgba(255, 171, 0, 0.15)",
-            color: "#b76e00",
-            padding: "4px 8px",
-            borderRadius: "4px",
-            fontSize: "11px",
-            fontWeight: 800,
+            background: "rgba(0, 164, 189, 0.1)",
+            color: "#007a8c",
+            padding: "2px 8px",
+            borderRadius: "3px",
+            fontSize: "10.5px",
+            fontWeight: 700,
             letterSpacing: "0.04em",
             textTransform: "uppercase",
+            border: "1px solid rgba(0, 164, 189, 0.25)",
             flexShrink: 0,
-            marginTop: 2,
           }}
         >
-          🧪 BETA PREVIEW
-        </div>
-        <div>
-          <div style={{ fontSize: "13px", fontWeight: 700, color: "#33475b", marginBottom: 2 }}>
-            {moduleName ? `${moduleName} (Enterprise Roadmap Preview)` : "Enterprise Roadmap Beta Module"}
-          </div>
-          <div style={{ fontSize: "12px", color: "#516f90", lineHeight: 1.45 }}>
-            This advanced module preview demonstrates upcoming revenue operations capabilities.
-            The core MVP features (<strong>Deal Inspector & Live CRM</strong>, <strong>Pipeline Command Center</strong>, and <strong>Action Approval Queue</strong>) are 100% live and operating against your production HubSpot server.
-          </div>
+          Beta Preview
+        </span>
+        <div style={{ fontSize: "12.5px", color: "#33475b", lineHeight: 1.45 }}>
+          <strong>{moduleName || "Enterprise Module"}</strong> is currently in public beta. Core deal scoring, MEDDICC qualification, and HubSpot write-backs are fully active in Deal Inspector.
         </div>
       </div>
 
@@ -66,31 +60,16 @@ export const BetaNotice: React.FC<BetaNoticeProps> = ({ moduleName }) => {
             background: "#ff7a59",
             color: "#ffffff",
             border: "none",
-            borderRadius: "4px",
-            fontSize: "12px",
-            fontWeight: 700,
-            cursor: "pointer",
-            boxShadow: "0 1px 3px rgba(255, 122, 89, 0.3)",
-            whiteSpace: "nowrap",
-          }}
-        >
-          Go to Live Deals (MVP) →
-        </button>
-        <button
-          onClick={() => navigate("/pipeline")}
-          style={{
-            padding: "6px 12px",
-            background: "#ffffff",
-            color: "#33475b",
-            border: "1px solid #cbd6e2",
-            borderRadius: "4px",
+            borderRadius: "3px",
             fontSize: "12px",
             fontWeight: 600,
             cursor: "pointer",
             whiteSpace: "nowrap",
+            outline: "none",
+            boxShadow: "0 1px 2px rgba(255, 122, 89, 0.25)",
           }}
         >
-          Pipeline Center
+          View Live Deals →
         </button>
       </div>
     </div>
