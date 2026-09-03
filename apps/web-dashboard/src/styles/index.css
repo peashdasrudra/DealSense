@@ -1903,3 +1903,110 @@ tr:hover td {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+/* ── Infinite Marquee Logo Bar ─────────────────────────────────────────── */
+@keyframes scroll-left {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.logo-marquee-container {
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+}
+
+.logo-marquee-track {
+  display: flex;
+  align-items: center;
+  gap: 48px;
+  width: max-content;
+  animation: scroll-left 35s linear infinite;
+}
+
+.logo-marquee-container:hover .logo-marquee-track {
+  animation-play-state: paused;
+}
+
+.logo-marquee-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  opacity: 0.55;
+  transition: opacity 0.3s ease;
+  cursor: default;
+}
+
+.logo-marquee-item:hover {
+  opacity: 0.85;
+}
+
+/* ── Premium Hub Card Hover Effects ────────────────────────────────────── */
+.premium-hub-card {
+  transition: all 0.28s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.premium-hub-card::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(180deg, #ff5c35 0%, #ff7a59 100%);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  border-radius: 0 3px 3px 0;
+}
+
+.premium-hub-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px rgba(9, 33, 36, 0.10), 0 4px 12px rgba(255, 92, 53, 0.06);
+  border-color: rgba(255, 92, 53, 0.25);
+}
+
+.premium-hub-card:hover::before {
+  opacity: 1;
+}
+
+.premium-hub-card .hub-explore-link {
+  transition: transform 0.2s ease, gap 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.premium-hub-card:hover .hub-explore-link {
+  transform: translateX(3px);
+  gap: 6px;
+}
+
+/* ── Responsive Adjustments for New Components ─────────────────────────── */
+@media (max-width: 768px) {
+  .logo-marquee-track {
+    gap: 32px;
+    animation-duration: 25s;
+  }
+  .logo-marquee-item svg {
+    max-height: 18px;
+    width: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .logo-marquee-track {
+    animation: none;
+  }
+  .premium-hub-card {
+    transition: none;
+  }
+  .premium-hub-card:hover {
+    transform: none;
+  }
+}

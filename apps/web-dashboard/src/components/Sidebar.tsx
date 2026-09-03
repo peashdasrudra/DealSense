@@ -182,10 +182,8 @@ const NAV_SECTIONS: NavSection[] = [
     title: "Commercial & Showcase",
     defaultOpen: true,
     items: [
-      { id: "landing", label: "Main Landing Page", iconKey: "overview", path: "/", badge: "SaaS", badgeColor: "#ff5c35" },
       { id: "agency", label: "Agency Partner Fleet", iconKey: "clients", path: "/agency", badge: "72% OFF", badgeColor: "#ff5c35" },
       { id: "case-study", label: "Architecture Case Study", iconKey: "casestudy", path: "/case-study" },
-      { id: "nav-test", label: "Link & CTA Test Suite", iconKey: "actions", path: "/nav-test", badge: "DEV", badgeColor: "#10b981" },
     ],
   },
   {

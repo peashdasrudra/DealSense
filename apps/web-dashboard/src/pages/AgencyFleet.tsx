@@ -1683,27 +1683,27 @@ export const AgencyFleet: React.FC = () => {
             {[
               {
                 q: "Do my clients ever see 'DealSense' or know it's a 3rd party tool?",
-                a: "No. With the Agency Fleet and Master tiers, DealSense is 100% white-labeled under your domain (e.g. revops.youragency.com). The embedded HubSpot CRM Canvas sidebar card displays your agency logo, signature brand colors, and company name. Your clients view this as your proprietary in-house AI technology.",
+                a: "Never. 100% white-labeled on your domain (revops.youragency.com) with your branding, logo, and embedded HubSpot CRM card. Clients see it entirely as your proprietary AI platform.",
               },
               {
                 q: "How does the $0 monthly platform tax work?",
-                a: "Unlike legacy SaaS platforms (Gong, Clari, BoostUp) that charge $1,200–$2,400/rep/year, DealSense gives you lifetime commercial ownership of the monorepo deployment for a one-time flat license. You bill your clients $2,500–$5,000/mo retainer and keep 100% of the margins forever.",
+                a: "One-time license, zero recurring fees. No seat taxes or per-rep charges. Bill clients $2,500–$5,000/mo and keep 95%+ profit margins permanently.",
               },
               {
                 q: "How long does it take to onboard a client portal?",
-                a: "Under 2 minutes. Your client simply authorizes the connection via HubSpot OAuth 2.0. DealSense immediately starts streaming webhook events and computes 0–100 deterministic risk scores across all active pipeline deals in 180ms. Zero engineering or IT setup required by your client.",
+                a: "Under 2 minutes. Client authorizes read-only HubSpot OAuth. DealSense syncs and scores all deals in sub-200ms with zero manual configuration.",
               },
               {
                 q: "How does the 'Find $25K Or It's Free' guarantee work?",
-                a: "If DealSense’s 7-vector scoring engine does not uncover at least $25,000 in at-risk pipeline slippage or hidden buyer ghosting on your first client audit, simply email us and you receive an immediate, no-questions-asked 100% refund.",
+                a: "Instant 100% refund. If your first client audit doesn't uncover at least $25,000 in at-risk pipeline slippage, we refund your payment immediately.",
               },
               {
                 q: "Can we customize scoring algorithms per industry vertical?",
-                a: "Yes. In the Master Cockpit, you can adjust the weights of the 7 deterministic vectors (stage velocity decay, single-threaded buyer risk, MEDDICC completeness, sentiment drift, etc.) tailored to B2B SaaS, professional services, healthcare, or manufacturing clients.",
+                a: "Yes, fully configurable. Tailor 7 deterministic risk weights (velocity decay, buyer engagement, MEDDICC) for SaaS, Services, Healthcare, or Manufacturing clients.",
               },
               {
                 q: "Do we get full access to the source code?",
-                a: "Yes. Both the Single Portal and Agency Fleet tiers include complete source code handover (FastAPI backend, React 18 frontend, PostgreSQL 16 schema, Redis Streams, Docker compose, and HubSpot Canvas SDK extension) with lifetime commercial usage rights.",
+                a: "100% Monorepo ownership. Complete FastAPI, React 18, Postgres 16, Redis Streams, and Canvas SDK codebase with private cloud VPC deployment rights.",
               },
             ].map((item, idx) => {
               const isOpen = openFaqIndex === idx;

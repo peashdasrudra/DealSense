@@ -73,12 +73,12 @@ export const LandingPage: React.FC = () => {
   };
 
   const HUBS = [
-    { icon: "🎯", title: "Deal Scoring Hub", desc: "0–100 deterministic risk scoring with transparent signal telemetry for every pipeline deal.", path: "/deals" },
-    { icon: "📈", title: "Revenue Forecast Hub", desc: "Stage-weighted and Monte Carlo models giving RevOps leaders realistic quarter projections.", path: "/forecast" },
-    { icon: "🌊", title: "Pipeline Waterfall Hub", desc: "Track pipeline velocity, newly created inflow, expansion, slippage, and lost momentum.", path: "/waterfall" },
-    { icon: "⚔️", title: "Deal War Room Hub", desc: "Executive command matrix for Friday pipeline reviews and unblocking stalled opportunities.", path: "/war-room" },
-    { icon: "⚡", title: "CRM Hygiene Hub", desc: "Automated writebacks and remediation for overdue close dates and single-threading.", path: "/hygiene" },
-    { icon: "🤝", title: "Stakeholder Matrix Hub", desc: "Power matrix visualizing Economic Buyers, Champions, and single-threaded vulnerability.", path: "/stakeholders" },
+    { iconSvg: "M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z", iconColor: "#ff5c35", iconBg: "rgba(255, 92, 53, 0.08)", title: "Deal Scoring Hub", desc: "0–100 deterministic risk scoring with transparent signal telemetry for every pipeline deal.", path: "/deals" },
+    { iconSvg: "M22 12h-4l-3 9L9 3l-3 9H2", iconColor: "#0284c7", iconBg: "rgba(2, 132, 199, 0.08)", title: "Revenue Forecast Hub", desc: "Stage-weighted and Monte Carlo models giving RevOps leaders realistic quarter projections.", path: "/forecast" },
+    { iconSvg: "M3 3v18h18", iconColor: "#7c3aed", iconBg: "rgba(124, 58, 237, 0.08)", title: "Pipeline Waterfall Hub", desc: "Track pipeline velocity, newly created inflow, expansion, slippage, and lost momentum.", path: "/waterfall" },
+    { iconSvg: "M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z", iconColor: "#dc2626", iconBg: "rgba(220, 38, 38, 0.08)", title: "Deal War Room Hub", desc: "Executive command matrix for Friday pipeline reviews and unblocking stalled opportunities.", path: "/war-room" },
+    { iconSvg: "M22 11.08V12a10 10 0 11-5.93-9.14", iconColor: "#059669", iconBg: "rgba(5, 150, 105, 0.08)", title: "CRM Hygiene Hub", desc: "Automated writebacks and remediation for overdue close dates and single-threading.", path: "/hygiene" },
+    { iconSvg: "M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2", iconColor: "#d97706", iconBg: "rgba(217, 119, 6, 0.08)", title: "Stakeholder Matrix Hub", desc: "Power matrix visualizing Economic Buyers, Champions, and single-threaded vulnerability.", path: "/stakeholders" },
   ];
 
   const AI_AGENTS = [
@@ -912,30 +912,73 @@ export const LandingPage: React.FC = () => {
         </motion.div>
       </section>
 
-      {/* ── 4. Logo Trust Bar ────────────────────────────────────────── */}
-      <section style={{ borderTop: "1px solid #e2e8f0", borderBottom: "1px solid #e2e8f0", padding: "20px 16px", background: "#f8fafc" }}>
-        <div style={{ maxWidth: 1140, margin: "0 auto", textAlign: "center" }}>
-          <div style={{ fontSize: "11px", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em", color: "#64748b", marginBottom: 12 }}>
-            TRUSTED BY REVENUE & REVOPS LEADERS SCALING MULTI-MILLION DOLLAR HUBSPOT PIPELINES
+      {/* ── 4. Logo Trust Bar — Real Enterprise Tech Brands + Infinite Marquee ── */}
+      <section style={{ borderTop: "1px solid #e2e8f0", borderBottom: "1px solid #e2e8f0", padding: "24px 0", background: "#f8fafc" }}>
+        <div style={{ maxWidth: 1240, margin: "0 auto", textAlign: "center" }}>
+          <div style={{ fontSize: "10.5px", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.1em", color: "#94a3b8", marginBottom: 16, padding: "0 16px" }}>
+            INTEGRATED WITH THE TECH STACK OF REVENUE & REVOPS LEADERS SCALING MULTI-MILLION DOLLAR PIPELINES
           </div>
-          <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "24px 40px", flexWrap: "wrap", opacity: 0.9 }}>
-            <span style={{ fontSize: "14px", fontWeight: 800, color: "#092124" }}>TechCorp Inc.</span>
-            <span style={{ fontSize: "14px", fontWeight: 800, color: "#092124" }}>FinanceGo Ltd.</span>
-            <span style={{ fontSize: "14px", fontWeight: 800, color: "#092124" }}>RetailMax</span>
-            <span style={{ fontSize: "14px", fontWeight: 800, color: "#092124" }}>HealthFirst Corp.</span>
-            <span style={{ fontSize: "14px", fontWeight: 800, color: "#092124" }}>LogiPro Solutions</span>
-            <span style={{ fontSize: "12px", fontWeight: 700, background: "rgba(255, 92, 53, 0.1)", color: "#ff5c35", padding: "4px 12px", borderRadius: "var(--radius-pill)" }}>
-              HubSpot App Partner
-            </span>
+          <div className="logo-marquee-container">
+            <div className="logo-marquee-track">
+              {[...Array(2)].map((_, setIdx) => (
+                <React.Fragment key={setIdx}>
+                  {/* HubSpot */}
+                  <div className="logo-marquee-item">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="#64748b"><path d="M17.69 13.28c-.39 0-.75.12-1.06.31l-1.59-1.2c.14-.35.22-.73.22-1.13 0-.38-.07-.75-.2-1.09l1.57-1.2c.31.2.68.32 1.06.32a1.89 1.89 0 001.89-1.89V7.2a1.89 1.89 0 00-1.89-1.89h-.2a1.89 1.89 0 00-1.89 1.89v.2c0 .08.01.15.02.22l-1.69 1.3a3.19 3.19 0 00-1.87-.61c-.7 0-1.35.23-1.88.62l-1.68-1.3c.01-.07.02-.14.02-.22v-.2A1.89 1.89 0 006.62 5.3h-.2a1.89 1.89 0 00-1.89 1.89v.2A1.89 1.89 0 006.42 9.3c.38 0 .75-.12 1.06-.32l1.57 1.2c-.13.34-.2.71-.2 1.09 0 .4.08.78.22 1.13l-1.59 1.2c-.31-.19-.67-.31-1.06-.31a1.89 1.89 0 00-1.89 1.89v.2a1.89 1.89 0 001.89 1.89h.2a1.89 1.89 0 001.89-1.89v-.2c0-.07-.01-.14-.02-.21l1.62-1.24a3.19 3.19 0 001.8.56c.68 0 1.31-.21 1.83-.58l1.61 1.23c-.01.08-.02.16-.02.24v.2a1.89 1.89 0 001.89 1.89h.2a1.89 1.89 0 001.89-1.89v-.2a1.89 1.89 0 00-1.89-1.89zm-5.63-1.01a1.04 1.04 0 110-2.08 1.04 1.04 0 010 2.08z"/></svg>
+                    <span style={{ fontSize: "14px", fontWeight: 800, color: "#475569", letterSpacing: "-0.02em" }}>HubSpot</span>
+                  </div>
+                  {/* Salesforce */}
+                  <div className="logo-marquee-item">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="#64748b"><path d="M10.05 4.8a4.6 4.6 0 013.45 1.56 3.9 3.9 0 012.14-.64 3.96 3.96 0 013.85 4.73A3.37 3.37 0 0121 13.6a3.37 3.37 0 01-2.82 3.32 3.56 3.56 0 01-3.25 2.13c-.9 0-1.72-.34-2.34-.9a4.2 4.2 0 01-2.78 1.05 4.2 4.2 0 01-3.87-2.57A3.65 3.65 0 013 13.2a3.65 3.65 0 012.24-3.37A4.6 4.6 0 0110.05 4.8z"/></svg>
+                    <span style={{ fontSize: "14px", fontWeight: 800, color: "#475569", letterSpacing: "-0.02em" }}>Salesforce</span>
+                  </div>
+                  {/* Slack */}
+                  <div className="logo-marquee-item">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="#64748b"><path d="M5.04 15.18a2.02 2.02 0 01-2.02 2.02A2.02 2.02 0 011 15.18a2.02 2.02 0 012.02-2.02h2.02v2.02zm1.01 0a2.02 2.02 0 012.02-2.02 2.02 2.02 0 012.02 2.02v5.05a2.02 2.02 0 01-2.02 2.02 2.02 2.02 0 01-2.02-2.02v-5.05zm2.02-10.14A2.02 2.02 0 016.05 3.02 2.02 2.02 0 018.07 1a2.02 2.02 0 012.02 2.02v2.02H8.07zm0 1.02a2.02 2.02 0 012.02 2.02 2.02 2.02 0 01-2.02 2.02H3.02A2.02 2.02 0 011 8.08a2.02 2.02 0 012.02-2.02h5.05zm10.14 2.02a2.02 2.02 0 012.02-2.02A2.02 2.02 0 0123 8.08a2.02 2.02 0 01-2.02 2.02h-2.02V8.08zm-1.01 0a2.02 2.02 0 01-2.02 2.02 2.02 2.02 0 01-2.02-2.02V3.02A2.02 2.02 0 0117.2 1a2.02 2.02 0 012.02 2.02v5.06zm-2.02 10.14a2.02 2.02 0 012.02 2.02A2.02 2.02 0 0117.2 23a2.02 2.02 0 01-2.02-2.02v-2.02h2.02v.26zm0-1.28a2.02 2.02 0 01-2.02-2.02 2.02 2.02 0 012.02-2.02h5.05A2.02 2.02 0 0123 15.92a2.02 2.02 0 01-2.02 2.02H17.2v-.98z"/></svg>
+                    <span style={{ fontSize: "14px", fontWeight: 800, color: "#475569", letterSpacing: "-0.02em" }}>Slack</span>
+                  </div>
+                  {/* Stripe */}
+                  <div className="logo-marquee-item">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="#64748b"><path d="M13.98 10.17c0-.94-.46-1.68-1.34-1.68-.89 0-1.42.74-1.42 1.67 0 1.1.63 1.66 1.53 1.66.44 0 .78-.1 1.03-.24v-1.18c-.23.13-.49.2-.78.2-.31 0-.58-.11-.62-.48h1.6v-.2zm-1.61-.35c0-.36.22-.51.42-.51.2 0 .4.15.4.51h-.82zM3.33 10.17c0-.94-.46-1.68-1.34-1.68-.88 0-1.41.74-1.41 1.67 0 1.1.63 1.66 1.53 1.66.44 0 .77-.1 1.03-.24v-1.18c-.23.13-.5.2-.78.2-.31 0-.58-.11-.62-.48H3.33v-.2zm-1.6-.35c0-.36.21-.51.41-.51.2 0 .4.15.4.51h-.81zm7.64-.65c-.31 0-.52.15-.63.25l-.04-.2h-.9v4.71l1.02-.22v-1.14c.12.08.29.2.57.2.58 0 1.1-.46 1.1-1.49 0-.94-.53-1.46-1.12-1.46v.35zm-.2 2.26c-.19 0-.3-.07-.38-.15v-1.2c.08-.1.2-.17.39-.17.3 0 .5.33.5.76 0 .44-.2.76-.51.76zm-3.16-.94c0 .78.38 1.35 1.11 1.35.33 0 .55-.07.74-.18l-.06-.77c-.15.08-.31.13-.52.13-.34 0-.56-.18-.56-.55V9.32h.56l.07-.77h-.63v-.92l-1.01.21v2.65h.3zm6.99-1.34l-.05-.2h-.88v3.43h1.01v-2.33c.24-.31.64-.25.77-.21V9.02c-.13-.05-.61-.14-.85.33zm3.39.09l-.04-.29h-.89v3.43h1.01v-2.35c.24-.31.64-.26.77-.21V9.02c-.13-.05-.61-.14-.85.32zm2.54-.75c0-.35.29-.49.77-.49.32 0 .72.1 1.04.27V8.3a3.09 3.09 0 00-1.04-.18c-.85 0-1.42.44-1.42 1.18 0 1.15 1.59.97 1.59 1.47 0 .41-.36.55-.85.55-.37 0-.84-.15-1.21-.36v1.01c.41.18.83.26 1.21.26.88 0 1.48-.35 1.48-1.18 0-1.24-1.59-1.02-1.59-1.49l.02-.12z"/></svg>
+                    <span style={{ fontSize: "14px", fontWeight: 800, color: "#475569", letterSpacing: "-0.02em" }}>Stripe</span>
+                  </div>
+                  {/* AWS */}
+                  <div className="logo-marquee-item">
+                    <svg width="26" height="16" viewBox="0 0 32 20" fill="#64748b"><path d="M9.02 7.71c0 .34.04.61.1.81.08.2.17.42.29.66.05.08.07.16.07.23 0 .1-.06.2-.19.3l-.63.42a.48.48 0 01-.26.09c-.1 0-.2-.05-.3-.14a3.1 3.1 0 01-.36-.47 8.7 8.7 0 01-.31-.59c-.78.92-1.76 1.38-2.94 1.38-.84 0-1.51-.24-2-.72-.49-.48-.74-1.12-.74-1.92 0-.85.3-1.54.91-2.06.6-.52 1.41-.78 2.44-.78.34 0 .69.03 1.06.08.37.05.75.13 1.15.22V4.7c0-.76-.16-1.29-.47-1.6-.32-.31-.86-.46-1.63-.46-.35 0-.71.04-1.08.13-.37.09-.73.2-1.08.35-.16.07-.28.11-.35.13a.63.63 0 01-.14.03c-.12 0-.18-.09-.18-.27V2.6c0-.14.02-.24.07-.3.05-.06.14-.12.28-.18.35-.18.77-.33 1.26-.45A6.05 6.05 0 015.37 1.5c1.16 0 2.01.26 2.56.79.54.53.81 1.33.81 2.41v3.17l.28-.16zm-4.06 1.52c.33 0 .67-.06 1.03-.18.36-.12.68-.34.94-.64.16-.19.28-.4.35-.64.07-.24.11-.53.11-.87v-.42c-.29-.07-.6-.13-.92-.17-.32-.04-.63-.06-.94-.06-.66 0-1.15.13-1.47.4-.32.27-.48.65-.48 1.15 0 .47.12.82.38 1.06.25.24.61.37 1 .37zm8.03 1.08c-.16 0-.27-.03-.34-.08-.07-.05-.14-.16-.19-.31L10.2 2.93c-.05-.16-.08-.26-.08-.31 0-.12.06-.19.18-.19h.98c.17 0 .28.03.34.08.07.05.13.16.18.31l1.6 6.31 1.49-6.31c.04-.16.1-.26.17-.31.07-.05.19-.08.35-.08h.8c.17 0 .28.03.35.08.07.05.14.16.17.31l1.5 6.39L19.97 2.8c.05-.16.12-.26.18-.31.07-.05.18-.08.34-.08h.93c.12 0 .19.06.19.19 0 .04-.01.08-.02.13-.01.05-.03.11-.06.2l-2.3 7.08c-.05.16-.12.26-.19.31-.07.05-.18.08-.34.08h-.86c-.17 0-.28-.03-.35-.08-.07-.06-.14-.16-.17-.32l-1.48-6.14-1.47 6.13c-.04.17-.1.27-.17.32-.07.06-.19.09-.35.09h-.86zm12.84.27c-.52 0-1.03-.06-1.53-.18-.5-.12-.89-.25-1.15-.4-.16-.09-.27-.19-.31-.28a.72.72 0 01-.06-.28v-.42c0-.18.07-.27.2-.27.05 0 .1.01.15.03.05.02.13.05.21.09.29.13.6.23.94.3.35.07.68.1 1.03.1.54 0 .97-.1 1.27-.29.3-.19.46-.47.46-.83 0-.24-.08-.45-.23-.61a2.15 2.15 0 00-.78-.45l-1.12-.35c-.56-.18-.98-.44-1.23-.79a1.87 1.87 0 01-.38-1.12c0-.32.07-.6.21-.86.14-.25.33-.47.57-.65.24-.18.51-.31.83-.4.32-.09.65-.13 1-.13.18 0 .37.01.55.03.19.03.36.06.53.1.16.05.32.1.46.15.14.06.25.12.33.18.11.07.19.14.24.22.05.08.07.18.07.31v.39c0 .18-.07.27-.2.27a.91.91 0 01-.33-.1 4.02 4.02 0 00-1.68-.34c-.49 0-.88.08-1.14.25-.27.17-.4.43-.4.79 0 .25.09.46.26.63.17.17.5.33.96.48l1.1.34c.56.18.96.43 1.2.76.24.33.36.7.36 1.12 0 .33-.07.63-.2.9-.14.27-.33.51-.57.7-.24.19-.53.34-.87.44-.35.11-.72.17-1.1.17z"/></svg>
+                    <span style={{ fontSize: "14px", fontWeight: 800, color: "#475569", letterSpacing: "-0.02em" }}>AWS</span>
+                  </div>
+                  {/* Google Cloud */}
+                  <div className="logo-marquee-item">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="#64748b"><path d="M12 3.68L7.37 8.31l1.42 1.42L12 6.51l3.21 3.22 1.42-1.42L12 3.68zM3.68 12l4.63-4.63-1.42-1.42L2.26 10.58l1.42 1.42zm0 0l-1.42 1.42L6.89 18.05l1.42-1.42L3.68 12zM12 20.32l4.63-4.63-1.42-1.42L12 17.49l-3.21-3.22-1.42 1.42L12 20.32zM20.32 12l-4.63 4.63 1.42 1.42 4.63-4.63-1.42-1.42zm0 0l1.42-1.42-4.63-4.63-1.42 1.42 4.63 4.63z"/></svg>
+                    <span style={{ fontSize: "14px", fontWeight: 800, color: "#475569", letterSpacing: "-0.02em" }}>Google Cloud</span>
+                  </div>
+                  {/* Zapier */}
+                  <div className="logo-marquee-item">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="#64748b"><path d="M15.54 8.46l-2.47 2.47h4.87c.06.35.06.7 0 1.06h-4.87l2.47 2.47c-.26.28-.54.54-.83.78l-2.47-2.47v4.87a5.88 5.88 0 01-1.06 0v-4.87l-2.47 2.47c-.29-.24-.57-.5-.83-.78l2.47-2.47H5.48a5.88 5.88 0 010-1.06h4.87L7.88 8.46c.26-.29.54-.57.83-.83l2.47 2.47V5.23c.35-.06.7-.06 1.06 0v4.87l2.47-2.47c.29.26.57.54.83.83zM12 2a10 10 0 100 20 10 10 0 000-20z"/></svg>
+                    <span style={{ fontSize: "14px", fontWeight: 800, color: "#475569", letterSpacing: "-0.02em" }}>Zapier</span>
+                  </div>
+                  {/* GitHub */}
+                  <div className="logo-marquee-item">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="#64748b"><path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+                    <span style={{ fontSize: "14px", fontWeight: 800, color: "#475569", letterSpacing: "-0.02em" }}>GitHub</span>
+                  </div>
+                </React.Fragment>
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
-      {/* ── 5. Product Hubs Bento Grid ───────────────────────────────── */}
-      <section style={{ padding: "clamp(48px, 6vw, 80px) clamp(16px, 4vw, 24px)", background: "#ffffff" }}>
+      {/* ── 5. Product Hubs Bento Grid — Premium Enterprise Style ─────── */}
+      <section style={{ padding: "clamp(56px, 7vw, 96px) clamp(16px, 4vw, 24px)", background: "#ffffff" }}>
         <div style={{ maxWidth: 1160, margin: "0 auto" }}>
           <div className="landing-hubs-layout">
-            <div>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-60px" }}
+              transition={{ duration: 0.5 }}
+            >
               <span style={{ fontSize: "11px", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em", color: "#ff5c35" }}>
                 ALL-IN-ONE REVOPS ENGINE
               </span>
@@ -956,38 +999,48 @@ export const LandingPage: React.FC = () => {
                   border: "none",
                   borderRadius: "8px",
                   cursor: "pointer",
+                  boxShadow: "0 4px 14px rgba(9, 33, 36, 0.2)",
+                  transition: "all 0.2s ease",
                 }}
               >
                 Explore Live Platform →
               </button>
-            </div>
+            </motion.div>
 
             <div className="landing-hubs-grid">
               {HUBS.map((hub, i) => (
-                <div
+                <motion.div
                   key={i}
+                  className="premium-hub-card"
+                  initial={{ opacity: 0, y: 16 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-40px" }}
+                  transition={{ duration: 0.4, delay: i * 0.08 }}
                   onClick={() => navigate(hub.path)}
                   style={{
                     background: "#ffffff",
-                    padding: "20px",
-                    borderRadius: "12px",
+                    padding: "22px 22px 22px 26px",
+                    borderRadius: "14px",
                     border: "1px solid #e2e8f0",
-                    boxShadow: "0 2px 6px rgba(0,0,0,0.03)",
-                    cursor: "pointer",
-                    transition: "all 0.2s ease",
+                    boxShadow: "0 2px 8px rgba(0,0,0,0.03)",
                   }}
                 >
-                  <div style={{ fontSize: "24px", marginBottom: 8 }}>{hub.icon}</div>
-                  <div style={{ fontSize: "15px", fontWeight: 700, color: "#092124", marginBottom: 4 }}>
+                  <div style={{ width: 40, height: 40, borderRadius: "10px", background: hub.iconBg, border: `1px solid ${hub.iconColor}20`, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 12 }}>
+                    <svg width={20} height={20} viewBox="0 0 24 24" fill="none" stroke={hub.iconColor} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+                      <path d={hub.iconSvg} />
+                    </svg>
+                  </div>
+                  <div style={{ fontSize: "15px", fontWeight: 700, color: "#092124", marginBottom: 5 }}>
                     {hub.title}
                   </div>
-                  <div style={{ fontSize: "12.5px", color: "#64748b", lineHeight: 1.5, marginBottom: 10 }}>
+                  <div style={{ fontSize: "12.5px", color: "#64748b", lineHeight: 1.55, marginBottom: 12 }}>
                     {hub.desc}
                   </div>
-                  <div style={{ fontSize: "12px", fontWeight: 700, color: "#ff5c35" }}>
-                    Explore Hub →
+                  <div className="hub-explore-link" style={{ fontSize: "12.5px", fontWeight: 700, color: "#ff5c35" }}>
+                    <span>Explore Hub</span>
+                    <svg width={12} height={12} viewBox="0 0 24 24" fill="none" stroke="#ff5c35" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
                   </div>
-                </div>
+                </motion.div>
               ))}
             </div>
           </div>
@@ -1792,68 +1845,38 @@ export const LandingPage: React.FC = () => {
                 🔥 Save $3,500 · Only 2 Sprint Slots Open This Month
               </div>
 
-              {/* 3 Contact Channels */}
-              <div style={{ display: "flex", justifyContent: "center", gap: 8, marginBottom: 12 }}>
-                <a
-                  href="mailto:peashdasrudra@gmail.com?subject=Custom%20AI%20HubSpot%20App%20Inquiry%20($1500%20Sprint)"
-                  style={{ width: 40, height: 40, borderRadius: "10px", background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.15)", display: "flex", alignItems: "center", justifyContent: "center", color: "#ffffff", textDecoration: "none" }}
-                  title="Direct Email"
-                >
-                  <svg width={17} height={17} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
-                    <rect width="20" height="16" x="2" y="4" rx="2" /><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
-                  </svg>
-                </a>
-                <a
-                  href="https://www.linkedin.com/in/peashdasrudra"
-                  target="_blank"
-                  rel="noreferrer"
-                  style={{ width: 40, height: 40, borderRadius: "10px", background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.15)", display: "flex", alignItems: "center", justifyContent: "center", color: "#ffffff", textDecoration: "none" }}
-                  title="Connect on LinkedIn"
-                >
-                  <svg width={17} height={17} viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9v8.37H9.2V10.9H6.46M7.83 6.2a1.65 1.65 0 1 0 0 3.3 1.65 1.65 0 0 0 0-3.3Z" />
-                  </svg>
-                </a>
-                <a
-                  href="https://github.com/peashdasrudra"
-                  target="_blank"
-                  rel="noreferrer"
-                  style={{ width: 40, height: 40, borderRadius: "10px", background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.15)", display: "flex", alignItems: "center", justifyContent: "center", color: "#ffffff", textDecoration: "none" }}
-                  title="GitHub Profile"
-                >
-                  <svg width={17} height={17} viewBox="0 0 24 24" fill="currentColor">
-                    <path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
-                  </svg>
-                </a>
-              </div>
-
-              <a
-                href="mailto:peashdasrudra@gmail.com?subject=Book%201-on-1%20Call%20-%20Custom%20AI%20HubSpot%20App"
+              <button
+                onClick={() => openOrder("deploy-1500")}
                 style={{
                   width: "100%",
-                  padding: "13px 18px",
+                  padding: "16px 24px",
                   background: "linear-gradient(180deg, #ff6b48 0%, #ff5c35 100%)",
                   color: "#ffffff",
                   border: "none",
-                  borderRadius: "10px",
-                  fontSize: "14px",
+                  borderRadius: "12px",
+                  fontSize: "15px",
                   fontWeight: 800,
                   fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif",
                   letterSpacing: "-0.02em",
                   cursor: "pointer",
-                  boxShadow: "0 6px 20px rgba(255, 92, 53, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.35)",
+                  boxShadow: "0 8px 24px rgba(255, 92, 53, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.35)",
                   display: "inline-flex",
                   alignItems: "center",
                   justifyContent: "center",
                   gap: "8px",
-                  textDecoration: "none",
+                  transition: "all 0.2s ease",
+                  marginBottom: 12,
                 }}
               >
-                <span>📅 Book 1-on-1 Call</span>
-                <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+                <span>Claim $1,500 Custom Sprint</span>
+                <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
                   <path d="M5 12h14M12 5l7 7-7 7" />
                 </svg>
-              </a>
+              </button>
+
+              <div style={{ fontSize: "11.5px", color: "#94a3b8" }}>
+                ⚡ Fixed Flat Price · 100% Code Handover · 1-Hr SLA
+              </div>
             </div>
           </div>
         </div>
@@ -2069,27 +2092,27 @@ export const LandingPage: React.FC = () => {
             {[
               {
                 q: "How fast does the $99 pilot risk audit deliver findings?",
-                a: "Within 24 to 48 hours of connecting your HubSpot portal via read-only OAuth, our 7-vector deterministic engine analyzes all active deals, flags economic buyer ghosting, identifies pipeline slippage, and generates an executive board-ready PDF briefing dossier along with a 10-minute Loom walkthrough from our Lead Architect.",
+                a: "Under 48 hours. Connect via read-only OAuth, and our 7-vector engine scores all active deals, detects ghosting, and generates an Executive PDF Dossier with a 10-min Architect Loom walkthrough.",
               },
               {
                 q: "Is our CRM data secure during the read-only OAuth connection?",
-                a: "Yes, 100%. DealSense connects via official HubSpot OAuth with strict read-only permissions on deals and contacts. We never modify your CRM data, never train public AI models on your data, and use AES-256 bank-grade encryption in transit and at rest.",
+                a: "100% bank-grade secure. Official HubSpot read-only OAuth. We never modify records, never train public AI models on your pipeline, and enforce AES-256 encryption in transit and at rest.",
               },
               {
                 q: "How does the $0 monthly platform tax work?",
-                a: "Unlike legacy SaaS platforms (Gong, Clari) that charge $1,200–$2,000/seat/year plus platform taxes, DealSense operates on a pure software ownership model. You pay a flat one-time deployment fee ($1,500 for Single Portal or $3,500 for Agency Fleet) and own 100% of the codebase, database, and infrastructure forever.",
+                a: "Zero recurring subscriptions. Unlike Gong or Clari ($1,200+/rep/yr), DealSense is a flat one-time deployment. You own the software and pay $0 monthly SaaS tax forever.",
               },
               {
                 q: "Do we get full source code ownership?",
-                a: "Yes. Both the Single Portal ($1,500) and Agency Fleet ($3,500) tiers include complete source code handover (FastAPI backend, React 18 frontend, PostgreSQL 16 schema, Redis Streams, Docker compose, and HubSpot Canvas SDK extension) with lifetime commercial usage rights.",
+                a: "Yes, complete source code handover. Full FastAPI backend, React 18 frontend, Postgres schema, Redis Streams, and HubSpot Canvas SDK with unlimited commercial rights.",
               },
               {
                 q: "How does the 'Find $25K Or It’s Free' guarantee work?",
-                a: "If our audit does not uncover at least $25,000 in unaddressed revenue slippage risk or buyer disengagement across your active pipeline, email our Lead Architect within 14 days and we will issue an immediate, 100% full refund with zero questions asked.",
+                a: "Zero-risk money-back guarantee. If our audit doesn't uncover at least $25,000 in pipeline slippage or ghosting risk, get a 100% full refund within 14 days. No questions asked.",
               },
               {
                 q: "Can this integrate with our agency's custom domain & branding?",
-                a: "Yes. With the Agency Fleet tier, DealSense is 100% white-labeled under your domain (e.g. revops.youragency.com). The embedded HubSpot CRM Canvas card displays your logo and brand colors so your clients view it as your proprietary technology.",
+                a: "100% white-label ready. Run on your own domain (e.g. revops.youragency.com) with your logo, colors, and bespoke HubSpot CRM sidebar cards.",
               },
             ].map((faq, idx) => {
               const isOpen = openFaqIndex === idx;

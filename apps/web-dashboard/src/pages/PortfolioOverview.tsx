@@ -334,11 +334,77 @@ export const PortfolioOverview: React.FC = () => {
         
         {/* Placeholder or Action Summary can go here if needed, but we'll leave it empty for now. 
             Because it's a grid-2, the Risk Distribution will take 50% width and not look stretched. */}
-        <div style={{ display: "flex", flexDirection: "column", gap: "var(--sp-4)" }}>
-          <motion.div className="card" style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", padding: "var(--sp-6)", textAlign: "center" }}>
-            <span style={{ fontSize: 32, marginBottom: 8 }}>⚡</span>
-            <h3 style={{ fontSize: 16, fontWeight: 700, margin: "0 0 4px" }}>System Health Optimal</h3>
-            <p style={{ fontSize: 13, color: "var(--hs-text-muted)", margin: 0, maxWidth: 240 }}>No critical system alerts. 48 deals synced successfully with real-time webhook ingestion.</p>
+        {/* System Health Premium Card */}
+        <div style={{ display: "flex", flexDirection: "column", gap: "var(--sp-4)", height: "100%" }}>
+          <motion.div
+            className="card"
+            style={{
+              flex: 1,
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              padding: "var(--sp-6)",
+              textAlign: "center",
+              background: "linear-gradient(135deg, rgba(18, 69, 72, 0.02) 0%, rgba(5, 150, 105, 0.04) 100%)",
+              border: "1px solid rgba(5, 150, 105, 0.15)",
+              position: "relative",
+              overflow: "hidden",
+            }}
+            whileHover={{ y: -2, boxShadow: "0 12px 24px -10px rgba(5, 150, 105, 0.2)" }}
+            transition={{ type: "spring", stiffness: 300, damping: 20 }}
+          >
+            {/* Background subtle pulse */}
+            <motion.div
+              animate={{ opacity: [0.1, 0.3, 0.1], scale: [1, 1.1, 1] }}
+              transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
+              style={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                width: 150,
+                height: 150,
+                background: "radial-gradient(circle, rgba(5,150,105,0.12) 0%, transparent 70%)",
+                borderRadius: "50%",
+                zIndex: 0,
+              }}
+            />
+
+            <div style={{ position: "relative", zIndex: 1, display: "flex", flexDirection: "column", alignItems: "center" }}>
+              <div style={{ position: "relative", display: "inline-flex", marginBottom: 16 }}>
+                <div style={{ width: 52, height: 52, borderRadius: "14px", background: "#ffffff", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 8px 24px rgba(5, 150, 105, 0.12)", border: "1px solid rgba(5, 150, 105, 0.1)" }}>
+                  <motion.svg
+                    width="26"
+                    height="26"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#059669"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    animate={{
+                      scale: [1, 1.15, 1],
+                      filter: ["drop-shadow(0px 0px 0px rgba(5,150,105,0))", "drop-shadow(0px 0px 8px rgba(5,150,105,0.6))", "drop-shadow(0px 0px 0px rgba(5,150,105,0))"]
+                    }}
+                    transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
+                  >
+                    <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+                  </motion.svg>
+                </div>
+                {/* Active indicator dot */}
+                <motion.div
+                  animate={{ boxShadow: ["0 0 0 0 rgba(16, 185, 129, 0.6)", "0 0 0 8px rgba(16, 185, 129, 0)"] }}
+                  transition={{ repeat: Infinity, duration: 2 }}
+                  style={{ position: "absolute", top: -4, right: -4, width: 14, height: 14, borderRadius: "50%", background: "#10b981", border: "2px solid #ffffff" }}
+                />
+              </div>
+
+              <h3 style={{ fontSize: "16.5px", fontWeight: 800, color: "#092124", margin: "0 0 6px", letterSpacing: "-0.01em" }}>System Health Optimal</h3>
+              <p style={{ fontSize: "13px", color: "#475569", margin: 0, maxWidth: 260, lineHeight: 1.5 }}>
+                No critical alerts. <motion.strong animate={{ opacity: [1, 0.5, 1] }} transition={{ repeat: Infinity, duration: 3 }} style={{ color: "#059669" }}>48 deals</motion.strong> synced successfully with real-time HubSpot webhook ingestion.
+              </p>
+            </div>
           </motion.div>
         </div>
       </div>

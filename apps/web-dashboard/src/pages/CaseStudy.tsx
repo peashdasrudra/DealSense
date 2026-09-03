@@ -116,12 +116,12 @@ const PACKAGES = [
 ];
 
 const FAQS = [
-  { q: "How long does deployment take?", a: "The $99 audit delivers results in 24–48 hours. Single portal deployment takes 5 business days. Agency fleet setup takes 10 business days with dedicated engineering support." },
-  { q: "Do my clients need to install anything?", a: "No. DealSense connects via 1-click HubSpot OAuth 2.0. Zero developer involvement, zero IT tickets, zero code changes to your clients' HubSpot portals." },
-  { q: "Can I white-label this under my agency brand?", a: "Yes. The Agency Fleet tier includes full white-labeling — your logo, your custom domain (e.g., revops.youragency.com), your brand colors. Your clients never see 'DealSense'." },
-  { q: "What if it doesn't find enough at-risk pipeline?", a: "The $99 audit comes with an unconditional 100% money-back guarantee. If we don't surface at least $25K in at-risk pipeline value, you get a full refund, no questions asked." },
-  { q: "How is the risk score calculated?", a: "DealSense uses 7 deterministic mathematical vectors — stage velocity, engagement half-life decay, economic buyer multi-threading, date slip frequency, MEDDICC completeness, sentiment drift, and activity recency. Zero LLM hallucination in the scoring layer." },
-  { q: "Do I get the source code?", a: "Yes. Both the Single Portal and Agency Fleet tiers include complete source code handover. You own the IP. No vendor lock-in, no recurring platform fees after deployment." },
+  { q: "How long does deployment take?", a: "The $99 audit takes under 48 hours. Full portal deployments take 5 business days, and Agency Fleet is delivered in 10 business days." },
+  { q: "Do my clients need to install anything?", a: "No. 1-click official HubSpot read-only OAuth. Zero code changes or client IT tickets required." },
+  { q: "Can I white-label this under my agency brand?", a: "Yes. 100% white-labeled on your domain (e.g. revops.youragency.com) with your logo, colors, and embedded CRM card." },
+  { q: "What if it doesn't find enough at-risk pipeline?", a: "100% money-back guarantee. If our audit doesn't surface at least $25,000 in pipeline risk, receive an immediate full refund." },
+  { q: "How is the risk score calculated?", a: "7 deterministic mathematical vectors (velocity decay, buyer ghosting, slip frequency, MEDDICC completeness). Zero LLM hallucinations." },
+  { q: "Do I get the source code?", a: "Yes. Complete FastAPI, React 18, PostgreSQL 16, and Redis monorepo handover with lifetime commercial ownership." },
 ];
 
 /* ────────────────────── COMPONENT ────────────────────── */
