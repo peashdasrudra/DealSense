@@ -18,7 +18,7 @@ export const ConnectHubSpotModal: React.FC<ConnectHubSpotModalProps> = ({
 
   const DEMO_PORTALS = [
     { id: "48920193", name: "HubAiLab Production Fleet", tier: "Diamond Partner", deals: 20 },
-    { id: "29481023", name: "HubXpert Client Portal (Sandbox)", tier: "Agency Client", deals: 16 },
+    { id: "29481023", name: "Premier Partner Client Portal (Sandbox)", tier: "Agency Client", deals: 16 },
     { id: "19284711", name: "TechCorp Global Enterprise", tier: "Enterprise Tier", deals: 12 },
   ];
 
@@ -66,7 +66,7 @@ export const ConnectHubSpotModal: React.FC<ConnectHubSpotModalProps> = ({
       setStep("success");
       const sandboxPortal = {
         id: "29481023",
-        name: "HubXpert Client Portal (Sandbox)",
+        name: "Premier Partner Client Portal (Sandbox)",
         tier: "Developer App (OAuth 2.0 Live)",
         deals: 16,
         latency: "0.18s",

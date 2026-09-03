@@ -8,8 +8,8 @@
  * 
  * Strategic Purpose:
  * Converts agency owners by exposing the brutal market shift toward automated revenue intelligence,
- * proving mathematical retainer arbitrage ($150K-$300K ARR on 95% margin), and presenting DealSense
- * as the ultimate white-label competitive weapon to become the #1 HubSpot partner in their market.
+ * proving mathematical retainer economics ($150K-$300K ARR on 95% margin), and presenting DealSense
+ * as the premier Solutions Partner fleet engine to become the #1 HubSpot partner in their market.
  */
 
 import React, { useState } from "react";
@@ -158,7 +158,7 @@ export const AgencyFleet: React.FC = () => {
             <a href="#the-shift" style={{ textDecoration: "none", color: "#334155", transition: "color 0.2s ease" }}>The Agency Dilemma</a>
             <a href="#how-it-works" style={{ textDecoration: "none", color: "#334155", transition: "color 0.2s ease" }}>How It Works</a>
             <a href="#trojan-horse" style={{ textDecoration: "none", color: "#334155", transition: "color 0.2s ease" }}>Client Acquisition</a>
-            <a href="#calculator" style={{ textDecoration: "none", color: "#334155", transition: "color 0.2s ease" }}>Retainer Arbitrage</a>
+            <a href="#calculator" style={{ textDecoration: "none", color: "#334155", transition: "color 0.2s ease" }}>Retainer Economics</a>
             <a href="#features" style={{ textDecoration: "none", color: "#334155", transition: "color 0.2s ease" }}>Fleet Weaponry</a>
           </div>
 
@@ -286,7 +286,7 @@ export const AgencyFleet: React.FC = () => {
                   onClick={() => setMobileMenuOpen(false)}
                   style={{ padding: "10px 14px", borderRadius: "10px", background: "#f8fafc", color: "#092124", textDecoration: "none", fontSize: "13.5px", fontWeight: 700 }}
                 >
-                  Retainer Arbitrage Calculator ($300K ARR)
+                  Retainer Revenue Calculator ($300K ARR)
                 </a>
                 <a
                   href="#features"
@@ -402,7 +402,7 @@ export const AgencyFleet: React.FC = () => {
               margin: "0 auto 22px",
             }}
           >
-            Stop trading hours for manual CRM cleanup. White-label DealSense under your agency’s domain in 10 minutes. Deliver 7-vector deterministic risk scoring and executive QBR briefings with <strong>zero custom engineering</strong> and <strong>$0 monthly platform tax</strong>.
+            Stop trading hours for manual CRM cleanup. Deploy DealSense across your agency’s client fleet in 10 minutes. Deliver 7-vector deterministic risk scoring and executive QBR briefings with <strong>zero custom engineering</strong> and <strong>$0 monthly platform tax</strong>.
           </motion.p>
 
           {/* Hero CTAs */}
@@ -480,7 +480,7 @@ export const AgencyFleet: React.FC = () => {
               { num: "$300,000", label: "New Retainer ARR", sub: "At $2.5K/mo across 10 clients" },
               { num: "70%+", label: "Audit-to-Retainer Close", sub: "48-hr $25K pipeline hook" },
               { num: "80+ Hours", label: "Saved Every Month", sub: "1-click automated QBR briefings" },
-              { num: "100% Owned", label: "White-Label Brand IP", sub: "Your domain · $0 SaaS tax" },
+              { num: "Multi-Portal", label: "Solutions Partner Fleet", sub: "Co-branded · $0 SaaS tax" },
             ].map((stat, i) => (
               <div
                 key={i}
@@ -740,7 +740,7 @@ export const AgencyFleet: React.FC = () => {
         </div>
       </section>
 
-      {/* ── 5. Live Interactive Retainer Arbitrage Calculator ──────────── */}
+      {/* ── 5. Live Interactive Retainer Revenue Calculator ──────────── */}
       <section id="calculator" style={{ padding: "84px clamp(16px, 4vw, 24px)", background: "linear-gradient(180deg, #f8fafc 0%, #ffffff 100%)" }}>
         <div style={{ maxWidth: 1080, margin: "0 auto" }}>
           <div style={{ textAlign: "center", maxWidth: 760, margin: "0 auto 48px" }}>
@@ -748,10 +748,10 @@ export const AgencyFleet: React.FC = () => {
               INTERACTIVE AGENCY ROI CALCULATOR
             </span>
             <h2 style={{ fontSize: "clamp(28px, 4.5vw, 42px)", fontWeight: 900, color: "#092124", letterSpacing: "-0.03em", margin: "12px 0 16px" }}>
-              Calculate Your Agency’s Pure Profit Arbitrage
+              Calculate Your Agency’s Solutions Partner Retainer Profit
             </h2>
             <p style={{ fontSize: "16px", color: "#64748b", lineHeight: 1.6 }}>
-              See why paying <strong>$0 monthly fees</strong> and owning the white-label source code creates an unstoppable cash engine for your agency.
+              See why paying <strong>$0 monthly fees</strong> and deploying the Solutions Partner fleet engine creates an unstoppable cash engine for your agency.
             </p>
           </div>
 
@@ -814,7 +814,7 @@ export const AgencyFleet: React.FC = () => {
               </div>
 
               <div style={{ background: "#f8fafc", padding: "14px 18px", borderRadius: "12px", border: "1px solid #e2e8f0", fontSize: "12.5px", color: "#475569" }}>
-                💡 <strong>DealSense Platform Tax:</strong> $0/month. You pay once for the White-Label Fleet License ($1,500–$3,500) and keep 100% of all client revenue forever.
+                💡 <strong>DealSense Platform Tax:</strong> $0/month. You pay once for the Solutions Partner Fleet License ($1,500–$3,500) and keep 100% of all client retainer revenue forever.
               </div>
             </div>
 
@@ -869,7 +869,7 @@ export const AgencyFleet: React.FC = () => {
         </div>
       </section>
 
-      {/* ── 6. Complete White-Label Arsenal ─────────────────────────────── */}
+      {/* ── 6. Complete Solutions Partner Arsenal ─────────────────────────────── */}
       <section id="features" style={{ padding: "64px clamp(16px, 4vw, 24px) 16px", background: "#ffffff" }}>
         <div style={{ maxWidth: 1140, margin: "0 auto" }}>
           <div style={{ textAlign: "center", maxWidth: 760, margin: "0 auto 40px" }}>
@@ -893,7 +893,7 @@ export const AgencyFleet: React.FC = () => {
               },
               {
                 icon: "🎨",
-                title: "100% White-Label Branding",
+                title: "Co-Branded Client Experience",
                 desc: "Hosted on your custom agency domain (e.g. revops.youragency.com) with your agency logo, signature color palette, and custom favicon.",
               },
               {
@@ -971,7 +971,7 @@ export const AgencyFleet: React.FC = () => {
               Specialized Agency & Partner Pricing
             </h2>
             <p style={{ fontSize: "12.5px", color: "#64748b", lineHeight: 1.4, maxWidth: 640, margin: "0 auto 8px" }}>
-              Competitor platforms cost <strong>$30,000–$60,000/yr</strong> with 0% white-labeling. Deploy your agency's AI fleet with <strong>zero monthly SaaS tax</strong>.
+              Competitor platforms cost <strong>$30,000–$60,000/yr</strong> with rigid per-seat lock-in. Deploy your agency's AI fleet with <strong>zero monthly SaaS tax</strong>.
             </p>
 
             {/* 100x Market Delta Comparison Ribbon */}
@@ -1213,7 +1213,7 @@ export const AgencyFleet: React.FC = () => {
                     </span>
                   </div>
                   <div style={{ fontSize: "10.5px", fontWeight: 700, color: "#ff5c35", marginTop: 2 }}>
-                    🔥 100% White-Label · 0 Monthly Platform Tax
+                    🔥 Solutions Partner Fleet · 0 Monthly Platform Tax
                   </div>
                 </div>
 
@@ -1224,7 +1224,7 @@ export const AgencyFleet: React.FC = () => {
                 <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 5.5, fontSize: "11.5px", color: "#092124" }}>
                   {[
                     { bold: "Manage up to 15 Client Portals", text: "master switcher cockpit" },
-                    { bold: "100% Agency White-Label", text: "revops.youragency.com + custom logo" },
+                    { bold: "Co-Branded Client Portals", text: "revops.youragency.com + custom logo" },
                     { bold: "Embedded HubSpot Canvas Card", text: "lives inside client CRM records" },
                     { bold: "Sub-200ms Webhook Stream", text: "Redis Streams real-time event engine" },
                     { bold: "1-Click Executive QBR Dossier", text: "automated board-ready PDF briefing" },
@@ -1807,7 +1807,7 @@ export const AgencyFleet: React.FC = () => {
             {[
               {
                 q: "Do my clients ever see 'DealSense' or know it's a 3rd party tool?",
-                a: "Never. 100% white-labeled on your domain (revops.youragency.com) with your branding, logo, and embedded HubSpot CRM card. Clients see it entirely as your proprietary AI platform.",
+                a: "Co-branded on your custom domain (revops.youragency.com) with your agency branding, logo, and embedded HubSpot CRM card as an authorized Solutions Partner delivery.",
               },
               {
                 q: "How does the $0 monthly platform tax work?",

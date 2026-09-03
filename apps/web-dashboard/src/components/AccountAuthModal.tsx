@@ -27,10 +27,10 @@ export const AccountAuthModal: React.FC<AccountAuthModalProps> = ({
       badge: "HubAiLab Super Admin",
     },
     {
-      name: "Tonmoy (CTO) / Evaluator",
-      email: "tonmoy@hubxpert.com",
-      role: "HubXpert Technical Evaluator",
-      initials: "TX",
+      name: "Enterprise Technical Evaluator",
+      email: "evaluator@partnerhub.io",
+      role: "Premier Agency Technical Evaluator",
+      initials: "EV",
       badge: "Hiring Evaluation Mode",
     },
     {

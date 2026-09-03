@@ -95,7 +95,7 @@ HubSpot requires testing credentials when submitting:
 ---
 
 ## 4. Why This Architecture is "Top 1%"
-When HubXpert CTO Tonmoy evaluates this repository, the following 5 engineering decisions prove senior architectural mastery:
+When premier HubSpot agency CTOs and marketplace review teams evaluate this repository, the following 5 engineering decisions prove senior architectural mastery:
 
 1. **Zero-Cold-Start Dual Engine**: If the LLM provider or external network fails, the backend falls back to a deterministic heuristic engine in $<15\text{ms}$. No deal score ever returns blank.
 2. **Cryptographic Integrity**: Official v3 HMAC-SHA256 Base64 scheme with timestamp replay attack defense and strict 401 rejection.

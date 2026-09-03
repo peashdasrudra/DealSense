@@ -67,7 +67,7 @@ export const CONTACT_LINKS = {
   ARCHITECT_ROLE: "Lead AI Architect · HubAiLab",
   EMAIL: "peashdasrudra@gmail.com",
   EMAIL_AUDIT: "mailto:peashdasrudra@gmail.com?subject=DealSense%20Pilot%20Risk%20Audit%20Inquiry",
-  EMAIL_AGENCY: "mailto:peashdasrudra@gmail.com?subject=DealSense%20Agency%20Fleet%20Arbitrage%20Inquiry",
+  EMAIL_AGENCY: "mailto:peashdasrudra@gmail.com?subject=DealSense%20Agency%20Fleet%20Partner%20Inquiry",
   EMAIL_CUSTOM_APP: "mailto:peashdasrudra@gmail.com?subject=Custom%20AI%20HubSpot%20App%20Inquiry%20($1500%20Sprint)",
   EMAIL_MEETING: "https://calendly.com/pdrpeash/onboarding-with-peash",
   ONBOARDING_CALENDLY: "https://calendly.com/pdrpeash/onboarding-with-peash",
@@ -96,7 +96,7 @@ export const ALL_NAV_ITEMS: NavLinkItem[] = [
     category: "Landing & Marketing",
     type: "route",
     badge: "72% OFF",
-    description: "Multi-tenant white-label arbitrage portal with interactive client switcher.",
+    description: "Multi-tenant Solutions Partner fleet portal with interactive client switcher.",
   },
   {
     id: "nav-pricing-anchor",

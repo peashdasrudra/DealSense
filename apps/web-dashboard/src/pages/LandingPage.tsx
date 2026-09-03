@@ -416,7 +416,7 @@ export const LandingPage: React.FC = () => {
                           72% OFF
                         </span>
                       </div>
-                      <div style={{ fontSize: "11px", color: "#64748b" }}>Multi-tenant white-label CRM canvas cards</div>
+                      <div style={{ fontSize: "11px", color: "#64748b" }}>Multi-tenant partner CRM canvas cards</div>
                     </div>
                   </div>
                   <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke="#ff5c35" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
@@ -1556,7 +1556,7 @@ export const LandingPage: React.FC = () => {
                     </span>
                   </div>
                   <div style={{ fontSize: "11px", fontWeight: 700, color: "#ff5c35", marginTop: 3 }}>
-                    🔥 100% White-Label · 0 Monthly Platform Tax
+                    🔥 Solutions Partner Fleet · 0 Monthly Platform Tax
                   </div>
                 </div>
 
@@ -1567,7 +1567,7 @@ export const LandingPage: React.FC = () => {
                 <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 7.5, fontSize: "12px", color: "#092124" }}>
                   {[
                     { bold: "Manage up to 15 Client Portals", text: "master switcher cockpit" },
-                    { bold: "100% Agency White-Label", text: "revops.youragency.com + custom logo" },
+                    { bold: "Co-Branded Client Portals", text: "revops.youragency.com + custom logo" },
                     { bold: "Embedded HubSpot Canvas Card", text: "lives inside client CRM records" },
                     { bold: "Sub-200ms Webhook Stream", text: "Redis Streams real-time event engine" },
                     { bold: "1-Click Executive QBR Dossier", text: "automated board-ready PDF briefing" },
@@ -2117,7 +2117,7 @@ export const LandingPage: React.FC = () => {
               },
               {
                 q: "Can this integrate with our agency's custom domain & branding?",
-                a: "100% white-label ready. Run on your own domain (e.g. revops.youragency.com) with your logo, colors, and bespoke HubSpot CRM sidebar cards.",
+                a: "Co-branded partner ready. Run on your own domain (e.g. revops.youragency.com) with your agency branding, colors, and bespoke HubSpot CRM sidebar cards.",
               },
             ].map((faq, idx) => {
               const isOpen = openFaqIndex === idx;

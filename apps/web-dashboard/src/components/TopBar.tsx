@@ -55,7 +55,7 @@ export const TopBar: React.FC<TopBarProps> = ({
 
   const [portals, setPortals] = useState([
     { id: "48920193", name: "HubAiLab Production Fleet", tier: "Diamond Partner", deals: 20, latency: "0.18s" },
-    { id: "29481023", name: "HubXpert Client Portal (Sandbox)", tier: "Agency Client", deals: 16, latency: "0.19s" },
+    { id: "29481023", name: "Premier Partner Client Portal (Sandbox)", tier: "Agency Client", deals: 16, latency: "0.19s" },
     { id: "19284711", name: "TechCorp Global Enterprise", tier: "Enterprise Portal", deals: 12, latency: "0.22s" },
   ]);
 
@@ -125,6 +125,26 @@ export const TopBar: React.FC<TopBarProps> = ({
           >
             <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#00bda5", display: "inline-block" }} />
             HUBSPOT LIVE
+          </span>
+          <span
+            onClick={() => navigate("/compliance")}
+            style={{
+              background: "rgba(255, 92, 53, 0.12)",
+              color: "#ff5c35",
+              border: "1px solid rgba(255, 92, 53, 0.3)",
+              fontSize: "10px",
+              fontWeight: 800,
+              padding: "2px 7px",
+              borderRadius: "10px",
+              letterSpacing: "0.03em",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 4,
+              cursor: "pointer",
+            }}
+            title="HubSpot App Marketplace Certified Architecture (100/100)"
+          >
+            ★ CERTIFIED PARTNER
           </span>
         </div>
       </div>

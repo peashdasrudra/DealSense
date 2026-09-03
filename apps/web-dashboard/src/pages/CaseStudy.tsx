@@ -27,7 +27,7 @@ const PROBLEMS = [
   { before: "$1.2M+ pipeline slips discovered during QBR — after the quarter closes", after: "Autonomous alerts fire the moment a deal stalls or a CFO goes silent" },
   { before: "Forecasting is a spreadsheet guess — managers pad 30% because they don't trust CRM data", after: "Monte Carlo simulation gives Commit, Manager, and AI Reality scenarios" },
   { before: "Single-threaded deals collapse when one champion leaves", after: "Stakeholder Power Matrix detects single-threading and triggers executive outreach" },
-  { before: "Agency RevOps consultants charge $5K/month for manual pipeline reviews", after: "Deploy a white-label AI engine under your brand, charge $2.5K/mo retainer, keep 100% margin" },
+  { before: "Agency RevOps consultants charge $5K/month for manual pipeline reviews", after: "Deploy our AI engine across your client fleet, charge $2.5K/mo retainer, keep 100% margin" },
 ];
 
 const MODULES = [
@@ -82,10 +82,10 @@ const PACKAGES = [
     crossed: "$8,500",
     timeline: "24h SLA",
     tagline: "Bill 10 clients $2,500/mo = $300,000/yr ARR (200x ROI)",
-    guarantee: "100% White-Label · 0 Monthly Platform Tax Forever",
+    guarantee: "Authorized Partner Fleet · 0 Monthly Platform Tax Forever",
     features: [
       "Manage up to 15 Client Portals (master switcher cockpit)",
-      "100% Agency White-Label (revops.youragency.com + custom logo)",
+      "Co-Branded Client Portal Delivery (revops.youragency.com + custom logo)",
       "Embedded HubSpot Canvas Card (lives native inside client CRM)",
       "Sub-200ms Webhook Stream (Redis Streams real-time event engine)",
       "1-Click Executive QBR Dossier (automated board-ready PDF briefing)",
@@ -118,7 +118,7 @@ const PACKAGES = [
 const FAQS = [
   { q: "How long does deployment take?", a: "The $99 audit takes under 48 hours. Full portal deployments take 5 business days, and Agency Fleet is delivered in 10 business days." },
   { q: "Do my clients need to install anything?", a: "No. 1-click official HubSpot read-only OAuth. Zero code changes or client IT tickets required." },
-  { q: "Can I white-label this under my agency brand?", a: "Yes. 100% white-labeled on your domain (e.g. revops.youragency.com) with your logo, colors, and embedded CRM card." },
+  { q: "Can I co-brand this for my agency clients?", a: "Yes. Deploy co-branded client portals on your custom domain (e.g. revops.youragency.com) with your agency colors and embedded CRM cards." },
   { q: "What if it doesn't find enough at-risk pipeline?", a: "100% money-back guarantee. If our audit doesn't surface at least $25,000 in pipeline risk, receive an immediate full refund." },
   { q: "How is the risk score calculated?", a: "7 deterministic mathematical vectors (velocity decay, buyer ghosting, slip frequency, MEDDICC completeness). Zero LLM hallucinations." },
   { q: "Do I get the source code?", a: "Yes. Complete FastAPI, React 18, PostgreSQL 16, and Redis monorepo handover with lifetime commercial ownership." },
@@ -201,7 +201,7 @@ export const CaseStudy: React.FC = () => {
           Stop Losing $1.2M+ in Pipeline Every Quarter.
         </h1>
         <p style={{ fontSize: "clamp(14px, 1.8vw, 17px)", color: "rgba(255,255,255,0.85)", lineHeight: 1.65, maxWidth: 780, marginBottom: 32 }}>
-          DealSense is the autonomous HubSpot revenue intelligence engine that scores every deal in real-time, surfaces hidden pipeline leaks before they kill your quarter, and lets you white-label the entire platform under your agency brand — generating <strong style={{ color: "#fbbf24" }}>$240K+/year in recurring retainer revenue</strong> from a single deployment.
+          DealSense is the autonomous HubSpot revenue intelligence engine that scores every deal in real-time, surfaces hidden pipeline leaks before they kill your quarter, and empowers your agency to deliver continuous pipeline telemetry across your entire client fleet — generating <strong style={{ color: "#fbbf24" }}>$240K+/year in recurring retainer revenue</strong> from a single deployment.
         </p>
 
         {/* CTA Row */}
@@ -342,7 +342,7 @@ export const CaseStudy: React.FC = () => {
       </div>
 
       {/* ═══════════════════ SECTION 5: AGENCY REVENUE CALCULATOR ═══════════════════ */}
-      {sectionTitle("Your Agency Revenue Calculator", "See exactly how much recurring revenue you could generate by white-labeling DealSense.")}
+      {sectionTitle("Your Agency Revenue Calculator", "See exactly how much recurring revenue you could generate by deploying DealSense across your client fleet.")}
 
       <div className="card" style={{ marginBottom: 48 }}>
         <div className="card-body" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 28, alignItems: "center" }}>

@@ -95,9 +95,9 @@ A visual qualification audit breakdown across *Metrics, Economic Buyer, Decision
 
 ---
 
-## 3. Agency-Grade Native HubSpot Architecture (HubXpert Production Spec)
+## 3. Agency-Grade Native HubSpot Architecture (Enterprise Production Spec)
 
-To meet the rigorous integration and security standards expected by premier HubSpot Elite & Diamond Solution Partners like **HubXpert**, DealSense is built with native CRM extensibility:
+To meet the rigorous integration and security standards expected by premier HubSpot Elite & Diamond Solution Partners, DealSense is built with native CRM extensibility:
 
 ```
 +----------------------------------------------------------------------------------------------------+
@@ -153,14 +153,14 @@ To meet the rigorous integration and security standards expected by premier HubS
 
 ---
 
-### 5. Outreach Script for HubXpert CTO (Tonmoy)
+### 5. Architecture Brief for Agency CTOs & Technical Evaluators
 
 ```text
 Subject: DealSense native HubSpot architecture & Node.js workflow actions
 
-Hi Tonmoy,
+Hi [Name],
 
-I've been following HubXpert’s engineering work in the HubSpot ecosystem and wanted to share an update on DealSense (an AI RevOps & deal risk engine I built).
+I've been following your agency's engineering work in the HubSpot ecosystem and wanted to share an architectural brief on DealSense (an AI RevOps & deterministic deal risk engine I built).
 
 To align DealSense with modern agency implementation standards, I recently completed four architectural upgrades:
 

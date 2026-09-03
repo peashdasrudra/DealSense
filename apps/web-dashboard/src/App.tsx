@@ -37,6 +37,9 @@ import { DealDrawer, DealData } from "./components/DealDrawer";
 import { BetaNotice } from "./components/BetaNotice";
 import { PrivacyPolicy } from "./pages/PrivacyPolicy";
 import { TermsOfService } from "./pages/TermsOfService";
+import { MarketplaceAudit } from "./pages/MarketplaceAudit";
+import { MarketplaceOnboarding } from "./pages/MarketplaceOnboarding";
+import { MarketplaceListingPreview } from "./pages/MarketplaceListingPreview";
 
 // ── Beta / Roadmap Route Mapping ─────────────────────────────────────────────
 const BETA_ROUTES: Record<string, string> = {
@@ -61,9 +64,10 @@ const PAGE_TITLES: Record<string, { title: string; breadcrumb: string }> = {
   "/": { title: "DealSense Platform", breadcrumb: "Landing" },
   "/landing": { title: "DealSense Revenue Platform", breadcrumb: "Landing" },
   "/welcome": { title: "Welcome & Onboarding", breadcrumb: "Welcome" },
-  "/agency": { title: "HubSpot Agency Fleet & Arbitrage", breadcrumb: "Agency Fleet" },
-  "/partners": { title: "HubSpot Agency Fleet & Arbitrage", breadcrumb: "Partners" },
-  "/agency-fleet": { title: "HubSpot Agency Fleet & Arbitrage", breadcrumb: "Agency Fleet" },
+  "/agency": { title: "HubSpot Solutions Partner Fleet", breadcrumb: "Agency Fleet" },
+  "/partners": { title: "HubSpot Solutions Partner Fleet", breadcrumb: "Partners" },
+  "/agents": { title: "HubSpot Solutions Partner Fleet", breadcrumb: "Agents" },
+  "/agency-fleet": { title: "HubSpot Solutions Partner Fleet", breadcrumb: "Agency Fleet" },
   "/checkout": { title: "Secure Checkout & Software Handover", breadcrumb: "Checkout" },
   "/payment": { title: "Secure Checkout & Software Handover", breadcrumb: "Payment" },
   "/pipeline": { title: "Home — Revenue Intelligence", breadcrumb: "Home" },
@@ -87,6 +91,10 @@ const PAGE_TITLES: Record<string, { title: string; breadcrumb: string }> = {
   "/settings": { title: "Settings & Scoring Weights", breadcrumb: "Settings" },
   "/privacy": { title: "Privacy Policy & GDPR", breadcrumb: "Privacy" },
   "/terms": { title: "Terms of Service", breadcrumb: "Terms" },
+  "/compliance": { title: "App Partner Certification", breadcrumb: "Certification" },
+  "/certification": { title: "App Partner Certification", breadcrumb: "Certification" },
+  "/onboarding": { title: "Marketplace Setup Flow", breadcrumb: "Onboarding" },
+  "/marketplace-listing": { title: "Marketplace Directory Preview", breadcrumb: "Marketplace" },
   "/nav-test": { title: "Navigation & CTA Test Suite", breadcrumb: "Dev / QA" },
 };
 
@@ -178,7 +186,7 @@ export const App: React.FC = () => {
   };
 
   const isCheckoutPage = location.pathname === "/checkout" || location.pathname === "/payment";
-  const isAgencyPage = location.pathname === "/agency" || location.pathname === "/partners" || location.pathname === "/agency-fleet";
+  const isAgencyPage = location.pathname === "/agency" || location.pathname === "/partners" || location.pathname === "/agents" || location.pathname === "/agency-fleet";
   const isLandingPage = location.pathname === "/" || location.pathname === "/landing" || location.pathname === "/welcome" || isAgencyPage || isCheckoutPage;
 
   if (isLandingPage) {
@@ -303,6 +311,7 @@ export const App: React.FC = () => {
                 <Route path="/case-study" element={<CaseStudy />} />
                 <Route path="/agency" element={<AgencyFleet />} />
                 <Route path="/partners" element={<AgencyFleet />} />
+                <Route path="/agents" element={<AgencyFleet />} />
                 <Route path="/agency-fleet" element={<AgencyFleet />} />
                 <Route path="/landing" element={<LandingPage />} />
                 <Route path="/welcome" element={<LandingPage />} />
@@ -311,8 +320,12 @@ export const App: React.FC = () => {
                 <Route path="/settings" element={<Settings />} />
                 <Route path="/checkout" element={<CheckoutPage />} />
                 <Route path="/payment" element={<CheckoutPage />} />
-                <Route path="/privacy" element={<PrivacyPolicy />} />
+                 <Route path="/privacy" element={<PrivacyPolicy />} />
                 <Route path="/terms" element={<TermsOfService />} />
+                <Route path="/compliance" element={<MarketplaceAudit />} />
+                <Route path="/certification" element={<MarketplaceAudit />} />
+                <Route path="/onboarding" element={<MarketplaceOnboarding />} />
+                <Route path="/marketplace-listing" element={<MarketplaceListingPreview />} />
                 <Route path="/nav-test" element={<NavTestPage />} />
               </Routes>
             </motion.div>

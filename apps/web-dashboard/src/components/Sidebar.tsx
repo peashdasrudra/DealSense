@@ -174,9 +174,12 @@ const NAV_SECTIONS: NavSection[] = [
     ],
   },
   {
-    title: "Platform & Compliance",
+    title: "HubSpot Marketplace & Trust",
     defaultOpen: true,
     items: [
+      { id: "compliance", label: "App Partner Certification", iconKey: "audit", path: "/compliance", badge: "100/100" },
+      { id: "onboarding", label: "Marketplace Setup Flow", iconKey: "playbooks", path: "/onboarding" },
+      { id: "listing", label: "Marketplace Directory View", iconKey: "casestudy", path: "/marketplace-listing" },
       { id: "case-study", label: "Architecture Case Study", iconKey: "casestudy", path: "/case-study" },
       { id: "audit", label: "Audit Log & Telemetry", iconKey: "audit", path: "/audit" },
       { id: "settings", label: "HubSpot Integration Hub", iconKey: "settings", path: "/settings" },

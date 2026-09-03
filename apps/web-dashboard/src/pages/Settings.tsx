@@ -283,20 +283,20 @@ export const Settings: React.FC = () => {
 
             {/* Agency Fleet Retainer */}
             <div style={{ background: "linear-gradient(180deg, #092124 0%, #051618 100%)", borderRadius: 10, border: "1px solid rgba(255,255,255,0.12)", padding: 24, color: "#ffffff" }}>
-              <div style={{ fontSize: 13, fontWeight: 700, color: "#34d399", textTransform: "uppercase" }}>Agency Arbitrage</div>
+              <div style={{ fontSize: 13, fontWeight: 700, color: "#34d399", textTransform: "uppercase" }}>Solutions Partner Fleet</div>
               <h3 style={{ fontSize: 22, fontWeight: 800, color: "#ffffff", margin: "4px 0 8px" }}>Agency Fleet Retainer</h3>
               <div style={{ fontSize: 26, fontWeight: 800, color: "#34d399", marginBottom: 16 }}>$2,500 <span style={{ fontSize: 13, fontWeight: 500, color: "rgba(255,255,255,0.6)" }}>/ retainer</span></div>
               <ul style={{ paddingLeft: 18, fontSize: 13, color: "rgba(255,255,255,0.8)", lineHeight: 1.7, margin: "0 0 20px" }}>
                 <li>Multi-Tenant Agency Command Console</li>
-                <li>White-Label HubSpot UI Extension Embedding</li>
-                <li>$99 Risk Audit Trojan Horse Kit</li>
+                <li>Co-Branded HubSpot UI Extension Embedding</li>
+                <li>$99 Pipeline Risk Audit Lead Generation Kit</li>
                 <li>Direct Architecture Support with Peash Das Rudra</li>
               </ul>
               <button
                 onClick={() => navigate("/agency")}
                 style={{ width: "100%", padding: "10px", background: "linear-gradient(90deg, #ff5c35 0%, #00a4bd 100%)", border: "none", borderRadius: 6, color: "#ffffff", fontWeight: 700, fontSize: 13, cursor: "pointer" }}
               >
-                Explore Agency Fleet Arbitrage ➔
+                Explore Partner Fleet Retainer ➔
               </button>
             </div>
           </div>

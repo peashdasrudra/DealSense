@@ -194,8 +194,8 @@ export const Footer: React.FC = () => {
               <Link to="/case-study" style={{ color: "rgba(255, 255, 255, 0.75)", textDecoration: "none" }}>
                 Pilot Portal Deal Audit
               </Link>
-              <Link to="/case-study" style={{ color: "rgba(255, 255, 255, 0.75)", textDecoration: "none" }}>
-                White-Label Fleet Deployment
+              <Link to="/agency" style={{ color: "rgba(255, 255, 255, 0.75)", textDecoration: "none" }}>
+                Solutions Partner Fleet Deployment
               </Link>
               <Link to="/clients" style={{ color: "rgba(255, 255, 255, 0.75)", textDecoration: "none" }}>
                 Client Health Scorecards

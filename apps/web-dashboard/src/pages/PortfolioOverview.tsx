@@ -22,6 +22,7 @@ import {
 import { fetchDeals, syncHubSpotDeals } from "../api";
 
 import { DealDrawer, DealData } from "../components/DealDrawer";
+import { ExecutiveAuditModal } from "../components/ExecutiveAuditModal";
 
 // ── Default Enterprise Sample Deals (used if DB has no seed data yet) ────────
 const SAMPLE_DEALS = [
@@ -92,6 +93,7 @@ export const PortfolioOverview: React.FC = () => {
   const navigate = useNavigate();
   const [deals, setDeals] = useState<any[]>(SAMPLE_DEALS);
   const [selectedDrawerDeal, setSelectedDrawerDeal] = useState<DealData | null>(null);
+  const [isAuditModalOpen, setIsAuditModalOpen] = useState(false);
   const [isSyncing, setIsSyncing] = useState(false);
   const [syncToast, setSyncToast] = useState<string | null>(null);
 
@@ -235,10 +237,28 @@ export const PortfolioOverview: React.FC = () => {
                 </svg>
                 <strong style={{ color: "#33475b" }}>HubSpot REST v3</strong> Certified
               </span>
+              <span style={{ color: "#cbd6e2" }}>•</span>
+              <span
+                onClick={() => navigate("/compliance")}
+                style={{ cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 5, background: "rgba(0, 164, 189, 0.08)", padding: "2px 8px", borderRadius: "10px", color: "#007a8c" }}
+                title="View Live HubSpot Marketplace Certification Suite"
+              >
+                <strong style={{ color: "#007a8c" }}>HubSpot Certified App Partner Architecture (100/100)</strong> ➔
+              </span>
             </div>
           </div>
 
           <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 16, flexWrap: "wrap" }}>
+            <button
+              onClick={() => setIsAuditModalOpen(true)}
+              style={{
+                padding: "8px 18px", background: "linear-gradient(135deg, #092124 0%, #124548 100%)", color: "#ffffff", fontSize: "13px", fontWeight: 700,
+                border: "1px solid rgba(0, 164, 189, 0.4)", borderRadius: "var(--radius-sm)", cursor: "pointer", boxShadow: "0 2px 8px rgba(9, 33, 36, 0.25)",
+                display: "inline-flex", alignItems: "center", gap: 6, transition: "all 0.2s ease"
+              }}
+            >
+              <span>📑 Export Executive Pipeline Audit Brief</span>
+            </button>
             <button
               onClick={() => navigate("/deals")}
               style={{
@@ -620,6 +640,15 @@ export const PortfolioOverview: React.FC = () => {
         deal={selectedDrawerDeal}
         isOpen={!!selectedDrawerDeal}
         onClose={() => setSelectedDrawerDeal(null)}
+      />
+
+      {/* ── Executive Pipeline Risk Audit Lead Magnet Modal ── */}
+      <ExecutiveAuditModal
+        deals={deals}
+        isOpen={isAuditModalOpen}
+        onClose={() => setIsAuditModalOpen(false)}
+        portalId={activePortal.id}
+        portalName={activePortal.name}
       />
     </div>
   );

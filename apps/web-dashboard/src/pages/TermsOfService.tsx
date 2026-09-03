@@ -35,7 +35,7 @@ export const TermsOfService: React.FC = () => {
             </p>
             <ul style={{ paddingLeft: 20, margin: "8px 0" }}>
               <li><strong>Marketplace Free Tier:</strong> Provides basic deal risk scoring (0-100), stalled deal flagging, and single-threaded contact alerts inside your native HubSpot deal cards at no charge.</li>
-              <li><strong>Commercial / Agency Retainer Tiers:</strong> Premium custom workflow automation, automated MEDDICC extractions, and white-label agency deployment are governed under separate commercial service agreements.</li>
+              <li><strong>Commercial / Agency Retainer Tiers:</strong> Premium custom workflow automation, automated MEDDICC extractions, and multi-portal solutions partner deployment are governed under separate commercial service agreements.</li>
             </ul>
           </section>
 
