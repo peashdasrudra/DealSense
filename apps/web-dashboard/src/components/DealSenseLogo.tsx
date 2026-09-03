@@ -28,10 +28,10 @@ export const DealSenseIcon: React.FC<{ size?: number; className?: string; style?
       style={{
         width: size,
         height: size,
-        borderRadius: Math.max(6, Math.round(size * 0.22)),
         objectFit: "contain",
         flexShrink: 0,
-        filter: "drop-shadow(0 2px 6px rgba(255, 92, 53, 0.22))",
+        filter: "drop-shadow(0 2px 8px rgba(255, 92, 53, 0.32)) drop-shadow(0 0 1px rgba(255, 92, 53, 0.5))",
+        display: "block",
         ...style,
       }}
     />

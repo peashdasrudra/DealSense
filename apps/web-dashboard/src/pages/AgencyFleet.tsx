@@ -121,9 +121,7 @@ export const AgencyFleet: React.FC = () => {
             onClick={() => navigate("/")}
             style={{ display: "flex", alignItems: "center", gap: 8, cursor: "pointer", flexShrink: 0 }}
           >
-            <div style={{ width: 34, height: 34, borderRadius: "8px", background: "linear-gradient(135deg, rgba(255,92,53,0.15) 0%, rgba(18,69,72,0.1) 100%)", display: "flex", alignItems: "center", justifyContent: "center", border: "1px solid rgba(255,92,53,0.3)", boxShadow: "0 2px 6px rgba(255,92,53,0.12)", flexShrink: 0 }}>
-              <DealSenseIcon size={19} />
-            </div>
+            <DealSenseIcon size={32} />
             <div style={{ display: "flex", alignItems: "center", gap: 6, whiteSpace: "nowrap" }}>
               <span style={{ fontSize: "19px", fontWeight: 800, color: "#092124", letterSpacing: "-0.035em", lineHeight: 1 }}>
                 Deal<span style={{ color: "#ff5c35" }}>Sense</span>
@@ -346,9 +344,7 @@ export const AgencyFleet: React.FC = () => {
           {/* Why DealSense Section Header — Full HubSpot UI Style */}
           <div style={{ marginTop: 18, marginBottom: 24, textAlign: "center" }}>
             <div style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 8, marginBottom: 14 }}>
-              <div style={{ width: 30, height: 30, borderRadius: "8px", background: "linear-gradient(135deg, rgba(255,92,53,0.15) 0%, rgba(18,69,72,0.1) 100%)", display: "inline-flex", alignItems: "center", justifyContent: "center", border: "1px solid rgba(255,92,53,0.3)", boxShadow: "0 2px 6px rgba(255,92,53,0.15)" }}>
-                <DealSenseIcon size={16} />
-              </div>
+              <DealSenseIcon size={28} />
               <h2 style={{ fontSize: "clamp(20px, 3.4vw, 28px)", fontWeight: 900, color: "#092124", letterSpacing: "-0.035em", margin: 0 }}>
                 Why Deal<span style={{ color: "#ff5c35" }}>Sense</span>?
               </h2>
@@ -524,9 +520,7 @@ export const AgencyFleet: React.FC = () => {
               {/* Cockpit Top Bar */}
               <div style={{ background: "#092124", padding: "16px 24px", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12, borderBottom: "1px solid rgba(255,255,255,0.1)" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                  <div style={{ width: 34, height: 34, borderRadius: "8px", background: "rgba(255,92,53,0.15)", display: "flex", alignItems: "center", justifyContent: "center", border: "1px solid rgba(255,92,53,0.3)" }}>
-                    <DealSenseIcon size={18} />
-                  </div>
+                  <DealSenseIcon size={30} />
                   <div>
                     <div style={{ fontSize: "14px", fontWeight: 800, color: "#ffffff" }}>
                       Apex RevOps Agency Fleet Cockpit

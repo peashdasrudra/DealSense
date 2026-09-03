@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { CONTACT_LINKS } from "../config/navigation";
 import { PAYMENT_GATEWAY_CONFIG, CURRENCIES, SupportedCurrency } from "../config/payment";
+import { DealSenseIcon } from "../components/DealSenseLogo";
 
 // ── Types & Tier Data ────────────────────────────────────────────────────────
 
@@ -208,18 +209,7 @@ export const CheckoutPage: React.FC = () => {
             style={{ display: "flex", alignItems: "center", gap: 8, cursor: "pointer", flexShrink: 0 }}
             title="Return to DealSense Homepage"
           >
-            <img
-              src="/logo_icon.png"
-              alt="DealSense Enterprise"
-              style={{
-                width: 34,
-                height: 34,
-                borderRadius: "9px",
-                objectFit: "contain",
-                flexShrink: 0,
-                filter: "drop-shadow(0 2px 6px rgba(255, 92, 53, 0.25))",
-              }}
-            />
+            <DealSenseIcon size={34} />
             <div>
               <span style={{ fontSize: "18px", fontWeight: 900, color: "#092124", letterSpacing: "-0.03em", fontFamily: "'Outfit', sans-serif" }}>
                 Deal<span style={{ color: "#ff5c35" }}>Sense</span>

@@ -206,9 +206,7 @@ export const LandingPage: React.FC = () => {
             style={{ display: "flex", alignItems: "center", gap: 10, cursor: "pointer" }}
             title="Launch Home Command Center"
           >
-            <div style={{ width: 36, height: 36, borderRadius: "10px", background: "linear-gradient(135deg, rgba(255,92,53,0.12) 0%, rgba(18,69,72,0.08) 100%)", display: "flex", alignItems: "center", justifyContent: "center", border: "1px solid rgba(255,92,53,0.25)", boxShadow: "0 2px 6px rgba(255,92,53,0.12)" }}>
-              <DealSenseIcon size={22} />
-            </div>
+            <DealSenseIcon size={34} />
             <span style={{ fontSize: "20px", fontWeight: 800, color: "#092124", letterSpacing: "-0.035em" }}>
               Deal<span style={{ color: "#ff5c35" }}>Sense</span>
             </span>
