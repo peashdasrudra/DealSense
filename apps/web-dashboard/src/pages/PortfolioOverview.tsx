@@ -438,6 +438,157 @@ export const PortfolioOverview: React.FC = () => {
         </div>
       </div>
 
+      {/* ── Revenue Leakage Radar ($10,000 Problem Solver Section) ──────── */}
+      <div style={{ marginBottom: "var(--sp-6)" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
+          <div>
+            <div style={{ fontSize: "11px", textTransform: "uppercase", letterSpacing: "0.06em", color: "#516f90", fontWeight: 700 }}>
+              Autonomous RevOps Radar
+            </div>
+            <h2 style={{ fontSize: "18px", fontWeight: 700, color: "#2d3e50", margin: "2px 0 0" }}>
+              Revenue Leakage & Slippage Diagnostic
+            </h2>
+          </div>
+          <button
+            onClick={() => navigate("/deals")}
+            style={{
+              padding: "6px 14px",
+              background: "#ff7a59",
+              color: "#ffffff",
+              border: "none",
+              borderRadius: "3px",
+              fontSize: "12px",
+              fontWeight: 700,
+              cursor: "pointer",
+            }}
+          >
+            Launch Deal Inspector →
+          </button>
+        </div>
+
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 14 }}>
+          <div
+            style={{
+              background: "#ffffff",
+              border: "1px solid #cbd6e2",
+              borderLeft: "4px solid #c8372d",
+              borderRadius: "4px",
+              padding: "14px 16px",
+              boxShadow: "0 1px 2px rgba(0,0,0,0.04)",
+            }}
+          >
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <span style={{ fontSize: "11px", fontWeight: 700, textTransform: "uppercase", color: "#c8372d" }}>
+                Stage Stagnation Risk
+              </span>
+              <strong style={{ fontSize: "15px", color: "#c8372d" }}>$235,000</strong>
+            </div>
+            <div style={{ fontSize: "12.5px", color: "#2d3e50", fontWeight: 600, marginTop: 4 }}>
+              2 Deals Stalled in Proposal (Over 21 Days)
+            </div>
+            <div style={{ fontSize: "11.5px", color: "#516f90", marginTop: 2 }}>
+              Exceeded historical cycle SLA. Deals stalling past 21 days experience a 64% drop in win conversion.
+            </div>
+            <button
+              onClick={() => navigate("/deals")}
+              style={{
+                marginTop: 10,
+                padding: "4px 10px",
+                background: "#fbeae9",
+                border: "1px solid #f5c6c4",
+                borderRadius: "3px",
+                fontSize: "11px",
+                fontWeight: 700,
+                color: "#c8372d",
+                cursor: "pointer",
+              }}
+            >
+              Resolve Stalled Deals →
+            </button>
+          </div>
+
+          <div
+            style={{
+              background: "#ffffff",
+              border: "1px solid #cbd6e2",
+              borderLeft: "4px solid #ffab00",
+              borderRadius: "4px",
+              padding: "14px 16px",
+              boxShadow: "0 1px 2px rgba(0,0,0,0.04)",
+            }}
+          >
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <span style={{ fontSize: "11px", fontWeight: 700, textTransform: "uppercase", color: "#b76e00" }}>
+                Single-Threaded Exposure
+              </span>
+              <strong style={{ fontSize: "15px", color: "#b76e00" }}>$360,000</strong>
+            </div>
+            <div style={{ fontSize: "12.5px", color: "#2d3e50", fontWeight: 600, marginTop: 4 }}>
+              3 Enterprise Accounts Missing Economic Buyer
+            </div>
+            <div style={{ fontSize: "11.5px", color: "#516f90", marginTop: 2 }}>
+              Reps have only logged contact with technical evaluators. No verified executive budget sponsor.
+            </div>
+            <button
+              onClick={() => navigate("/deals")}
+              style={{
+                marginTop: 10,
+                padding: "4px 10px",
+                background: "#fff6e6",
+                border: "1px solid #fde1b0",
+                borderRadius: "3px",
+                fontSize: "11px",
+                fontWeight: 700,
+                color: "#b76e00",
+                cursor: "pointer",
+              }}
+            >
+              Trigger Multi-Threading →
+            </button>
+          </div>
+
+          <div
+            style={{
+              background: "#ffffff",
+              border: "1px solid #cbd6e2",
+              borderLeft: "4px solid #00a4bd",
+              borderRadius: "4px",
+              padding: "14px 16px",
+              boxShadow: "0 1px 2px rgba(0,0,0,0.04)",
+            }}
+          >
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <span style={{ fontSize: "11px", fontWeight: 700, textTransform: "uppercase", color: "#007a8c" }}>
+                Close Date Variance
+              </span>
+              <strong style={{ fontSize: "15px", color: "#007a8c" }}>$140,000</strong>
+            </div>
+            <div style={{ fontSize: "12.5px", color: "#2d3e50", fontWeight: 600, marginTop: 4 }}>
+              2 Deals Slipped 2× or More
+            </div>
+            <div style={{ fontSize: "11.5px", color: "#516f90", marginTop: 2 }}>
+              Close date was pushed into next quarter. Proactive HubSpot task creation recommended.
+            </div>
+            <button
+              onClick={() => navigate("/deals")}
+              style={{
+                marginTop: 10,
+                padding: "4px 10px",
+                background: "#e5f5f8",
+                border: "1px solid #b2e3eb",
+                borderRadius: "3px",
+                fontSize: "11px",
+                fontWeight: 700,
+                color: "#007a8c",
+                cursor: "pointer",
+              }}
+            >
+              Auto-Align Close Dates →
+            </button>
+          </div>
+        </div>
+      </div>
+
       {/* ── At-Risk Deals Section (Adaptive Desktop Table + Mobile Cards) ── */}
       <motion.div
         className="card"
