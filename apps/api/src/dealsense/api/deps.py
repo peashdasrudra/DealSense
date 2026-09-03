@@ -4,6 +4,7 @@ FastAPI dependencies for database sessions, Redis, and request context.
 """
 
 from collections.abc import AsyncGenerator
+from contextlib import suppress
 from uuid import UUID
 
 from fastapi import Header, HTTPException
@@ -29,6 +30,27 @@ async def get_db() -> AsyncGenerator[AsyncSession, None]:
         raise
     finally:
         await session.close()
+
+
+async def get_db_optional() -> AsyncGenerator[AsyncSession | None, None]:
+    """Provide a database session or None if database is offline/unreachable."""
+    try:
+        factory = get_session_factory()
+        session = factory()
+    except Exception:
+        yield None
+        return
+
+    try:
+        yield session
+        await session.commit()
+    except Exception:
+        with suppress(Exception):
+            await session.rollback()
+        yield None
+    finally:
+        with suppress(Exception):
+            await session.close()
 
 
 async def get_redis_client():  # type: ignore[no-untyped-def]

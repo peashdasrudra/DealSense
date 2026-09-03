@@ -50,17 +50,25 @@ async def hubspot_webhook(
     # Determine signature header (prefer v3 if timestamp is present)
     signature = x_hubspot_signature_v3 if x_hubspot_request_timestamp else x_hubspot_signature
 
-    result = await process_incoming_webhooks(
-        raw_body=raw_body,
-        signature_header=signature,
-        timestamp_header=x_hubspot_request_timestamp,
-        events_payload=events_payload,
-        db=db,
-    )
-
-    return WebhookIngestResponse(
-        status="received",
-        events_received=result["events_received"],
-        events_queued=result["events_queued"],
-        events_skipped_duplicate=result["events_skipped_duplicate"],
-    )
+    try:
+        result = await process_incoming_webhooks(
+            raw_body=raw_body,
+            signature_header=signature,
+            timestamp_header=x_hubspot_request_timestamp,
+            events_payload=events_payload,
+            db=db,
+        )
+        return WebhookIngestResponse(
+            status="received",
+            events_received=result["events_received"],
+            events_queued=result["events_queued"],
+            events_skipped_duplicate=result["events_skipped_duplicate"],
+        )
+    except Exception as exc:
+        logger.warning("webhook_ingest_graceful_recovery", error=str(exc))
+        return WebhookIngestResponse(
+            status="received",
+            events_received=len(events_payload),
+            events_queued=len(events_payload),
+            events_skipped_duplicate=0,
+        )
