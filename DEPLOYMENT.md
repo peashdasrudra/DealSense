@@ -34,23 +34,33 @@ This guide covers how to deploy the entire **DealSense** production ecosystem fo
 ### 3. Backend API & Celery Worker: Render.com
 1. Sign up at [render.com](https://render.com) (Free Web Service).
 2. Connect your GitHub repository (`peashdasrudra/DealSense`).
-3. Set **Root Directory** to `apps/api`, **Runtime** to `Python 3`.
-4. Build Command: `pip install -e .`
+3. Set **Runtime** to `Python 3`.
+4. Build Command: `pip install -e packages/scoring && pip install -e apps/api`
 5. Start Command: `uvicorn dealsense.main:app --host 0.0.0.0 --port $PORT --workers 2`
 6. Add Environment Variables:
-   - `DATABASE_URL`: `postgresql+asyncpg://...` (from Neon)
-   - `DATABASE_URL_SYNC`: `postgresql://...` (from Neon)
-   - `REDIS_URL`: `rediss://...` (from Upstash)
+   - `HUBSPOT_ACCESS_TOKEN`: `pat-...` (from HubSpot Developer Private App)
    - `SECRET_KEY`: `your_random_64_char_key`
-   - `HUBSPOT_CLIENT_ID` & `HUBSPOT_CLIENT_SECRET`
-7. Click **Create Web Service**. Your API will be live at `https://dealsense-api.onrender.com`.
+   - `ENCRYPTION_KEY`: `your_fernet_key`
+7. Click **Create Web Service**. Your API will be live at `https://dealsense-api-6o2h.onrender.com`.
 
 ### 4. Web Dashboard: Vercel
 1. Sign up at [vercel.com](https://vercel.com).
 2. Import `DealSense` repo ➔ set **Root Directory** to `apps/web-dashboard`.
 3. Add Environment Variable:
-   - `VITE_API_URL`: `https://dealsense-api.onrender.com`
-4. Click **Deploy**. Attach your client's custom domain (e.g. `dealsense.clientdomain.com`). Vercel provisions free Let's Encrypt SSL automatically.
+   - `VITE_API_URL`: `https://dealsense-api-6o2h.onrender.com`
+4. Click **Deploy**. Attach your client's custom domain (e.g. `dealsense.peash.tech`). Vercel provisions free Let's Encrypt SSL automatically.
+
+---
+
+## 🌐 Active Live Production Deployments
+
+| Component | Production URL | Status | Notes |
+|:---|:---|:---:|:---|
+| **Web Dashboard** | [https://dealsense.peash.tech](https://dealsense.peash.tech) | 🟢 Live | Hosted on Vercel Edge with zero-CORS API rewrite |
+| **API Backend** | [https://dealsense-api-6o2h.onrender.com](https://dealsense-api-6o2h.onrender.com) | 🟢 Live | Python 3 Native FastAPI on Render |
+| **Health Probe** | `https://dealsense-api-6o2h.onrender.com/api/v1/health` | 🟢 HTTP 200 | Uptime monitor & load balancer probe |
+| **HubSpot Webhook** | `https://dealsense-api-6o2h.onrender.com/api/v1/webhooks/hubspot` | 🟢 HTTP 200 | Verified HubSpot Deal Event Subscription |
+| **Deals CRM Sync** | `https://dealsense-api-6o2h.onrender.com/api/v1/deals` | 🟢 HTTP 200 | Live Bi-directional HubSpot CRUD & Scoring |
 
 ---
 
