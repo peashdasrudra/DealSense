@@ -2,11 +2,11 @@
 export const API_BASE =
   (import.meta as any).env?.VITE_API_BASE_URL || "https://dealsense-api-6o2h.onrender.com/api/v1";
 
-// For development without a real HubSpot token exchange, we use a fixed mock Tenant ID
-export const MOCK_TENANT_ID = "00000000-0000-0000-0000-000000000001";
-export const MOCK_DEAL_ID = "00000000-0000-0000-0000-000000000002";
+// Multi-tenant production header fallback
+export const DEFAULT_TENANT_ID = "00000000-0000-0000-0000-000000000001";
+export const DEFAULT_DEAL_ID = "00000000-0000-0000-0000-000000000002";
 
-export async function fetchDealSnapshot(dealId: string = MOCK_DEAL_ID, tenantId: string = MOCK_TENANT_ID) {
+export async function fetchDealSnapshot(dealId: string = DEFAULT_DEAL_ID, tenantId: string = DEFAULT_TENANT_ID) {
   const response = await fetch(`${API_BASE}/deals/${dealId}/snapshot`, {
     headers: {
       "X-Tenant-ID": tenantId,
@@ -20,7 +20,7 @@ export async function fetchDealSnapshot(dealId: string = MOCK_DEAL_ID, tenantId:
   return response.json();
 }
 
-export async function triggerDealEvaluation(dealId: string = MOCK_DEAL_ID, tenantId: string = MOCK_TENANT_ID, portalId?: string) {
+export async function triggerDealEvaluation(dealId: string = DEFAULT_DEAL_ID, tenantId: string = DEFAULT_TENANT_ID, portalId?: string) {
   const response = await fetch(`${API_BASE}/deals/${dealId}/score`, {
     method: "POST",
     headers: {
@@ -41,7 +41,7 @@ export async function triggerDealEvaluation(dealId: string = MOCK_DEAL_ID, tenan
   return response.json();
 }
 
-export async function submitActionDecision(actionId: string, decision: "approve" | "reject", tenantId: string = MOCK_TENANT_ID) {
+export async function submitActionDecision(actionId: string, decision: "approve" | "reject", tenantId: string = DEFAULT_TENANT_ID) {
   const response = await fetch(`${API_BASE}/actions/${actionId}/decision`, {
     method: "POST",
     headers: {

@@ -80,7 +80,7 @@ def create_app() -> FastAPI:
     app = FastAPI(
         title="DealSense API",
         description=(
-            "White-label HubSpot-native AI Deal Intelligence platform. "
+            "HubSpot-native AI Deal Intelligence and Revenue Risk platform. "
             "Provides deal health scoring, risk signals, evidence-grounded "
             "recommendations, and approval-controlled CRM write-backs."
         ),

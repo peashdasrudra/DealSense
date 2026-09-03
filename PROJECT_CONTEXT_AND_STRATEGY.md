@@ -135,29 +135,32 @@ $$\text{Health Score} = 100 - \sum_{i=1}^{7} (w_i \cdot \text{Signal}_i)$$
 | **12** | **CRM Hygiene Engine** | `/hygiene` | Automated discrepancy detector with 1-click batch date correction and contact backfill. |
 | **13** | **Rep Coaching** | `/reps` | Rep risk index, stage velocity bottleneck analysis, and customized coaching plans. |
 | **14** | **Client Health** | `/clients` | Account churn probability, expansion pipeline, and executive sponsor health tracking. |
-| **15** | **Architecture & Case Study** | `/case-study` | Comprehensive technical deep-dive, ROI arbitrage calculator, and tier checkout. |
+| **15** | **Architecture & Case Study** | `/case-study` | Comprehensive technical deep-dive, ROI revenue calculator, and tier checkout. |
 
 ---
 
-## 💼 Business Strategy & Agency Arbitrage Model
+## 💼 Business Strategy & Solutions Partner Fleet Model
 
 ### Target Audience & Buyer Personas:
 1. **HubSpot Solutions Partners & RevOps Agencies:** Agencies looking to offer $2,500/mo automated revenue intelligence retainers to their clients without writing custom code.
 2. **B2B Tech Founders & VPs of Sales:** Scaling companies ($2M–$50M ARR) struggling with inaccurate sales forecasts and silent deal slippage.
 
-### Transparent 3-Tier Value-Based Pricing:
-* **Tier 1: $99 Pilot Deal Risk Audit (Was $5,000)**
+### Transparent Value-Based Pricing Ladder:
+* **Tier 1: $99 Pilot Deal Risk Audit**
   * Full 0–100 health scoring across 50 active deals in 24–48 hours.
   * Executive PDF report + 14-day Action Queue access.
   * **100% "Find $25K Or It's Free" Money-Back Guarantee.**
-* **Tier 2: $1,500 Full RevOps AI Deployment (Was $3,500)**
-  * Complete FastAPI + PostgreSQL + Redis production stack deployed in client infrastructure.
-  * Sub-200ms bi-directional webhooks + all 15 modules.
-  * **100% Source code & database ownership (Zero monthly recurring platform fees).**
-* **Tier 3: $3,500 White-Label Agency Fleet (Was $9,000)**
-  * Multi-tenant fleet license for unlimited client portals.
-  * 100% white-label (agency domain, custom branding, custom scoring weights).
-  * Priority engineering Slack channel and dedicated SLA.
+* **Tier 2: $499/mo Agency Growth Fleet (Up to 5 Portals)**
+  * Multi-portal workspace switcher with isolated client data.
+  * Native HubSpot Canvas deal card extensions.
+  * Real-time 7-vector deterministic scoring and executive pipeline briefs.
+* **Tier 3: $999/mo Agency Pro Fleet (Up to 15 Portals - Featured)**
+  * Co-branded client portals on custom domain (`revops.youragency.com`).
+  * Real-time Redis Streams webhook engine (<200ms) with automated QBR briefs.
+  * Inbound diagnostic proposal templates and priority partner Slack SLA.
+* **Tier 4: $2,499/mo Enterprise Solutions Fleet (Unlimited Portals)**
+  * Unlimited client portals with dedicated database and private cloud VPC options.
+  * Row-Level Security (RLS) cryptographic isolation and custom workflow actions.
 
 ---
 

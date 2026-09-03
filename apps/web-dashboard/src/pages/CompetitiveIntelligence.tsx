@@ -28,7 +28,7 @@ const COMPETITORS: CompetitorCard[] = [
       "Deterministic 0-100 risk scoring with 0 hallucination (Gong relies on statistical sentiment).",
       "Native bidirectional write-back into HubSpot (auto-create tasks, slip dates, enrich next steps).",
       "100% tenant-isolated with zero LLM training on proprietary deal data.",
-      "1/4th the price with zero per-seat user tax for casual viewers.",
+      "1/4th the price with zero per-seat user markups for casual viewers.",
     ],
     trapQuestions: [
       "Does Gong automatically fix your past-due close dates and missing MEDDICC criteria directly in HubSpot, or does your team still do that manually on Friday afternoons?",

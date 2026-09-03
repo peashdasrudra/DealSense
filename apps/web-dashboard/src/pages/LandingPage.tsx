@@ -136,7 +136,7 @@ export const LandingPage: React.FC = () => {
           {/* Telemetry Metric Chip */}
           <div className="telemetry-cta-pill" title="0.2s Real-Time Webhook Processing">
             <span style={{ color: "#38bdf8", fontSize: "10px" }}>⚡</span>
-            <span>0.2s sync · $0 SaaS tax</span>
+            <span>0.2s sync · Unlimited rep seats</span>
           </div>
         </div>
 
@@ -157,7 +157,7 @@ export const LandingPage: React.FC = () => {
 
             <div className="telemetry-cta-pill" title="0.2s Real-Time Webhook Processing" style={{ padding: "2px 7px" }}>
               <span style={{ color: "#38bdf8", fontSize: "9.5px" }}>⚡</span>
-              <span style={{ fontSize: "10px" }}>0.2s sync · $0 SaaS tax</span>
+              <span style={{ fontSize: "10px" }}>0.2s sync · Unlimited rep seats</span>
             </div>
           </div>
 
@@ -1341,7 +1341,7 @@ export const LandingPage: React.FC = () => {
               Transparent Revenue Intelligence Packages
             </h2>
             <p style={{ fontSize: "14px", color: "#64748b", lineHeight: 1.5, maxWidth: 680, margin: "0 auto 14px" }}>
-              Competitor platforms cost <strong>$30,000–$60,000/yr</strong> with 0% code ownership. Deploy DealSense with <strong>$0 monthly platform tax</strong>.
+              Competitor platforms cost <strong>$30,000–$60,000/yr</strong> with rigid per-seat licensing. Deploy DealSense with <strong>transparent pricing and unlimited rep seats</strong>.
             </p>
 
             {/* 100x Market Delta Comparison Ribbon */}
@@ -1370,7 +1370,7 @@ export const LandingPage: React.FC = () => {
               {/* Option 3 (Winner) */}
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 6, padding: "7px 12px", background: "rgba(16, 185, 129, 0.12)", borderRadius: "8px", border: "1px solid rgba(16, 185, 129, 0.35)", boxShadow: "0 0 14px rgba(16, 185, 129, 0.15)" }}>
                 <span style={{ color: "#34d399", fontSize: "11.5px", fontWeight: 800 }}>DealSense Stack:</span>
-                <span style={{ color: "#ffffff", fontSize: "12px", fontWeight: 900, whiteSpace: "nowrap" }}>$99–$3,500 (100% Owned)</span>
+                <span style={{ color: "#ffffff", fontSize: "12px", fontWeight: 900, whiteSpace: "nowrap" }}>$99–$3,500 (Predictable ROI)</span>
               </div>
             </div>
           </div>
@@ -1556,7 +1556,7 @@ export const LandingPage: React.FC = () => {
                     </span>
                   </div>
                   <div style={{ fontSize: "11px", fontWeight: 700, color: "#ff5c35", marginTop: 3 }}>
-                    🔥 Solutions Partner Fleet · 0 Monthly Platform Tax
+                    🔥 Solutions Partner Fleet · Unlimited Rep Seats
                   </div>
                 </div>
 
@@ -1802,7 +1802,7 @@ export const LandingPage: React.FC = () => {
                   { icon: "⏱️", text: "5–10 Day Rapid Sprint" },
                   { icon: "💎", text: "100% Code Ownership" },
                   { icon: "🛡️", text: "HubSpot Canvas Certified" },
-                  { icon: "🔒", text: "$0 Monthly Platform Tax" },
+                  { icon: "🔒", text: "Zero Per-Seat Fees" },
                 ].map((item, idx) => (
                   <div key={idx} style={{ display: "flex", alignItems: "center", gap: 7, fontSize: "12px", fontWeight: 700, color: "#f1f5f9" }}>
                     <span style={{ fontSize: "13px" }}>{item.icon}</span>
@@ -2104,8 +2104,8 @@ export const LandingPage: React.FC = () => {
                 a: "100% bank-grade secure. Official HubSpot read-only OAuth. We never modify records, never train public AI models on your pipeline, and enforce AES-256 encryption in transit and at rest.",
               },
               {
-                q: "How does the $0 monthly platform tax work?",
-                a: "Zero recurring subscriptions. Unlike Gong or Clari ($1,200+/rep/yr), DealSense is a flat one-time deployment. You own the software and pay $0 monthly SaaS tax forever.",
+                q: "How does partner pricing work without per-seat charges?",
+                a: "Unlike legacy platforms that charge $1,200+/rep/year for every sales rep, DealSense offers flat portal-based fleet licensing with unlimited viewer and sales rep seats.",
               },
               {
                 q: "Do we get full source code ownership?",

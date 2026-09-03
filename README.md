@@ -37,7 +37,7 @@
 | 🎥 **Platform Walkthrough** | [**Watch on Loom (4 min)**](https://www.loom.com/share/0fa494403b584e51a988e5bf7474b82d) | Full end-to-end product demonstration, HubSpot Canvas deck & live telemetry tour |
 | 🏛️ **Architecture Deep Dive** | [**Watch on Loom (34 sec)**](https://www.loom.com/share/36fa0417cc9a47e1b08ef2091a304c5f) | Sub-200ms Redis Streams, 7-vector deterministic scoring & RLS multi-tenant pipeline |
 | 🌐 **Live Web Application** | [**dealsense.peash.tech**](https://dealsense.peash.tech) | Production RevOps Command Center, Monte Carlo forecasting & deal triage |
-| 🏢 **Agency Fleet Partner** | [**dealsense.peash.tech/agency**](https://dealsense.peash.tech/agency) | Multi-tenant white-label fleet cockpit & $300K ARR retainer arbitrage model |
+| 🏢 **Agency Fleet Partner** | [**dealsense.peash.tech/agency**](https://dealsense.peash.tech/agency) | Multi-tenant fleet cockpit & $300K ARR retainer revenue model |
 | 🧩 **HubSpot Native App** | [**dealsense.peash.tech/pipeline**](https://dealsense.peash.tech/pipeline) | Embedded HubSpot Canvas sidebar card preview inside native deal pipelines |
 
 <br />
@@ -59,7 +59,7 @@ Experience DealSense in action through recorded walkthroughs showcasing both use
 > - **Interactive How It Works Telemetry Tour**: Live 4-stage interactive video flow showing OAuth ingestion, dynamic score calculations, Monte Carlo simulations, and 2-way writeback.
 > - **Multi-Tenant Agency Fleet Command**: Switching between live client portals (`TechCorp`, `FinanceGo`, `RetailMax`) with cross-portal health benchmarking.
 > - **HubSpot Embedded Canvas Card**: Inspecting live 7-vector score breakdowns, ghosting CFO alerts, and 1-click deal rescue writebacks directly inside HubSpot deal records.
-> - **Retainer Arbitrage Calculator**: Real-time ARR simulation proving how agencies scale from $99 pilot audits to $2,500/mo retained revenue.
+> - **Retainer Revenue Calculator**: Real-time ARR simulation proving how agencies scale from $99 pilot audits to $2,500/mo retained revenue.
 
 👉 **Direct Link**: [https://www.loom.com/share/0fa494403b584e51a988e5bf7474b82d](https://www.loom.com/share/0fa494403b584e51a988e5bf7474b82d)
 
@@ -82,7 +82,7 @@ Experience DealSense in action through recorded walkthroughs showcasing both use
 | Environment | Focus Area | Production URL | Status |
 | :--- | :--- | :--- | :--- |
 | **🏢 Agency Command Center** | Macro portfolio health, Monte Carlo forecasting, Waterfall & Playbooks | [dealsense.peash.tech](https://dealsense.peash.tech) | ![Live](https://img.shields.io/badge/Status-Online-success?style=flat-square) |
-| **🏢 Agency Fleet Partner Hub** | White-label client acquisition, Trojan Horse playbook, $300K ARR calculator | [dealsense.peash.tech/agency](https://dealsense.peash.tech/agency) | ![Live](https://img.shields.io/badge/Status-Online-success?style=flat-square) |
+| **🏢 Agency Fleet Partner Hub** | Solutions Partner fleet management, Inbound diagnostic methodology, RevOps retainer calculator | [dealsense.peash.tech/agency](https://dealsense.peash.tech/agency) | ![Live](https://img.shields.io/badge/Status-Online-success?style=flat-square) |
 | **🧩 HubSpot Native Deck** | Embedded HubSpot Canvas UI directly inside CRM pipelines | [dealsense.peash.tech/pipeline](https://dealsense.peash.tech/pipeline) | ![Live](https://img.shields.io/badge/Status-Online-success?style=flat-square) |
 | **✨ Case Study & Audit** | Technical deep-dive, $99 pilot risk audit & direct booking checkout | [dealsense.peash.tech/case-study](https://dealsense.peash.tech/case-study) | ![Live](https://img.shields.io/badge/Status-Online-success?style=flat-square) |
 
@@ -207,7 +207,7 @@ Risk Band Classification:
 | **🧹 CRM Hygiene Engine** | `/hygiene` | Automated discrepancy detector with 1-click batch close date slip auto-remediation |
 | **👥 Rep Coaching** | `/reps` | Rep risk index, stage velocity bottleneck analysis, and customized coaching plans |
 | **🏢 Client Health** | `/clients` | Account churn probability, expansion pipeline, and executive sponsor health scorecards |
-| **✨ Architecture & Case Study**| `/case-study`| Live agency arbitrage calculator, $99 / $1,500 / $3,500 packages & direct outbound booking |
+| **✨ Architecture & Case Study**| `/case-study`| Live agency retainer calculator, $99 / $499 / $999 packages & direct consultation booking |
 
 ---
 
@@ -241,7 +241,7 @@ packages/scoring/tests/test_scoring_engine.py .....                      [100%]
 | :--- | :--- | :--- | :--- | :--- |
 | **⚡ Pilot Deal Risk Audit** | **$99 flat fee** *(was $5,000)* | 24–48h | Founders, VPs of Sales | • 1-Click HubSpot OAuth connection (zero dev setup)<br>• Full 0–100 deterministic risk scoring across 50 deals<br>• Executive PDF briefing + live dashboard leak report<br>• 14-day Action Queue & CRM Hygiene access<br>• 30-min strategy call with Senior Architect<br>• **🛡️ 100% "Find $25K Or It's Free" Money-Back Guarantee** |
 | **⭐ Full RevOps AI Deployment** | **$1,500 flat fee** *(was $3,500)* | 5 Days | High-Growth B2B Brands | • Everything in $99 Audit tier<br>• Complete FastAPI + PostgreSQL + Redis stack deployed<br>• Sub-200ms bi-directional HubSpot webhooks<br>• All 15 RevOps intelligence modules & Monte Carlo forecaster<br>• **Full source code & database ownership (No recurring fees)** |
-| **🏢 White-Label Agency Fleet** | **$3,500 flat fee** *(was $9,000)* | 10 Days | HubSpot Solutions Partners | • Everything in Full Deployment tier<br>• Multi-tenant client fleet dashboard (Unlimited portals)<br>• 100% Agency white-labeling (your logo, domain & brand)<br>• Custom property schema mapping & priority Slack SLA<br>• **Charge clients $2.5K/mo → $240K/yr recurring (161x ROI)** |
+| **🏢 Solutions Partner Fleet** | **From $499/mo** *(or $399/mo annual)* | Instant | HubSpot Solutions Partners | • Multi-tenant client fleet dashboard (Up to 15+ portals)<br>• Co-branded client portals (your logo, domain & brand)<br>• Native HubSpot Canvas cards inside client CRM records<br>• Custom property schema mapping & priority Slack SLA<br>• **Charge clients $2.5K/mo → $300K/yr recurring (25x ROI)** |
 
 ---
 
@@ -324,4 +324,4 @@ DealSense/
 
 ## 📜 License & Intellectual Property
 
-Proprietary Software. Copyright © 2026 Peash Das Rudra. All rights reserved. Available under commercial single-tenant and white-label agency deployment licenses.
+Proprietary Software. Copyright © 2026 Peash Das Rudra. All rights reserved. Available under commercial single-tenant and Solutions Partner agency fleet licenses.

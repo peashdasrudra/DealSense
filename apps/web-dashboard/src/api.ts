@@ -3,9 +3,9 @@ export const API_BASE = (import.meta as any).env?.VITE_API_URL
   ? `${(import.meta as any).env.VITE_API_URL}/api/v1`
   : "/api/v1";
 
-export const MOCK_TENANT_ID = "00000000-0000-0000-0000-000000000001";
+export const DEFAULT_TENANT_ID = "00000000-0000-0000-0000-000000000001";
 
-export async function fetchDeals(tenantId: string = MOCK_TENANT_ID) {
+export async function fetchDeals(tenantId: string = DEFAULT_TENANT_ID) {
   const response = await fetch(`${API_BASE}/deals`, {
     headers: {
       "X-Tenant-ID": tenantId,
@@ -19,7 +19,7 @@ export async function fetchDeals(tenantId: string = MOCK_TENANT_ID) {
   return response.json();
 }
 
-export async function fetchActions(tenantId: string = MOCK_TENANT_ID) {
+export async function fetchActions(tenantId: string = DEFAULT_TENANT_ID) {
   const response = await fetch(`${API_BASE}/actions`, {
     headers: {
       "X-Tenant-ID": tenantId,
@@ -33,7 +33,7 @@ export async function fetchActions(tenantId: string = MOCK_TENANT_ID) {
   return response.json();
 }
 
-export async function submitActionDecision(actionId: string, decision: "approve" | "reject", tenantId: string = MOCK_TENANT_ID) {
+export async function submitActionDecision(actionId: string, decision: "approve" | "reject", tenantId: string = DEFAULT_TENANT_ID) {
   const response = await fetch(`${API_BASE}/actions/${actionId}/decision`, {
     method: "POST",
     headers: {
@@ -50,7 +50,7 @@ export async function submitActionDecision(actionId: string, decision: "approve"
   return response.json();
 }
 
-export async function executeAction(actionId: string, tenantId: string = MOCK_TENANT_ID) {
+export async function executeAction(actionId: string, tenantId: string = DEFAULT_TENANT_ID) {
   const response = await fetch(`${API_BASE}/actions/${actionId}/execute`, {
     method: "POST",
     headers: {
@@ -68,7 +68,7 @@ export async function executeAction(actionId: string, tenantId: string = MOCK_TE
 
 export async function createDeal(
   dealData: { name: string; amount: number; stage: string; client?: string; owner?: string },
-  tenantId: string = MOCK_TENANT_ID
+  tenantId: string = DEFAULT_TENANT_ID
 ) {
   const response = await fetch(`${API_BASE}/deals`, {
     method: "POST",
@@ -89,7 +89,7 @@ export async function createDeal(
 export async function updateDeal(
   dealId: string,
   dealData: { name?: string; amount?: number; stage?: string; client?: string; owner?: string },
-  tenantId: string = MOCK_TENANT_ID
+  tenantId: string = DEFAULT_TENANT_ID
 ) {
   const response = await fetch(`${API_BASE}/deals/${dealId}`, {
     method: "PATCH",
@@ -107,7 +107,7 @@ export async function updateDeal(
   return response.json();
 }
 
-export async function deleteDeal(dealId: string, tenantId: string = MOCK_TENANT_ID) {
+export async function deleteDeal(dealId: string, tenantId: string = DEFAULT_TENANT_ID) {
   const response = await fetch(`${API_BASE}/deals/${dealId}`, {
     method: "DELETE",
     headers: {
@@ -122,7 +122,7 @@ export async function deleteDeal(dealId: string, tenantId: string = MOCK_TENANT_
   return response.json();
 }
 
-export async function syncHubSpotDeals(tenantId: string = MOCK_TENANT_ID) {
+export async function syncHubSpotDeals(tenantId: string = DEFAULT_TENANT_ID) {
   const response = await fetch(`${API_BASE}/deals/sync-hubspot`, {
     method: "POST",
     headers: {
@@ -137,7 +137,7 @@ export async function syncHubSpotDeals(tenantId: string = MOCK_TENANT_ID) {
   return response.json();
 }
 
-export async function fetchDealSnapshot(dealId: string, tenantId: string = MOCK_TENANT_ID) {
+export async function fetchDealSnapshot(dealId: string, tenantId: string = DEFAULT_TENANT_ID) {
   const response = await fetch(`${API_BASE}/deals/${dealId}/snapshot`, {
     headers: {
       "X-Tenant-ID": tenantId,

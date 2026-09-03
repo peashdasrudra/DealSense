@@ -613,7 +613,7 @@ export const HowItWorksVideoSection: React.FC<HowItWorksProps> = ({ variant = "l
                             <DealSenseIcon size={28} />
                             <div>
                               <div style={{ fontSize: "13px", fontWeight: 800, color: "#092124" }}>DealSense Ingestion Core</div>
-                              <div style={{ fontSize: "10.5px", color: "#ff5c35", fontWeight: 800 }}>⚡ 0% SaaS Tax · Sub-200ms</div>
+                              <div style={{ fontSize: "10.5px", color: "#ff5c35", fontWeight: 800 }}>⚡ Unlimited Seats · Sub-200ms</div>
                             </div>
                           </div>
                           <div style={{ fontSize: "11.5px", color: "#334155", background: "#ffffff", padding: "8px 10px", borderRadius: "6px", border: "1px solid #e2e8f0" }}>
@@ -1080,7 +1080,7 @@ export const HowItWorksVideoSection: React.FC<HowItWorksProps> = ({ variant = "l
               </div>
               <div style={{ fontSize: "12px", color: "#94a3b8", marginTop: 2 }}>
                 {variant === "agency"
-                  ? "Zero monthly platform tax · 95% pure retainer margin · 2-minute client setup"
+                  ? "Zero per-seat markups · Predictable fleet margins · 2-minute client setup"
                   : "Test-drive with 50 scored deals for $99. Find $25K in slippage or pay $0."}
               </div>
             </div>

@@ -5,7 +5,7 @@
 [project]
 name = "dealsense-workspace"
 version = "0.1.0"
-description = "White-label HubSpot-native AI Deal Intelligence platform"
+description = "HubSpot-native AI Deal Intelligence and Revenue Risk platform"
 requires-python = ">=3.12"
 
 [tool.ruff]

@@ -39,6 +39,9 @@ export const PAYMENT_GATEWAY_CONFIG = {
   // 1. UK & EU Supported Gateway Links (LemonSqueezy / Stripe with iDEAL, SEPA, Bacs, GPay, Apple Pay)
   STRIPE_PAYMENT_LINKS: {
     "audit-99": "https://buy.stripe.com/test_pilot_audit_99", // Replace with your real link
+    "growth-499": "https://buy.stripe.com/test_agency_growth_499",
+    "scale-999": "https://buy.stripe.com/test_agency_scale_999",
+    "enterprise-2499": "https://buy.stripe.com/test_enterprise_fleet_2499",
     "deploy-1500": "https://buy.stripe.com/test_single_portal_1500", // Replace with your real link
     "agency-3500": "https://buy.stripe.com/test_agency_fleet_3500", // Replace with your real link
     "custom-app": "https://buy.stripe.com/test_custom_app_1500", // Replace with your real link
@@ -46,6 +49,9 @@ export const PAYMENT_GATEWAY_CONFIG = {
 
   LEMON_SQUEEZY_LINKS: {
     "audit-99": "https://dealsense.lemonsqueezy.com/checkout/buy/7491e844-9603-480b-9c4c-03264e4dbfb9",
+    "growth-499": "https://dealsense.lemonsqueezy.com/checkout/buy/7491e844-9603-480b-9c4c-03264e4dbfb9",
+    "scale-999": "https://dealsense.lemonsqueezy.com/checkout/buy/7b883450-f248-4b29-bc29-d30ed6d4b5a0",
+    "enterprise-2499": "https://dealsense.lemonsqueezy.com/checkout/buy/6b28e506-5fc0-4f1c-a00c-ff0689155f01",
     "deploy-1500": "https://dealsense.lemonsqueezy.com/checkout/buy/7b883450-f248-4b29-bc29-d30ed6d4b5a0",
     "agency-3500": "https://dealsense.lemonsqueezy.com/checkout/buy/6b28e506-5fc0-4f1c-a00c-ff0689155f01",
     "custom-app": "https://dealsense.lemonsqueezy.com/checkout/buy/7b883450-f248-4b29-bc29-d30ed6d4b5a0",

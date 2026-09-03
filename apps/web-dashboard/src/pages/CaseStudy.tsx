@@ -82,7 +82,7 @@ const PACKAGES = [
     crossed: "$8,500",
     timeline: "24h SLA",
     tagline: "Bill 10 clients $2,500/mo = $300,000/yr ARR (200x ROI)",
-    guarantee: "Authorized Partner Fleet · 0 Monthly Platform Tax Forever",
+    guarantee: "Authorized Partner Fleet · Transparent Fleet Economics & Unlimited Seats",
     features: [
       "Manage up to 15 Client Portals (master switcher cockpit)",
       "Co-Branded Client Portal Delivery (revops.youragency.com + custom logo)",

@@ -7,7 +7,7 @@ import { DealSenseIcon } from "../components/DealSenseLogo";
 
 // ── Types & Tier Data ────────────────────────────────────────────────────────
 
-export type TierKey = "agency-3500" | "deploy-1500" | "audit-99" | "custom-app";
+export type TierKey = "agency-3500" | "deploy-1500" | "audit-99" | "custom-app" | "growth-499" | "scale-999" | "enterprise-2499";
 
 interface BaseTierPlan {
   id: TierKey;
@@ -36,7 +36,7 @@ const PRICING_TIERS: Record<TierKey, BaseTierPlan> = {
     baseUsdPrice: 3500,
     baseUsdListPrice: 12500,
     discountPercentage: 72,
-    description: "Deploy dedicated deal intelligence across 10+ client portals at £1,200/mo or €1,400/mo each with zero per-seat platform tax.",
+    description: "Deploy dedicated deal intelligence across 10+ client portals at £1,200/mo or €1,400/mo each with zero per-seat platform markup.",
     deliveryTime: "Instant License & Full Monorepo Handover (24h Setup SLA)",
     licenseType: "Unlimited Multi-Tenant Perpetual Commercial License",
     deliverables: [
@@ -46,6 +46,68 @@ const PRICING_TIERS: Record<TierKey, BaseTierPlan> = {
       { icon: "⚡", title: "Row-Level Security (RLS) Partition Engine", subtitle: "Deterministic multi-client database isolation fully compliant with GDPR and UK DPA" },
       { icon: "📈", title: "Solutions Partner Retainer Playbooks", subtitle: "Client audit proposal templates, slide decks, and pricing models to close retainers" },
       { icon: "🚀", title: "Dedicated 1-on-1 Direct SLA Channel", subtitle: "Private Slack channel with Lead AI Architect Peash Das Rudra (1-hour response SLA)" },
+    ],
+  },
+  "scale-999": {
+    id: "scale-999",
+    name: "Agency Pro Fleet (Up to 15 Portals)",
+    tagline: "The #1 choice for scaling HubSpot Solutions Partners managing up to 15 client portals.",
+    badge: "MOST POPULAR",
+    badgeColor: "#ff5c35",
+    popular: true,
+    baseUsdPrice: 999,
+    baseUsdListPrice: 1499,
+    discountPercentage: 33,
+    description: "Deploy co-branded deal intelligence across 15 client portals with custom domain hosting and automated QBR briefs.",
+    deliveryTime: "Instant Activation (2-Minute Client Onboarding)",
+    licenseType: "Agency Scale Fleet Subscription (15 Portals)",
+    deliverables: [
+      { icon: "🏢", title: "Manage up to 15 Client Portals", subtitle: "Unified multi-client command center with cross-portal risk benchmarking" },
+      { icon: "🌐", title: "Custom Domain & Co-Branded Portal", subtitle: "Hosted on revops.youragency.com with your agency branding and colors" },
+      { icon: "🛡️", title: "Embedded HubSpot Deal Canvas Cards", subtitle: "Lives native inside your clients' HubSpot CRM deal records" },
+      { icon: "⚡", title: "Sub-200ms Webhook Stream", subtitle: "Real-time Redis Streams ingestion with v3 HMAC signature verification" },
+      { icon: "📋", title: "1-Click Executive QBR Dossiers", subtitle: "Board-ready PDF briefs detailing deal velocity and stalled capital" },
+      { icon: "🧰", title: "Client Acquisition Toolkit", subtitle: "Diagnostic $99 audit proposal templates and retainer pitch decks" },
+    ],
+  },
+  "growth-499": {
+    id: "growth-499",
+    name: "Agency Growth Fleet (Up to 5 Portals)",
+    tagline: "For boutique RevOps consultancies managing up to 5 client HubSpot portals.",
+    badge: "GROWTH TIER",
+    badgeColor: "#00a4bd",
+    baseUsdPrice: 499,
+    baseUsdListPrice: 699,
+    discountPercentage: 28,
+    description: "Deploy real-time 7-vector deal risk scoring across 5 client portals with native CRM cards.",
+    deliveryTime: "Instant Activation",
+    licenseType: "Agency Growth Fleet Subscription (5 Portals)",
+    deliverables: [
+      { icon: "🏢", title: "Manage up to 5 Client Portals", subtitle: "Multi-portal workspace switcher with isolated client data" },
+      { icon: "🛡️", title: "HubSpot CRM Canvas Extensions", subtitle: "Native deal risk card embedded inside client deal records" },
+      { icon: "⚡", title: "7-Vector Deterministic Scoring", subtitle: "Real-time mathematical evaluation of stage velocity and buyer ghosting" },
+      { icon: "📑", title: "Executive Pipeline Risk Briefs", subtitle: "1-click exportable dossiers highlighting at-risk revenue" },
+      { icon: "💬", title: "Standard Partner Slack Support", subtitle: "Business-hours email & Slack channel support with our RevOps team" },
+    ],
+  },
+  "enterprise-2499": {
+    id: "enterprise-2499",
+    name: "Enterprise Solutions Partner Fleet",
+    tagline: "For premier HubSpot Elite Partners requiring unlimited portals and dedicated architect support.",
+    badge: "ENTERPRISE UNLIMITED",
+    badgeColor: "#34d399",
+    baseUsdPrice: 2499,
+    baseUsdListPrice: 3999,
+    discountPercentage: 37,
+    description: "Unlimited client portals, private VPC cloud deployment options, and custom workflow action code generators.",
+    deliveryTime: "Same-Day Setup SLA",
+    licenseType: "Enterprise Solutions Partner Fleet (Unlimited Portals)",
+    deliverables: [
+      { icon: "👑", title: "Unlimited Multi-Tenant Portals", subtitle: "Zero client or volume caps across your entire agency book of business" },
+      { icon: "🔒", title: "Dedicated Database & VPC Options", subtitle: "Private cloud deployment with Row-Level Security (RLS) isolation" },
+      { icon: "🧩", title: "Custom Workflow Action Code Generators", subtitle: "Bespoke HubSpot custom code actions executing inside 14s watchdog" },
+      { icon: "👨‍💻", title: "Dedicated RevOps Architect Hours", subtitle: "Bi-weekly strategy and deal war room sessions with Peash Das Rudra" },
+      { icon: "🚀", title: "Direct 1-Hour SLA Emergency Channel", subtitle: "Private priority Slack channel with lead AI engineering team" },
     ],
   },
   "deploy-1500": {
@@ -65,7 +127,7 @@ const PRICING_TIERS: Record<TierKey, BaseTierPlan> = {
       { icon: "🛡️", title: "HubSpot CRM Canvas Card Extension", subtitle: "Embedded native deal risk card displaying real-time 7-vector scoring inside CRM" },
       { icon: "⚡", title: "180ms Deterministic Scoring Engine", subtitle: "0% hallucination telemetry evaluating stakeholder sentiment, single-threading & cadence" },
       { icon: "🔒", title: "Private Cloud VPC Deployment", subtitle: "Self-hosted Docker Compose / AWS / GCP / EU-Frankfurt / London deployment scripts" },
-      { icon: "💳", title: "Zero Ongoing Monthly SaaS Tax", subtitle: "No per-seat fees or platform taxes forever ($0 ongoing software fee)" },
+      { icon: "💳", title: "Transparent Predictable Licensing", subtitle: "No per-seat user markups or hidden platform surcharges" },
       { icon: "👨‍💻", title: "1-on-1 Senior Architect Onboarding", subtitle: "60-minute live architectural walkthrough and pipeline onboarding session" },
     ],
   },
@@ -107,7 +169,7 @@ const PRICING_TIERS: Record<TierKey, BaseTierPlan> = {
       { icon: "⚡", title: "Custom AI Deal Intelligence Engine", subtitle: "Fine-tuned algorithms mapped to your ICP, sales methodology (MEDDPICC/SPIN)" },
       { icon: "📦", title: "100% Full Source Code Handover", subtitle: "Complete repository access and automated CI/CD deployment pipeline" },
       { icon: "🛡️", title: "HubSpot API Webhook Resiliency", subtitle: "Sub-200ms real-time event processing with Redis Streams backpressure" },
-      { icon: "🔒", title: "$0 Ongoing Platform Tax Forever", subtitle: "Self-hosted private cloud infrastructure with zero third-party lock-in" },
+      { icon: "🔒", title: "Enterprise Private Cloud Infrastructure", subtitle: "Self-hosted private cloud deployment with zero third-party lock-in" },
       { icon: "👨‍💻", title: "Direct Lead Architect Coordination", subtitle: "Direct sprint alignment with Lead Architect Peash Das Rudra" },
     ],
   },
@@ -302,7 +364,7 @@ export const CheckoutPage: React.FC = () => {
               CHOOSE PRODUCTION PACKAGE
             </span>
             <span style={{ fontSize: "10.5px", fontWeight: 700, color: "#059669" }}>
-              $0 Monthly SaaS Tax
+              Zero Per-Seat Markups
             </span>
           </div>
 
@@ -793,7 +855,7 @@ export const CheckoutPage: React.FC = () => {
                 </div>
 
                 <div style={{ background: "#f0fdf4", border: "1px solid #bbf7d0", padding: "9px 12px", borderRadius: "8px", fontSize: "11.5px", color: "#166534" }}>
-                  ✅ <strong>Zero Intermediary Platform Tax:</strong> 100% of your earnings belong to you and settle automatically.
+                  ✅ <strong>Direct Partner Retainers:</strong> 100% of your client retainer revenue belongs to your agency.
                 </div>
               </div>
             </motion.div>
