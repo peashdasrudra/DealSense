@@ -1,5 +1,7 @@
 // apps/web-dashboard/src/api.ts
-export const API_BASE = "/api/v1";
+export const API_BASE = (import.meta as any).env?.VITE_API_URL
+  ? `${(import.meta as any).env.VITE_API_URL}/api/v1`
+  : "/api/v1";
 
 export const MOCK_TENANT_ID = "00000000-0000-0000-0000-000000000001";
 
