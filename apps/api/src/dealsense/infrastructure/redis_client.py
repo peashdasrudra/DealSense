@@ -43,25 +43,43 @@ async def close_redis() -> None:
         _redis_pool = None
 
 
+import time
+
+_memory_cache: dict[str, tuple[str, float]] = {}
+
 # ---- Typed Helper Methods ----
 
 
 async def cache_get(key: str) -> str | None:
-    """Get a cached value by key."""
-    client = get_redis()
-    return await client.get(key)
+    """Get a cached value by key with memory fallback."""
+    try:
+        client = get_redis()
+        return await client.get(key)
+    except Exception:
+        if key in _memory_cache:
+            val, expires_at = _memory_cache[key]
+            if time.time() < expires_at:
+                return val
+            _memory_cache.pop(key, None)
+        return None
 
 
 async def cache_set(key: str, value: str, ttl_seconds: int = 3600) -> None:
-    """Set a cached value with TTL."""
-    client = get_redis()
-    await client.set(key, value, ex=ttl_seconds)
+    """Set a cached value with TTL with memory fallback."""
+    try:
+        client = get_redis()
+        await client.set(key, value, ex=ttl_seconds)
+    except Exception:
+        _memory_cache[key] = (value, time.time() + ttl_seconds)
 
 
 async def cache_delete(key: str) -> None:
-    """Delete a cached value."""
-    client = get_redis()
-    await client.delete(key)
+    """Delete a cached value with memory fallback."""
+    try:
+        client = get_redis()
+        await client.delete(key)
+    except Exception:
+        _memory_cache.pop(key, None)
 
 
 async def acquire_lock(
