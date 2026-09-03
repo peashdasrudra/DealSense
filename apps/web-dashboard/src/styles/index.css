@@ -198,10 +198,10 @@ body {
 }
 
 .main-header {
-  height: 56px;
-  padding: 0 var(--sp-6);
-  background: var(--hs-surface);
-  border-bottom: 1px solid var(--hs-border-dark);
+  height: 48px;
+  padding: 0 var(--sp-4);
+  background: #2d3e50; /* Authentic HubSpot Global Nav Charcoal Navy */
+  border-bottom: 1px solid #1e2a38;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -211,8 +211,39 @@ body {
   gap: 12px;
   width: 100%;
   max-width: 100%;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  color: #ffffff;
+}
+
+.main-header .topbar-brand-text span:first-child {
+  color: #ffffff !important;
+}
+
+.main-header .header-page-title {
+  color: #ffffff !important;
+  font-size: 13.5px;
+}
+
+.main-header .title-divider {
+  color: #516f90 !important;
+}
+
+.main-header .header-search-btn {
+  background: rgba(255, 255, 255, 0.12) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  color: #ffffff !important;
+}
+
+.main-header .header-search-btn:hover {
+  background: rgba(255, 255, 255, 0.18) !important;
+}
+
+.main-header .header-icon-btn {
+  color: #cbd6e2 !important;
+}
+
+.main-header .header-icon-btn:hover {
+  color: #ffffff !important;
+  background: rgba(255, 255, 255, 0.1) !important;
 }
 
 .page-content {
