@@ -228,6 +228,7 @@ export const DealExplorer: React.FC = () => {
   const [formAmount, setFormAmount] = useState(75000);
   const [formStage, setFormStage] = useState("appointmentscheduled");
   const [formOwner] = useState("Peash Rudra");
+  const [mobileTab, setMobileTab] = useState<"list" | "dossier">("list");
 
   // What-if simulator toggles
   const [simCfo, setSimCfo] = useState(false);
@@ -553,11 +554,41 @@ export const DealExplorer: React.FC = () => {
               </span>
             </div>
             <h1 style={{ fontSize: "22px", fontWeight: 700, color: "#33475b", margin: "0 0 4px" }}>
-              Deal Inspector & Diagnostic Command
+              Deal Inspector &amp; Diagnostic Command
             </h1>
             <p style={{ fontSize: "13px", color: "#516f90", margin: 0, maxWidth: 720, lineHeight: 1.45 }}>
               Continuously grades HubSpot deals across 7 objective risk vectors. Pinpoint stalled momentum, missing economic buyers, and close-date push decay with instant 1-click write-backs.
             </p>
+
+            {/* Enterprise Trust & Security Badges */}
+            <div style={{ display: "flex", alignItems: "center", gap: 14, marginTop: 10, flexWrap: "wrap", fontSize: "11.5px", color: "#516f90" }}>
+              <span style={{ display: "inline-flex", alignItems: "center", gap: 5 }}>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#007a70" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                </svg>
+                <strong style={{ color: "#33475b" }}>SOC-2 Type II</strong> Security
+              </span>
+              <span style={{ color: "#cbd6e2" }}>•</span>
+              <span style={{ display: "inline-flex", alignItems: "center", gap: 5 }}>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#00a4bd" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                </svg>
+                <strong style={{ color: "#33475b" }}>256-Bit TLS</strong> Encryption
+              </span>
+              <span style={{ color: "#cbd6e2" }}>•</span>
+              <span style={{ display: "inline-flex", alignItems: "center", gap: 5 }}>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#ff7a59" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                </svg>
+                <strong style={{ color: "#33475b" }}>HubSpot REST v3</strong> Bi-Directional
+              </span>
+              <span style={{ color: "#cbd6e2" }}>•</span>
+              <span style={{ display: "inline-flex", alignItems: "center", gap: 5 }}>
+                <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#00bda5" }} />
+                Portal <strong style={{ color: "#33475b" }}>#48921820</strong> Verified
+              </span>
+            </div>
           </div>
 
           {/* Action Bar */}
@@ -611,14 +642,7 @@ export const DealExplorer: React.FC = () => {
       </div>
 
       {/* ── Executive Slippage & Risk Command Bar ($10,000 Value Bar) ─────── */}
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
-          gap: 12,
-          marginBottom: 16,
-        }}
-      >
+      <div className="deal-inspector-command-bar">
         <div style={{ background: "#ffffff", border: "1px solid #cbd6e2", borderRadius: "4px", padding: "14px 18px", boxShadow: "0 1px 2px rgba(0,0,0,0.03)" }}>
           <div style={{ fontSize: "11px", fontWeight: 700, textTransform: "uppercase", color: "#7c98b6", letterSpacing: "0.05em", marginBottom: 4 }}>
             Active Evaluated Pipeline
@@ -666,10 +690,37 @@ export const DealExplorer: React.FC = () => {
         </div>
       </div>
 
+      {/* Mobile Tab Switcher (Visible on Tablet/Mobile) */}
+      <div className="mobile-view-tabs">
+        <button
+          className="mobile-view-tab-btn"
+          onClick={() => setMobileTab("list")}
+          style={{
+            background: mobileTab === "list" ? "#ffffff" : "transparent",
+            color: mobileTab === "list" ? "#007a8c" : "#516f90",
+            boxShadow: mobileTab === "list" ? "0 1px 3px rgba(0,0,0,0.1)" : "none",
+          }}
+        >
+          📋 Deals List ({filteredDeals.length})
+        </button>
+        <button
+          className="mobile-view-tab-btn"
+          onClick={() => setMobileTab("dossier")}
+          style={{
+            background: mobileTab === "dossier" ? "#ffffff" : "transparent",
+            color: mobileTab === "dossier" ? "#007a8c" : "#516f90",
+            boxShadow: mobileTab === "dossier" ? "0 1px 3px rgba(0,0,0,0.1)" : "none",
+          }}
+        >
+          🔍 Deal Dossier ({activeDeal.name.slice(0, 14)}...)
+        </button>
+      </div>
+
       {/* ── Main Two-Column Layout ────────────────────────────────────────── */}
-      <div style={{ display: "grid", gridTemplateColumns: "360px 1fr", gap: 16, alignItems: "start" }}>
+      <div className="deal-inspector-grid">
         {/* ── Left Column: Deal Roster & Quick Filters ──────────────────── */}
         <div
+          className={`deal-roster-column ${mobileTab === "dossier" ? "mobile-hidden" : ""}`}
           style={{
             background: "#ffffff",
             border: "1px solid #cbd6e2",
@@ -737,14 +788,19 @@ export const DealExplorer: React.FC = () => {
               return (
                 <div
                   key={deal.id}
-                  onClick={() => setActiveDeal(deal)}
+                  onClick={() => {
+                    setActiveDeal(deal);
+                    setMobileTab("dossier");
+                  }}
                   style={{
-                    padding: "12px",
+                    padding: "12px 14px",
                     borderRadius: "4px",
-                    border: isSelected ? "2px solid #00a4bd" : "1px solid #eaf0f6",
-                    background: isSelected ? "#f4fbfd" : "#ffffff",
+                    border: isSelected ? "1px solid #00a4bd" : "1px solid #cbd6e2",
+                    borderLeft: isSelected ? "4px solid #ff7a59" : "4px solid transparent",
+                    background: isSelected ? "#fbfdfe" : "#ffffff",
                     cursor: "pointer",
                     transition: "all 0.15s ease",
+                    boxShadow: isSelected ? "0 2px 6px rgba(0, 164, 189, 0.1)" : "0 1px 2px rgba(0, 0, 0, 0.02)",
                     position: "relative",
                   }}
                 >
@@ -782,7 +838,18 @@ export const DealExplorer: React.FC = () => {
         </div>
 
         {/* ── Right Column: Interactive Deal Dossier & Action Console ────── */}
-        <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+        <div
+          className={`deal-dossier-column ${mobileTab === "list" ? "mobile-hidden" : ""}`}
+          style={{ display: "flex", flexDirection: "column", gap: 16 }}
+        >
+          {/* Mobile Back Button */}
+          <button
+            className="mobile-back-to-list-btn"
+            onClick={() => setMobileTab("list")}
+          >
+            ← Back to Deals List
+          </button>
+
           {/* Main Deal Header Card */}
           <div
             style={{
@@ -795,6 +862,13 @@ export const DealExplorer: React.FC = () => {
           >
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 12 }}>
               <div>
+                <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: "11px", color: "#7c98b6", marginBottom: 6 }}>
+                  <span>Sales Hub</span>
+                  <span>/</span>
+                  <span style={{ color: "#00a4bd" }}>Deals</span>
+                  <span>/</span>
+                  <span style={{ color: "#33475b", fontWeight: 600 }}>#{activeDeal.hubspotId}</span>
+                </div>
                 <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
                   <span style={{ fontSize: "12px", fontWeight: 700, color: "#00a4bd" }}>
                     HubSpot Object #{activeDeal.hubspotId}
@@ -831,7 +905,29 @@ export const DealExplorer: React.FC = () => {
               </div>
 
               {/* CRM Actions */}
-              <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+              <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
+                <a
+                  href={`https://app.hubspot.com/contacts/48921820/record/0-3/${activeDeal.hubspotId}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  style={{
+                    padding: "6px 12px",
+                    background: "#ffffff",
+                    color: "#007a8c",
+                    border: "1px solid #cbd6e2",
+                    borderRadius: "3px",
+                    fontSize: "12px",
+                    fontWeight: 600,
+                    textDecoration: "none",
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 4,
+                  }}
+                  title="View native record in HubSpot portal #48921820"
+                >
+                  <span>HubSpot CRM</span>
+                  <span style={{ fontSize: "10px" }}>↗</span>
+                </a>
                 <button
                   onClick={() => {
                     setFormName(activeDeal.name);
@@ -898,7 +994,7 @@ export const DealExplorer: React.FC = () => {
               </div>
             </div>
 
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+            <div className="deal-vector-grid">
               {[
                 { label: "Stage Velocity & Momentum", val: activeDeal.vectorScores?.stageMomentum || 70, status: activeDeal.daysInStage > 14 ? "Stalled velocity" : "On schedule" },
                 { label: "Economic Buyer Alignment", val: activeDeal.vectorScores?.economicBuyer || 60, status: activeDeal.meddicc.economicBuyer.includes("Verified") ? "Verified" : "Missing sponsor" },
@@ -981,7 +1077,7 @@ export const DealExplorer: React.FC = () => {
               Toggle corrective executive interventions to calculate predicted health score recovery:
             </div>
 
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 10, marginBottom: 14 }}>
+            <div className="deal-simulator-grid">
               <label style={{ display: "flex", alignItems: "center", gap: 8, fontSize: "12px", color: "#33475b", cursor: "pointer", background: simCfo ? "#e6f9f7" : "#f5f8fa", padding: "8px 12px", borderRadius: "3px", border: simCfo ? "1px solid #00bda5" : "1px solid #cbd6e2" }}>
                 <input type="checkbox" checked={simCfo} onChange={(e) => setSimCfo(e.target.checked)} />
                 <span>Verify CFO Engagement (<strong>+14 pts</strong>)</span>
@@ -1037,7 +1133,7 @@ export const DealExplorer: React.FC = () => {
               <span style={{ fontSize: "11px", color: "#7c98b6" }}>Continuous CRM Field Audit</span>
             </div>
 
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 10 }}>
+            <div className="deal-meddicc-grid">
               {[
                 { key: "Metrics", val: activeDeal.meddicc.metrics, status: "Verified" },
                 { key: "Economic Buyer", val: activeDeal.meddicc.economicBuyer, status: activeDeal.meddicc.economicBuyer.includes("Verified") ? "Verified" : "Missing / Gap" },
@@ -1169,8 +1265,42 @@ export const DealExplorer: React.FC = () => {
                   overflowX: "auto",
                 }}
               >
-                <div style={{ color: "#00bda5", marginBottom: 6 }}>
-                  // PATCH https://api.hubapi.com/crm/v3/objects/deals/{activeDeal.hubspotId}
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8, flexWrap: "wrap", gap: 6 }}>
+                  <div style={{ color: "#00bda5", fontSize: "11px" }}>
+                    // PATCH https://api.hubapi.com/crm/v3/objects/deals/{activeDeal.hubspotId}
+                  </div>
+                  <button
+                    onClick={() => {
+                      const payloadStr = JSON.stringify({
+                        properties: {
+                          dealname: activeDeal.name,
+                          amount: String(activeDeal.value),
+                          dealstage: activeDeal.stage,
+                          dealsense_health_score: String(activeDeal.score),
+                          dealsense_risk_band: activeDeal.band,
+                          dealsense_next_action: activeDeal.recommendation,
+                          hs_lastmodifieddate: new Date().toISOString(),
+                        },
+                      }, null, 2);
+                      navigator.clipboard?.writeText(payloadStr);
+                      showToast("📋 Copied HubSpot API JSON payload to clipboard!");
+                    }}
+                    style={{
+                      background: "rgba(255, 255, 255, 0.1)",
+                      color: "#ffffff",
+                      border: "1px solid rgba(255, 255, 255, 0.2)",
+                      borderRadius: "3px",
+                      padding: "3px 8px",
+                      fontSize: "10.5px",
+                      cursor: "pointer",
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: 4,
+                    }}
+                  >
+                    <span>📋</span>
+                    <span>Copy JSON</span>
+                  </button>
                 </div>
                 <pre style={{ margin: 0, color: "#ffffff" }}>
 {JSON.stringify(

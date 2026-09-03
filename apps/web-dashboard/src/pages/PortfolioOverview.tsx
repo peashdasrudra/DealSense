@@ -187,6 +187,31 @@ export const PortfolioOverview: React.FC = () => {
             <p style={{ fontSize: "13px", color: "var(--hs-text-muted)", margin: 0, lineHeight: 1.55 }}>
               Continuous 7-vector telemetry, automated MEDDICC qualification audits, and 4-tier CRM write-backs. Protect your quarterly pipeline from silent slippage and unengaged economic buyers.
             </p>
+
+            {/* Enterprise Trust & Verification Strip */}
+            <div style={{ display: "flex", alignItems: "center", gap: 14, marginTop: 10, flexWrap: "wrap", fontSize: "11.5px", color: "var(--hs-text-muted)" }}>
+              <span style={{ display: "inline-flex", alignItems: "center", gap: 5 }}>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#007a70" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                </svg>
+                <strong style={{ color: "#33475b" }}>SOC-2 Type II</strong> Security
+              </span>
+              <span style={{ color: "#cbd6e2" }}>•</span>
+              <span style={{ display: "inline-flex", alignItems: "center", gap: 5 }}>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#00a4bd" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                </svg>
+                <strong style={{ color: "#33475b" }}>256-Bit TLS</strong> Encrypted
+              </span>
+              <span style={{ color: "#cbd6e2" }}>•</span>
+              <span style={{ display: "inline-flex", alignItems: "center", gap: 5 }}>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#ff7a59" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                </svg>
+                <strong style={{ color: "#33475b" }}>HubSpot REST v3</strong> Certified
+              </span>
+            </div>
           </div>
 
           <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 16, flexWrap: "wrap" }}>

@@ -11,54 +11,54 @@
  */
 
 :root {
-  /* HubSpot Core Palette */
-  --hs-primary: #124548;           /* HubSpot Dark Teal */
-  --hs-primary-hover: #042729;     /* Deep Teal Accent */
-  --hs-primary-subtle: #e6f0f0;    /* Soft Teal tint */
+  /* Real HubSpot Canvas Design System Tokens */
+  --hs-primary: #2d3e50;           /* HubSpot Charcoal Navy */
+  --hs-primary-hover: #1f2d3d;     /* Deep Slate Navy */
+  --hs-primary-subtle: #eaf0f6;    /* Soft Tint */
   --hs-on-primary: #ffffff;
   
-  --hs-accent: #ff5c35;            /* HubSpot Sprocket Flame */
-  --hs-accent-hover: #e04a25;
+  --hs-accent: #ff7a59;            /* HubSpot Sprocket Orange */
+  --hs-accent-hover: #ff5c35;
   --hs-accent-subtle: #fff2ed;
   
-  --hs-background: #f8f9fa;        /* Refined light gray canvas */
+  --hs-background: #f5f8fa;        /* Authentic HubSpot Canvas Gray */
   --hs-surface: #ffffff;           /* Clean White Surface */
-  --hs-surface-hover: #f3f4f6;     /* Neutral Hover State */
+  --hs-surface-hover: #f1f4f8;     /* Neutral Hover State */
   
-  --hs-border: #edf0f2;            /* Subtle Divider */
-  --hs-border-dark: #dfe3e8;       /* Structural Card Border */
-  --hs-border-focus: #124548;      /* Active Ring */
+  --hs-border: #eaf0f6;            /* Subtle Divider */
+  --hs-border-dark: #cbd6e2;       /* Signature HubSpot Border */
+  --hs-border-focus: #00a4bd;      /* Active Ring */
 
-  --hs-text: #1a1a2e;              /* Rich near-black */
-  --hs-text-muted: #64748b;        /* Slate secondary text */
-  --hs-text-disabled: #94a3b8;
+  --hs-text: #33475b;              /* HubSpot Slate Navy */
+  --hs-text-muted: #516f90;        /* Slate secondary text */
+  --hs-text-disabled: #7c98b6;
 
-  /* Telemetry Risk Bands */
-  --risk-critical: #dc2626;
-  --risk-critical-bg: #fef2f2;
-  --risk-critical-border: #fecaca;
+  /* Telemetry Risk Bands (HubSpot Palette) */
+  --risk-critical: #c8372d;
+  --risk-critical-bg: #fbeae9;
+  --risk-critical-border: #f5c6c4;
 
-  --risk-high: #ea580c;
-  --risk-high-bg: #fff7ed;
-  --risk-high-border: #fed7aa;
+  --risk-high: #b76e00;
+  --risk-high-bg: #fff6e6;
+  --risk-high-border: #fde1b0;
 
-  --risk-moderate: #d97706;
-  --risk-moderate-bg: #fffbeb;
-  --risk-moderate-border: #fde68a;
+  --risk-moderate: #007a8c;
+  --risk-moderate-bg: #e5f5f8;
+  --risk-moderate-border: #b2e3eb;
 
-  --risk-low: #16a34a;
-  --risk-low-bg: #f0fdf4;
-  --risk-low-border: #bbf7d0;
+  --risk-low: #007a70;
+  --risk-low-bg: #e5f8f6;
+  --risk-low-border: #b2ede5;
 
-  --risk-healthy: #059669;
-  --risk-healthy-bg: #ecfdf5;
-  --risk-healthy-border: #a7f3d0;
+  --risk-healthy: #007a70;
+  --risk-healthy-bg: #e5f8f6;
+  --risk-healthy-border: #b2ede5;
 
   /* Action Tiers */
-  --tier-1: #475569;
-  --tier-2: #2563eb;
+  --tier-1: #516f90;
+  --tier-2: #0091ae;
   --tier-3: #7c3aed;
-  --tier-4: #db2777;
+  --tier-4: #ff7a59;
 
   /* Aliases */
   --danger: var(--risk-critical);
@@ -68,9 +68,9 @@
   --success: var(--risk-healthy);
   --success-bg: var(--risk-healthy-bg);
 
-  /* Modern Enterprise SaaS Typography */
-  --font-sans: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-heading: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  /* Authentic HubSpot Canvas Typography */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+  --font-heading: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
   --font-mono: 'JetBrains Mono', Consolas, monospace;
 
   /* Spacing Scale (8px base) */
@@ -83,12 +83,12 @@
   --sp-8: 32px;
   --sp-10: 40px;
 
-  /* Radii */
-  --radius-xs: 4px;
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
-  --radius-xl: 20px;
+  /* Radii (Authentic HubSpot 3px-4px Standard) */
+  --radius-xs: 2px;
+  --radius-sm: 3px;
+  --radius-md: 4px;
+  --radius-lg: 6px;
+  --radius-xl: 8px;
   --radius-pill: 9999px;
 
   /* Shadows — Layered for depth */
@@ -2245,4 +2245,120 @@ body.mobile-force .landing-hubs-grid {
     grid-template-columns: 1fr !important;
   }
 }
+
+/* ── Mobile-Friendly Deal Inspector Styles ───────────────────────────────── */
+
+.deal-inspector-grid {
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  gap: 16px;
+  align-items: start;
+}
+
+.deal-inspector-command-bar {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.deal-vector-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.deal-simulator-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.deal-meddicc-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 10px;
+}
+
+.mobile-view-tabs {
+  display: none;
+}
+
+.mobile-back-to-list-btn {
+  display: none;
+}
+
+@media (max-width: 992px) {
+  .deal-inspector-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .mobile-hidden {
+    display: none !important;
+  }
+
+  .mobile-view-tabs {
+    display: flex;
+    gap: 6px;
+    background: #f5f8fa;
+    padding: 4px;
+    border-radius: 6px;
+    border: 1px solid #cbd6e2;
+    margin-bottom: 12px;
+  }
+
+  .mobile-view-tab-btn {
+    flex: 1;
+    padding: 8px 12px;
+    font-size: 12px;
+    font-weight: 700;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.15s ease;
+  }
+
+  .mobile-back-to-list-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #00a4bd;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px 0;
+    margin-bottom: 8px;
+  }
+
+  .deal-inspector-command-bar {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 680px) {
+  .deal-inspector-command-bar {
+    grid-template-columns: 1fr;
+  }
+
+  .deal-vector-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .deal-simulator-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .deal-meddicc-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 
