@@ -112,7 +112,16 @@ def create_app() -> FastAPI:
     app.include_router(api_v1_router, prefix="/api/v1")
 
     # ---- Health Checks ----
+    @app.get("/", tags=["System"])
+    @app.head("/", tags=["System"])
+    async def root_health() -> dict[str, str]:
+        """Root probe for cloud load balancers and Render."""
+        return {"status": "healthy", "service": "dealsense-api"}
+
     @app.get("/health", tags=["System"])
+    @app.head("/health", tags=["System"])
+    @app.get("/api/v1/health", tags=["System"])
+    @app.head("/api/v1/health", tags=["System"])
     async def health_check() -> dict[str, str]:
         """Liveness probe — returns 200 if the process is running."""
         return {"status": "healthy", "service": "dealsense-api"}

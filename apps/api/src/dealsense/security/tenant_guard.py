@@ -23,11 +23,14 @@ logger = structlog.get_logger(__name__)
 # Paths that do NOT require tenant context
 TENANT_EXEMPT_PATHS = frozenset(
     {
+        "/",
         "/health",
         "/ready",
         "/docs",
         "/redoc",
         "/openapi.json",
+        "/api/v1/health",
+        "/api/v1/ready",
         "/api/v1/status",
         "/api/v1/oauth/authorize",
         "/api/v1/oauth/callback",
