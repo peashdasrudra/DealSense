@@ -88,59 +88,20 @@ export const TopBar: React.FC<TopBarProps> = ({
         <div className="header-brand-wrap" onClick={handleLogoClick} style={{ cursor: "pointer" }} title="DealSense Home">
           <DealSenseIcon size={24} />
           <div className="topbar-brand-text">
-            <span style={{ fontWeight: 700, color: "#ffffff" }}>Deal</span>
-            <span style={{ fontWeight: 800, color: "#ff7a59" }}>Sense</span>
+            <span style={{ fontWeight: 700, color: "#2d3e50" }}>Deal</span>
+            <span style={{ fontWeight: 800, color: "#ff5c35" }}>Sense</span>
           </div>
         </div>
 
-        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-          <span style={{ color: "#516f90", fontSize: "14px" }}>/</span>
-          <span style={{ color: "#ffffff", fontSize: "13px", fontWeight: 600 }}>{title}</span>
-        </div>
-
-        {/* HubSpot Global Hub Navigation */}
-        <div style={{ display: "flex", alignItems: "center", gap: 2, marginLeft: 12 }}>
-          {[
-            { label: "Sales", path: "/deals", active: true },
-            { label: "Pipeline", path: "/pipeline", active: false },
-            { label: "Actions", path: "/actions", active: false },
-            { label: "Agency Fleet", path: "/agency", active: false },
-          ].map((h) => (
-            <button
-              key={h.label}
-              onClick={() => navigate(h.path)}
-              style={{
-                background: "none",
-                border: "none",
-                color: h.active ? "#ffffff" : "#cbd6e2",
-                fontWeight: h.active ? 700 : 500,
-                fontSize: "12.5px",
-                padding: "6px 10px",
-                borderRadius: "3px",
-                cursor: "pointer",
-                borderBottom: h.active ? "2px solid #ff7a59" : "2px solid transparent",
-                outline: "none",
-                display: "inline-block",
-              }}
-              onMouseEnter={(e) => {
-                if (!h.active) e.currentTarget.style.color = "#ffffff";
-              }}
-              onMouseLeave={(e) => {
-                if (!h.active) e.currentTarget.style.color = "#cbd6e2";
-              }}
-            >
-              {h.label}
-            </button>
-          ))}
-        </div>
-
-        {/* Live Status Pill */}
-        <div style={{ display: "flex", alignItems: "center", gap: 6, marginLeft: 6 }}>
+        {/* Page Title (Always Visible on Both Desktop and Mobile) */}
+        <div className="topbar-title-section" style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <span className="title-divider">/</span>
+          <h1 className="header-page-title">{title}</h1>
           <span
             style={{
-              background: "rgba(0, 189, 165, 0.2)",
-              color: "#00bda5",
-              border: "1px solid rgba(0, 189, 165, 0.4)",
+              background: "rgba(0, 189, 165, 0.12)",
+              color: "#00838f",
+              border: "1px solid rgba(0, 189, 165, 0.3)",
               fontSize: "10px",
               fontWeight: 700,
               padding: "2px 7px",
@@ -152,7 +113,7 @@ export const TopBar: React.FC<TopBarProps> = ({
             }}
           >
             <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#00bda5", display: "inline-block" }} />
-            HubSpot Connected
+            HUBSPOT LIVE
           </span>
         </div>
       </div>

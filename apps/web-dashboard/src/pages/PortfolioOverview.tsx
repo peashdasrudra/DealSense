@@ -180,12 +180,12 @@ export const PortfolioOverview: React.FC = () => {
           
           <div>
             <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
-              <span style={{ background: "rgba(5,150,105,0.1)", color: "var(--risk-healthy)", border: "1px solid rgba(5,150,105,0.25)", padding: "3px 9px", borderRadius: "var(--radius-pill)", fontSize: "10px", fontWeight: 700, textTransform: "uppercase" }}>● Webhook Synced</span>
-              <span style={{ fontSize: "11px", color: "var(--hs-text-muted)" }}>Portal #48921820</span>
+              <span style={{ background: "rgba(0, 189, 165, 0.1)", color: "#007a70", border: "1px solid rgba(0, 189, 165, 0.25)", padding: "3px 9px", borderRadius: "10px", fontSize: "10px", fontWeight: 700, textTransform: "uppercase" }}>● HubSpot CRM Connected</span>
+              <span style={{ fontSize: "11.5px", color: "var(--hs-text-muted)" }}>Portal #48921820 · Webhooks Active</span>
             </div>
-            <h2 style={{ fontSize: "19px", fontWeight: 800, color: "var(--hs-heading)", margin: "0 0 6px", letterSpacing: "-0.02em" }}>Welcome to DealSense Intelligence</h2>
+            <h2 style={{ fontSize: "20px", fontWeight: 800, color: "var(--hs-heading)", margin: "0 0 6px", letterSpacing: "-0.01em" }}>Pipeline Revenue &amp; Slippage Command Center</h2>
             <p style={{ fontSize: "13px", color: "var(--hs-text-muted)", margin: 0, lineHeight: 1.55 }}>
-              You're viewing a live interactive demo of the DealSense Revenue Operations engine. Navigate through the modules to explore predictive deal scoring, pipeline waterfalls, and autonomous CRM hygiene.
+              Continuous 7-vector telemetry, automated MEDDICC qualification audits, and 4-tier CRM write-backs. Protect your quarterly pipeline from silent slippage and unengaged economic buyers.
             </p>
           </div>
 
@@ -193,19 +193,19 @@ export const PortfolioOverview: React.FC = () => {
             <button
               onClick={() => navigate("/deals")}
               style={{
-                padding: "8px 18px", background: "linear-gradient(180deg, #ff6b48 0%, #ff5c35 100%)", color: "#fff", fontSize: "13px", fontWeight: 700,
-                border: "none", borderRadius: "var(--radius-sm)", cursor: "pointer", boxShadow: "0 2px 6px rgba(255,92,53,0.3), inset 0 1px 0 rgba(255,255,255,0.3)",
+                padding: "8px 18px", background: "#ff7a59", color: "#fff", fontSize: "13px", fontWeight: 700,
+                border: "none", borderRadius: "var(--radius-sm)", cursor: "pointer", boxShadow: "0 2px 6px rgba(255, 122, 89, 0.3)",
                 display: "inline-flex", alignItems: "center", gap: 6, transition: "all 0.2s ease"
               }}
             >
-              <span>Get Started</span>
+              <span>Inspect Deals in CRM (MVP)</span>
               <span>→</span>
             </button>
             <button
               onClick={handleSync}
               disabled={isSyncing}
               style={{
-                padding: "8px 16px", background: "#f5f8fa", color: "#ff7a59", fontSize: "12.5px", fontWeight: 700,
+                padding: "8px 16px", background: "#f5f8fa", color: "#33475b", fontSize: "12.5px", fontWeight: 600,
                 border: "1px solid #cbd6e2", borderRadius: "var(--radius-sm)", cursor: "pointer",
                 display: "inline-flex", alignItems: "center", gap: 6, transition: "all 0.2s ease",
                 boxShadow: "var(--shadow-sm)"
@@ -213,18 +213,17 @@ export const PortfolioOverview: React.FC = () => {
             >
               <span>{isSyncing ? "⏳ Syncing..." : "🔄 Sync HubSpot"}</span>
             </button>
-            <a
-              href="/case-study"
+            <button
+              onClick={() => navigate("/actions")}
               style={{
-                padding: "8px 16px", background: "#ffffff", color: "var(--hs-text)", fontSize: "12.5px", fontWeight: 600,
-                border: "1px solid var(--hs-border-dark)", borderRadius: "var(--radius-sm)", cursor: "pointer",
-                textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 6, transition: "all 0.2s ease",
+                padding: "8px 16px", background: "#ffffff", color: "#33475b", fontSize: "12.5px", fontWeight: 600,
+                border: "1px solid #cbd6e2", borderRadius: "var(--radius-sm)", cursor: "pointer",
+                display: "inline-flex", alignItems: "center", gap: 6, transition: "all 0.2s ease",
                 boxShadow: "var(--shadow-sm)"
               }}
             >
-              <span>Read Case Study</span>
-              <span>↗</span>
-            </a>
+              <span>Review Action Queue</span>
+            </button>
           </div>
         </motion.div>
 
@@ -435,157 +434,6 @@ export const PortfolioOverview: React.FC = () => {
               </p>
             </div>
           </motion.div>
-        </div>
-      </div>
-
-      {/* ── Revenue Leakage Radar ($10,000 Problem Solver Section) ──────── */}
-      <div style={{ marginBottom: "var(--sp-6)" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
-          <div>
-            <div style={{ fontSize: "11px", textTransform: "uppercase", letterSpacing: "0.06em", color: "#516f90", fontWeight: 700 }}>
-              Autonomous RevOps Radar
-            </div>
-            <h2 style={{ fontSize: "18px", fontWeight: 700, color: "#2d3e50", margin: "2px 0 0" }}>
-              Revenue Leakage & Slippage Diagnostic
-            </h2>
-          </div>
-          <button
-            onClick={() => navigate("/deals")}
-            style={{
-              padding: "6px 14px",
-              background: "#ff7a59",
-              color: "#ffffff",
-              border: "none",
-              borderRadius: "3px",
-              fontSize: "12px",
-              fontWeight: 700,
-              cursor: "pointer",
-            }}
-          >
-            Launch Deal Inspector →
-          </button>
-        </div>
-
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 14 }}>
-          <div
-            style={{
-              background: "#ffffff",
-              border: "1px solid #cbd6e2",
-              borderLeft: "4px solid #c8372d",
-              borderRadius: "4px",
-              padding: "14px 16px",
-              boxShadow: "0 1px 2px rgba(0,0,0,0.04)",
-            }}
-          >
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-              <span style={{ fontSize: "11px", fontWeight: 700, textTransform: "uppercase", color: "#c8372d" }}>
-                Stage Stagnation Risk
-              </span>
-              <strong style={{ fontSize: "15px", color: "#c8372d" }}>$235,000</strong>
-            </div>
-            <div style={{ fontSize: "12.5px", color: "#2d3e50", fontWeight: 600, marginTop: 4 }}>
-              2 Deals Stalled in Proposal (Over 21 Days)
-            </div>
-            <div style={{ fontSize: "11.5px", color: "#516f90", marginTop: 2 }}>
-              Exceeded historical cycle SLA. Deals stalling past 21 days experience a 64% drop in win conversion.
-            </div>
-            <button
-              onClick={() => navigate("/deals")}
-              style={{
-                marginTop: 10,
-                padding: "4px 10px",
-                background: "#fbeae9",
-                border: "1px solid #f5c6c4",
-                borderRadius: "3px",
-                fontSize: "11px",
-                fontWeight: 700,
-                color: "#c8372d",
-                cursor: "pointer",
-              }}
-            >
-              Resolve Stalled Deals →
-            </button>
-          </div>
-
-          <div
-            style={{
-              background: "#ffffff",
-              border: "1px solid #cbd6e2",
-              borderLeft: "4px solid #ffab00",
-              borderRadius: "4px",
-              padding: "14px 16px",
-              boxShadow: "0 1px 2px rgba(0,0,0,0.04)",
-            }}
-          >
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-              <span style={{ fontSize: "11px", fontWeight: 700, textTransform: "uppercase", color: "#b76e00" }}>
-                Single-Threaded Exposure
-              </span>
-              <strong style={{ fontSize: "15px", color: "#b76e00" }}>$360,000</strong>
-            </div>
-            <div style={{ fontSize: "12.5px", color: "#2d3e50", fontWeight: 600, marginTop: 4 }}>
-              3 Enterprise Accounts Missing Economic Buyer
-            </div>
-            <div style={{ fontSize: "11.5px", color: "#516f90", marginTop: 2 }}>
-              Reps have only logged contact with technical evaluators. No verified executive budget sponsor.
-            </div>
-            <button
-              onClick={() => navigate("/deals")}
-              style={{
-                marginTop: 10,
-                padding: "4px 10px",
-                background: "#fff6e6",
-                border: "1px solid #fde1b0",
-                borderRadius: "3px",
-                fontSize: "11px",
-                fontWeight: 700,
-                color: "#b76e00",
-                cursor: "pointer",
-              }}
-            >
-              Trigger Multi-Threading →
-            </button>
-          </div>
-
-          <div
-            style={{
-              background: "#ffffff",
-              border: "1px solid #cbd6e2",
-              borderLeft: "4px solid #00a4bd",
-              borderRadius: "4px",
-              padding: "14px 16px",
-              boxShadow: "0 1px 2px rgba(0,0,0,0.04)",
-            }}
-          >
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-              <span style={{ fontSize: "11px", fontWeight: 700, textTransform: "uppercase", color: "#007a8c" }}>
-                Close Date Variance
-              </span>
-              <strong style={{ fontSize: "15px", color: "#007a8c" }}>$140,000</strong>
-            </div>
-            <div style={{ fontSize: "12.5px", color: "#2d3e50", fontWeight: 600, marginTop: 4 }}>
-              2 Deals Slipped 2× or More
-            </div>
-            <div style={{ fontSize: "11.5px", color: "#516f90", marginTop: 2 }}>
-              Close date was pushed into next quarter. Proactive HubSpot task creation recommended.
-            </div>
-            <button
-              onClick={() => navigate("/deals")}
-              style={{
-                marginTop: 10,
-                padding: "4px 10px",
-                background: "#e5f5f8",
-                border: "1px solid #b2e3eb",
-                borderRadius: "3px",
-                fontSize: "11px",
-                fontWeight: 700,
-                color: "#007a8c",
-                cursor: "pointer",
-              }}
-            >
-              Auto-Align Close Dates →
-            </button>
-          </div>
         </div>
       </div>
 
