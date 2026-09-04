@@ -88,6 +88,15 @@ Experience DealSense in action through recorded walkthroughs showcasing both use
 
 ---
 
+## 🚀 What's New in v1.0.0 (Production Release)
+
+DealSense has officially graduated from a sandbox proof-of-concept to a strictly enforced production environment:
+*   **True OAuth 2.0 Integration:** Bypassed fragile server-side redirects in favor of resilient client-side HubSpot authorization URL construction. The backend strictly exchanges and stores JWT/tenant tokens.
+*   **Strict Real-Data Enforcement:** All fallback "Portfolio Demo" mock data (`SAMPLE_DEALS`, `SAMPLE_ACTIONS`, `_DEMO_DEALS`) has been entirely removed across the React frontend and FastAPI backend. The app now requires a valid HubSpot portal connection to render real CRM data, gracefully displaying native HubSpot Canvas Empty States otherwise.
+*   **Dual Onboarding Persona Architecture:** The main landing page (`/`) now features two distinct onboarding paths for standard B2B sales users (`/login` for the HubSpot App Marketplace flow) versus HubSpot Solutions Partners (`/agency` for the multi-tenant fleet command).
+
+---
+
 ## 💡 Why DealSense?
 
 Most "AI CRM" tools simply dump generic LLM wrappers on deal records. They hallucinate win probabilities, generate generic summaries reps ignore, and expose sensitive sales data to non-deterministic third-party APIs.
