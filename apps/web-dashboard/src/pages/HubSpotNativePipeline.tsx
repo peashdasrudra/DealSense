@@ -528,6 +528,14 @@ export const HubSpotNativePipeline: React.FC = () => {
 
         {/* 1. Desktop & Tablet Responsive Table */}
         <div className="desktop-deal-table table-responsive">
+          {AT_RISK_DEALS.length === 0 ? (
+            <div style={{ padding: 60, textAlign: "center", background: "#f5f8fa", borderRadius: 8, border: "1px dashed #cbd6e2" }}>
+              <div style={{ fontSize: 40, marginBottom: 16 }}>📉</div>
+              <h3 style={{ fontSize: 18, color: "#33475b", marginBottom: 8 }}>No At-Risk Deals Found</h3>
+              <p style={{ color: "#516f90", marginBottom: 16 }}>Your HubSpot pipeline looks healthy, or you haven't created any deals yet.</p>
+              <a href="https://app.hubspot.com" target="_blank" rel="noreferrer" style={{ display: "inline-block", background: "#ff7a59", color: "#fff", padding: "8px 16px", borderRadius: 3, textDecoration: "none", fontWeight: 600, fontSize: 12 }}>Open HubSpot</a>
+            </div>
+          ) : (
           <table>
             <thead>
               <tr>
@@ -593,6 +601,7 @@ export const HubSpotNativePipeline: React.FC = () => {
               })}
             </tbody>
           </table>
+          )}
         </div>
 
         {/* 2. Mobile-Native Deal Cards (<640px) */}

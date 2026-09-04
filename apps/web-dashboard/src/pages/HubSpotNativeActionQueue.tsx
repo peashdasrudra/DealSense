@@ -337,6 +337,13 @@ export const HubSpotNativeActionQueue: React.FC = () => {
       >
         {/* Desktop & Tablet Responsive Table */}
         <div className="desktop-action-table table-responsive">
+          {actions.length === 0 ? (
+            <div style={{ padding: 60, textAlign: "center", background: "#f5f8fa", borderRadius: 8, border: "1px dashed #cbd6e2" }}>
+              <div style={{ fontSize: 40, marginBottom: 16 }}>✅</div>
+              <h3 style={{ fontSize: 18, color: "#33475b", marginBottom: 8 }}>You're All Caught Up</h3>
+              <p style={{ color: "#516f90", marginBottom: 16 }}>DealSense hasn't detected any missing hygiene steps or risk signals in your pipeline.</p>
+            </div>
+          ) : (
           <table>
             <thead>
               <tr>
@@ -481,6 +488,7 @@ export const HubSpotNativeActionQueue: React.FC = () => {
               </AnimatePresence>
             </tbody>
           </table>
+          )}
         </div>
 
         {/* Mobile Action Cards (<640px) */}
