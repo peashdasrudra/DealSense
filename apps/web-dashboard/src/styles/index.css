@@ -593,6 +593,65 @@ body {
   justify-content: center;
 }
 
+/* ── Responsive UI Overhaul Utilities ───────────────────────────────────── */
+.responsive-master-detail {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 20px;
+  align-items: stretch;
+}
+
+.responsive-detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 20px;
+  align-items: start;
+}
+
+@media (max-width: 1024px) {
+  .responsive-detail-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .responsive-master-detail {
+    grid-template-columns: 1fr;
+  }
+  .hide-on-mobile {
+    display: none !important;
+  }
+  .mobile-full-width {
+    width: 100% !important;
+  }
+}
+
+/* ── Modals ──────────────────────────────────────────────────────────────── */
+.enterprise-modal {
+  background: var(--hs-surface);
+  border: 1px solid var(--hs-border-dark);
+  border-radius: 6px;
+  padding: 20px 24px;
+  width: 100%;
+  max-width: 520px;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.22);
+}
+
+.enterprise-modal.wide {
+  max-width: 640px;
+}
+
+@media (max-width: 640px) {
+  .enterprise-modal {
+    max-width: 100% !important;
+    height: 100% !important;
+    max-height: 100vh !important;
+    border-radius: 0 !important;
+    padding: 16px !important;
+    overflow-y: auto;
+  }
+}
+
 /* ── Mobile Bottom Navigation Bar ────────────────────────────────────────── */
 
 .mobile-bottom-nav {

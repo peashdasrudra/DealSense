@@ -1486,15 +1486,8 @@ export const DealExplorer: React.FC = () => {
         </div>
       </div>
 
-      {/* ── 3-Column Native HubSpot CRM Record Architecture ────────────────── */}
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "280px 1fr 290px",
-          gap: 16,
-          alignItems: "start",
-        }}
-      >
+      {/* ── Responsive Enterprise Master-Detail Architecture ────────────────── */}
+      <div className="responsive-master-detail">
         {/* ── Left Column: "About This Deal" Properties ──────────────────── */}
         <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
           {/* Quick Deal Switcher Box */}
@@ -1659,8 +1652,10 @@ export const DealExplorer: React.FC = () => {
           </div>
         </div>
 
-        {/* ── Center Column: 5 Native HubSpot Tabs ───────────────────────── */}
-        <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+        {/* ── Detail Canvas (Tabs + Associations) ────────────────────────── */}
+        <div className="responsive-detail-grid">
+          {/* ── Center Column: 5 Native HubSpot Tabs ───────────────────────── */}
+          <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
           {/* Tab Navigation Header */}
           <div
             style={{
@@ -2361,13 +2356,14 @@ export const DealExplorer: React.FC = () => {
           </div>
         </div>
       </div>
+      </div>
 
       {/* ── All 12 Functional Enterprise Modals ────────────────────────────── */}
 
       {/* 1. Create Deal Modal */}
       {modalType === "create" && (
         <div style={modalOverlayStyle}>
-          <div style={modalBoxStyle}>
+          <div className="enterprise-modal">
             <div style={modalHeaderStyle}>
               <h3 style={{ margin: 0, fontSize: "16px", fontWeight: 700, color: "#33475b" }}>Create Deal in HubSpot CRM</h3>
               <button onClick={() => setModalType(null)} style={closeBtnStyle}>✕</button>
@@ -2445,7 +2441,7 @@ export const DealExplorer: React.FC = () => {
       {/* 2. Edit Deal Modal */}
       {modalType === "edit" && (
         <div style={modalOverlayStyle}>
-          <div style={modalBoxStyle}>
+          <div className="enterprise-modal">
             <div style={modalHeaderStyle}>
               <h3 style={{ margin: 0, fontSize: "16px", fontWeight: 700, color: "#33475b" }}>Edit Deal Properties</h3>
               <button onClick={() => setModalType(null)} style={closeBtnStyle}>✕</button>
@@ -2513,7 +2509,7 @@ export const DealExplorer: React.FC = () => {
       {/* 3. Note Composer Modal */}
       {modalType === "note" && (
         <div style={modalOverlayStyle}>
-          <div style={modalBoxStyle}>
+          <div className="enterprise-modal">
             <div style={modalHeaderStyle}>
               <h3 style={{ margin: 0, fontSize: "16px", fontWeight: 700, color: "#33475b" }}>Add Note to Deal Timeline</h3>
               <button onClick={() => setModalType(null)} style={closeBtnStyle}>✕</button>
@@ -2538,7 +2534,7 @@ export const DealExplorer: React.FC = () => {
       {/* 4. Sales Email Modal */}
       {modalType === "email" && (
         <div style={modalOverlayStyle}>
-          <div style={modalBoxStyle}>
+          <div className="enterprise-modal">
             <div style={modalHeaderStyle}>
               <h3 style={{ margin: 0, fontSize: "16px", fontWeight: 700, color: "#33475b" }}>Compose Sales Email</h3>
               <button onClick={() => setModalType(null)} style={closeBtnStyle}>✕</button>
@@ -2585,7 +2581,7 @@ export const DealExplorer: React.FC = () => {
       {/* 5. Call Logger Modal */}
       {modalType === "call" && (
         <div style={modalOverlayStyle}>
-          <div style={modalBoxStyle}>
+          <div className="enterprise-modal">
             <div style={modalHeaderStyle}>
               <h3 style={{ margin: 0, fontSize: "16px", fontWeight: 700, color: "#33475b" }}>Log a Phone Call</h3>
               <button onClick={() => setModalType(null)} style={closeBtnStyle}>✕</button>
@@ -2622,7 +2618,7 @@ export const DealExplorer: React.FC = () => {
       {/* 6. Task Creator Modal */}
       {modalType === "task" && (
         <div style={modalOverlayStyle}>
-          <div style={modalBoxStyle}>
+          <div className="enterprise-modal">
             <div style={modalHeaderStyle}>
               <h3 style={{ margin: 0, fontSize: "16px", fontWeight: 700, color: "#33475b" }}>Create Follow-up Task</h3>
               <button onClick={() => setModalType(null)} style={closeBtnStyle}>✕</button>
@@ -2658,7 +2654,7 @@ export const DealExplorer: React.FC = () => {
       {/* 7. Meeting Logger Modal */}
       {modalType === "meeting" && (
         <div style={modalOverlayStyle}>
-          <div style={modalBoxStyle}>
+          <div className="enterprise-modal">
             <div style={modalHeaderStyle}>
               <h3 style={{ margin: 0, fontSize: "16px", fontWeight: 700, color: "#33475b" }}>Log Meeting</h3>
               <button onClick={() => setModalType(null)} style={closeBtnStyle}>✕</button>
@@ -2692,7 +2688,7 @@ export const DealExplorer: React.FC = () => {
       {/* 8. Add Contact Modal */}
       {modalType === "contact" && (
         <div style={modalOverlayStyle}>
-          <div style={modalBoxStyle}>
+          <div className="enterprise-modal">
             <div style={modalHeaderStyle}>
               <h3 style={{ margin: 0, fontSize: "16px", fontWeight: 700, color: "#33475b" }}>Associate Contact with Deal</h3>
               <button onClick={() => setModalType(null)} style={closeBtnStyle}>✕</button>
@@ -2734,7 +2730,7 @@ export const DealExplorer: React.FC = () => {
       {/* 9. Add Line Item Modal */}
       {modalType === "lineItem" && (
         <div style={modalOverlayStyle}>
-          <div style={modalBoxStyle}>
+          <div className="enterprise-modal">
             <div style={modalHeaderStyle}>
               <h3 style={{ margin: 0, fontSize: "16px", fontWeight: 700, color: "#33475b" }}>Attach Line Item / Product</h3>
               <button onClick={() => setModalType(null)} style={closeBtnStyle}>✕</button>
@@ -2766,7 +2762,7 @@ export const DealExplorer: React.FC = () => {
       {/* 10. All 42 CRM Properties Modal */}
       {modalType === "properties" && (
         <div style={modalOverlayStyle}>
-          <div style={{ ...modalBoxStyle, maxWidth: 640 }}>
+          <div className="enterprise-modal wide">
             <div style={modalHeaderStyle}>
               <h3 style={{ margin: 0, fontSize: "16px", fontWeight: 700, color: "#33475b" }}>HubSpot CRM Object Schema (42 Properties)</h3>
               <button onClick={() => setModalType(null)} style={closeBtnStyle}>✕</button>
@@ -2814,7 +2810,7 @@ export const DealExplorer: React.FC = () => {
       {/* 11. Property History Modal */}
       {modalType === "history" && (
         <div style={modalOverlayStyle}>
-          <div style={modalBoxStyle}>
+          <div className="enterprise-modal">
             <div style={modalHeaderStyle}>
               <h3 style={{ margin: 0, fontSize: "16px", fontWeight: 700, color: "#33475b" }}>Property Change History</h3>
               <button onClick={() => setModalType(null)} style={closeBtnStyle}>✕</button>
@@ -2865,13 +2861,7 @@ const modalOverlayStyle: React.CSSProperties = {
 };
 
 const modalBoxStyle: React.CSSProperties = {
-  background: "#ffffff",
-  border: "1px solid #cbd6e2",
-  borderRadius: "6px",
-  padding: "20px 24px",
-  width: "100%",
-  maxWidth: 520,
-  boxShadow: "0 12px 36px rgba(0, 0, 0, 0.22)",
+  /* Migrated to .enterprise-modal in index.css for mobile responsiveness */
 };
 
 const modalHeaderStyle: React.CSSProperties = {
