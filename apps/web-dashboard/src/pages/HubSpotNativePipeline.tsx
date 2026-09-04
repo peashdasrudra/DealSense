@@ -1,5 +1,5 @@
 /**
- * DealSense Dashboard â€” Portfolio Overview Page.
+ * DealSense Dashboard — Portfolio Overview Page.
  * Canvas Design System Edition.
  * Wired to Real FastAPI Backend with graceful Enterprise fallback.
  */
@@ -24,7 +24,7 @@ import { fetchDeals, syncHubSpotDeals } from "../api";
 import { DealDrawer, DealData } from "../components/DealDrawer";
 import { ExecutiveAuditModal } from "../components/ExecutiveAuditModal";
 
-// â”€â”€ Default Enterprise Sample Deals (used if DB has no seed data yet) â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Default Enterprise Sample Deals (used if DB has no seed data yet) ────────
 const SAMPLE_DEALS = [
   { id: "1", name: "Orion Cloud Migration", client: "TechCorp Inc.", score: 23, band: "Critical", value: 150000, owner: "Sarah Miller", stage: "Proposal" },
   { id: "2", name: "Quantum Security Suite", client: "FinanceGo Ltd.", score: 31, band: "Critical", value: 280000, owner: "James Reynolds", stage: "Negotiation" },
@@ -123,7 +123,7 @@ export const HubSpotNativePipeline: React.FC = () => {
     const handlePortalChange = (e: any) => {
       if (e.detail) {
         setActivePortal(e.detail);
-        setSyncToast(`âœ“ Switched to ${e.detail.name} (Portal #${e.detail.id})`);
+        setSyncToast(`✓ Switched to ${e.detail.name} (Portal #${e.detail.id})`);
         setTimeout(() => setSyncToast(null), 3500);
       }
     };
@@ -134,14 +134,14 @@ export const HubSpotNativePipeline: React.FC = () => {
 
   const handleSync = async () => {
     setIsSyncing(true);
-    setSyncToast("â†» Synchronizing HubSpot Webhooks v3...");
+    setSyncToast("↻ Synchronizing HubSpot Webhooks v3...");
     try {
       await syncHubSpotDeals();
       loadDeals();
-      setSyncToast(`âœ“ Synced ${deals.length} Deals from HubSpot Portal #${activePortal.id}`);
+      setSyncToast(`✓ Synced ${deals.length} Deals from HubSpot Portal #${activePortal.id}`);
       setTimeout(() => setSyncToast(null), 3500);
     } catch (e) {
-      setSyncToast(`âœ“ 20 Deals Synced from Portal #${activePortal.id} (Sub-200ms ACK)`);
+      setSyncToast(`✓ 20 Deals Synced from Portal #${activePortal.id} (Sub-200ms ACK)`);
       setTimeout(() => setSyncToast(null), 3500);
     } finally {
       setIsSyncing(false);
@@ -180,7 +180,7 @@ export const HubSpotNativePipeline: React.FC = () => {
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "var(--sp-6)" }}>
-      {/* â”€â”€ Top Row: Onboarding + Health Trend â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+      {/* ── Top Row: Onboarding + Health Trend ─────────────────────── */}
       <div className="grid-2" style={{ alignItems: "stretch" }}>
         
         {/* DealSense Onboarding Banner */}
@@ -206,8 +206,8 @@ export const HubSpotNativePipeline: React.FC = () => {
           
           <div>
             <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
-              <span style={{ background: "rgba(0, 189, 165, 0.1)", color: "#007a70", border: "1px solid rgba(0, 189, 165, 0.25)", padding: "3px 9px", borderRadius: "10px", fontSize: "10px", fontWeight: 700, textTransform: "uppercase" }}>â— HubSpot CRM Connected</span>
-              <span style={{ fontSize: "11.5px", color: "#516f90" }}>Portal #{activePortal.id} ({activePortal.name}) Â· Webhooks Active</span>
+              <span style={{ background: "rgba(0, 189, 165, 0.1)", color: "#007a70", border: "1px solid rgba(0, 189, 165, 0.25)", padding: "3px 9px", borderRadius: "10px", fontSize: "10px", fontWeight: 700, textTransform: "uppercase" }}>● HubSpot CRM Connected</span>
+              <span style={{ fontSize: "11.5px", color: "#516f90" }}>Portal #{activePortal.id} ({activePortal.name}) · Webhooks Active</span>
             </div>
             <h2 style={{ fontSize: "20px", fontWeight: 800, color: "var(--hs-heading)", margin: "0 0 6px", letterSpacing: "-0.01em" }}>Pipeline Revenue &amp; Slippage Command Center</h2>
             <p style={{ fontSize: "13px", color: "#516f90", margin: 0, lineHeight: 1.55 }}>
@@ -222,7 +222,7 @@ export const HubSpotNativePipeline: React.FC = () => {
                 </svg>
                 <strong style={{ color: "#33475b" }}>SOC-2 Type II</strong> Security
               </span>
-              <span style={{ color: "#cbd6e2" }}>â€¢</span>
+              <span style={{ color: "#cbd6e2" }}>•</span>
               <span style={{ display: "inline-flex", alignItems: "center", gap: 5 }}>
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#00a4bd" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
@@ -230,20 +230,20 @@ export const HubSpotNativePipeline: React.FC = () => {
                 </svg>
                 <strong style={{ color: "#33475b" }}>256-Bit TLS</strong> Encrypted
               </span>
-              <span style={{ color: "#cbd6e2" }}>â€¢</span>
+              <span style={{ color: "#cbd6e2" }}>•</span>
               <span style={{ display: "inline-flex", alignItems: "center", gap: 5 }}>
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#ff7a59" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
                 </svg>
                 <strong style={{ color: "#33475b" }}>HubSpot REST v3</strong> Certified
               </span>
-              <span style={{ color: "#cbd6e2" }}>â€¢</span>
+              <span style={{ color: "#cbd6e2" }}>•</span>
               <span
                 onClick={() => navigate("/compliance")}
                 style={{ cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 5, background: "rgba(0, 164, 189, 0.08)", padding: "2px 8px", borderRadius: "10px", color: "#007a8c" }}
                 title="View Live HubSpot Marketplace Certification Suite"
               >
-                <strong style={{ color: "#007a8c" }}>HubSpot Certified App Partner Architecture (100/100)</strong> âž”
+                <strong style={{ color: "#007a8c" }}>HubSpot Certified App Partner Architecture (100/100)</strong> ➔
               </span>
             </div>
           </div>
@@ -257,7 +257,7 @@ export const HubSpotNativePipeline: React.FC = () => {
                 display: "inline-flex", alignItems: "center", gap: 6, transition: "all 0.2s ease"
               }}
             >
-              <span>ðŸ“‘ Export Executive Pipeline Audit Brief</span>
+              <span>📑 Export Executive Pipeline Audit Brief</span>
             </button>
             <button
               onClick={() => navigate("/deals")}
@@ -268,7 +268,7 @@ export const HubSpotNativePipeline: React.FC = () => {
               }}
             >
               <span>Inspect Deals in CRM (MVP)</span>
-              <span>â†’</span>
+              <span>→</span>
             </button>
             <button
               onClick={handleSync}
@@ -280,7 +280,7 @@ export const HubSpotNativePipeline: React.FC = () => {
                 boxShadow: "var(--shadow-sm)"
               }}
             >
-              <span>{isSyncing ? "â³ Syncing..." : "ðŸ”„ Sync HubSpot"}</span>
+              <span>{isSyncing ? "⏳ Syncing..." : "🔄 Sync HubSpot"}</span>
             </button>
             <button
               onClick={() => navigate("/actions")}
@@ -343,7 +343,7 @@ export const HubSpotNativePipeline: React.FC = () => {
         </motion.div>
       </div>
 
-      {/* â”€â”€ KPI Grid â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+      {/* ── KPI Grid ─────────────────────────────────────────────────── */}
       <div className="kpi-grid">
         {KPI_DATA.map((kpi, idx) => (
           <motion.div
@@ -369,13 +369,13 @@ export const HubSpotNativePipeline: React.FC = () => {
                 color: kpi.direction === "up" ? "#00bda5" : "#f2545b",
               }}
             >
-              {kpi.direction === "up" ? "â–²" : "â–¼"} {kpi.trend}
+              {kpi.direction === "up" ? "▲" : "▼"} {kpi.trend}
             </div>
           </motion.div>
         ))}
       </div>
 
-      {/* â”€â”€ Risk Distribution Row â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+      {/* ── Risk Distribution Row ──────────────────────────────────────── */}
       <div className="grid-2" style={{ marginBottom: "var(--sp-6)" }}>
         {/* Risk Distribution */}
         <motion.div
@@ -511,7 +511,7 @@ export const HubSpotNativePipeline: React.FC = () => {
         </div>
       </div>
 
-      {/* â”€â”€ At-Risk Deals Section (Adaptive Desktop Table + Mobile Cards) â”€â”€ */}
+      {/* ── At-Risk Deals Section (Adaptive Desktop Table + Mobile Cards) ── */}
       <motion.div
         className="card"
         initial={{ opacity: 0, y: 16 }}
@@ -585,7 +585,7 @@ export const HubSpotNativePipeline: React.FC = () => {
                           setSelectedDrawerDeal(deal);
                         }}
                       >
-                        âš¡ Inspect
+                        ⚡ Inspect
                       </button>
                     </td>
                   </motion.tr>
@@ -608,15 +608,15 @@ export const HubSpotNativePipeline: React.FC = () => {
                 <div className="mobile-deal-card-header">
                   <div className="mobile-deal-card-title">{deal.name}</div>
                   <span className="risk-pill" data-band={b}>
-                    {deal.score} Â· {deal.band}
+                    {deal.score} · {deal.band}
                   </span>
                 </div>
 
                 <div className="mobile-deal-card-meta">
                   <span>{deal.client}</span>
-                  <span>â€¢</span>
+                  <span>•</span>
                   <strong style={{ color: "#ff7a59" }}>${(deal.value / 1000).toFixed(0)}K</strong>
-                  <span>â€¢</span>
+                  <span>•</span>
                   <span>{deal.owner}</span>
                 </div>
 
@@ -627,7 +627,7 @@ export const HubSpotNativePipeline: React.FC = () => {
                     setSelectedDrawerDeal(deal);
                   }}
                 >
-                  âš¡ Inspect Deal Dossier
+                  ⚡ Inspect Deal Dossier
                 </button>
               </div>
             );
@@ -635,14 +635,14 @@ export const HubSpotNativePipeline: React.FC = () => {
         </div>
       </motion.div>
 
-      {/* â”€â”€ Global Deal Inspection Drawer â”€â”€ */}
+      {/* ── Global Deal Inspection Drawer ── */}
       <DealDrawer
         deal={selectedDrawerDeal}
         isOpen={!!selectedDrawerDeal}
         onClose={() => setSelectedDrawerDeal(null)}
       />
 
-      {/* â”€â”€ Executive Pipeline Risk Audit Lead Magnet Modal â”€â”€ */}
+      {/* ── Executive Pipeline Risk Audit Lead Magnet Modal ── */}
       <ExecutiveAuditModal
         deals={deals}
         isOpen={isAuditModalOpen}
