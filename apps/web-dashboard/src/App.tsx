@@ -175,14 +175,14 @@ export const App: React.FC = () => {
   };
 
   const isCheckoutPage = location.pathname === "/checkout" || location.pathname === "/payment";
-  const isAgencyPage = location.pathname === "/agency" || location.pathname === "/partners" || location.pathname === "/agents" || location.pathname === "/agency-fleet";
+  const isAgencyPage =  location.pathname === "/partners" || location.pathname === "/agents" || location.pathname === "/agency-fleet";
 
   // Check if we are on a standalone page (no sidebar)
   const isStandalonePage =
     location.pathname === "/" ||
     location.pathname === "/landing" ||
     location.pathname === "/welcome" ||
-    location.pathname === "/agency" ||
+    
     location.pathname === "/partners" ||
     location.pathname === "/agents" ||
     location.pathname === "/agency-fleet" ||
