@@ -15,22 +15,17 @@ export const AuthPage: React.FC = () => {
     setIsAuthenticating(true);
     try {
       // @ts-ignore
-      const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8000";
+      const clientId = import.meta.env.VITE_HUBSPOT_CLIENT_ID || "4a050326-6a29-4e48-b11d-0896ea1e0c15";
       const redirectUri = window.location.origin + "/oauth/callback"; 
-      const response = await fetch(`${apiUrl}/api/v1/oauth/authorize?redirect_uri=${encodeURIComponent(redirectUri)}`);
-      if (!response.ok) {
-        throw new Error("Failed to fetch authorization URL");
-      }
-      const data = await response.json();
+      const scope = "crm.objects.deals.read crm.objects.deals.write crm.objects.contacts.read timeline";
       
-      // Redirect to HubSpot
-      window.location.href = data.authorization_url;
+      const authUrl = `https://app.hubspot.com/oauth/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scope)}`;
+      
+      // Redirect to HubSpot directly
+      window.location.href = authUrl;
     } catch (err) {
-      console.warn("Backend API not reachable. Falling back to Portfolio Demo mode.", err);
-      // Fallback for Portfolio Demo (bypasses real OAuth if backend is offline)
-      setTimeout(() => {
-        window.location.href = window.location.origin + "/oauth/callback?code=demo-portfolio-mode&state=demo";
-      }, 800);
+      console.warn("Failed to construct OAuth URL", err);
+      setIsAuthenticating(false);
     }
   };
 
