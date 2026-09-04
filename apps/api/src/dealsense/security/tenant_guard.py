@@ -74,8 +74,9 @@ class TenantGuardMiddleware(BaseHTTPMiddleware):
 
         if not tenant_id_header:
             if is_admin:
-                # Admin logged in but no tenant specified, default to first live tenant
-                tenant_id_header = "00000000-0000-0000-0000-000000000002"
+                # Admin logged in but no tenant specified, use explicit admin target or default
+                admin_target = request.headers.get("X-Admin-Tenant-ID")
+                tenant_id_header = admin_target if admin_target else "00000000-0000-0000-0000-000000000002"
             else:
                 # Unauthenticated users are routed to the Demo Mode mock tenant
                 tenant_id_header = "00000000-0000-0000-0000-000000000001"

@@ -1,5 +1,8 @@
+import json
 from typing import Any
 from uuid import UUID, uuid4
+
+import redis.asyncio as redis
 
 import structlog
 from fastapi import APIRouter, Depends, HTTPException
@@ -70,6 +73,13 @@ async def list_deals_for_dashboard(
     # 2. Try querying HubSpot live if token is configured
     if settings.hubspot_access_token:
         try:
+            r = redis.from_url(settings.redis_connection_url, decode_responses=True)
+            cache_key = f"deals:{tenant_id}:hubspot_cache"
+            cached_data = await r.get(cache_key)
+            if cached_data:
+                logger.debug("hubspot_deals_cache_hit", tenant_id=str(tenant_id))
+                return [DealDashboardSchema.model_validate(json.loads(d)) for d in json.loads(cached_data)]
+
             client = HubSpotClient(tenant_id=tenant_id, db=db)
             hs_deals = await client.list_deals(limit=50)
             if hs_deals:
@@ -106,6 +116,9 @@ async def list_deals_for_dashboard(
                             hubspot_id=str(hd["id"]),
                         )
                     )
+                
+                # Cache the successful result for 60 seconds to prevent rate limits
+                await r.setex(cache_key, 60, json.dumps([d.model_dump_json() for d in live_deals]))
                 return live_deals
         except Exception as e:
             logger.warning("hubspot_direct_query_failed_falling_back", error=str(e))

@@ -508,11 +508,11 @@ export const DealExplorer: React.FC = () => {
     fetchDeals()
       .then((data) => {
         if (Array.isArray(data) && data.length > 0) {
-          console.log("Connected to live backend deals:", data.length);
+          // Live deals connected successfully
         }
       })
-      .catch((err) => {
-        console.warn("Using sample deals fallback:", err);
+      .catch(() => {
+        // Fallback to sample deals if backend is unreachable
       });
   }, []);
 

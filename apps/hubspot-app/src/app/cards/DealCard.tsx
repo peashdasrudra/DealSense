@@ -70,15 +70,25 @@ const DealExtension = ({ context }: CrmExtensionProps) => {
             <Button
               variant="primary"
               onClick={() => {
-                window.open(intelligenceUrl, '_blank');
+                actions.addIframeModal({
+                  uri: intelligenceUrl,
+                  title: 'DealSense Intelligence Dossier',
+                  width: 1000,
+                  height: 800,
+                });
               }}
             >
-              Open Deal Dossier ↗
+              Open Deal Dossier
             </Button>
             <Button
               variant="secondary"
               onClick={() => {
-                window.open(dashboardUrl, '_blank');
+                actions.addIframeModal({
+                  uri: dashboardUrl,
+                  title: 'DealSense Pipeline Waterfall',
+                  width: 1200,
+                  height: 800,
+                });
               }}
             >
               View Pipeline

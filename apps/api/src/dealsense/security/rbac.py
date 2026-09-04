@@ -9,8 +9,10 @@ from enum import StrEnum
 from uuid import UUID
 
 import structlog
+import jwt
 from fastapi import Depends, HTTPException, Request
 
+from dealsense.config import get_settings
 from dealsense.domain.enums import UserRole
 
 logger = structlog.get_logger(__name__)
@@ -149,6 +151,37 @@ def get_role_permissions(role: UserRole) -> frozenset[Permission]:
     return ROLE_PERMISSIONS.get(role, frozenset())
 
 
+def extract_role_from_jwt(request: Request) -> UserRole:
+    """Extract and validate the user role from a JWT Bearer token.
+    
+    If no token is provided or parsing fails, defaults to Sales Rep.
+    """
+    auth_header = request.headers.get("Authorization")
+    if not auth_header or not auth_header.startswith("Bearer "):
+        # For single-server Admin API Key bypass
+        settings = get_settings()
+        if auth_header and auth_header.replace("Bearer ", "") == settings.admin_api_key:
+            return UserRole.AGENCY_OWNER
+        return UserRole.SALES_REP
+    
+    token = auth_header.replace("Bearer ", "")
+    try:
+        settings = get_settings()
+        # Decode without verification if secret isn't set, otherwise verify
+        if not settings.secret_key or settings.secret_key == "changeme":
+            payload = jwt.decode(token, options={"verify_signature": False})
+        else:
+            payload = jwt.decode(token, settings.secret_key, algorithms=["HS256"])
+            
+        role_str = payload.get("role")
+        if role_str:
+            return UserRole(role_str)
+    except Exception:
+        pass
+        
+    return UserRole.SALES_REP
+
+
 def require_permission(permission: Permission) -> Callable[..., UUID]:
     """FastAPI dependency that enforces a permission check.
 
@@ -172,17 +205,16 @@ def require_permission(permission: Permission) -> Callable[..., UUID]:
                 detail="Authentication required",
             )
 
-        # TODO: In V2, extract user role from JWT and verify permission
-        # For now, having a valid tenant context is sufficient
-        # role = extract_role_from_jwt(request)
-        # if not has_permission(role, permission):
-        #     logger.warning(
-        #         "permission_denied",
-        #         role=role,
-        #         permission=permission,
-        #         tenant_id=str(tenant_id),
-        #     )
-        #     raise HTTPException(status_code=403, detail="Insufficient permissions")
+        # Extract user role from JWT and verify permission
+        role = extract_role_from_jwt(request)
+        if not has_permission(role, permission):
+            logger.warning(
+                "permission_denied",
+                role=role,
+                permission=permission,
+                tenant_id=str(tenant_id),
+            )
+            raise HTTPException(status_code=403, detail="Insufficient permissions")
 
         return tenant_id
 
@@ -210,7 +242,13 @@ def require_any_permission(*permissions: Permission) -> Callable[..., UUID]:
                 detail="Authentication required",
             )
 
-        # TODO: Check user has any of the required permissions
+        role = extract_role_from_jwt(request)
+        
+        has_any = any(has_permission(role, perm) for perm in permissions)
+        if not has_any:
+            logger.warning("any_permission_denied", role=role, tenant_id=str(tenant_id))
+            raise HTTPException(status_code=403, detail="Insufficient permissions")
+            
         return tenant_id
 
     return Depends(_check)
