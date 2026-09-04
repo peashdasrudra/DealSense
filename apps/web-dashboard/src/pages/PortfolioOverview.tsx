@@ -24,29 +24,7 @@ import { fetchDeals, syncHubSpotDeals } from "../api";
 import { DealDrawer, DealData } from "../components/DealDrawer";
 import { ExecutiveAuditModal } from "../components/ExecutiveAuditModal";
 
-// ── Default Enterprise Sample Deals (used if DB has no seed data yet) ────────
-const SAMPLE_DEALS = [
-  { id: "1", name: "Orion Cloud Migration", client: "TechCorp Inc.", score: 23, band: "Critical", value: 150000, owner: "Sarah Miller", stage: "Proposal" },
-  { id: "2", name: "Quantum Security Suite", client: "FinanceGo Ltd.", score: 31, band: "Critical", value: 280000, owner: "James Reynolds", stage: "Negotiation" },
-  { id: "3", name: "Horizon Data Platform", client: "RetailMax", score: 35, band: "Critical", value: 95000, owner: "Lisa Chen", stage: "Qualification" },
-  { id: "4", name: "Apex CRM Integration", client: "LogiPro Solutions", score: 38, band: "Critical", value: 120000, owner: "Mike Torres", stage: "Proposal" },
-  { id: "5", name: "Nebula Analytics Engine", client: "HealthFirst Corp.", score: 44, band: "High", value: 210000, owner: "Sarah Miller", stage: "Discovery" },
-  { id: "6", name: "Titan ERP Modernization", client: "ManufactCo", score: 46, band: "High", value: 340000, owner: "James Reynolds", stage: "Qualification" },
-  { id: "7", name: "Atlas Data Warehouse", client: "TechCorp Inc.", score: 48, band: "High", value: 180000, owner: "Lisa Chen", stage: "Proposal" },
-  { id: "8", name: "Pulse Infrastructure Monitoring", client: "HealthFirst Corp.", score: 50, band: "High", value: 75000, owner: "Mike Torres", stage: "Discovery" },
-  { id: "9", name: "Zenith Portfolio Analytics", client: "FinanceGo Ltd.", score: 52, band: "High", value: 160000, owner: "Sarah Miller", stage: "Negotiation" },
-  { id: "10", name: "Nova Multi-Cloud Integration", client: "RetailMax", score: 55, band: "Moderate", value: 90000, owner: "James Reynolds", stage: "Qualification" },
-  { id: "11", name: "Summit Workflow Platform", client: "LogiPro Solutions", score: 58, band: "Moderate", value: 220000, owner: "Lisa Chen", stage: "Proposal" },
-  { id: "12", name: "Vortex Cyber Defense", client: "ManufactCo", score: 60, band: "Moderate", value: 130000, owner: "Mike Torres", stage: "Negotiation" },
-  { id: "13", name: "Echo Enterprise Voice", client: "TechCorp Inc.", score: 62, band: "Moderate", value: 95000, owner: "Sarah Miller", stage: "Contract" },
-  { id: "14", name: "Prism Real-Time BI", client: "FinanceGo Ltd.", score: 65, band: "Moderate", value: 140000, owner: "James Reynolds", stage: "Discovery" },
-  { id: "15", name: "Cascade Customer Success", client: "LogiPro Solutions", score: 72, band: "Low", value: 110000, owner: "Lisa Chen", stage: "Proposal" },
-  { id: "16", name: "Delta Global Commerce", client: "RetailMax", score: 75, band: "Low", value: 200000, owner: "Mike Torres", stage: "Negotiation" },
-  { id: "17", name: "Forge Assembly IoT", client: "ManufactCo", score: 78, band: "Low", value: 175000, owner: "Sarah Miller", stage: "Contract" },
-  { id: "18", name: "Stellar Cloud Compute", client: "TechCorp Inc.", score: 85, band: "Healthy", value: 320000, owner: "James Reynolds", stage: "Contract" },
-  { id: "19", name: "Pinnacle Compliance Suite", client: "FinanceGo Ltd.", score: 88, band: "Healthy", value: 250000, owner: "Lisa Chen", stage: "Negotiation" },
-  { id: "20", name: "Crown Global Enterprise", client: "LogiPro Solutions", score: 92, band: "Healthy", value: 400000, owner: "Mike Torres", stage: "Contract" },
-];
+// ── Deals will be fetched from the backend ────────
 
 const TREND_DATA = [
   { date: "Jan", score: 62, value: 3200 },
@@ -91,7 +69,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 
 export const PortfolioOverview: React.FC = () => {
   const navigate = useNavigate();
-  const [deals, setDeals] = useState<any[]>(SAMPLE_DEALS);
+  const [deals, setDeals] = useState<any[]>([]);
   const [selectedDrawerDeal, setSelectedDrawerDeal] = useState<DealData | null>(null);
   const [isAuditModalOpen, setIsAuditModalOpen] = useState(false);
   const [isSyncing, setIsSyncing] = useState(false);

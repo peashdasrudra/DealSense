@@ -35,6 +35,11 @@ export const OAuthCallback: React.FC = () => {
           const errorData = await response.json();
           throw new Error(errorData.detail || "Failed to complete OAuth exchange");
         }
+        
+        const responseData = await response.json();
+        if (responseData.tenant_id) {
+          localStorage.setItem("dealsense_tenant_id", responseData.tenant_id);
+        }
 
         setStatus("success");
         // Redirect to native app dashboard after successful connection
@@ -43,12 +48,9 @@ export const OAuthCallback: React.FC = () => {
         }, 1500);
 
       } catch (err: any) {
-        console.warn("Backend API not reachable. Falling back to Portfolio Demo mode.", err);
-        // Fallback for Portfolio Demo
-        setStatus("success");
-        setTimeout(() => {
-          navigate("/app/pipeline");
-        }, 1500);
+        console.error("Backend OAuth exchange failed:", err);
+        setStatus("error");
+        setErrorMessage(err.message || "Failed to connect HubSpot.");
       }
     };
 

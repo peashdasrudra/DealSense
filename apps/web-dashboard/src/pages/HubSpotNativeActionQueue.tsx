@@ -23,74 +23,6 @@ interface ActionItem {
   urgency: "critical" | "high" | "normal";
 }
 
-const SAMPLE_ACTIONS: ActionItem[] = [
-  {
-    id: "act-001",
-    dealName: "Orion Cloud Migration",
-    clientName: "TechCorp Inc.",
-    tier: "tier_4",
-    title: "Create Follow-Up Task in HubSpot",
-    description: "Auto-create a high-priority HubSpot task for deal owner: 'Schedule exec alignment call with VP Engineering'",
-    rationale: "21 days in Proposal Sent stage + missing economic buyer = 68% stall probability based on historical patterns",
-    impact: "Accelerates response by 2.1 days avg",
-    status: "pending",
-    createdAt: "2 min ago",
-    urgency: "critical",
-  },
-  {
-    id: "act-002",
-    dealName: "Quantum Security Suite",
-    clientName: "FinanceGo Ltd.",
-    tier: "tier_3",
-    title: "Deliver Value & ROI Assessment",
-    description: "Deliver personalized security ROI calculator with compliance cost savings analysis directly to CFO",
-    rationale: "Metrics dimension unconfirmed. Deals with quantified ROI documentation close 2.8× faster",
-    impact: "+8 to +12 score points",
-    status: "pending",
-    createdAt: "15 min ago",
-    urgency: "high",
-  },
-  {
-    id: "act-003",
-    dealName: "Horizon Data Platform",
-    clientName: "RetailMax",
-    tier: "tier_4",
-    title: "Advance CRM Deal Stage to Negotiation",
-    description: "Move deal from 'Proposal Sent' to 'Negotiation' — mutual action plan signed yesterday by procurement",
-    rationale: "Stage history shows buyer commitment signals. CRM stage not yet updated by rep",
-    impact: "Improves pipeline forecast accuracy",
-    status: "pending",
-    createdAt: "28 min ago",
-    urgency: "high",
-  },
-  {
-    id: "act-004",
-    dealName: "Nebula Analytics Engine",
-    clientName: "HealthFirst Corp.",
-    tier: "tier_2",
-    title: "Notify Sales Director of Engagement Decay",
-    description: "Trigger internal Slack alert about silence — no 2-way client communication for 14 consecutive days",
-    rationale: "Deal value $210K is above intervention threshold. Early manager intervention recovers 34% of stalled deals",
-    impact: "Immediate risk mitigation",
-    status: "pending",
-    createdAt: "1 hr ago",
-    urgency: "normal",
-  },
-  {
-    id: "act-005",
-    dealName: "Titan ERP Modernization",
-    clientName: "ManufactCo",
-    tier: "tier_3",
-    title: "Multi-Thread Stakeholder Introduction",
-    description: "Draft warm intro email to VP Operations through existing champion contact to establish technical buy-in",
-    rationale: "Only 1 stakeholder associated. Historical win rate doubles with 3+ decision makers",
-    impact: "+5 to +10 score points",
-    status: "pending",
-    createdAt: "2 hrs ago",
-    urgency: "normal",
-  },
-];
-
 const TIER_META: Record<string, { label: string; color: string; bg: string; icon: string }> = {
   tier_1: { label: "Observe", color: "#516f90", bg: "#dfe3eb", icon: "👁" },
   tier_2: { label: "Notify", color: "var(--tier-2)", bg: "var(--hs-surface-hover)", icon: "🔔" },
@@ -105,8 +37,8 @@ const URGENCY_STYLES: Record<string, { color: string; dot: string }> = {
 };
 
 export const HubSpotNativeActionQueue: React.FC = () => {
+  const [actions, setActions] = useState<ActionItem[]>([]);
   const [isUpgradeModalOpen, setIsUpgradeModalOpen] = useState(false);
-  const [actions, setActions] = useState<ActionItem[]>(SAMPLE_ACTIONS);
   const [filter, setFilter] = useState<string>("all");
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [isLive, setIsLive] = useState(false);

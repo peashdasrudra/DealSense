@@ -5,10 +5,16 @@ export const API_BASE = (import.meta as any).env?.VITE_API_URL
 
 export const DEFAULT_TENANT_ID = "00000000-0000-0000-0000-000000000001";
 
-export async function fetchDeals(tenantId: string = DEFAULT_TENANT_ID) {
+const getTenantId = (overrideId?: string) => {
+  if (overrideId && overrideId !== DEFAULT_TENANT_ID) return overrideId;
+  const stored = localStorage.getItem("dealsense_tenant_id");
+  return stored || DEFAULT_TENANT_ID;
+};
+
+export async function fetchDeals(tenantId?: string) {
   const response = await fetch(`${API_BASE}/deals`, {
     headers: {
-      "X-Tenant-ID": tenantId,
+      "X-Tenant-ID": getTenantId(tenantId),
     },
   });
 
@@ -19,10 +25,10 @@ export async function fetchDeals(tenantId: string = DEFAULT_TENANT_ID) {
   return response.json();
 }
 
-export async function fetchActions(tenantId: string = DEFAULT_TENANT_ID) {
+export async function fetchActions(tenantId?: string) {
   const response = await fetch(`${API_BASE}/actions`, {
     headers: {
-      "X-Tenant-ID": tenantId,
+      "X-Tenant-ID": getTenantId(tenantId),
     },
   });
 
@@ -33,12 +39,12 @@ export async function fetchActions(tenantId: string = DEFAULT_TENANT_ID) {
   return response.json();
 }
 
-export async function submitActionDecision(actionId: string, decision: "approve" | "reject", tenantId: string = DEFAULT_TENANT_ID) {
+export async function submitActionDecision(actionId: string, decision: "approve" | "reject", tenantId?: string) {
   const response = await fetch(`${API_BASE}/actions/${actionId}/decision`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "X-Tenant-ID": tenantId,
+      "X-Tenant-ID": getTenantId(tenantId),
     },
     body: JSON.stringify({ decision, reason: "" }),
   });
@@ -50,12 +56,12 @@ export async function submitActionDecision(actionId: string, decision: "approve"
   return response.json();
 }
 
-export async function executeAction(actionId: string, tenantId: string = DEFAULT_TENANT_ID) {
+export async function executeAction(actionId: string, tenantId?: string) {
   const response = await fetch(`${API_BASE}/actions/${actionId}/execute`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "X-Tenant-ID": tenantId,
+      "X-Tenant-ID": getTenantId(tenantId),
     },
   });
 

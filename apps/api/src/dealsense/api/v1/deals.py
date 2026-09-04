@@ -38,64 +38,8 @@ STAGE_SCORES: dict[str, int] = {
     "closedlost": 12,
 }
 
-# In-memory store for instant zero-latency demo / fallback mode
-_DEMO_DEALS: list[DealDashboardSchema] = [
-    DealDashboardSchema(
-        id=UUID("11111111-1111-1111-1111-111111111101"),
-        name="Global Logistics Cloud Migration",
-        client="Maersk Digital",
-        score=88,
-        value=185000.0,
-        owner="Peash Rudra",
-        stage="Contract Sent",
-        band="Healthy",
-        hubspot_id="10101",
-    ),
-    DealDashboardSchema(
-        id=UUID("11111111-1111-1111-1111-111111111102"),
-        name="Enterprise FinTech Compliance Suite",
-        client="Stripe Financial",
-        score=72,
-        value=120000.0,
-        owner="Peash Rudra",
-        stage="Decision Maker Bought-In",
-        band="Moderate",
-        hubspot_id="10102",
-    ),
-    DealDashboardSchema(
-        id=UUID("11111111-1111-1111-1111-111111111103"),
-        name="Automated Supply Chain AI",
-        client="DHL Supply Chain",
-        score=44,
-        value=240000.0,
-        owner="Sarah Connor",
-        stage="Qualified to Buy",
-        band="Critical",
-        hubspot_id="10103",
-    ),
-    DealDashboardSchema(
-        id=UUID("11111111-1111-1111-1111-111111111104"),
-        name="Next-Gen Telemetry Platform",
-        client="Nordic Health",
-        score=92,
-        value=95000.0,
-        owner="Peash Rudra",
-        stage="Closed Won",
-        band="Healthy",
-        hubspot_id="10104",
-    ),
-    DealDashboardSchema(
-        id=UUID("11111111-1111-1111-1111-111111111105"),
-        name="Retail Omnichannel POS Upgrade",
-        client="Zalando SE",
-        score=51,
-        value=160000.0,
-        owner="Alex Chen",
-        stage="Appointment Scheduled",
-        band="Critical",
-        hubspot_id="10105",
-    ),
-]
+# In-memory store for instant zero-latency demo / fallback mode is now disabled for production
+_DEMO_DEALS: list[DealDashboardSchema] = []
 
 
 @router.get("", response_model=list[DealDashboardSchema])
