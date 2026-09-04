@@ -42,6 +42,9 @@ import { MarketplaceOnboarding } from "./pages/MarketplaceOnboarding";
 import { MarketplaceListingPreview } from "./pages/MarketplaceListingPreview";
 import { AuthPage } from "./pages/AuthPage";
 import { OAuthCallback } from "./pages/OAuthCallback";
+import { HubSpotNativeLayout } from "./components/HubSpotNativeLayout";
+import { HubSpotNativePipeline } from "./pages/HubSpotNativePipeline";
+import { ProGate } from "./components/ProGate";
 // ── Page Title Mapping ───────────────────────────────────────────────────────
 
 const PAGE_TITLES: Record<string, { title: string; breadcrumb: string }> = {
@@ -185,7 +188,8 @@ export const App: React.FC = () => {
     location.pathname === "/payment" ||
     location.pathname === "/login" ||
     location.pathname === "/signup" ||
-    location.pathname === "/oauth/callback";
+    location.pathname === "/oauth/callback" ||
+    location.pathname.startsWith("/app");
 
   if (isStandalonePage) {
     return (
@@ -213,7 +217,21 @@ export const App: React.FC = () => {
             />
           )}
         </AnimatePresence>
-        {isCheckoutPage ? <CheckoutPage /> : isAgencyPage ? <AgencyFleet /> : location.pathname === '/login' || location.pathname === '/signup' ? <AuthPage /> : location.pathname === '/oauth/callback' ? <OAuthCallback /> : <LandingPage />}
+        
+        {location.pathname.startsWith("/app") ? (
+          <HubSpotNativeLayout>
+            <Routes>
+              <Route path="/app/pipeline" element={<HubSpotNativePipeline />} />
+              <Route path="/app/upgrade" element={<AgencyFleet />} />
+              <Route path="/app/action-queue" element={<ProGate featureName="Action Queue" description="Upgrade to Enterprise Pro to execute playbooks on these deals."><div style={{ height: "800px", background: "#ffffff", borderRadius: 8, border: "1px solid #dfe3eb" }}></div></ProGate>} />
+              <Route path="/app/playbooks" element={<ProGate featureName="RevOps Playbooks" description="Unlock autonomous playbooks and workflow automation."><div style={{ height: "800px", background: "#ffffff", borderRadius: 8, border: "1px solid #dfe3eb" }}></div></ProGate>} />
+              <Route path="/app/hygiene" element={<ProGate featureName="CRM Hygiene" description="Unlock AI-driven hygiene sweeps."><div style={{ height: "800px", background: "#ffffff", borderRadius: 8, border: "1px solid #dfe3eb" }}></div></ProGate>} />
+              <Route path="/app/*" element={<HubSpotNativePipeline />} />
+            </Routes>
+          </HubSpotNativeLayout>
+        ) : (
+          isCheckoutPage ? <CheckoutPage /> : isAgencyPage ? <AgencyFleet /> : location.pathname === '/login' || location.pathname === '/signup' ? <AuthPage /> : location.pathname === '/oauth/callback' ? <OAuthCallback /> : <LandingPage />
+        )}
       </div>
     );
   }

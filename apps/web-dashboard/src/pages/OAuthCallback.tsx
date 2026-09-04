@@ -37,9 +37,9 @@ export const OAuthCallback: React.FC = () => {
         }
 
         setStatus("success");
-        // Redirect to onboarding after successful connection
+        // Redirect to native app dashboard after successful connection
         setTimeout(() => {
-          navigate("/onboarding");
+          navigate("/app/pipeline");
         }, 1500);
 
       } catch (err: any) {
