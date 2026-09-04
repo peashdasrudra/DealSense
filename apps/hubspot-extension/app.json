@@ -11,6 +11,10 @@
     "oauth"
   ],
   "public": false,
+  "redirectUrls": [
+    "http://localhost:3000/oauth/callback",
+    "https://dealsense.peash.tech/oauth/callback"
+  ],
   "extensions": {
     "crm": {
       "cards": [
