@@ -850,7 +850,7 @@ export const AgencyFleet: React.FC = () => {
               </div>
 
               <button
-                onClick={() => openOrder(clientCount <= 5 ? "growth-499" : clientCount <= 15 ? "scale-999" : "enterprise-2499")}
+                onClick={() => clientCount <= 15 ? openOrder(clientCount <= 5 ? "growth-499" : "scale-999") : navigate("/app/enterprise")}
                 style={{
                   width: "100%",
                   marginTop: 24,
@@ -1484,7 +1484,7 @@ export const AgencyFleet: React.FC = () => {
                   💎 Unlimited Scale: Build a $500K+ ARR RevOps Practice
                 </div>
                 <button
-                  onClick={() => openOrder("enterprise-2499")}
+                  onClick={() => navigate("/app/enterprise")}
                   style={{
                     width: "100%",
                     padding: "10px 14px",

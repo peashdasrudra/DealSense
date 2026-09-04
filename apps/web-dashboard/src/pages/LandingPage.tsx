@@ -971,8 +971,8 @@ export const LandingPage: React.FC = () => {
         </div>
       </section>
 
-      {/* ── 5. Product Hubs Bento Grid — Premium Enterprise Style ─────── */}
-      <section style={{ padding: "clamp(56px, 7vw, 96px) clamp(16px, 4vw, 24px)", background: "#ffffff" }}>
+      {/* ── 5. Product Hubs Bento Grid — HubSpot Native Style ─────── */}
+      <section style={{ padding: "clamp(56px, 7vw, 96px) clamp(16px, 4vw, 24px)", background: "linear-gradient(180deg, #f8fafc 0%, #ffffff 100%)" }}>
         <div style={{ maxWidth: 1160, margin: "0 auto" }}>
           <div className="landing-hubs-layout">
             <motion.div
@@ -980,32 +980,42 @@ export const LandingPage: React.FC = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-60px" }}
               transition={{ duration: 0.5 }}
+              style={{ display: "flex", flexDirection: "column", justifyContent: "center" }}
             >
-              <span style={{ fontSize: "11px", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em", color: "#ff5c35" }}>
-                ALL-IN-ONE REVOPS ENGINE
-              </span>
-              <h2 style={{ fontSize: "clamp(24px, 4vw, 36px)", fontWeight: 800, letterSpacing: "-0.03em", color: "#092124", margin: "8px 0 14px" }}>
+              <div style={{ display: "inline-flex", alignItems: "center", gap: 6, marginBottom: 16 }}>
+                <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#ff5c35", display: "inline-block" }} />
+                <span style={{ fontSize: "11px", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em", color: "#ff5c35" }}>
+                  ALL-IN-ONE REVOPS ENGINE
+                </span>
+              </div>
+              <h2 style={{ fontSize: "clamp(26px, 4.5vw, 40px)", fontWeight: 900, letterSpacing: "-0.03em", color: "#092124", margin: "0 0 16px", lineHeight: 1.15 }}>
                 Growing a pipeline is hard. DealSense makes it automatic.
               </h2>
-              <p style={{ fontSize: "14px", color: "#64748b", lineHeight: 1.6, marginBottom: 24 }}>
+              <p style={{ fontSize: "15px", color: "#475569", lineHeight: 1.6, marginBottom: 28 }}>
                 Everything your revenue team needs to inspect stalled opportunities, run executive war rooms, and eliminate pipeline leakage in one unified HubSpot-native suite.
               </p>
               <button
                 onClick={() => navigate("/pipeline")}
                 style={{
-                  padding: "12px 24px",
-                  background: "#092124",
+                  padding: "14px 28px",
+                  background: "linear-gradient(135deg, #ff6b48 0%, #ff5c35 100%)",
                   color: "#fff",
-                  fontSize: "13.5px",
-                  fontWeight: 700,
+                  fontSize: "14px",
+                  fontWeight: 800,
                   border: "none",
                   borderRadius: "8px",
                   cursor: "pointer",
-                  boxShadow: "0 4px 14px rgba(9, 33, 36, 0.2)",
+                  boxShadow: "0 6px 16px rgba(255, 92, 53, 0.25)",
                   transition: "all 0.2s ease",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: "8px",
+                  width: "fit-content",
                 }}
               >
-                Explore Live Platform →
+                <span>Explore Live Platform</span>
+                <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
               </button>
             </motion.div>
 
@@ -1021,26 +1031,40 @@ export const LandingPage: React.FC = () => {
                   onClick={() => navigate(hub.path)}
                   style={{
                     background: "#ffffff",
-                    padding: "22px 22px 22px 26px",
-                    borderRadius: "14px",
+                    padding: "26px 24px",
+                    borderRadius: "12px",
                     border: "1px solid #e2e8f0",
-                    boxShadow: "0 2px 8px rgba(0,0,0,0.03)",
+                    borderTop: `4px solid ${hub.iconColor}`,
+                    boxShadow: "0 8px 30px rgba(9, 33, 36, 0.04)",
+                    display: "flex",
+                    flexDirection: "column",
+                    height: "100%",
+                    cursor: "pointer",
+                    transition: "transform 0.2s ease, box-shadow 0.2s ease",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = "translateY(-4px)";
+                    e.currentTarget.style.boxShadow = "0 12px 40px rgba(9, 33, 36, 0.08)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = "translateY(0)";
+                    e.currentTarget.style.boxShadow = "0 8px 30px rgba(9, 33, 36, 0.04)";
                   }}
                 >
-                  <div style={{ width: 40, height: 40, borderRadius: "10px", background: hub.iconBg, border: `1px solid ${hub.iconColor}20`, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 12 }}>
-                    <svg width={20} height={20} viewBox="0 0 24 24" fill="none" stroke={hub.iconColor} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+                  <div style={{ width: 48, height: 48, borderRadius: "50%", background: hub.iconBg, border: `1px solid ${hub.iconColor}30`, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 16 }}>
+                    <svg width={22} height={22} viewBox="0 0 24 24" fill="none" stroke={hub.iconColor} strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
                       <path d={hub.iconSvg} />
                     </svg>
                   </div>
-                  <div style={{ fontSize: "15px", fontWeight: 700, color: "#092124", marginBottom: 5 }}>
+                  <div style={{ fontSize: "16px", fontWeight: 800, color: "#092124", marginBottom: 8, letterSpacing: "-0.01em" }}>
                     {hub.title}
                   </div>
-                  <div style={{ fontSize: "12.5px", color: "#64748b", lineHeight: 1.55, marginBottom: 12 }}>
+                  <div style={{ fontSize: "13px", color: "#475569", lineHeight: 1.6, marginBottom: 16, flex: 1 }}>
                     {hub.desc}
                   </div>
-                  <div className="hub-explore-link" style={{ fontSize: "12.5px", fontWeight: 700, color: "#ff5c35" }}>
+                  <div className="hub-explore-link" style={{ fontSize: "13px", fontWeight: 800, color: hub.iconColor, display: "flex", alignItems: "center", gap: 4 }}>
                     <span>Explore Hub</span>
-                    <svg width={12} height={12} viewBox="0 0 24 24" fill="none" stroke="#ff5c35" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
+                    <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke={hub.iconColor} strokeWidth={3} strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
                   </div>
                 </motion.div>
               ))}
