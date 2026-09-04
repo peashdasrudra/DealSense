@@ -39,7 +39,7 @@ class Settings(BaseSettings):
     postgres_host: str = "localhost"
     postgres_port: int = 5432
     postgres_user: str = "dealsense"
-    postgres_password: str = "dealsense_dev_password"  # noqa: S105
+    postgres_password: str = Field(default="")
     postgres_db: str = "dealsense"
     database_url: str | None = None
     database_url_sync: str | None = None
@@ -54,7 +54,7 @@ class Settings(BaseSettings):
     # ---- HubSpot OAuth ----
     hubspot_client_id: str = ""
     hubspot_client_secret: str = ""
-    hubspot_redirect_uri: str = "http://localhost:8000/api/v1/oauth/callback"
+    hubspot_redirect_uri: str = "https://dealsense-ai.peash.tech/api/v1/oauth/callback"
     hubspot_scopes: str = "crm.objects.deals.read,crm.objects.contacts.read"
     hubspot_app_id: str = ""
     hubspot_access_token: str = ""
