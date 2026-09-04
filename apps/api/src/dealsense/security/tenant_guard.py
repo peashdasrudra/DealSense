@@ -58,19 +58,27 @@ class TenantGuardMiddleware(BaseHTTPMiddleware):
         if _is_exempt(path):
             return await call_next(request)
 
-        # Extract tenant ID from header
+        # Extract tenant ID and auth headers
         tenant_id_header = request.headers.get("X-Tenant-ID")
+        auth_header = request.headers.get("Authorization")
+
+        from dealsense.config import get_settings
+        settings = get_settings()
+
+        # Check for single-server admin authentication
+        is_admin = False
+        if auth_header and auth_header.startswith("Bearer "):
+            token = auth_header.replace("Bearer ", "")
+            if token == settings.admin_api_key:
+                is_admin = True
 
         if not tenant_id_header:
-            from fastapi.responses import JSONResponse
-
-            return JSONResponse(
-                status_code=400,
-                content={
-                    "error": "TENANT_REQUIRED",
-                    "message": "X-Tenant-ID header is required",
-                },
-            )
+            if is_admin:
+                # Admin logged in but no tenant specified, default to first live tenant
+                tenant_id_header = "00000000-0000-0000-0000-000000000002"
+            else:
+                # Unauthenticated users are routed to the Demo Mode mock tenant
+                tenant_id_header = "00000000-0000-0000-0000-000000000001"
 
         # Validate UUID format
         try:

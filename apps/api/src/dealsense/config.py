@@ -27,6 +27,7 @@ class Settings(BaseSettings):
     debug: bool = False
     log_level: str = "INFO"
     secret_key: str = Field(min_length=32)
+    admin_api_key: str = "dealsense_admin_secret_key"
 
     # ---- API Server ----
     api_host: str = "0.0.0.0"  # noqa: S104

@@ -11,11 +11,20 @@ const getTenantId = (overrideId?: string) => {
   return stored || DEFAULT_TENANT_ID;
 };
 
+const getAuthHeaders = (tenantId?: string) => {
+  const headers: Record<string, string> = {
+    "X-Tenant-ID": getTenantId(tenantId),
+  };
+  const apiKey = localStorage.getItem("dealsense_api_key");
+  if (apiKey) {
+    headers["Authorization"] = `Bearer ${apiKey}`;
+  }
+  return headers;
+};
+
 export async function fetchDeals(tenantId?: string) {
   const response = await fetch(`${API_BASE}/deals`, {
-    headers: {
-      "X-Tenant-ID": getTenantId(tenantId),
-    },
+    headers: getAuthHeaders(tenantId),
   });
 
   if (!response.ok) {
@@ -27,9 +36,7 @@ export async function fetchDeals(tenantId?: string) {
 
 export async function fetchActions(tenantId?: string) {
   const response = await fetch(`${API_BASE}/actions`, {
-    headers: {
-      "X-Tenant-ID": getTenantId(tenantId),
-    },
+    headers: getAuthHeaders(tenantId),
   });
 
   if (!response.ok) {
@@ -44,7 +51,7 @@ export async function submitActionDecision(actionId: string, decision: "approve"
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "X-Tenant-ID": getTenantId(tenantId),
+      ...getAuthHeaders(tenantId),
     },
     body: JSON.stringify({ decision, reason: "" }),
   });
@@ -61,7 +68,7 @@ export async function executeAction(actionId: string, tenantId?: string) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "X-Tenant-ID": getTenantId(tenantId),
+      ...getAuthHeaders(tenantId),
     },
   });
 
@@ -80,7 +87,7 @@ export async function createDeal(
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "X-Tenant-ID": tenantId,
+      ...getAuthHeaders(tenantId),
     },
     body: JSON.stringify(dealData),
   });
@@ -101,7 +108,7 @@ export async function updateDeal(
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
-      "X-Tenant-ID": tenantId,
+      ...getAuthHeaders(tenantId),
     },
     body: JSON.stringify(dealData),
   });
@@ -116,9 +123,7 @@ export async function updateDeal(
 export async function deleteDeal(dealId: string, tenantId: string = DEFAULT_TENANT_ID) {
   const response = await fetch(`${API_BASE}/deals/${dealId}`, {
     method: "DELETE",
-    headers: {
-      "X-Tenant-ID": tenantId,
-    },
+    headers: getAuthHeaders(tenantId),
   });
 
   if (!response.ok) {
@@ -131,9 +136,7 @@ export async function deleteDeal(dealId: string, tenantId: string = DEFAULT_TENA
 export async function syncHubSpotDeals(tenantId: string = DEFAULT_TENANT_ID) {
   const response = await fetch(`${API_BASE}/deals/sync-hubspot`, {
     method: "POST",
-    headers: {
-      "X-Tenant-ID": tenantId,
-    },
+    headers: getAuthHeaders(tenantId),
   });
 
   if (!response.ok) {
@@ -145,9 +148,7 @@ export async function syncHubSpotDeals(tenantId: string = DEFAULT_TENANT_ID) {
 
 export async function fetchDealSnapshot(dealId: string, tenantId: string = DEFAULT_TENANT_ID) {
   const response = await fetch(`${API_BASE}/deals/${dealId}/snapshot`, {
-    headers: {
-      "X-Tenant-ID": tenantId,
-    },
+    headers: getAuthHeaders(tenantId),
   });
 
   if (!response.ok) {

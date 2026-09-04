@@ -8,6 +8,8 @@ import { useNavigate } from "react-router-dom";
 import { DealSenseIcon } from "./DealSenseLogo";
 import { ConnectHubSpotModal } from "./ConnectHubSpotModal";
 import { AccountAuthModal } from "./AccountAuthModal";
+import { AdminLoginModal } from "./AdminLoginModal";
+import { useAuth } from "../contexts/AuthContext";
 
 interface TopBarProps {
   breadcrumb?: string;
@@ -29,6 +31,9 @@ export const TopBar: React.FC<TopBarProps> = ({
   const [syncStatusMsg, setSyncStatusMsg] = useState<string | null>(null);
   const [isConnectModalOpen, setIsConnectModalOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [isAdminModalOpen, setIsAdminModalOpen] = useState(false);
+
+  const { isAdmin } = useAuth();
 
   const handleLogoClick = () => {
     if (onNavigateHome) {
@@ -110,9 +115,9 @@ export const TopBar: React.FC<TopBarProps> = ({
           <h1 className="header-page-title">{title}</h1>
           <span
             style={{
-              background: "rgba(0, 189, 165, 0.12)",
-              color: "#00838f",
-              border: "1px solid rgba(0, 189, 165, 0.3)",
+              background: isAdmin ? "rgba(255, 92, 53, 0.12)" : "rgba(0, 189, 165, 0.12)",
+              color: isAdmin ? "#ff5c35" : "#00838f",
+              border: isAdmin ? "1px solid rgba(255, 92, 53, 0.3)" : "1px solid rgba(0, 189, 165, 0.3)",
               fontSize: "10px",
               fontWeight: 700,
               padding: "2px 7px",
@@ -123,8 +128,8 @@ export const TopBar: React.FC<TopBarProps> = ({
               gap: 4,
             }}
           >
-            <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#00bda5", display: "inline-block" }} />
-            HUBSPOT LIVE
+            <span style={{ width: 6, height: 6, borderRadius: "50%", background: isAdmin ? "#ff5c35" : "#00bda5", display: "inline-block" }} />
+            {isAdmin ? "LIVE ADMIN" : "DEMO MODE"}
           </span>
           <span
             onClick={() => navigate("/compliance")}
@@ -351,6 +356,15 @@ export const TopBar: React.FC<TopBarProps> = ({
                 <button
                   className="profile-link-btn"
                   onClick={() => {
+                    setIsAdminModalOpen(true);
+                    setProfileMenuOpen(false);
+                  }}
+                >
+                  🔐 {isAdmin ? "Admin Logout" : "Admin Login (API Key)"}
+                </button>
+                <button
+                  className="profile-link-btn"
+                  onClick={() => {
                     navigate("/case-study");
                     setProfileMenuOpen(false);
                   }}
@@ -384,12 +398,17 @@ export const TopBar: React.FC<TopBarProps> = ({
         }}
       />
 
-      {/* Operator Session / Auth Modal */}
       <AccountAuthModal
         isOpen={isAuthModalOpen}
         onClose={() => setIsAuthModalOpen(false)}
         currentUser={currentUser}
         onUserSwitch={(newUser) => setCurrentUser(newUser)}
+      />
+
+      {/* Single Server Admin Login Modal */}
+      <AdminLoginModal
+        isOpen={isAdminModalOpen}
+        onClose={() => setIsAdminModalOpen(false)}
       />
     </header>
   );

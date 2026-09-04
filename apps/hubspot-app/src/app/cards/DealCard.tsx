@@ -11,6 +11,10 @@ import {
   StatusTag,
   Link,
   hubspot,
+  Alert,
+  ProgressBar,
+  Statistics,
+  StatisticsItem,
 } from '@hubspot/ui-extensions';
 
 interface CrmExtensionProps {
@@ -31,16 +35,34 @@ const DealExtension = ({ context }: CrmExtensionProps) => {
 
   return (
     <Flex direction="column" gap="medium">
+      <Alert title="Deal Risk Detected" variant="warning">
+        DealSense AI detected 18 days of stakeholder silence. Suggested Action: Trigger Executive Alignment Playbook.
+      </Alert>
+
       <Tile>
-        <Flex direction="column" gap="small">
+        <Flex direction="column" gap="medium">
           <Flex justify="between" align="center">
             <Heading>DealSense Intelligence</Heading>
             <StatusTag variant="success">Active AI Engine</StatusTag>
           </Flex>
 
-          <Text>
-            Autonomous revenue intelligence, velocity scoring, and MEDDICC risk assessment for this deal.
+          <Text variant="microcopy">
+            Autonomous revenue intelligence, velocity scoring, and MEDDICC risk assessment.
           </Text>
+
+          <Box>
+            <Flex justify="between" align="end" marginBottom="x-small">
+              <Text>Health Score</Text>
+              <Heading>64 / 100</Heading>
+            </Flex>
+            <ProgressBar value={64} showValue={false} title="Health Score" />
+          </Box>
+
+          <Statistics>
+            <StatisticsItem label="Velocity Trend" number="Critical" />
+            <StatisticsItem label="Stakeholder Coverage" number="45%" />
+            <StatisticsItem label="Revenue at Risk" number="$125k" />
+          </Statistics>
 
           <Divider />
 
@@ -51,7 +73,7 @@ const DealExtension = ({ context }: CrmExtensionProps) => {
                 window.open(intelligenceUrl, '_blank');
               }}
             >
-              Open Deal Intelligence Dossier ↗
+              Open Deal Dossier ↗
             </Button>
             <Button
               variant="secondary"
@@ -59,14 +81,14 @@ const DealExtension = ({ context }: CrmExtensionProps) => {
                 window.open(dashboardUrl, '_blank');
               }}
             >
-              View Pipeline Waterfall
+              View Pipeline
             </Button>
           </Flex>
         </Flex>
       </Tile>
 
       <Box>
-        <Text format={{ italic: true }}>
+        <Text format={{ italic: true }} variant="microcopy">
           Live deal telemetry synced via DealSense AI ·{' '}
           <Link href="https://dealsense.peash.tech/compliance">
             Enterprise Compliance &amp; Audit
