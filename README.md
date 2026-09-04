@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://hubspot.com/hubfs/assets/hubspot.com/style-guide/brand-guidelines/guidelines_the-sprocket.svg" width="100" />
+  <img src=docs/assets/logo_icon.png width="100" />
   <h1>DealSense Intelligence Platform</h1>
   <p><strong>Enterprise-Grade Autonomous Revenue Intelligence for the HubSpot Ecosystem</strong></p>
 </div>
