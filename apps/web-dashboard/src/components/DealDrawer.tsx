@@ -813,7 +813,7 @@ export const DealDrawer: React.FC<DealDrawerProps> = ({
               }}
             >
               <div style={{ fontSize: "11.5px", color: "var(--hs-text-muted)" }}>
-                ID: <code>{deal.id}</code> · Tenant: HubAiLab Fleet
+                ID: <code>{deal.id}</code> · Tenant: DealSense Enterprise
               </div>
               <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
                 <button

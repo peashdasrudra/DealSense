@@ -5,6 +5,7 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { ProGate } from "../components/ProGate";
 
 interface RepProfile {
   id: string;
@@ -85,7 +86,8 @@ export const RepPerformance: React.FC = () => {
   const [selectedRep, setSelectedRep] = useState<RepProfile | null>(null);
 
   return (
-  <div>
+    <ProGate featureName="AI Rep Coaching" description="Automatically generate individualized coaching dossiers for your reps based on deterministic CRM adherence and historical win rates.">
+      <div>
       {/* ── Enterprise Header ─────────────────────────────────────────── */}
       <div
         className="card"
@@ -372,5 +374,6 @@ export const RepPerformance: React.FC = () => {
         )}
       </AnimatePresence>
     </div>
+    </ProGate>
   );
 };

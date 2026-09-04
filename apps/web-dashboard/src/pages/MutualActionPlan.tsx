@@ -5,6 +5,7 @@
 
 import React, { useState } from "react";
 import { motion } from "framer-motion";
+import { ProGate } from "../components/ProGate";
 
 interface Milestone {
   id: string;
@@ -109,7 +110,8 @@ export const MutualActionPlan: React.FC = () => {
   };
 
   return (
-  <div>
+    <ProGate featureName="Mutual Action Plans" description="Generate, share, and track collaborative buyer-seller timelines. Sync milestones automatically with your HubSpot CRM.">
+      <div>
       {/* ── Enterprise Header ─────────────────────────────────────────── */}
       <div
         className="card"
@@ -295,5 +297,6 @@ export const MutualActionPlan: React.FC = () => {
         </div>
       </motion.div>
     </div>
+    </ProGate>
   );
 };

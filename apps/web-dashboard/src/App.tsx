@@ -34,30 +34,13 @@ import { RevOpsPlaybooks } from "./pages/RevOpsPlaybooks";
 import { PipelineWaterfall } from "./pages/PipelineWaterfall";
 import { StakeholderMatrix } from "./pages/StakeholderMatrix";
 import { DealDrawer, DealData } from "./components/DealDrawer";
-import { BetaNotice } from "./components/BetaNotice";
+
 import { PrivacyPolicy } from "./pages/PrivacyPolicy";
 import { TermsOfService } from "./pages/TermsOfService";
 import { MarketplaceAudit } from "./pages/MarketplaceAudit";
 import { MarketplaceOnboarding } from "./pages/MarketplaceOnboarding";
 import { MarketplaceListingPreview } from "./pages/MarketplaceListingPreview";
-
-// ── Beta / Roadmap Route Mapping ─────────────────────────────────────────────
-const BETA_ROUTES: Record<string, string> = {
-  "/forecast": "Revenue Forecast & Simulation",
-  "/waterfall": "Pipeline Waterfall & Velocity",
-  "/war-room": "Deal War Room (QBR)",
-  "/stakeholders": "Stakeholder Power Matrix",
-  "/heatmap": "Pipeline Risk Heatmap",
-  "/map": "Mutual Action Plans (MAP)",
-  "/battlecards": "Competitive Battlecards",
-  "/playbooks": "RevOps Playbooks",
-  "/hygiene": "CRM Hygiene & Remediation",
-  "/reps": "Rep Risk Profiles & Coaching",
-  "/clients": "Client Health Scorecards",
-  "/audit": "Audit & Compliance Trail",
-  "/settings": "Scoring Settings",
-};
-
+import { AuthPage } from "./pages/AuthPage";
 // ── Page Title Mapping ───────────────────────────────────────────────────────
 
 const PAGE_TITLES: Record<string, { title: string; breadcrumb: string }> = {
@@ -187,9 +170,22 @@ export const App: React.FC = () => {
 
   const isCheckoutPage = location.pathname === "/checkout" || location.pathname === "/payment";
   const isAgencyPage = location.pathname === "/agency" || location.pathname === "/partners" || location.pathname === "/agents" || location.pathname === "/agency-fleet";
-  const isLandingPage = location.pathname === "/" || location.pathname === "/landing" || location.pathname === "/welcome" || isAgencyPage || isCheckoutPage;
 
-  if (isLandingPage) {
+  // Check if we are on a standalone page (no sidebar)
+  const isStandalonePage =
+    location.pathname === "/" ||
+    location.pathname === "/landing" ||
+    location.pathname === "/welcome" ||
+    location.pathname === "/agency" ||
+    location.pathname === "/partners" ||
+    location.pathname === "/agents" ||
+    location.pathname === "/agency-fleet" ||
+    location.pathname === "/checkout" ||
+    location.pathname === "/payment" ||
+    location.pathname === "/login" ||
+    location.pathname === "/signup";
+
+  if (isStandalonePage) {
     return (
       <div className="landing-layout" style={{ minHeight: "100vh", background: "#ffffff" }}>
         <ScrollToTop />
@@ -215,7 +211,7 @@ export const App: React.FC = () => {
             />
           )}
         </AnimatePresence>
-        {isCheckoutPage ? <CheckoutPage /> : isAgencyPage ? <AgencyFleet /> : <LandingPage />}
+        {isCheckoutPage ? <CheckoutPage /> : isAgencyPage ? <AgencyFleet /> : location.pathname === '/login' || location.pathname === '/signup' ? <AuthPage /> : <LandingPage />}
       </div>
     );
   }
@@ -280,9 +276,6 @@ export const App: React.FC = () => {
         />
 
         <div className="page-content">
-          {BETA_ROUTES[location.pathname] && (
-            <BetaNotice moduleName={BETA_ROUTES[location.pathname]} />
-          )}
           <AnimatePresence mode="wait">
             <motion.div
               key={location.pathname}
@@ -327,11 +320,13 @@ export const App: React.FC = () => {
                 <Route path="/onboarding" element={<MarketplaceOnboarding />} />
                 <Route path="/marketplace-listing" element={<MarketplaceListingPreview />} />
                 <Route path="/nav-test" element={<NavTestPage />} />
+                <Route path="/login" element={<AuthPage />} />
+                <Route path="/signup" element={<AuthPage />} />
               </Routes>
             </motion.div>
           </AnimatePresence>
 
-          {location.pathname !== "/landing" && location.pathname !== "/welcome" && location.pathname !== "/case-study" && (
+          {(location.pathname === "/landing" || location.pathname === "/welcome" || location.pathname === "/" || location.pathname === "/case-study") && (
             <div style={{ marginTop: "64px", marginInline: "-24px", marginBottom: "-24px" }}>
               <Footer />
             </div>

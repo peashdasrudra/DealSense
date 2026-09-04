@@ -102,7 +102,7 @@ export const PortfolioOverview: React.FC = () => {
       const saved = localStorage.getItem("dealsense_active_portal");
       if (saved) return JSON.parse(saved);
     } catch (e) {}
-    return { id: "48920193", name: "HubAiLab Production Fleet", deals: 20 };
+    return { id: "48920193", name: "DealSense Enterprise Fleet", deals: 20 };
   });
 
   const loadDeals = () => {

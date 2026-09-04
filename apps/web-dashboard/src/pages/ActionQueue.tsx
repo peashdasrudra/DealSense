@@ -7,6 +7,7 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { fetchActions, submitActionDecision } from "../api";
+import { ProGate } from "../components/ProGate";
 
 interface ActionItem {
   id: string;
@@ -176,7 +177,8 @@ export const ActionQueue: React.FC = () => {
   };
 
   return (
-  <div>
+    <ProGate featureName="Action Approval Queue" description="Automate CRM interventions, dispatch playbooks, and approve critical write-backs in one unified command center.">
+      <div>
       {/* ── Enterprise Header ─────────────────────────────────────────── */}
       <div
         className="card"
@@ -524,5 +526,6 @@ export const ActionQueue: React.FC = () => {
         </div>
       </motion.div>
     </div>
+    </ProGate>
   );
 };

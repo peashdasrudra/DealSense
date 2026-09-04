@@ -147,42 +147,48 @@ interface NavSection {
 
 const NAV_SECTIONS: NavSection[] = [
   {
-    title: "Core MVP (Free Marketplace)",
+    title: "Core Revenue Pipeline",
     defaultOpen: true,
     items: [
       { id: "overview", label: "Pipeline Overview", iconKey: "overview", path: "/pipeline" },
-      { id: "deals", label: "Deal Inspector", iconKey: "deals", path: "/deals", badge: "Live" },
-      { id: "actions", label: "Action Queue", iconKey: "actions", path: "/actions" },
-      { id: "agency", label: "Agency Fleet Partner", iconKey: "clients", path: "/agency", badge: "Retainer" },
+      { id: "deals", label: "Deal Inspector", iconKey: "deals", path: "/deals" },
+      { id: "actions", label: "Action Queue", iconKey: "actions", path: "/actions", badge: "Pro" },
     ],
   },
   {
-    title: "Enterprise Pro (Paid / Beta)",
-    defaultOpen: false,
-    items: [
-      { id: "forecast", label: "Revenue Forecast", iconKey: "forecast", path: "/forecast", badge: "Pro" },
-      { id: "waterfall", label: "Pipeline Waterfall", iconKey: "waterfall", path: "/waterfall", badge: "Pro" },
-      { id: "warroom", label: "Deal War Room", iconKey: "warroom", path: "/war-room", badge: "Pro" },
-      { id: "stakeholders", label: "Stakeholder Matrix", iconKey: "stakeholders", path: "/stakeholders", badge: "Pro" },
-      { id: "heatmap", label: "Risk Heatmap", iconKey: "heatmap", path: "/heatmap", badge: "Pro" },
-      { id: "map", label: "Mutual Action Plans", iconKey: "map", path: "/map", badge: "Pro" },
-      { id: "battlecards", label: "Battlecards", iconKey: "battlecards", path: "/battlecards", badge: "Pro" },
-      { id: "playbooks", label: "RevOps Playbooks", iconKey: "playbooks", path: "/playbooks", badge: "Pro" },
-      { id: "hygiene", label: "CRM Hygiene", iconKey: "hygiene", path: "/hygiene", badge: "Pro" },
-      { id: "reps", label: "Rep Coaching", iconKey: "reps", path: "/reps", badge: "Pro" },
-      { id: "clients", label: "Client Health", iconKey: "clients", path: "/clients", badge: "Pro" },
-    ],
-  },
-  {
-    title: "HubSpot Marketplace & Trust",
+    title: "Revenue Intelligence",
     defaultOpen: true,
     items: [
-      { id: "compliance", label: "App Partner Certification", iconKey: "audit", path: "/compliance", badge: "100/100" },
+      { id: "forecast", label: "Revenue Forecast", iconKey: "forecast", path: "/forecast" },
+      { id: "waterfall", label: "Pipeline Waterfall", iconKey: "waterfall", path: "/waterfall" },
+      { id: "warroom", label: "Deal War Room", iconKey: "warroom", path: "/war-room" },
+      { id: "stakeholders", label: "Stakeholder Matrix", iconKey: "stakeholders", path: "/stakeholders" },
+      { id: "heatmap", label: "Risk Heatmap", iconKey: "heatmap", path: "/heatmap" },
+      { id: "map", label: "Mutual Action Plans", iconKey: "map", path: "/map", badge: "Pro" },
+      { id: "battlecards", label: "Battlecards", iconKey: "battlecards", path: "/battlecards", badge: "Pro" },
+      { id: "reps", label: "Rep Coaching", iconKey: "reps", path: "/reps", badge: "Pro" },
+    ],
+  },
+  {
+    title: "Solutions & Operations",
+    defaultOpen: true,
+    items: [
+      { id: "playbooks", label: "RevOps Playbooks", iconKey: "playbooks", path: "/playbooks", badge: "Pro" },
+      { id: "hygiene", label: "CRM Hygiene", iconKey: "hygiene", path: "/hygiene", badge: "Pro" },
+      { id: "agency", label: "Enterprise Pro Upgrade", iconKey: "clients", path: "/agency" },
+      { id: "clients", label: "Client Health", iconKey: "clients", path: "/clients" },
+      { id: "settings", label: "Integration & Settings", iconKey: "settings", path: "/settings" },
+    ],
+  },
+  {
+    title: "Developer & Marketplace Tools",
+    defaultOpen: false,
+    items: [
+      { id: "compliance", label: "App Partner Certification", iconKey: "audit", path: "/compliance" },
       { id: "onboarding", label: "Marketplace Setup Flow", iconKey: "playbooks", path: "/onboarding" },
       { id: "listing", label: "Marketplace Directory View", iconKey: "casestudy", path: "/marketplace-listing" },
       { id: "case-study", label: "Architecture Case Study", iconKey: "casestudy", path: "/case-study" },
       { id: "audit", label: "Audit Log & Telemetry", iconKey: "audit", path: "/audit" },
-      { id: "settings", label: "HubSpot Integration Hub", iconKey: "settings", path: "/settings" },
     ],
   },
 ];
@@ -310,11 +316,11 @@ export const Sidebar: React.FC<SidebarProps> = ({ onClose, onNavigateHome }) => 
               flexShrink: 0,
             }}
           >
-            HL
+            DS
           </div>
           <div style={{ minWidth: 0 }}>
             <div style={{ fontSize: "12px", fontWeight: 700, color: "var(--hs-text)", lineHeight: 1.2, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-              HubAiLab Fleet
+              DealSense Enterprise
             </div>
             <div style={{ fontSize: "10.5px", color: "var(--hs-text-muted)", display: "flex", alignItems: "center", gap: 4 }}>
               <span style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--risk-healthy)", display: "inline-block" }} />

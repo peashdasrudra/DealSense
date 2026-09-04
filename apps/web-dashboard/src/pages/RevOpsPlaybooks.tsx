@@ -5,6 +5,7 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { ProGate } from "../components/ProGate";
 
 interface PlaybookRule {
   id: string;
@@ -120,7 +121,8 @@ export const RevOpsPlaybooks: React.FC = () => {
   };
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "var(--sp-6)" }}>
+    <ProGate featureName="Autonomous RevOps Playbooks" description="Set up event-driven playbooks to automatically fix CRM hygiene, escalate ghosting, and trigger Slack alerts without lifting a finger.">
+      <div style={{ display: "flex", flexDirection: "column", gap: "var(--sp-6)" }}>
       {/* ── Playbooks Header Card ─────────────────────────────────────── */}
       <div
         className="card"
@@ -462,5 +464,6 @@ export const RevOpsPlaybooks: React.FC = () => {
         )}
       </AnimatePresence>
     </div>
+    </ProGate>
   );
 };

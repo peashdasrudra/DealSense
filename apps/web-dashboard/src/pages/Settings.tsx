@@ -16,8 +16,8 @@ export const Settings: React.FC = () => {
 
   const [portal, setPortal] = useState({
     id: "48920193",
-    name: "HubAiLab Production Fleet",
-    tier: "Marketplace Free Active",
+    name: "DealSense Enterprise Fleet",
+    tier: "Enterprise Active",
     connectedSince: "September 4, 2026",
     webhookUrl: "https://api.dealsense.peash.tech/api/v1/webhooks/hubspot",
     tokenEncryption: "AES-256-GCM (Fernet)",
@@ -69,9 +69,6 @@ export const Settings: React.FC = () => {
     <div style={{ maxWidth: 940, fontFamily: "var(--font-sans, -apple-system, sans-serif)" }}>
       {/* Enterprise Header */}
       <div style={{ marginBottom: 24 }}>
-        <div style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "4px 10px", background: "rgba(255, 122, 89, 0.1)", borderRadius: 12, color: "#ff5c35", fontSize: 11, fontWeight: 700, textTransform: "uppercase", marginBottom: 8 }}>
-          HubSpot App Marketplace Certified Configuration
-        </div>
         <h1 style={{ fontSize: 24, fontWeight: 800, color: "#2d3e50", margin: "0 0 6px" }}>
           Integration & App Settings
         </h1>
@@ -119,7 +116,7 @@ export const Settings: React.FC = () => {
                 </div>
                 <div>
                   <div style={{ fontSize: 16, fontWeight: 700, color: "#2d3e50" }}>
-                    DealSense by HubAiLab (App ID: <code>hs-dealsense-v3</code>)
+                    DealSense Native Integration (App ID: <code>hs-dealsense-v3</code>)
                   </div>
                   <div style={{ fontSize: 12, color: "#64748b", marginTop: 2 }}>
                     Official HubSpot Developer App • Native UI Extension + Webhook v3 Listener

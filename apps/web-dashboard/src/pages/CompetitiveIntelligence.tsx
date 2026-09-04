@@ -5,6 +5,7 @@
 
 import React, { useState } from "react";
 import { motion } from "framer-motion";
+import { ProGate } from "../components/ProGate";
 
 interface CompetitorCard {
   id: string;
@@ -105,7 +106,8 @@ export const CompetitiveIntelligence: React.FC = () => {
   };
 
   return (
-    <div>
+    <ProGate featureName="Competitive Battlecards" description="Equip your sales reps with real-time AI battlecards, trap questions, and objection handling scripts right when they need them.">
+      <div>
       {/* ── Enterprise Header ─────────────────────────────────────────── */}
       <div
         className="card"
@@ -274,7 +276,8 @@ export const CompetitiveIntelligence: React.FC = () => {
             </div>
           </div>
         </div>
-      </motion.div>
-    </div>
+        </motion.div>
+      </div>
+    </ProGate>
   );
 };

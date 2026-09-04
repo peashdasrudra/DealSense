@@ -47,14 +47,14 @@ export const TopBar: React.FC<TopBarProps> = ({
 
   const [selectedPortal, setSelectedPortal] = useState({
     id: "48920193",
-    name: "HubAiLab Production Fleet",
+    name: "DealSense Enterprise Fleet",
     tier: "Diamond Partner",
     deals: 20,
     latency: "0.18s",
   });
 
   const [portals, setPortals] = useState([
-    { id: "48920193", name: "HubAiLab Production Fleet", tier: "Diamond Partner", deals: 20, latency: "0.18s" },
+    { id: "48920193", name: "DealSense Enterprise Fleet", tier: "Diamond Partner", deals: 20, latency: "0.18s" },
     { id: "29481023", name: "Premier Partner Client Portal (Sandbox)", tier: "Agency Client", deals: 16, latency: "0.19s" },
     { id: "19284711", name: "TechCorp Global Enterprise", tier: "Enterprise Portal", deals: 12, latency: "0.22s" },
   ]);

@@ -6,6 +6,7 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { DealDrawer, DealData } from "../components/DealDrawer";
+import { ProGate } from "../components/ProGate";
 
 interface HygieneIssue {
   id: string;
@@ -135,7 +136,8 @@ export const CrmHygiene: React.FC = () => {
   };
 
   return (
-  <div>
+    <ProGate featureName="CRM Data Hygiene & Auto-Remediation" description="Scan your HubSpot CRM for stale dates, missing next steps, and single-threaded deals. Fix them all with a single click.">
+      <div>
       {/* ── Enterprise Header ─────────────────────────────────────────── */}
       <div
         className="card"
@@ -513,5 +515,6 @@ export const CrmHygiene: React.FC = () => {
         onClose={() => setSelectedDrawerDeal(null)}
       />
     </div>
+    </ProGate>
   );
 };
