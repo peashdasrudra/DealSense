@@ -1,10 +1,11 @@
 const fs = require('fs');
 
-const path = 'apps/web-dashboard/src/pages/HubSpotNativePipeline.tsx';
-let content = fs.readFileSync(path, 'utf8');
+const files = [
+    { path: 'apps/web-dashboard/src/pages/HubSpotNativeActionQueue.tsx', oldName: 'ActionQueue', newName: 'HubSpotNativeActionQueue' },
+    { path: 'apps/web-dashboard/src/pages/HubSpotNativePlaybooks.tsx', oldName: 'RevOpsPlaybooks', newName: 'HubSpotNativePlaybooks' }
+];
 
 const replacements = {
-    'export const PortfolioOverview: React.FC = () => {': 'export const HubSpotNativePipeline: React.FC = () => {',
     'var(--hs-background)': '#ffffff',
     'var(--hs-border-dark)': '#dfe3eb',
     'var(--hs-border)': '#dfe3eb',
@@ -24,8 +25,16 @@ const replacements = {
     'var(--hs-primary)': '#ff7a59',
 };
 
-for (const [oldStr, newStr] of Object.entries(replacements)) {
-    content = content.split(oldStr).join(newStr);
-}
+for (const file of files) {
+    let content = fs.readFileSync(file.path, 'utf8');
+    content = content.replace(`export const ${file.oldName}: React.FC = () => {`, `export const ${file.newName}: React.FC = () => {`);
+    
+    // Also remove the <ProGate> wrapper since we will gate execution, not the view
+    content = content.replace(/<ProGate[^>]*>/g, '<div style={{ flex: 1 }}>');
+    content = content.replace(/<\/ProGate>/g, '</div>');
 
-fs.writeFileSync(path, content, 'utf8');
+    for (const [oldStr, newStr] of Object.entries(replacements)) {
+        content = content.split(oldStr).join(newStr);
+    }
+    fs.writeFileSync(file.path, content, 'utf8');
+}

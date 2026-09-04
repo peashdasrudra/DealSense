@@ -82,8 +82,8 @@ export const HubSpotNativeLayout: React.FC<{ children: React.ReactNode }> = ({ c
       <div style={{ backgroundColor: "#ffffff", padding: "0 32px", borderBottom: "1px solid #dfe3eb", display: "flex", gap: 32, alignItems: "center" }}>
         {[
           { label: "Pipeline Risk (Free)", path: "/app/pipeline", isFree: true },
-          { label: "Action Queue 🔒", path: "/app/action-queue", badge: "3" },
-          { label: "RevOps Playbooks 🔒", path: "/app/playbooks" },
+          { label: "Action Queue", path: "/app/action-queue", badge: "3" },
+          { label: "RevOps Playbooks", path: "/app/playbooks" },
           { label: "CRM Hygiene 🔒", path: "/app/hygiene" },
         ].map(tab => {
           const isActive = window.location.pathname === tab.path;

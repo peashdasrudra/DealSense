@@ -72,3 +72,6 @@ secrets/
 # ---- Build artifacts ----
 *.tar.gz
 *.zip
+
+# HubSpot config file
+hubspot.config.yml

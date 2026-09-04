@@ -44,6 +44,8 @@ import { AuthPage } from "./pages/AuthPage";
 import { OAuthCallback } from "./pages/OAuthCallback";
 import { HubSpotNativeLayout } from "./components/HubSpotNativeLayout";
 import { HubSpotNativePipeline } from "./pages/HubSpotNativePipeline";
+import { HubSpotNativeActionQueue } from "./pages/HubSpotNativeActionQueue";
+import { HubSpotNativePlaybooks } from "./pages/HubSpotNativePlaybooks";
 import { ProGate } from "./components/ProGate";
 // ── Page Title Mapping ───────────────────────────────────────────────────────
 
@@ -223,8 +225,8 @@ export const App: React.FC = () => {
             <Routes>
               <Route path="/app/pipeline" element={<HubSpotNativePipeline />} />
               <Route path="/app/upgrade" element={<AgencyFleet />} />
-              <Route path="/app/action-queue" element={<ProGate featureName="Action Queue" description="Upgrade to Enterprise Pro to execute playbooks on these deals."><div style={{ height: "800px", background: "#ffffff", borderRadius: 8, border: "1px solid #dfe3eb" }}></div></ProGate>} />
-              <Route path="/app/playbooks" element={<ProGate featureName="RevOps Playbooks" description="Unlock autonomous playbooks and workflow automation."><div style={{ height: "800px", background: "#ffffff", borderRadius: 8, border: "1px solid #dfe3eb" }}></div></ProGate>} />
+              <Route path="/app/action-queue" element={<HubSpotNativeActionQueue />} />
+              <Route path="/app/playbooks" element={<HubSpotNativePlaybooks />} />
               <Route path="/app/hygiene" element={<ProGate featureName="CRM Hygiene" description="Unlock AI-driven hygiene sweeps."><div style={{ height: "800px", background: "#ffffff", borderRadius: 8, border: "1px solid #dfe3eb" }}></div></ProGate>} />
               <Route path="/app/*" element={<HubSpotNativePipeline />} />
             </Routes>

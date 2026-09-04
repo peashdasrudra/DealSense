@@ -22,7 +22,7 @@ import {
 import { fetchDeals, syncHubSpotDeals } from "../api";
 
 import { DealDrawer, DealData } from "../components/DealDrawer";
-import { ExecutiveAuditModal } from "../components/ExecutiveAuditModal";
+import { HubSpotNativeExecutiveAuditModal } from "../components/HubSpotNativeExecutiveAuditModal";
 
 // ── Default Enterprise Sample Deals (used if DB has no seed data yet) ────────
 const SAMPLE_DEALS = [
@@ -643,7 +643,7 @@ export const HubSpotNativePipeline: React.FC = () => {
       />
 
       {/* ── Executive Pipeline Risk Audit Lead Magnet Modal ── */}
-      <ExecutiveAuditModal
+      <HubSpotNativeExecutiveAuditModal 
         deals={deals}
         isOpen={isAuditModalOpen}
         onClose={() => setIsAuditModalOpen(false)}
