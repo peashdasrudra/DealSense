@@ -1,3 +1,4 @@
+from typing import Any
 from uuid import UUID, uuid4
 
 import structlog

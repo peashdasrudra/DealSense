@@ -161,8 +161,8 @@ class TestWebhookIngestion:
     @pytest.mark.asyncio
     async def test_webhook_app_uninstall_disconnects_tenant(self) -> None:
         """HubSpot app.uninstall event should immediately disconnect the tenant and revoke tokens."""
-        from dealsense.domain.models import Tenant
         from dealsense.domain.enums import TenantStatus
+        from dealsense.domain.models import Tenant
 
         tenant = Tenant(
             id=uuid4(),
@@ -200,8 +200,8 @@ class TestWebhookIngestion:
     @pytest.mark.asyncio
     async def test_webhook_contact_privacy_deletion_cleans_cache(self) -> None:
         """HubSpot GDPR contact.privacy.deletion event should scrub cached PII."""
-        from dealsense.domain.models import Tenant
         from dealsense.domain.enums import TenantStatus
+        from dealsense.domain.models import Tenant
 
         tenant = Tenant(
             id=uuid4(),

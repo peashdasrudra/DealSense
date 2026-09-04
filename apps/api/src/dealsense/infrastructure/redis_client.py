@@ -3,6 +3,7 @@
 Connection pool, typed helper methods, and distributed locking.
 """
 
+import time
 from contextlib import suppress
 
 import redis.asyncio as redis
@@ -43,7 +44,6 @@ async def close_redis() -> None:
         _redis_pool = None
 
 
-import time
 
 _memory_cache: dict[str, tuple[str, float]] = {}
 

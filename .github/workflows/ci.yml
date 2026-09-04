@@ -32,6 +32,7 @@ jobs:
           pip install ruff mypy
           pip install -e apps/api[dev]
           pip install -e packages/scoring[dev]
+          pip install -e packages/prompts
 
       - name: Ruff lint
         run: ruff check apps/api/src apps/worker/src packages/scoring/src
@@ -106,6 +107,7 @@ jobs:
         run: |
           pip install -e apps/api[dev]
           pip install -e packages/scoring[dev]
+          pip install -e packages/prompts
 
       - name: Enable pgvector extension
         run: |
