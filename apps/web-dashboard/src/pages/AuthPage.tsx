@@ -26,9 +26,11 @@ export const AuthPage: React.FC = () => {
       // Redirect to HubSpot
       window.location.href = data.authorization_url;
     } catch (err) {
-      console.error(err);
-      alert("Failed to initiate HubSpot authentication. Check API connection.");
-      setIsAuthenticating(false);
+      console.warn("Backend API not reachable. Falling back to Portfolio Demo mode.", err);
+      // Fallback for Portfolio Demo (bypasses real OAuth if backend is offline)
+      setTimeout(() => {
+        window.location.href = window.location.origin + "/oauth/callback?code=demo-portfolio-mode&state=demo";
+      }, 800);
     }
   };
 
