@@ -41,6 +41,7 @@ import { MarketplaceAudit } from "./pages/MarketplaceAudit";
 import { MarketplaceOnboarding } from "./pages/MarketplaceOnboarding";
 import { MarketplaceListingPreview } from "./pages/MarketplaceListingPreview";
 import { AuthPage } from "./pages/AuthPage";
+import { OAuthCallback } from "./pages/OAuthCallback";
 // ── Page Title Mapping ───────────────────────────────────────────────────────
 
 const PAGE_TITLES: Record<string, { title: string; breadcrumb: string }> = {
@@ -183,7 +184,8 @@ export const App: React.FC = () => {
     location.pathname === "/checkout" ||
     location.pathname === "/payment" ||
     location.pathname === "/login" ||
-    location.pathname === "/signup";
+    location.pathname === "/signup" ||
+    location.pathname === "/oauth/callback";
 
   if (isStandalonePage) {
     return (
@@ -211,7 +213,7 @@ export const App: React.FC = () => {
             />
           )}
         </AnimatePresence>
-        {isCheckoutPage ? <CheckoutPage /> : isAgencyPage ? <AgencyFleet /> : location.pathname === '/login' || location.pathname === '/signup' ? <AuthPage /> : <LandingPage />}
+        {isCheckoutPage ? <CheckoutPage /> : isAgencyPage ? <AgencyFleet /> : location.pathname === '/login' || location.pathname === '/signup' ? <AuthPage /> : location.pathname === '/oauth/callback' ? <OAuthCallback /> : <LandingPage />}
       </div>
     );
   }
@@ -322,6 +324,7 @@ export const App: React.FC = () => {
                 <Route path="/nav-test" element={<NavTestPage />} />
                 <Route path="/login" element={<AuthPage />} />
                 <Route path="/signup" element={<AuthPage />} />
+                <Route path="/oauth/callback" element={<OAuthCallback />} />
               </Routes>
             </motion.div>
           </AnimatePresence>

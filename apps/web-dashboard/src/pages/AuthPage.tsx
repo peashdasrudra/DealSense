@@ -6,12 +6,30 @@ export const AuthPage: React.FC = () => {
   const navigate = useNavigate();
   const [isAuthenticating, setIsAuthenticating] = useState(false);
 
-  const handleOAuthLogin = (_provider: "hubspot" | "google") => {
+  const handleOAuthLogin = async (_provider: "hubspot" | "google") => {
+    if (_provider !== "hubspot") {
+      alert("Only HubSpot OAuth is supported in this demo.");
+      return;
+    }
+    
     setIsAuthenticating(true);
-    // Simulate OAuth redirect delay
-    setTimeout(() => {
-      navigate("/onboarding");
-    }, 1200);
+    try {
+      // @ts-ignore
+      const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8000";
+      const redirectUri = window.location.origin + "/oauth/callback"; 
+      const response = await fetch(`${apiUrl}/api/v1/oauth/authorize?redirect_uri=${encodeURIComponent(redirectUri)}`);
+      if (!response.ok) {
+        throw new Error("Failed to fetch authorization URL");
+      }
+      const data = await response.json();
+      
+      // Redirect to HubSpot
+      window.location.href = data.authorization_url;
+    } catch (err) {
+      console.error(err);
+      alert("Failed to initiate HubSpot authentication. Check API connection.");
+      setIsAuthenticating(false);
+    }
   };
 
   return (
