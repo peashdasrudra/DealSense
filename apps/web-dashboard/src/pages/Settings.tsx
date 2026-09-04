@@ -259,10 +259,10 @@ export const Settings: React.FC = () => {
             </div>
 
             {/* Pro Remediations */}
-            <div style={{ background: "#ffffff", borderRadius: 10, border: "1px solid #cbd6e2", padding: 24 }}>
-              <div style={{ fontSize: 13, fontWeight: 700, color: "#ff7a59", textTransform: "uppercase" }}>Automated Cure</div>
+            <div style={{ background: "#ffffff", borderRadius: 10, border: "1px solid #00bda5", padding: 24, boxShadow: "0 4px 12px rgba(0, 189, 165, 0.15)" }}>
+              <div style={{ fontSize: 13, fontWeight: 700, color: "#00bda5", textTransform: "uppercase" }}>Enterprise Unlimited</div>
               <h3 style={{ fontSize: 22, fontWeight: 800, color: "#2d3e50", margin: "4px 0 8px" }}>Pro Remediations</h3>
-              <div style={{ fontSize: 26, fontWeight: 800, color: "#2d3e50", marginBottom: 16 }}>$79 <span style={{ fontSize: 13, fontWeight: 500, color: "#64748b" }}>/ month</span></div>
+              <div style={{ fontSize: 26, fontWeight: 800, color: "#2d3e50", marginBottom: 16 }}>Included</div>
               <ul style={{ paddingLeft: 18, fontSize: 13, color: "#33475b", lineHeight: 1.7, margin: "0 0 20px" }}>
                 <li>Automated HubSpot Task & Note Write-Backs</li>
                 <li>AI Multi-Threading Email Generator</li>
@@ -271,10 +271,10 @@ export const Settings: React.FC = () => {
                 <li>Slack & Teams High-Risk Alerts</li>
               </ul>
               <button
-                onClick={() => navigate("/checkout")}
-                style={{ width: "100%", padding: "10px", background: "#ff7a59", border: "none", borderRadius: 6, color: "#ffffff", fontWeight: 700, fontSize: 13, cursor: "pointer" }}
+                disabled
+                style={{ width: "100%", padding: "10px", background: "rgba(0, 189, 165, 0.1)", border: "1px solid rgba(0, 189, 165, 0.3)", borderRadius: 6, color: "#00bda5", fontWeight: 700, fontSize: 13 }}
               >
-                Upgrade to Pro ➔
+                ✓ Currently Active (Enterprise)
               </button>
             </div>
 

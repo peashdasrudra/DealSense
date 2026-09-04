@@ -14,7 +14,7 @@ interface ExecutiveAuditModalProps {
   portalName?: string;
 }
 
-import { NativeUpgradeModal } from "./NativeUpgradeModal";
+
 
 export const HubSpotNativeExecutiveAuditModal: React.FC<ExecutiveAuditModalProps> = ({
   isOpen,
@@ -351,7 +351,7 @@ export const HubSpotNativeExecutiveAuditModal: React.FC<ExecutiveAuditModalProps
 
               <div style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
                 <button
-                  onClick={() => setIsUpgradeOpen(true)}
+                  onClick={() => alert("Syncing execution...")}
                   style={{
                     padding: "11px 20px",
                     background: "#ff5c35",
@@ -371,7 +371,7 @@ export const HubSpotNativeExecutiveAuditModal: React.FC<ExecutiveAuditModalProps
                 </button>
 
                 <button
-                  onClick={() => setIsUpgradeOpen(true)}
+                  onClick={() => alert("Syncing execution...")}
                   style={{
                     padding: "11px 20px",
                     background: "#e5f5f8",
@@ -399,7 +399,7 @@ export const HubSpotNativeExecutiveAuditModal: React.FC<ExecutiveAuditModalProps
       </div>
 
       
-      <NativeUpgradeModal isOpen={isUpgradeOpen} onClose={() => setIsUpgradeOpen(false)} featureName="Automated Remediation & Sync" />
+       setIsUpgradeOpen(false)} featureName="Automated Remediation & Sync" />
     </>
   );
 };

@@ -174,8 +174,9 @@ export const TopBar: React.FC<TopBarProps> = ({
         {/* Risk Alerts Notification Bell */}
         <div ref={notifRef} style={{ position: "relative" }}>
           <button
-            onClick={() => {
-              setNotificationOpen(!notificationOpen);
+            onClick={(e) => {
+              e.stopPropagation();
+              setNotificationOpen((prev) => !prev);
               setProfileMenuOpen(false);
             }}
             className="header-icon-btn"
@@ -207,8 +208,9 @@ export const TopBar: React.FC<TopBarProps> = ({
         <div ref={profileRef} style={{ position: "relative" }}>
           <div
             className="header-avatar-btn"
-            onClick={() => {
-              setProfileMenuOpen(!profileMenuOpen);
+            onClick={(e) => {
+              e.stopPropagation();
+              setProfileMenuOpen((prev) => !prev);
               setNotificationOpen(false);
             }}
             title={`HubSpot Operator: ${currentUser.name} (Portal #${selectedPortal.id})`}

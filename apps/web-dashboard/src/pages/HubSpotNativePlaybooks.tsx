@@ -4,7 +4,7 @@
  */
 
 import React, { useState } from "react";
-import { NativeUpgradeModal } from "../components/NativeUpgradeModal";
+
 import { motion, AnimatePresence } from "framer-motion";
 
 interface PlaybookRule {
@@ -72,7 +72,7 @@ const INITIAL_PLAYBOOKS: PlaybookRule[] = [
 ];
 
 export const HubSpotNativePlaybooks: React.FC = () => {
-  const [isUpgradeModalOpen, setIsUpgradeModalOpen] = useState(false);
+  
   const [playbooks, setPlaybooks] = useState<PlaybookRule[]>(INITIAL_PLAYBOOKS);
   const [simulating, setSimulating] = useState(false);
   const [simResult, setSimResult] = useState<string | null>(null);
@@ -123,7 +123,7 @@ export const HubSpotNativePlaybooks: React.FC = () => {
 
   return (
     <>
-      <NativeUpgradeModal isOpen={isUpgradeModalOpen} onClose={() => setIsUpgradeModalOpen(false)} featureName="Automated Playbooks" />
+       setIsUpgradeModalOpen(false)} featureName="Automated Playbooks" />
       <div style={{ flex: 1 }}>
       <div style={{ display: "flex", flexDirection: "column", gap: "var(--sp-6)" }}>
       {/* ── Playbooks Header Card ─────────────────────────────────────── */}

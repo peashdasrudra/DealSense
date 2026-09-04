@@ -7,7 +7,6 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { fetchActions, submitActionDecision } from "../api";
-import { NativeUpgradeModal } from "../components/NativeUpgradeModal";
 
 interface ActionItem {
   id: string;
@@ -38,7 +37,6 @@ const URGENCY_STYLES: Record<string, { color: string; dot: string }> = {
 
 export const HubSpotNativeActionQueue: React.FC = () => {
   const [actions, setActions] = useState<ActionItem[]>([]);
-  const [isUpgradeModalOpen, setIsUpgradeModalOpen] = useState(false);
   const [filter, setFilter] = useState<string>("all");
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [isLive, setIsLive] = useState(false);
@@ -112,9 +110,6 @@ export const HubSpotNativeActionQueue: React.FC = () => {
   };
 
   return (
-    <>
-      <NativeUpgradeModal isOpen={isUpgradeModalOpen} onClose={() => setIsUpgradeModalOpen(false)} featureName="Action Queue Write-back" />
-    
       <div>
       {/* ── Enterprise Header ─────────────────────────────────────────── */}
       <div
@@ -390,13 +385,13 @@ export const HubSpotNativeActionQueue: React.FC = () => {
                           <div style={{ display: "flex", gap: 8, justifyContent: "flex-end" }}>
                             <button
                               className="btn btn-primary btn-sm"
-                              onClick={() => setIsUpgradeModalOpen(true)}
+                              onClick={() => handleApprove(action.id)}
                             >
                               ✓ Approve
                             </button>
                             <button
                               className="btn btn-secondary btn-sm"
-                              onClick={() => setIsUpgradeModalOpen(true)}
+                              onClick={() => handleReject(action.id)}
                             >
                               ✕ Reject
                             </button>
@@ -452,10 +447,10 @@ export const HubSpotNativeActionQueue: React.FC = () => {
                   <span style={{ fontSize: "11px", color: "#516f90" }}>Impact: {action.impact}</span>
                   {isPending ? (
                     <div style={{ display: "flex", gap: 6 }}>
-                      <button className="btn btn-primary btn-sm" onClick={() => setIsUpgradeModalOpen(true)}>
+                      <button className="btn btn-primary btn-sm" onClick={() => handleApprove(action.id)}>
                         ✓ Approve
                       </button>
-                      <button className="btn btn-secondary btn-sm" onClick={() => setIsUpgradeModalOpen(true)}>
+                      <button className="btn btn-secondary btn-sm" onClick={() => handleReject(action.id)}>
                         ✕
                       </button>
                     </div>
