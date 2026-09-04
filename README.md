@@ -20,12 +20,13 @@
 
 **DealSense** is an enterprise-grade, high-performance RevOps AI Copilot built specifically for the HubSpot CRM ecosystem. Designed to solve the "dirty data and slipped revenue" crisis for high-volume sales agencies and enterprise SaaS teams, it injects autonomous **MEDDICC qualification**, **pipeline velocity tracking**, and **zero-hallucination deal health telemetry** directly into the native HubSpot UI.
 
-This repository is engineered as a **masterclass reference architecture** for Senior Backend and AI Systems Engineers. It demonstrates production-ready, highly scalable solutions for the most complex challenges in the HubSpot App developer ecosystem:
+This repository is engineered as a **masterclass reference architecture** for Senior/Mid-Level Backend and Systems Engineers. It demonstrates production-ready, highly scalable solutions for the most complex challenges in the HubSpot App developer ecosystem:
 
-1. **Bypassing HubSpot Serverless Limits:** Moving heavy AI compute and persistent state out of restrictive HubSpot Serverless functions (10s timeouts) into a massively scalable external FastAPI cluster.
-2. **Strict Multi-Tenant Data Isolation:** Cryptographic row-level isolation via JWT-bound middlewares.
+1. **Bypassing HubSpot Serverless Limits:** Moving heavy AI compute and persistent state out of restrictive HubSpot Serverless functions (10s timeouts) into a massively scalable external API cluster (conceptually identical whether written in Node.js/Express or Python/FastAPI).
+2. **Robust Authentication & Multi-Tenancy:** End-to-end custom OAuth 2.0 implementation with dynamic redirect URIs, tenant provisioning, and cryptographic row-level isolation via JWT-bound middlewares.
 3. **API Rate Limit Deflection:** Aggressive Redis caching to ensure high-concurrency compliance with HubSpot's 100-150 calls/10 sec API burst limits.
-4. **Native CRM UI Extensions:** Leveraging the newest `@hubspot/ui-extensions` framework for seamless, embedded IFrames without jarring popups.
+4. **Webhooks & CI/CD Pipelines:** Asynchronous processing of HubSpot CRM webhooks (e.g., deal stage changes) and automated, containerized deployments (Docker/Vercel/Render).
+5. **Native CRM UI Extensions:** Leveraging the newest `@hubspot/ui-extensions` framework (React/JavaScript) for seamless, embedded IFrames without jarring popups.
 
 ---
 
@@ -69,10 +70,10 @@ For a RevOps CTO or Partner Agency Director, raw data isn't enough. DealSense tr
 
 ## ⚙️ Backend Infrastructure (The Muscle)
 
-The backend is a purely asynchronous Python microservice built for maximum throughput and security.
+The backend is a purely asynchronous microservice built for maximum throughput and security. While this specific implementation utilizes Python/FastAPI for AI telemetry, the architectural design patterns (Event-Driven Architecture, Dependency Injection, REST APIs, JSON validation) are universal and directly mirror best practices found in **Node.js / Express** ecosystems.
 
-### 1. Multi-Tenant Isolation (TenantGuard Middleware)
-We do not rely on simple ORM filters where developers can accidentally leak data. Multi-tenancy is enforced at the **ASGI middleware level**. Every API request is intercepted, the JWT is validated, and the `X-Admin-Tenant-ID` is extracted.
+### 1. Robust Authentication & Multi-Tenant Isolation
+We do not rely on simple ORM filters where developers can accidentally leak data. Multi-tenancy is enforced at the **API Middleware level**. Every request is intercepted, the JWT is validated, and the `X-Admin-Tenant-ID` is extracted cryptographically.
 
 ```python
 # Conceptual snippet of our strict isolation
@@ -108,10 +109,10 @@ This application is engineered specifically to pass HubSpot's stringent App Mark
 
 | Security Requirement | DealSense Implementation |
 | :--- | :--- |
-| **OAuth 2.0 Flow** | Full, strict implementation with automatic token refresh cycles and `state` parameter CSRF validation. |
+| **OAuth 2.0 Authentication** | Full, strict implementation with automatic token refresh cycles and `state` parameter CSRF validation. Handled dynamically across local and production environments. |
+| **Database Architecture** | Secure PostgreSQL relational schemas mapping multi-tenant CRM configuration, leveraging UUIDs and foreign-key constraints. |
 | **GDPR Compliance** | Implements the mandated `gdpr.delete` webhook listener to automatically purge customer PII within 30 days. |
-| **Secret Management** | No hardcoded secrets. All DB credentials, OAuth Client IDs, and API keys are injected via `.env` / CI pipelines. |
-| **Data Ephemerality** | AI prompts and CRM data are processed ephemerally. Raw PII is not persisted long-term beyond the strict Redis caching window. |
+| **Docker & Cloud Deployment** | Containerized backend deployments via Docker and Render. Frontend CI/CD automated via Vercel GitHub integrations. |
 | **Signature Verification** | Cryptographic SHA-256 HMAC verification of `X-HubSpot-Signature-v3` to prevent forged webhooks. |
 
 ---
