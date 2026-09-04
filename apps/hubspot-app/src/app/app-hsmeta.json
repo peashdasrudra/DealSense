@@ -1,0 +1,40 @@
+{
+  "uid": "dealsense_revenue_intelligence_app",
+  "type": "app",
+  "config": {
+    "description": "AI-powered deal risk intelligence, velocity scoring, and automated RevOps playbooks.",
+    "name": "DealSense Revenue Intelligence",
+    "distribution": "marketplace",
+    "auth": {
+      "type": "oauth",
+      "redirectUrls": [
+        "https://dealsense.peash.tech/oauth/callback",
+        "http://localhost:3000/oauth/callback"
+      ],
+      "requiredScopes": [
+        "oauth",
+        "crm.objects.deals.read",
+        "crm.objects.deals.write",
+        "crm.objects.contacts.read"
+      ],
+      "optionalScopes": [],
+      "conditionallyRequiredScopes": []
+    },
+    "permittedUrls": {
+      "fetch": [
+        "https://dealsense-api-6o2h.onrender.com",
+        "https://dealsense-ai.peash.tech"
+      ],
+      "iframe": [
+        "https://dealsense-ai.peash.tech"
+      ],
+      "img": []
+    },
+    "support": {
+      "supportEmail": "support@dealsense.ai",
+      "documentationUrl": "https://dealsense.peash.tech/onboarding",
+      "supportUrl": "https://dealsense.peash.tech/compliance",
+      "supportPhone": "+18005555555"
+    }
+  }
+}

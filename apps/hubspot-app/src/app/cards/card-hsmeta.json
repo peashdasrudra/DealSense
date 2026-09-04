@@ -1,0 +1,12 @@
+{
+  "uid": "dealsense_revenue_intelligence_card",
+  "type": "card",
+  "config": {
+    "name": "DealSense Intelligence",
+    "location": "crm.record.tab",
+    "entrypoint": "/app/cards/DealCard.tsx",
+    "objectTypes": [
+      "deals"
+    ]
+  }
+}
