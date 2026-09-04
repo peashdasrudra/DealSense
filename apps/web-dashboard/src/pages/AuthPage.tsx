@@ -15,7 +15,7 @@ export const AuthPage: React.FC = () => {
     setIsAuthenticating(true);
     try {
       // @ts-ignore
-      const clientId = import.meta.env.VITE_HUBSPOT_CLIENT_ID || "4a050326-6a29-4e48-b11d-0896ea1e0c15";
+      const clientId = import.meta.env.VITE_HUBSPOT_CLIENT_ID || "b70e4bd1-26ac-4470-b6e6-c06d8b4c7920";
       const redirectUri = window.location.origin + "/oauth/callback"; 
       const scope = "crm.objects.deals.read crm.objects.deals.write crm.objects.contacts.read timeline";
       
