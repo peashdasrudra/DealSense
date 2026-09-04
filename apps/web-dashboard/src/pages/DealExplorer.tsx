@@ -2860,9 +2860,7 @@ const modalOverlayStyle: React.CSSProperties = {
   padding: "16px",
 };
 
-const modalBoxStyle: React.CSSProperties = {
-  /* Migrated to .enterprise-modal in index.css for mobile responsiveness */
-};
+
 
 const modalHeaderStyle: React.CSSProperties = {
   display: "flex",

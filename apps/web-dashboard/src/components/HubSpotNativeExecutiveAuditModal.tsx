@@ -3,7 +3,7 @@
  * High-converting lead magnet generating board-ready pipeline leakage audits.
  */
 
-import React, { useState } from "react";
+import React from "react";
 import { motion } from "framer-motion";
 
 interface ExecutiveAuditModalProps {
@@ -23,7 +23,7 @@ export const HubSpotNativeExecutiveAuditModal: React.FC<ExecutiveAuditModalProps
   portalId = "48920193",
   portalName = "HubAiLab Production Fleet",
 }) => {
-  const [isUpgradeOpen, setIsUpgradeOpen] = useState(false);
+
 
   if (!isOpen) return null;
 
@@ -397,9 +397,6 @@ export const HubSpotNativeExecutiveAuditModal: React.FC<ExecutiveAuditModalProps
           </div>
         </motion.div>
       </div>
-
-      
-       setIsUpgradeOpen(false)} featureName="Automated Remediation & Sync" />
     </>
   );
 };

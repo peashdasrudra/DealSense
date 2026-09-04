@@ -122,8 +122,6 @@ export const HubSpotNativePlaybooks: React.FC = () => {
   };
 
   return (
-    <>
-       setIsUpgradeModalOpen(false)} featureName="Automated Playbooks" />
       <div style={{ flex: 1 }}>
       <div style={{ display: "flex", flexDirection: "column", gap: "var(--sp-6)" }}>
       {/* ── Playbooks Header Card ─────────────────────────────────────── */}
@@ -468,6 +466,5 @@ export const HubSpotNativePlaybooks: React.FC = () => {
       </AnimatePresence>
     </div>
     </div>
-    </>
   );
 };

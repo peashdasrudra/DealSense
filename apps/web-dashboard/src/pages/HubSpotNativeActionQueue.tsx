@@ -466,6 +466,5 @@ export const HubSpotNativeActionQueue: React.FC = () => {
         </div>
       </motion.div>
     </div>
-    </>
   );
 };
