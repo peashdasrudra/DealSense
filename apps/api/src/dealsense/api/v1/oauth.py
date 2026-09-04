@@ -82,6 +82,7 @@ async def oauth_callback_post(
         code=payload.code,
         state=payload.state,
         db=db,
+        redirect_uri=payload.redirect_uri,
         ip_address=client_ip,
         user_agent=user_agent,
     )

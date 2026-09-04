@@ -23,12 +23,13 @@ export const OAuthCallback: React.FC = () => {
       try {
         // @ts-ignore
         const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8000";
+        const redirectUri = window.location.origin + "/oauth/callback";
         const response = await fetch(`${apiUrl}/api/v1/oauth/callback`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ code, state }),
+          body: JSON.stringify({ code, state, redirect_uri: redirectUri }),
         });
 
         if (!response.ok) {
