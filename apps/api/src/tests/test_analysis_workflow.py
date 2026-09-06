@@ -17,7 +17,7 @@ from cryptography.fernet import Fernet
 from httpx import ASGITransport, AsyncClient
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from dealsense.domain.enums import TenantStatus
+from dealsense.domain.enums import TenantStatus, UserRole
 from dealsense.domain.models import Deal, DealSnapshot
 from dealsense_worker.workflows.deal_analysis import DealAnalysisWorkflow
 

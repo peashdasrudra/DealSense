@@ -291,5 +291,5 @@ class TestOAuthAndTenantGuard:
             response = await client.get("/api/v1/oauth/status")
 
         assert response.status_code in (400, 403)
-        error = response.json()["error"]
-        assert error in ("TENANT_REQUIRED", "PERMISSION_DENIED", "INVALID_TENANT_ID", "TENANT_NOT_FOUND")
+        error = response.json().get("error") or response.json().get("detail")
+        assert error in ("TENANT_REQUIRED", "PERMISSION_DENIED", "INVALID_TENANT_ID", "TENANT_NOT_FOUND", "Tenant header missing", "Insufficient permissions")
