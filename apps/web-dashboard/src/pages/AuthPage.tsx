@@ -14,17 +14,29 @@ export const AuthPage: React.FC = () => {
     
     setIsAuthenticating(true);
     try {
-      // @ts-ignore
-      const clientId = import.meta.env.VITE_HUBSPOT_CLIENT_ID || "b70e4bd1-26ac-4470-b6e6-c06d8b4c7920";
-      const redirectUri = window.location.origin + "/oauth/callback"; 
-      const scope = "crm.objects.deals.read crm.objects.deals.write crm.objects.contacts.read timeline";
-      
-      const authUrl = `https://app.hubspot.com/oauth/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scope)}`;
-      
-      // Redirect to HubSpot directly
-      window.location.href = authUrl;
+      // Call the backend to generate the authorize URL with proper CSRF state
+      const apiBase = (import.meta as any).env?.VITE_API_URL
+        ? `${(import.meta as any).env.VITE_API_URL}/api/v1`
+        : "/api/v1";
+
+      const redirectUri = window.location.origin + "/oauth/callback";
+      const response = await fetch(
+        `${apiBase}/oauth/authorize?redirect_uri=${encodeURIComponent(redirectUri)}`
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to generate authorization URL");
+      }
+
+      const data = await response.json();
+
+      // Store the state for CSRF validation on callback
+      sessionStorage.setItem("dealsense_oauth_state", data.state);
+
+      // Redirect to HubSpot
+      window.location.href = data.authorization_url;
     } catch (err) {
-      console.warn("Failed to construct OAuth URL", err);
+      console.warn("Failed to initiate OAuth flow", err);
       setIsAuthenticating(false);
     }
   };

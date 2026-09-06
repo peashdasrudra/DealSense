@@ -105,14 +105,14 @@ async def process_incoming_webhooks(
             continue
 
         # 3.1 Handle HubSpot App Marketplace Lifecycle & GDPR Erasure Events
-        if subscription_type == "app.uninstall":
+        if subscription_type == "app.deactivated" or subscription_type == "app.uninstalled":
             logger.info("hubspot_app_uninstall_event_received", portal_id=portal_id, tenant_id=str(tenant.id))
             from dealsense.services.oauth_service import disconnect_tenant
             await disconnect_tenant(tenant.id, db, actor=f"hubspot:{portal_id}:uninstall")
             events_queued += 1
             continue
 
-        if subscription_type == "contact.privacy.deletion":
+        if subscription_type == "contact.privacyDeletion" or subscription_type == "contact.privacy.deletion":
             logger.info("hubspot_gdpr_contact_privacy_deletion_received", portal_id=portal_id, object_id=object_id)
             from dealsense.infrastructure.redis_client import cache_delete
             await cache_delete(f"contact:pii:{portal_id}:{object_id}")

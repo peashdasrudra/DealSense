@@ -35,6 +35,10 @@
       ],
       "hubEvents": [
         {
+          "subscriptionType": "app.deactivated",
+          "active": true
+        },
+        {
           "subscriptionType": "contact.privacyDeletion",
           "active": true
         }

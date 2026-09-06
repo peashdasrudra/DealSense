@@ -72,6 +72,11 @@ class TenantGuardMiddleware(BaseHTTPMiddleware):
             if token == settings.admin_api_key:
                 is_admin = True
 
+        portal_id_header = request.headers.get("X-HubSpot-Portal-Id")
+        if not tenant_id_header and portal_id_header:
+            # Resolve portal ID to tenant ID
+            tenant_id_header = await self._resolve_tenant_by_portal(portal_id_header)
+
         if not tenant_id_header:
             if is_admin:
                 # Admin logged in but no tenant specified, use explicit admin target or default
@@ -83,7 +88,7 @@ class TenantGuardMiddleware(BaseHTTPMiddleware):
 
         # Validate UUID format
         try:
-            tenant_id = UUID(tenant_id_header)
+            tenant_id = UUID(str(tenant_id_header))
         except ValueError:
             from fastapi.responses import JSONResponse
 
@@ -162,5 +167,25 @@ class TenantGuardMiddleware(BaseHTTPMiddleware):
         except Exception as e:
             logger.warning("tenant_validation_error_fallback", error=str(e))
             return TenantStatus.ACTIVE
+        finally:
+            await session.close()
+
+    async def _resolve_tenant_by_portal(self, portal_id: str) -> str | None:
+        """Resolve a HubSpot portal ID to a DealSense tenant ID."""
+        if portal_id == "982341":  # Demo portal
+            return "00000000-0000-0000-0000-000000000002"
+
+        factory = get_session_factory()
+        session = factory()
+        try:
+            stmt = select(Tenant.id).where(Tenant.hubspot_portal_id == str(portal_id))
+            result = await session.execute(stmt)
+            row = result.scalar_one_or_none()
+            if row:
+                return str(row)
+            return None
+        except Exception as e:
+            logger.warning("tenant_resolution_error", error=str(e))
+            return None
         finally:
             await session.close()

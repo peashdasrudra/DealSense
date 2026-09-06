@@ -21,10 +21,13 @@ export const OAuthCallback: React.FC = () => {
       }
 
       try {
-        // @ts-ignore
-        const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8000";
+        const apiBase = (import.meta as any).env?.VITE_API_URL
+          ? `${(import.meta as any).env.VITE_API_URL}/api/v1`
+          : "/api/v1";
+
+        // The redirect_uri MUST match what was used in the authorize URL
         const redirectUri = window.location.origin + "/oauth/callback";
-        const response = await fetch(`${apiUrl}/api/v1/oauth/callback`, {
+        const response = await fetch(`${apiBase}/oauth/callback`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -33,8 +36,10 @@ export const OAuthCallback: React.FC = () => {
         });
 
         if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.detail || "Failed to complete OAuth exchange");
+          const errorData = await response.json().catch(() => ({}));
+          throw new Error(
+            errorData.message || errorData.detail || `OAuth exchange failed (HTTP ${response.status})`
+          );
         }
         
         const responseData = await response.json();

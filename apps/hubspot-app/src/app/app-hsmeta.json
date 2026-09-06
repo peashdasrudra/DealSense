@@ -4,7 +4,7 @@
   "config": {
     "description": "AI-powered deal risk intelligence, velocity scoring, and automated RevOps playbooks.",
     "name": "DealSense Revenue Intelligence",
-    "distribution": "marketplace",
+    "distribution": "public",
     "auth": {
       "type": "oauth",
       "redirectUrls": [
@@ -12,12 +12,15 @@
         "http://localhost:3000/oauth/callback"
       ],
       "requiredScopes": [
-        "oauth",
         "crm.objects.deals.read",
         "crm.objects.deals.write",
-        "crm.objects.contacts.read"
+        "crm.objects.contacts.read",
+        "crm.objects.companies.read",
+        "crm.schemas.deals.read"
       ],
-      "optionalScopes": [],
+      "optionalScopes": [
+        "timeline"
+      ],
       "conditionallyRequiredScopes": []
     },
     "permittedUrls": {
