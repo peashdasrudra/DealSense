@@ -179,12 +179,12 @@ class TestWebhookIngestion:
             {
                 "eventId": "uninstall-evt-1",
                 "portalId": "999000",
-                "subscriptionType": "app.uninstall",
+                "subscriptionType": "app.uninstalled",
                 "objectId": "0",
             }
         ]
 
-        with patch("dealsense.services.oauth_service.disconnect_tenant", new_callable=AsyncMock) as mock_disc:
+        with patch("dealsense.services.webhook_service.disconnect_tenant", new_callable=AsyncMock) as mock_disc:
             result = await process_incoming_webhooks(
                 raw_body=b"",
                 signature_header=None,

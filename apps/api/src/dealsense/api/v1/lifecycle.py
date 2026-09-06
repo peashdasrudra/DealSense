@@ -63,7 +63,7 @@ async def handle_gdpr_delete(
         body = await request.json()
     except Exception:
         return Response(status_code=204)
-        
+
     portal_id = body.get("portalId")
     object_id = body.get("objectId")
     

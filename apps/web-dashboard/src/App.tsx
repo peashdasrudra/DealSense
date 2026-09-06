@@ -145,6 +145,25 @@ export const App: React.FC = () => {
     return () => clearTimeout(timer);
   }, [location.pathname]);
 
+  // Auth & Guest Mode Check
+  const isAuthenticated = sessionStorage.getItem("dealsense_oauth_state") || localStorage.getItem("dealsense_guest_mode");
+  const isGuestMode = localStorage.getItem("dealsense_guest_mode") === "true";
+
+  const isStandalonePage =
+    location.pathname === "/" ||
+    location.pathname === "/landing" ||
+    location.pathname === "/welcome" ||
+    location.pathname === "/login" ||
+    location.pathname === "/signup" ||
+    location.pathname === "/oauth/callback" ||
+    location.pathname.startsWith("/app");
+
+  useEffect(() => {
+    if (!isAuthenticated && !isStandalonePage) {
+      navigate("/login");
+    }
+  }, [isAuthenticated, isStandalonePage, location.pathname, navigate]);
+
   const pageMeta = PAGE_TITLES[location.pathname] || {
     title: "DealSense Intelligence",
     breadcrumb: "Dashboard",
@@ -176,22 +195,6 @@ export const App: React.FC = () => {
 
   const isCheckoutPage = location.pathname === "/checkout" || location.pathname === "/payment";
   const isAgencyPage = location.pathname === "/agency" || location.pathname === "/partners" || location.pathname === "/agents" || location.pathname === "/agency-fleet";
-
-  // Check if we are on a standalone page (no sidebar)
-  const isStandalonePage =
-    location.pathname === "/" ||
-    location.pathname === "/landing" ||
-    location.pathname === "/welcome" ||
-    location.pathname === "/agency" ||
-    location.pathname === "/partners" ||
-    location.pathname === "/agents" ||
-    location.pathname === "/agency-fleet" ||
-    location.pathname === "/checkout" ||
-    location.pathname === "/payment" ||
-    location.pathname === "/login" ||
-    location.pathname === "/signup" ||
-    location.pathname === "/oauth/callback" ||
-    location.pathname.startsWith("/app");
 
   if (isStandalonePage) {
     return (
@@ -267,6 +270,32 @@ export const App: React.FC = () => {
 
       {/* Main Content */}
       <main className="main-content" style={{ position: "relative" }}>
+        {/* Top Navbar */}
+        <div className="main-header" style={{ position: "relative" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "var(--sp-4)" }}>
+            <button className="mobile-menu-btn" onClick={() => setSidebarOpen(true)}>
+              <svg width={20} height={20} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                <line x1={3} y1={12} x2={21} y2={12} />
+                <line x1={3} y1={6} x2={21} y2={6} />
+                <line x1={3} y1={18} x2={21} y2={18} />
+              </svg>
+            </button>
+            <div className="page-breadcrumb">
+              {pageMeta.breadcrumb}
+              <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                <polyline points="9 18 15 12 9 6" />
+              </svg>
+              <span>{pageMeta.title}</span>
+            </div>
+            {isGuestMode && (
+              <div style={{ marginLeft: 16, background: "var(--warning-bg)", color: "var(--warning)", padding: "4px 8px", borderRadius: "var(--radius-sm)", fontSize: 12, fontWeight: 600, display: "flex", alignItems: "center", gap: 6 }}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                Guest View (Mock Data)
+              </div>
+            )}
+          </div>
+        </div>
+
         {/* Top Telemetry Loading Bar on Navigation */}
         <AnimatePresence>
           {isNavigating && (

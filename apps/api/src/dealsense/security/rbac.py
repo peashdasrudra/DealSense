@@ -176,9 +176,9 @@ def extract_role_from_jwt(request: Request) -> UserRole:
         role_str = payload.get("role")
         if role_str:
             return UserRole(role_str)
-    except Exception:
-        pass
-        
+    except Exception as e:
+        logger.warning("jwt_role_extraction_failed", error=str(e))
+
     return UserRole.SALES_REP
 
 
