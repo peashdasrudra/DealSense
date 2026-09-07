@@ -2,33 +2,41 @@
   "uid": "DealSense_app",
   "type": "app",
   "config": {
-    "description": "An example to demonstrate how to build a marketplace app with developer projects.",
-    "name": "DealSense-App",
-    "distribution": "marketplace",
+    "description": "AI-powered deal risk intelligence, velocity scoring, and automated RevOps playbooks.",
+    "name": "DealSense Revenue Intelligence",
+    "distribution": "public",
     "auth": {
       "type": "oauth",
       "redirectUrls": [
-        "http://localhost:3000"
+        "https://dealsense.peash.tech/oauth/callback"
       ],
       "requiredScopes": [
         "oauth",
+        "crm.objects.deals.read",
+        "crm.objects.deals.write",
         "crm.objects.contacts.read",
-        "crm.objects.contacts.write"
+        "crm.objects.companies.read",
+        "crm.schemas.deals.read"
       ],
-      "optionalScopes": [],
+      "optionalScopes": [
+        "timeline"
+      ],
       "conditionallyRequiredScopes": []
     },
     "permittedUrls": {
       "fetch": [
-        "https://api.hubapi.com"
+        "https://dealsense-api-6o2h.onrender.com",
+        "https://dealsense-ai.peash.tech"
       ],
-      "iframe": [],
+      "iframe": [
+        "https://dealsense-ai.peash.tech"
+      ],
       "img": []
     },
     "support": {
-      "supportEmail": "support@example.com",
-      "documentationUrl": "https://example.com/docs",
-      "supportUrl": "https://example.com/support",
+      "supportEmail": "support@dealsense.ai",
+      "documentationUrl": "https://dealsense.peash.tech/onboarding",
+      "supportUrl": "https://dealsense.peash.tech/compliance",
       "supportPhone": "+18005555555"
     }
   }

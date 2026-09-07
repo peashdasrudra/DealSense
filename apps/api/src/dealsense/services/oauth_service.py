@@ -51,11 +51,17 @@ async def generate_authorize_url(redirect_uri: str | None = None) -> tuple[str, 
         "redirect_uri": effective_redirect_uri,
         "scope": scope_param,
         "state": state,
+        "response_type": "code",
     }
     query_string = urllib.parse.urlencode(params)
     auth_url = f"https://app.hubspot.com/oauth/authorize?{query_string}"
 
-    logger.info("oauth_authorize_url_generated", state=state[:8] + "...")
+    logger.info(
+        "oauth_authorize_url_generated",
+        state=state[:8] + "...",
+        redirect_uri=effective_redirect_uri,
+        scopes=scope_param,
+    )
     return auth_url, state
 
 
@@ -112,8 +118,17 @@ async def handle_oauth_callback(
                 headers={"Content-Type": "application/x-www-form-urlencoded"},
             )
             if token_resp.status_code != 200:
-                logger.error("oauth_code_exchange_failed", status_code=token_resp.status_code)
-                raise OAuthError(f"OAuth code exchange failed: HTTP {token_resp.status_code}")
+                error_body = token_resp.text[:200] if token_resp.text else "empty"
+                logger.error(
+                    "oauth_code_exchange_failed",
+                    status_code=token_resp.status_code,
+                    redirect_uri=effective_redirect_uri,
+                    error_body=error_body,
+                )
+                raise OAuthError(
+                    f"OAuth code exchange failed: HTTP {token_resp.status_code}. "
+                    f"Ensure redirect_uri '{effective_redirect_uri}' matches the registered URL in HubSpot."
+                )
             token_data = token_resp.json()
         except httpx.HTTPError as e:
             raise OAuthError(f"OAuth code exchange network error: {e}") from e
@@ -237,3 +252,32 @@ async def get_tenant_oauth_status(
 ) -> dict[str, object]:
     """Retrieve the OAuth connection status for a given tenant."""
     return await get_connection_status(tenant_id, db)
+
+
+def generate_install_url() -> dict[str, str]:
+    """Generate a one-click HubSpot OAuth install URL for production use.
+
+    This URL can be shared with customers for frictionless app installation.
+    Always uses the production redirect URI.
+
+    Returns:
+        Dict with install_url and redirect_uri.
+    """
+    settings = get_settings()
+    scopes_list = [s.strip() for s in settings.hubspot_scopes.split(",") if s.strip()]
+
+    params = {
+        "client_id": settings.hubspot_client_id,
+        "redirect_uri": settings.hubspot_redirect_uri,
+        "scope": " ".join(scopes_list),
+        "response_type": "code",
+    }
+    query_string = urllib.parse.urlencode(params)
+    install_url = f"https://app.hubspot.com/oauth/authorize?{query_string}"
+
+    logger.info("install_url_generated", redirect_uri=settings.hubspot_redirect_uri)
+    return {
+        "install_url": install_url,
+        "redirect_uri": settings.hubspot_redirect_uri,
+        "app_id": settings.hubspot_app_id,
+    }

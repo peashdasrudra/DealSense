@@ -32,6 +32,7 @@ TENANT_EXEMPT_PATHS = frozenset(
         "/api/v1/health",
         "/api/v1/ready",
         "/api/v1/status",
+        "/api/v1/oauth/install",
         "/api/v1/oauth/authorize",
         "/api/v1/oauth/callback",
         "/api/v1/webhooks/hubspot",

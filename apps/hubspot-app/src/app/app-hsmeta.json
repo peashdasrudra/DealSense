@@ -9,7 +9,7 @@
       "type": "oauth",
       "redirectUrls": [
         "https://dealsense.peash.tech/oauth/callback",
-        "http://localhost:3000/oauth/callback"
+        "https://dealsense-api-6o2h.onrender.com/api/v1/oauth/callback"
       ],
       "requiredScopes": [
         "crm.objects.deals.read",

@@ -26,7 +26,10 @@ export const OAuthCallback: React.FC = () => {
           ? `${(import.meta as any).env.VITE_API_URL}/api/v1`
           : "/api/v1";
 
-        const redirectUri = window.location.origin + "/oauth/callback";
+        // Production redirect_uri must exactly match what's registered in HubSpot
+        // and what was used in the authorize URL. Never use window.location.origin
+        // as it may differ between environments.
+        const redirectUri = "https://dealsense.peash.tech/oauth/callback";
         const response = await fetch(`${apiBase}/oauth/callback`, {
           method: "POST",
           headers: {

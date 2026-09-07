@@ -1,6 +1,7 @@
 """DealSense API — OAuth Endpoints.
 
 Handles HubSpot OAuth 2.0 flow:
+- GET /api/v1/oauth/install: One-click install URL for customers
 - GET /api/v1/oauth/authorize: Generates authorization URL with CSRF state
 - GET /api/v1/oauth/callback: Handles OAuth redirect from HubSpot
 - POST /api/v1/oauth/callback: JSON payload handler for OAuth callback
@@ -12,6 +13,7 @@ Handles HubSpot OAuth 2.0 flow:
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, Query, Request
+from fastapi.responses import RedirectResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from dealsense.api.deps import get_db
@@ -27,11 +29,22 @@ from dealsense.security.token_manager import get_access_token
 from dealsense.services.oauth_service import (
     disconnect_tenant,
     generate_authorize_url,
+    generate_install_url,
     get_tenant_oauth_status,
     handle_oauth_callback,
 )
 
 router = APIRouter(prefix="/oauth", tags=["OAuth"])
+
+
+@router.get("/install")
+async def install_url() -> dict[str, str]:
+    """Generate a one-click HubSpot OAuth install URL.
+
+    This is the URL you share with customers for frictionless app installation.
+    Uses the production redirect URI — no localhost involved.
+    """
+    return generate_install_url()
 
 
 @router.get("/authorize", response_model=OAuthAuthorizeResponse)
