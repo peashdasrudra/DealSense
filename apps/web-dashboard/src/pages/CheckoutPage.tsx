@@ -51,37 +51,37 @@ const PRICING_TIERS: Record<TierKey, BaseTierPlan> = {
   "scale-999": {
     id: "scale-999",
     name: "Agency Pro Fleet (Up to 15 Portals)",
-    tagline: "The #1 choice for scaling HubSpot Solutions Partners managing up to 15 client portals.",
-    badge: "MOST POPULAR",
+    tagline: "7-day free trial. The #1 choice for scaling HubSpot Solutions Partners managing up to 15 client portals.",
+    badge: "MOST POPULAR · 7-DAY TRIAL",
     badgeColor: "#ff5c35",
     popular: true,
     baseUsdPrice: 999,
     baseUsdListPrice: 1499,
     discountPercentage: 33,
-    description: "Deploy co-branded deal intelligence across 15 client portals with custom domain hosting and automated QBR briefs.",
+    description: "Start 7-day free trial ($0 today). Deploy co-branded deal intelligence across 15 client portals with custom domain hosting and automated QBR briefs.",
     deliveryTime: "Instant Activation (2-Minute Client Onboarding)",
-    licenseType: "Agency Scale Fleet Subscription (15 Portals)",
+    licenseType: "7-Day Free Trial → Agency Scale Fleet Subscription ($999/mo after trial)",
     deliverables: [
       { icon: "🏢", title: "Manage up to 15 Client Portals", subtitle: "Unified multi-client command center with cross-portal risk benchmarking" },
       { icon: "🌐", title: "Custom Domain & Co-Branded Portal", subtitle: "Hosted on revops.youragency.com with your agency branding and colors" },
       { icon: "🛡️", title: "Embedded HubSpot Deal Canvas Cards", subtitle: "Lives native inside your clients' HubSpot CRM deal records" },
       { icon: "⚡", title: "Sub-200ms Webhook Stream", subtitle: "Real-time Redis Streams ingestion with v3 HMAC signature verification" },
       { icon: "📋", title: "1-Click Executive QBR Dossiers", subtitle: "Board-ready PDF briefs detailing deal velocity and stalled capital" },
-      { icon: "🧰", title: "Client Acquisition Toolkit", subtitle: "Diagnostic $99 audit proposal templates and retainer pitch decks" },
+      { icon: "🧰", title: "Client Acquisition Toolkit", subtitle: "Diagnostic proposals and partner retainer pitch decks" },
     ],
   },
   "growth-499": {
     id: "growth-499",
     name: "Agency Growth Fleet (Up to 5 Portals)",
-    tagline: "For boutique RevOps consultancies managing up to 5 client HubSpot portals.",
-    badge: "GROWTH TIER",
+    tagline: "7-day free trial. For boutique RevOps consultancies managing up to 5 client HubSpot portals.",
+    badge: "7-DAY FREE TRIAL",
     badgeColor: "#00a4bd",
     baseUsdPrice: 499,
     baseUsdListPrice: 699,
     discountPercentage: 28,
-    description: "Deploy real-time 7-vector deal risk scoring across 5 client portals with native CRM cards.",
+    description: "Start 7-day free trial ($0 today). Deploy real-time 7-vector deal risk scoring across 5 client portals with native CRM cards.",
     deliveryTime: "Instant Activation",
-    licenseType: "Agency Growth Fleet Subscription (5 Portals)",
+    licenseType: "7-Day Free Trial → Agency Growth Fleet Subscription ($499/mo after trial)",
     deliverables: [
       { icon: "🏢", title: "Manage up to 5 Client Portals", subtitle: "Multi-portal workspace switcher with isolated client data" },
       { icon: "🛡️", title: "HubSpot CRM Canvas Extensions", subtitle: "Native deal risk card embedded inside client deal records" },
@@ -93,15 +93,15 @@ const PRICING_TIERS: Record<TierKey, BaseTierPlan> = {
   "enterprise-2499": {
     id: "enterprise-2499",
     name: "Enterprise Solutions Partner Fleet",
-    tagline: "For premier HubSpot Elite Partners requiring unlimited portals and dedicated architect support.",
-    badge: "ENTERPRISE UNLIMITED",
+    tagline: "7-day free trial. For premier HubSpot Elite Partners requiring unlimited portals and dedicated architect support.",
+    badge: "ENTERPRISE UNLIMITED · 7-DAY TRIAL",
     badgeColor: "#34d399",
     baseUsdPrice: 2499,
     baseUsdListPrice: 3999,
     discountPercentage: 37,
-    description: "Unlimited client portals, private VPC cloud deployment options, and custom workflow action code generators.",
+    description: "Start 7-day free trial ($0 today). Unlimited client portals, private VPC cloud deployment options, and custom workflow action code generators.",
     deliveryTime: "Same-Day Setup SLA",
-    licenseType: "Enterprise Solutions Partner Fleet (Unlimited Portals)",
+    licenseType: "7-Day Free Trial → Enterprise Solutions Partner Fleet ($2,499/mo after trial)",
     deliverables: [
       { icon: "👑", title: "Unlimited Multi-Tenant Portals", subtitle: "Zero client or volume caps across your entire agency book of business" },
       { icon: "🔒", title: "Dedicated Database & VPC Options", subtitle: "Private cloud deployment with Row-Level Security (RLS) isolation" },
@@ -634,30 +634,64 @@ export const CheckoutPage: React.FC = () => {
 
                 {/* Price Breakdown */}
                 <div style={{ borderTop: "1.5px solid #f1f5f9", paddingTop: 10, marginTop: 2 }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", fontSize: "12px", color: "#64748b", marginBottom: 4 }}>
-                    <span>List License Value ({currencyConfig.code})</span>
-                    <span style={{ textDecoration: "line-through" }}>{formattedListPrice}</span>
-                  </div>
-                  <div style={{ display: "flex", justifyContent: "space-between", fontSize: "12px", color: "#059669", fontWeight: 700, marginBottom: 4 }}>
-                    <span>Applied Founder Discount</span>
-                    <span>-{formattedSavings}</span>
-                  </div>
-                  <div style={{ display: "flex", justifyContent: "space-between", fontSize: "12px", color: "#64748b", marginBottom: 8 }}>
-                    <span>EU/UK Reverse-Charge VAT</span>
-                    <span style={{ color: "#059669", fontWeight: 700 }}>{currencyConfig.symbol}0.00 (0% Tax)</span>
-                  </div>
+                  {(selectedTierKey === "growth-499" || selectedTierKey === "scale-999" || selectedTierKey === "enterprise-2499") ? (
+                    <>
+                      <div style={{ display: "flex", justifyContent: "space-between", fontSize: "12px", color: "#64748b", marginBottom: 4 }}>
+                        <span>Trial Period</span>
+                        <span style={{ color: "#059669", fontWeight: 800 }}>7 Days (100% Free Access)</span>
+                      </div>
+                      <div style={{ display: "flex", justifyContent: "space-between", fontSize: "12px", color: "#64748b", marginBottom: 4 }}>
+                        <span>Monthly Rate (After Trial)</span>
+                        <span style={{ fontWeight: 700, color: "#092124" }}>{formattedPrice} / mo</span>
+                      </div>
+                      <div style={{ display: "flex", justifyContent: "space-between", fontSize: "12px", color: "#059669", fontWeight: 700, marginBottom: 8 }}>
+                        <span>Trial Discount</span>
+                        <span>-100% (Save {formattedPrice} Today)</span>
+                      </div>
 
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", borderTop: "1.5px solid #e2e8f0", paddingTop: 8, marginBottom: 12 }}>
-                    <span style={{ fontSize: "15px", fontWeight: 900, color: "#092124" }}>Total Due</span>
-                    <div style={{ textAlign: "right" }}>
-                      <span style={{ fontSize: "24px", fontWeight: 900, color: "#ff5c35", fontFamily: "'Outfit', sans-serif" }}>
-                        {formattedPrice}
-                      </span>
-                      <span style={{ fontSize: "10.5px", color: "#64748b", display: "block" }}>
-                        flat one-time fee
-                      </span>
-                    </div>
-                  </div>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", borderTop: "1.5px solid #e2e8f0", paddingTop: 8, marginBottom: 12 }}>
+                        <div>
+                          <span style={{ fontSize: "15px", fontWeight: 900, color: "#092124", display: "block" }}>Due Today</span>
+                          <span style={{ fontSize: "11px", color: "#059669", fontWeight: 700 }}>7-Day Free Trial</span>
+                        </div>
+                        <div style={{ textAlign: "right" }}>
+                          <span style={{ fontSize: "26px", fontWeight: 900, color: "#059669", fontFamily: "'Outfit', sans-serif" }}>
+                            {currencyConfig.symbol}0.00
+                          </span>
+                          <span style={{ fontSize: "10.5px", color: "#64748b", display: "block" }}>
+                            then {formattedPrice}/mo · Cancel anytime
+                          </span>
+                        </div>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div style={{ display: "flex", justifyContent: "space-between", fontSize: "12px", color: "#64748b", marginBottom: 4 }}>
+                        <span>List License Value ({currencyConfig.code})</span>
+                        <span style={{ textDecoration: "line-through" }}>{formattedListPrice}</span>
+                      </div>
+                      <div style={{ display: "flex", justifyContent: "space-between", fontSize: "12px", color: "#059669", fontWeight: 700, marginBottom: 4 }}>
+                        <span>Applied Founder Discount</span>
+                        <span>-{formattedSavings}</span>
+                      </div>
+                      <div style={{ display: "flex", justifyContent: "space-between", fontSize: "12px", color: "#64748b", marginBottom: 8 }}>
+                        <span>EU/UK Reverse-Charge VAT</span>
+                        <span style={{ color: "#059669", fontWeight: 700 }}>{currencyConfig.symbol}0.00 (0% Tax)</span>
+                      </div>
+
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", borderTop: "1.5px solid #e2e8f0", paddingTop: 8, marginBottom: 12 }}>
+                        <span style={{ fontSize: "15px", fontWeight: 900, color: "#092124" }}>Total Due</span>
+                        <div style={{ textAlign: "right" }}>
+                          <span style={{ fontSize: "24px", fontWeight: 900, color: "#ff5c35", fontFamily: "'Outfit', sans-serif" }}>
+                            {formattedPrice}
+                          </span>
+                          <span style={{ fontSize: "10.5px", color: "#64748b", display: "block" }}>
+                            flat one-time fee
+                          </span>
+                        </div>
+                      </div>
+                    </>
+                  )}
                 </div>
 
                 {/* Main Action Button (In Form for Desktop / Scrolling) */}
@@ -684,14 +718,16 @@ export const CheckoutPage: React.FC = () => {
                 >
                   {isSubmitting ? (
                     <span>Connecting to Payment Terminal...</span>
+                  ) : (selectedTierKey === "growth-499" || selectedTierKey === "scale-999" || selectedTierKey === "enterprise-2499") ? (
+                    <span>🎁 Start 7-Day Free Trial ($0 Due Today) →</span>
                   ) : (
                     <span>🔒 Complete {formattedPrice} Order →</span>
                   )}
                 </button>
 
                 <div style={{ textAlign: "center", fontSize: "11px", color: "#64748b", marginTop: 2, lineHeight: 1.35 }}>
-                  🔒 Payments securely processed by Lemon Squeezy Merchant of Record.<br />
-                  Immediate B2B invoice dispatch & 100% Money-Back Guarantee.
+                  🔒 7 days 100% free · $0 due today · 1-click self-serve cancellation.<br />
+                  Immediate HubSpot OAuth connection & zero per-seat user markups.
                 </div>
               </form>
             </div>
@@ -736,14 +772,14 @@ export const CheckoutPage: React.FC = () => {
         <div style={{ maxWidth: 1200, width: "100%", margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, boxSizing: "border-box" }}>
           <div style={{ minWidth: 0 }}>
             <div style={{ fontSize: "10px", fontWeight: 800, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.04em" }}>
-              Total ({selectedTier.name.split(" ")[0]})
+              Due Today ({(selectedTierKey === "growth-499" || selectedTierKey === "scale-999" || selectedTierKey === "enterprise-2499") ? "Trial" : selectedTier.name.split(" ")[0]})
             </div>
             <div style={{ display: "flex", alignItems: "baseline", gap: 5, marginTop: 1 }}>
-              <span style={{ fontSize: "22px", fontWeight: 900, color: "#ff5c35", fontFamily: "'Outfit', sans-serif", lineHeight: 1 }}>
-                {formattedPrice}
+              <span style={{ fontSize: "22px", fontWeight: 900, color: (selectedTierKey === "growth-499" || selectedTierKey === "scale-999" || selectedTierKey === "enterprise-2499") ? "#059669" : "#ff5c35", fontFamily: "'Outfit', sans-serif", lineHeight: 1 }}>
+                {(selectedTierKey === "growth-499" || selectedTierKey === "scale-999" || selectedTierKey === "enterprise-2499") ? `${currencyConfig.symbol}0.00` : formattedPrice}
               </span>
               <span style={{ fontSize: "10.5px", color: "#059669", fontWeight: 800 }}>
-                (Save {selectedTier.discountPercentage}%)
+                {(selectedTierKey === "growth-499" || selectedTierKey === "scale-999" || selectedTierKey === "enterprise-2499") ? "(7 Days Free)" : `(Save ${selectedTier.discountPercentage}%)`}
               </span>
             </div>
           </div>
@@ -753,10 +789,10 @@ export const CheckoutPage: React.FC = () => {
             disabled={isSubmitting}
             onClick={() => handleProceedToPayment()}
             style={{
-              padding: "12px 20px",
+              padding: "12px 18px",
               background: "linear-gradient(135deg, #ff6b48 0%, #ff5c35 100%)",
               color: "#ffffff",
-              fontSize: "14px",
+              fontSize: "13.5px",
               fontWeight: 800,
               border: "none",
               borderRadius: "10px",

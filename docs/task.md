@@ -77,3 +77,13 @@
 - `[x]` Premium Dashboard CSS (`index.css` with ambient glows and animations)
 - `[x]` React Pages (App Shell, Portfolio Overview, Client Health, Risk Heatmap, Action Queue)
 - `[x]` Recharts integration for data visualization
+
+## Batch 9: Marketplace Productization & Certification Readiness ✅
+- `[x]` Single canonical HubSpot project (`apps/hubspot-app/`) with `platformVersion: "2025.2"`
+- `[x]` Schema-compliant project configuration (`hsproject.json`, `app-hsmeta.json`, `card-hsmeta.json`, `sidebar-card-hsmeta.json`, `webhooks-hsmeta.json`)
+- `[x]` Native UI Extension components (`DealCard.tsx`, `DealSidebarCard.tsx`) with zero build errors
+- `[x]` Live action handling for deal scoring, re-analysis, and Command Deck linking
+- `[x]` Marketplace lifecycle & GDPR data scrub endpoints (`POST /api/v1/lifecycle/uninstall`, `POST /api/v1/lifecycle/gdpr-delete`, `contact.privacyDeletion`)
+- `[x]` Rate limiting headers & security middleware (`X-Content-Type-Options`, `Strict-Transport-Security`, `X-Frame-Options`, `X-RateLimit-*`)
+- `[x]` Marketplace listing assets & collateral (`docs/marketplace/`: listing description, setup guide, demo video script, privacy disclosure)
+- `[x]` Validation: `hs project validate` passed ✅, `npx tsc --noEmit` passed (0 errors) ✅, 52/52 backend tests passing ✅

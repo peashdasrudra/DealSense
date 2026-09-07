@@ -175,7 +175,6 @@ const NAV_SECTIONS: NavSection[] = [
     items: [
       { id: "playbooks", label: "RevOps Playbooks", iconKey: "playbooks", path: "/playbooks", badge: "Pro" },
       { id: "hygiene", label: "CRM Hygiene", iconKey: "hygiene", path: "/hygiene", badge: "Pro" },
-      { id: "agency", label: "Enterprise Pro Upgrade", iconKey: "clients", path: "/agency" },
       { id: "clients", label: "Client Health", iconKey: "clients", path: "/clients" },
       { id: "settings", label: "Integration & Settings", iconKey: "settings", path: "/settings" },
     ],

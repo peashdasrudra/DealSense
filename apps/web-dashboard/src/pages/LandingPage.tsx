@@ -69,8 +69,10 @@ export const LandingPage: React.FC = () => {
     }, 3800);
   };
 
-  const openOrder = (tier: "audit-99" | "deploy-1500" | "agency-3500" | "custom-app") => {
-    navigate(`/checkout?tier=${tier}`);
+  const openOrder = (tier: "growth-499" | "scale-999" | "enterprise-2499" | "audit-99" | "deploy-1500" | "agency-3500" | "custom-app") => {
+    let mappedTier = tier;
+    if (tier === "audit-99") mappedTier = "growth-499";
+    navigate(`/checkout?tier=${mappedTier}`);
   };
 
   const HUBS = [
@@ -798,118 +800,411 @@ export const LandingPage: React.FC = () => {
       </section>
 
       {/* ── 3. Interactive Hero Command Deck ─────────────────────────── */}
-      <section style={{ padding: "0 clamp(16px, 4vw, 24px) 56px", maxWidth: 1080, margin: "-16px auto 0", position: "relative", zIndex: 10 }}>
+      <section style={{ padding: "0 clamp(16px, 4vw, 24px) 56px", maxWidth: 1140, margin: "-16px auto 0", position: "relative", zIndex: 10 }}>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.35 }}
           style={{
             background: "#ffffff",
-            borderRadius: "16px",
-            border: "1px solid #e2e8f0",
-            borderTop: "4px solid #ff5c35",
-            boxShadow: "0 20px 48px -12px rgba(9, 33, 36, 0.12), 0 4px 16px rgba(0,0,0,0.04)",
+            borderRadius: "20px",
+            border: "1px solid #cbd5e1",
+            boxShadow: "0 28px 64px -12px rgba(9, 33, 36, 0.16), 0 0 0 1px rgba(9, 33, 36, 0.05), 0 8px 24px rgba(0,0,0,0.04)",
             overflow: "hidden",
           }}
         >
-          {/* App Mock Header */}
-          <div style={{ background: "#f8fafc", padding: "12px 20px", borderBottom: "1px solid #e2e8f0", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 10 }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-              <div style={{ display: "flex", gap: 6 }}>
-                <span style={{ width: 10, height: 10, borderRadius: "50%", background: "#ef4444" }} />
-                <span style={{ width: 10, height: 10, borderRadius: "50%", background: "#f59e0b" }} />
-                <span style={{ width: 10, height: 10, borderRadius: "50%", background: "#10b981" }} />
+          {/* App Window Header Bar */}
+          <div
+            style={{
+              background: "linear-gradient(90deg, #092124 0%, #124548 100%)",
+              padding: "14px 22px",
+              borderBottom: "1px solid rgba(255,255,255,0.1)",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              flexWrap: "wrap",
+              gap: 12,
+            }}
+          >
+            {/* Window Controls & Title */}
+            <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+              <div style={{ display: "flex", gap: 7 }}>
+                <span style={{ width: 11, height: 11, borderRadius: "50%", background: "#ef4444", boxShadow: "0 0 6px rgba(239,68,68,0.4)" }} />
+                <span style={{ width: 11, height: 11, borderRadius: "50%", background: "#f59e0b", boxShadow: "0 0 6px rgba(245,158,11,0.4)" }} />
+                <span style={{ width: 11, height: 11, borderRadius: "50%", background: "#10b981", boxShadow: "0 0 6px rgba(16,185,129,0.4)" }} />
               </div>
-              <span style={{ fontSize: "12px", fontWeight: 700, color: "#092124" }}>DealSense RevOps Command Deck</span>
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <DealSenseIcon size={18} />
+                <span style={{ fontSize: "13px", fontWeight: 800, color: "#ffffff", letterSpacing: "-0.01em" }}>
+                  DealSense RevOps Command Deck
+                </span>
+                <span style={{ fontSize: "10px", fontWeight: 800, color: "#34d399", background: "rgba(16,185,129,0.18)", border: "1px solid rgba(16,185,129,0.3)", padding: "2px 8px", borderRadius: "9999px", display: "inline-flex", alignItems: "center", gap: 4 }}>
+                  <span style={{ width: 5, height: 5, borderRadius: "50%", background: "#34d399" }} />
+                  LIVE TELEMETRY
+                </span>
+              </div>
             </div>
 
-            <div style={{ display: "flex", gap: 6 }}>
-              <button onClick={() => setHeroTab("scoring")} style={{ padding: "5px 12px", fontSize: "12px", fontWeight: 700, borderRadius: "6px", border: "none", cursor: "pointer", background: heroTab === "scoring" ? "#092124" : "transparent", color: heroTab === "scoring" ? "#fff" : "#64748b" }}>
-                Deal Inspector
-              </button>
-              <button onClick={() => setHeroTab("forecast")} style={{ padding: "5px 12px", fontSize: "12px", fontWeight: 700, borderRadius: "6px", border: "none", cursor: "pointer", background: heroTab === "forecast" ? "#092124" : "transparent", color: heroTab === "forecast" ? "#fff" : "#64748b" }}>
-                Monte Carlo
-              </button>
-              <button onClick={() => setHeroTab("warroom")} style={{ padding: "5px 12px", fontSize: "12px", fontWeight: 700, borderRadius: "6px", border: "none", cursor: "pointer", background: heroTab === "warroom" ? "#092124" : "transparent", color: heroTab === "warroom" ? "#fff" : "#64748b" }}>
-                Deal War Room
-              </button>
+            {/* Segmented Tab Controls */}
+            <div style={{ display: "flex", gap: 6, background: "rgba(255,255,255,0.08)", padding: "3px", borderRadius: "10px", border: "1px solid rgba(255,255,255,0.1)" }}>
+              {[
+                { key: "scoring", label: "Deal Inspector", icon: "📊" },
+                { key: "forecast", label: "Monte Carlo", icon: "📈" },
+                { key: "warroom", label: "Deal War Room", icon: "🛡️" },
+              ].map((tab) => {
+                const active = heroTab === tab.key;
+                return (
+                  <button
+                    key={tab.key}
+                    onClick={() => setHeroTab(tab.key as any)}
+                    style={{
+                      padding: "6px 14px",
+                      fontSize: "12px",
+                      fontWeight: 700,
+                      borderRadius: "7px",
+                      border: "none",
+                      cursor: "pointer",
+                      background: active ? "linear-gradient(135deg, #ff6b48 0%, #ff5c35 100%)" : "transparent",
+                      color: active ? "#ffffff" : "#cbd5e1",
+                      boxShadow: active ? "0 2px 8px rgba(255,92,53,0.35)" : "none",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 6,
+                      transition: "all 0.15s ease",
+                    }}
+                  >
+                    <span>{tab.icon}</span>
+                    <span>{tab.label}</span>
+                  </button>
+                );
+              })}
             </div>
           </div>
 
           {/* Dynamic Content Display */}
-          <div style={{ padding: "clamp(20px, 4vw, 32px)" }}>
+          <div style={{ padding: "clamp(24px, 4vw, 36px)", background: "#ffffff" }}>
+            
+            {/* TAB 1: DEAL INSPECTOR */}
             {heroTab === "scoring" && (
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 24, alignItems: "center" }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 340px), 1fr))", gap: 28, alignItems: "start" }}>
+                
+                {/* Left Side: Deal Dossier & Signals */}
                 <div>
-                  <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
-                    <span style={{ background: "rgba(220, 38, 38, 0.1)", color: "#dc2626", padding: "3px 10px", borderRadius: "var(--radius-pill)", fontSize: "11px", fontWeight: 800 }}>
+                  {/* Deal Header */}
+                  <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", marginBottom: 10 }}>
+                    <span style={{ background: "rgba(220, 38, 38, 0.08)", color: "#dc2626", border: "1px solid rgba(220, 38, 38, 0.25)", padding: "3px 10px", borderRadius: "9999px", fontSize: "11.5px", fontWeight: 800, display: "inline-flex", alignItems: "center", gap: 5 }}>
+                      <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#dc2626" }} />
                       23/100 · Critical Slippage Risk
                     </span>
-                    <span style={{ fontSize: "12px", color: "#64748b" }}>HubSpot Deal #48921820</span>
+                    <span style={{ fontSize: "12px", color: "#64748b", fontFamily: "var(--font-mono)", background: "#f1f5f9", padding: "2px 8px", borderRadius: "6px", border: "1px solid #e2e8f0" }}>
+                      HubSpot Deal #48921820
+                    </span>
                   </div>
-                  <h3 style={{ fontSize: "22px", fontWeight: 800, color: "#092124", margin: "0 0 6px" }}>
-                    Horizon Data Modernization · $180,000
-                  </h3>
-                  <div style={{ fontSize: "13px", color: "#475569", marginBottom: 14 }}>
-                    <strong>Account:</strong> RetailMax Corp. · <strong>Rep:</strong> Sarah Miller · <strong>Stage:</strong> Proposal & Review
+
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", flexWrap: "wrap", gap: 8, margin: "0 0 10px" }}>
+                    <h3 style={{ fontSize: "clamp(20px, 3.5vw, 24px)", fontWeight: 900, color: "#092124", margin: 0, letterSpacing: "-0.02em" }}>
+                      Horizon Data Modernization
+                    </h3>
+                    <span style={{ fontSize: "22px", fontWeight: 900, color: "#059669", fontFamily: "var(--font-heading)" }}>
+                      $180,000
+                    </span>
                   </div>
-                  <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: 16 }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: "12.5px", color: "#dc2626", fontWeight: 600 }}>
-                      <span>⚠️</span> <span>Economic Buyer (CFO) silent for 18 days (-34pts)</span>
+
+                  {/* Metadata Chips Bar */}
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 18, fontSize: "12px", color: "#475569" }}>
+                    <span style={{ background: "#f8fafc", padding: "4px 10px", borderRadius: "6px", border: "1px solid #e2e8f0" }}>
+                      <strong>Account:</strong> RetailMax Corp.
+                    </span>
+                    <span style={{ background: "#f8fafc", padding: "4px 10px", borderRadius: "6px", border: "1px solid #e2e8f0" }}>
+                      <strong>Rep:</strong> Sarah Miller (AE)
+                    </span>
+                    <span style={{ background: "#f8fafc", padding: "4px 10px", borderRadius: "6px", border: "1px solid #e2e8f0" }}>
+                      <strong>Stage:</strong> Proposal & Review (18d)
+                    </span>
+                  </div>
+
+                  {/* Detected Risk Vectors (Card Rows) */}
+                  <div style={{ display: "flex", flexDirection: "column", gap: 9, marginBottom: 18 }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 14px", background: "rgba(220, 38, 38, 0.04)", border: "1px solid rgba(220, 38, 38, 0.2)", borderRadius: "10px" }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                        <span style={{ fontSize: "16px" }}>📉</span>
+                        <div>
+                          <div style={{ fontSize: "13px", fontWeight: 800, color: "#b91c1c" }}>
+                            Economic Buyer (CFO) Silent for 18 Days
+                          </div>
+                          <div style={{ fontSize: "11px", color: "#64748b" }}>
+                            No emails, calendar holds, or engagement since Nov 12
+                          </div>
+                        </div>
+                      </div>
+                      <span style={{ fontSize: "11px", fontWeight: 800, color: "#dc2626", background: "rgba(220, 38, 38, 0.12)", padding: "2px 8px", borderRadius: "6px" }}>
+                        -34 pts
+                      </span>
                     </div>
-                    <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: "12.5px", color: "#ea580c", fontWeight: 600 }}>
-                      <span>⚠️</span> <span>Single-threaded through VP Eng only (-22pts)</span>
+
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 14px", background: "rgba(234, 88, 12, 0.04)", border: "1px solid rgba(234, 88, 12, 0.2)", borderRadius: "10px" }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                        <span style={{ fontSize: "16px" }}>👤</span>
+                        <div>
+                          <div style={{ fontSize: "13px", fontWeight: 800, color: "#c2410c" }}>
+                            Single-Threaded (VP Engineering Only)
+                          </div>
+                          <div style={{ fontSize: "11px", color: "#64748b" }}>
+                            Missing procurement, legal, and financial decision-makers
+                          </div>
+                        </div>
+                      </div>
+                      <span style={{ fontSize: "11px", fontWeight: 800, color: "#ea580c", background: "rgba(234, 88, 12, 0.12)", padding: "2px 8px", borderRadius: "6px" }}>
+                        -22 pts
+                      </span>
                     </div>
-                    <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: "12.5px", color: "#ea580c", fontWeight: 600 }}>
-                      <span>⚠️</span> <span>Close date pushed 2x this quarter (-18pts)</span>
+
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 14px", background: "rgba(234, 88, 12, 0.04)", border: "1px solid rgba(234, 88, 12, 0.2)", borderRadius: "10px" }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                        <span style={{ fontSize: "16px" }}>📅</span>
+                        <div>
+                          <div style={{ fontSize: "13px", fontWeight: 800, color: "#c2410c" }}>
+                            Close Date Pushed 2x This Quarter
+                          </div>
+                          <div style={{ fontSize: "11px", color: "#64748b" }}>
+                            Pushed from Oct 31 → Nov 30 → Dec 15 (+45d slippage)
+                          </div>
+                        </div>
+                      </div>
+                      <span style={{ fontSize: "11px", fontWeight: 800, color: "#ea580c", background: "rgba(234, 88, 12, 0.12)", padding: "2px 8px", borderRadius: "6px" }}>
+                        -18 pts
+                      </span>
                     </div>
                   </div>
-                  <div style={{ padding: "10px 14px", background: "rgba(255, 92, 53, 0.08)", border: "1px solid rgba(255, 92, 53, 0.25)", borderRadius: "8px", fontSize: "12.5px", color: "#092124", fontWeight: 600 }}>
-                    ⚡ <strong>Automated Action:</strong> Triggered executive peer-to-peer sequence to CFO with Forrester ROI benchmark.
+
+                  {/* AI Autonomous Action Bar */}
+                  <div style={{ padding: "12px 16px", background: "linear-gradient(135deg, rgba(255,92,53,0.06) 0%, rgba(18,69,72,0.06) 100%)", border: "1.5px solid rgba(255,92,53,0.3)", borderRadius: "10px", display: "flex", alignItems: "flex-start", gap: 10 }}>
+                    <span style={{ fontSize: "18px", lineHeight: 1 }}>⚡</span>
+                    <div style={{ fontSize: "12.5px", color: "#092124", lineHeight: 1.5 }}>
+                      <strong>Autonomous Playbook Triggered:</strong> Executive peer-to-peer sequence to CFO dispatched with Forrester ROI benchmark & DocuSign velocity tracking.
+                    </div>
                   </div>
                 </div>
 
-                <div style={{ background: "#f8fafc", padding: "24px", borderRadius: "12px", border: "1px solid #e2e8f0", display: "flex", flexDirection: "column", gap: 12 }}>
-                  <div style={{ fontSize: "12px", fontWeight: 800, color: "#092124", textTransform: "uppercase" }}>
-                    Instant Executive Actions
+                {/* Right Side: Health Score Dial & Instant Actions Cockpit */}
+                <div
+                  style={{
+                    background: "linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%)",
+                    padding: "26px",
+                    borderRadius: "16px",
+                    border: "1.5px solid #e2e8f0",
+                    boxShadow: "0 10px 28px rgba(9, 33, 36, 0.05)",
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 18,
+                  }}
+                >
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <span style={{ fontSize: "11.5px", fontWeight: 800, color: "#092124", textTransform: "uppercase", letterSpacing: "0.06em" }}>
+                      Health Score Gauge
+                    </span>
+                    <span style={{ fontSize: "11px", color: "#059669", fontWeight: 700 }}>● Active Scoring Stream</span>
                   </div>
-                  <button onClick={() => navigate("/deals")} style={{ width: "100%", padding: "12px", background: "#ff5c35", color: "#fff", fontSize: "13.5px", fontWeight: 700, border: "none", borderRadius: "8px", cursor: "pointer", boxShadow: "0 2px 8px rgba(255,92,53,0.3)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    <span>Inspect Full Dossier in App</span>
-                    <span>→</span>
-                  </button>
-                  <button onClick={() => openOrder("audit-99")} style={{ width: "100%", padding: "12px", background: "#ffffff", color: "#092124", fontSize: "13.5px", fontWeight: 700, border: "1px solid #cbd5e1", borderRadius: "8px", cursor: "pointer", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    <span>Audit Your Portal for $99</span>
-                    <span>↗</span>
-                  </button>
+
+                  {/* Big Score Dial */}
+                  <div style={{ background: "#ffffff", padding: "20px", borderRadius: "12px", border: "1px solid #e2e8f0", textAlign: "center" }}>
+                    <div style={{ fontSize: "44px", fontWeight: 900, color: "#dc2626", lineHeight: 1, letterSpacing: "-0.04em", fontFamily: "var(--font-heading)" }}>
+                      23<span style={{ fontSize: "20px", color: "#94a3b8", fontWeight: 700 }}>/100</span>
+                    </div>
+                    <div style={{ fontSize: "12px", fontWeight: 800, color: "#dc2626", textTransform: "uppercase", marginTop: 6, letterSpacing: "0.04em" }}>
+                      Critical Slippage Detected
+                    </div>
+                    <div style={{ fontSize: "11.5px", color: "#64748b", marginTop: 4 }}>
+                      ▼ -41 pts decay since initial proposal stage
+                    </div>
+                  </div>
+
+                  {/* Actions */}
+                  <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                    <button
+                      onClick={() => navigate("/deals")}
+                      style={{
+                        width: "100%",
+                        padding: "14px 18px",
+                        background: "linear-gradient(135deg, #ff6b48 0%, #ff5c35 100%)",
+                        color: "#ffffff",
+                        fontSize: "14px",
+                        fontWeight: 800,
+                        border: "none",
+                        borderRadius: "10px",
+                        cursor: "pointer",
+                        boxShadow: "0 6px 18px rgba(255,92,53,0.32)",
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        transition: "all 0.2s ease",
+                      }}
+                    >
+                      <span>Inspect Full Dossier in App</span>
+                      <span>→</span>
+                    </button>
+
+                    <button
+                      onClick={() => openOrder("growth-499")}
+                      style={{
+                        width: "100%",
+                        padding: "13px 18px",
+                        background: "#ffffff",
+                        color: "#092124",
+                        fontSize: "13.5px",
+                        fontWeight: 800,
+                        border: "1.5px solid #cbd5e1",
+                        borderRadius: "10px",
+                        cursor: "pointer",
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        boxShadow: "0 2px 6px rgba(9, 33, 36, 0.04)",
+                        transition: "all 0.15s ease",
+                      }}
+                    >
+                      <span>Start 7-Day Free Trial ($0 Today)</span>
+                      <span>↗</span>
+                    </button>
+                  </div>
+
+                  <div style={{ fontSize: "11px", color: "#64748b", textAlign: "center", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
+                    <svg width={13} height={13} viewBox="0 0 24 24" fill="none" stroke="#059669" strokeWidth={2.5}><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /><path d="m9 12 2 2 4-4" /></svg>
+                    <span>100% Deterministic 7-Vector Math Engine</span>
+                  </div>
                 </div>
+
               </div>
             )}
 
+            {/* TAB 2: MONTE CARLO */}
             {heroTab === "forecast" && (
-              <div style={{ textAlign: "center", padding: "20px 0" }}>
-                <div style={{ fontSize: "13px", fontWeight: 700, color: "#00a4bd", textTransform: "uppercase", marginBottom: 6 }}>Monte Carlo Revenue Simulation</div>
-                <h4 style={{ fontSize: "20px", fontWeight: 800, color: "#092124", marginBottom: 10 }}>Rep Commit: $1.4M vs. AI Realistic: $940K</h4>
-                <p style={{ fontSize: "13.5px", color: "#64748b", maxWidth: 580, margin: "0 auto 18px" }}>
-                  Uncovers $460,000 in manager padding and hidden deal slippage across 10,000 statistical Monte Carlo distribution runs.
-                </p>
-                <button onClick={() => navigate("/forecast")} style={{ padding: "10px 22px", background: "#092124", color: "#fff", borderRadius: "8px", fontWeight: 700, fontSize: "13px", border: "none", cursor: "pointer" }}>
-                  Explore Forecast Simulator →
-                </button>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 320px), 1fr))", gap: 28, alignItems: "center" }}>
+                <div>
+                  <span style={{ fontSize: "11.5px", fontWeight: 800, color: "#00a4bd", textTransform: "uppercase", letterSpacing: "0.08em" }}>
+                    10,000-RUN STATISTICAL SIMULATION
+                  </span>
+                  <h3 style={{ fontSize: "clamp(22px, 3.5vw, 26px)", fontWeight: 900, color: "#092124", margin: "8px 0 10px" }}>
+                    Rep Commit: $1.4M vs. AI Realistic: $940K
+                  </h3>
+                  <p style={{ fontSize: "14px", color: "#475569", lineHeight: 1.6, marginBottom: 20 }}>
+                    Uncovers <strong>$460,000 in manager padding and hidden deal slippage</strong> by computing probability distributions across historical stage velocity and rep win rates.
+                  </p>
+
+                  <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                    <div style={{ background: "#f8fafc", padding: "12px 16px", borderRadius: "10px", border: "1px solid #e2e8f0", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                      <span style={{ fontSize: "13px", fontWeight: 700, color: "#092124" }}>P90 Probability (Conservative Floor):</span>
+                      <span style={{ fontSize: "15px", fontWeight: 900, color: "#059669" }}>$880,000 (90% Confidence)</span>
+                    </div>
+                    <div style={{ background: "rgba(0,164,189,0.06)", padding: "12px 16px", borderRadius: "10px", border: "1px solid rgba(0,164,189,0.3)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                      <span style={{ fontSize: "13px", fontWeight: 800, color: "#007a8c" }}>P50 Probability (Expected Real Target):</span>
+                      <span style={{ fontSize: "16px", fontWeight: 900, color: "#007a8c" }}>$940,000 (Median)</span>
+                    </div>
+                    <div style={{ background: "#f8fafc", padding: "12px 16px", borderRadius: "10px", border: "1px solid #e2e8f0", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                      <span style={{ fontSize: "13px", fontWeight: 700, color: "#092124" }}>P10 Probability (Optimistic Ceiling):</span>
+                      <span style={{ fontSize: "15px", fontWeight: 900, color: "#ff5c35" }}>$1,180,000 (Stretch)</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div style={{ background: "#092124", padding: "28px", borderRadius: "16px", color: "#ffffff", textAlign: "center" }}>
+                  <div style={{ fontSize: "12px", fontWeight: 800, color: "#ff5c35", textTransform: "uppercase", marginBottom: 6 }}>
+                    Quarterly Gap Analysis
+                  </div>
+                  <div style={{ fontSize: "38px", fontWeight: 900, color: "#ef4444", fontFamily: "var(--font-heading)", margin: "4px 0 12px" }}>
+                    -$460,000
+                  </div>
+                  <p style={{ fontSize: "13px", color: "#94a3b8", lineHeight: 1.5, marginBottom: 20 }}>
+                    Identified 4 stalled deals with uncommitted champions before executive board forecasts.
+                  </p>
+                  <button
+                    onClick={() => navigate("/forecast")}
+                    style={{
+                      width: "100%",
+                      padding: "13px",
+                      background: "#00a4bd",
+                      color: "#fff",
+                      borderRadius: "10px",
+                      fontWeight: 800,
+                      fontSize: "13.5px",
+                      border: "none",
+                      cursor: "pointer",
+                      boxShadow: "0 4px 14px rgba(0,164,189,0.4)",
+                    }}
+                  >
+                    Open Forecast Simulator →
+                  </button>
+                </div>
               </div>
             )}
 
+            {/* TAB 3: DEAL WAR ROOM */}
             {heroTab === "warroom" && (
-              <div style={{ textAlign: "center", padding: "20px 0" }}>
-                <div style={{ fontSize: "13px", fontWeight: 700, color: "#ff5c35", textTransform: "uppercase", marginBottom: 6 }}>Executive QBR Decision Matrix</div>
-                <h4 style={{ fontSize: "20px", fontWeight: 800, color: "#092124", marginBottom: 10 }}>5 Enterprise Deals Requiring Immediate CFO Intervention</h4>
-                <p style={{ fontSize: "13.5px", color: "#64748b", maxWidth: 580, margin: "0 auto 18px" }}>
-                  Pre-configured board briefing deck, DocuSign velocity tracking, and peer-to-peer executive outreach sequencing.
-                </p>
-                <button onClick={() => navigate("/war-room")} style={{ padding: "10px 22px", background: "#ff5c35", color: "#fff", borderRadius: "8px", fontWeight: 700, fontSize: "13px", border: "none", cursor: "pointer" }}>
-                  Open Deal War Room →
-                </button>
+              <div>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12, marginBottom: 18 }}>
+                  <div>
+                    <span style={{ fontSize: "11.5px", fontWeight: 800, color: "#ff5c35", textTransform: "uppercase", letterSpacing: "0.08em" }}>
+                      EXECUTIVE PIPELINE REVIEW
+                    </span>
+                    <h3 style={{ fontSize: "clamp(20px, 3.5vw, 24px)", fontWeight: 900, color: "#092124", margin: "4px 0 0" }}>
+                      Friday QBR Priority Rescue Queue
+                    </h3>
+                  </div>
+                  <button
+                    onClick={() => navigate("/war-room")}
+                    style={{
+                      padding: "10px 18px",
+                      background: "linear-gradient(135deg, #ff6b48 0%, #ff5c35 100%)",
+                      color: "#fff",
+                      borderRadius: "8px",
+                      fontWeight: 800,
+                      fontSize: "13px",
+                      border: "none",
+                      cursor: "pointer",
+                      boxShadow: "0 4px 12px rgba(255,92,53,0.3)",
+                    }}
+                  >
+                    Launch Full War Room →
+                  </button>
+                </div>
+
+                {/* Priority Deals Table */}
+                <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                  {[
+                    { name: "Horizon Data Modernization", client: "RetailMax Corp.", val: "$180,000", score: "23/100", risk: "Critical (CFO Silent 18d)", action: "Auto-Peer Sequence", bg: "rgba(220, 38, 38, 0.05)", border: "rgba(220, 38, 38, 0.25)" },
+                    { name: "Quantum Security Suite", client: "FinanceGo Ltd.", val: "$280,000", score: "31/100", risk: "Critical (Close Date Pushed 2x)", action: "Procurement Fast-Track", bg: "rgba(220, 38, 38, 0.05)", border: "rgba(220, 38, 38, 0.25)" },
+                    { name: "Apex CRM Integration", client: "LogiPro Solutions", val: "$120,000", score: "62/100", risk: "Moderate (Single-Threaded)", action: "Multi-Thread VP Intro", bg: "rgba(234, 88, 12, 0.05)", border: "rgba(234, 88, 12, 0.25)" },
+                  ].map((row, i) => (
+                    <div
+                      key={i}
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        padding: "12px 18px",
+                        background: row.bg,
+                        border: `1px solid ${row.border}`,
+                        borderRadius: "10px",
+                        flexWrap: "wrap",
+                        gap: 10,
+                      }}
+                    >
+                      <div>
+                        <div style={{ fontSize: "14px", fontWeight: 800, color: "#092124" }}>{row.name}</div>
+                        <div style={{ fontSize: "12px", color: "#64748b" }}>{row.client} · {row.val}</div>
+                      </div>
+                      <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                        <span style={{ fontSize: "12px", fontWeight: 800, color: "#dc2626" }}>Score: {row.score}</span>
+                        <span style={{ fontSize: "12px", background: "#ffffff", padding: "4px 10px", borderRadius: "6px", border: "1px solid #cbd5e1", fontWeight: 700, color: "#092124" }}>
+                          ⚡ {row.action}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             )}
+
           </div>
         </motion.div>
       </section>
@@ -971,7 +1266,168 @@ export const LandingPage: React.FC = () => {
         </div>
       </section>
 
-      {/* ── 5. Product Hubs Bento Grid — HubSpot Native Style ─────── */}
+      {/* ── 4.5 The Shift: Dark Green Obsidian Reality Section (Agency Style) ─── */}
+      <section style={{ padding: "clamp(56px, 7vw, 92px) clamp(16px, 4vw, 24px)", background: "linear-gradient(180deg, #092124 0%, #0d2d30 50%, #092124 100%)", color: "#ffffff", position: "relative", borderTop: "1px solid rgba(255,255,255,0.08)", borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
+        <div style={{ maxWidth: 1140, margin: "0 auto" }}>
+          
+          {/* Section Header */}
+          <div style={{ textAlign: "center", maxWidth: 800, margin: "0 auto 52px" }}>
+            <span style={{ fontSize: "12px", fontWeight: 800, color: "#ff5c35", letterSpacing: "0.08em", textTransform: "uppercase", background: "rgba(255, 92, 53, 0.12)", border: "1px solid rgba(255, 92, 53, 0.3)", padding: "4px 14px", borderRadius: "9999px", display: "inline-block", marginBottom: 14 }}>
+              THE BRUTAL REALITY OF REVOPS IN 2026
+            </span>
+            <h2 style={{ fontSize: "clamp(28px, 4.5vw, 44px)", fontWeight: 900, color: "#ffffff", letterSpacing: "-0.03em", margin: "10px 0 16px", lineHeight: 1.15 }}>
+              The Subjective Forecasting Model Is Broken. The AI-Augmented Pipeline Is Dominating.
+            </h2>
+            <p style={{ fontSize: "16px", color: "#94a3b8", lineHeight: 1.6, margin: 0 }}>
+              Why 78% of commit deals slip in HubSpot without warning — and how 7-vector mathematical telemetry stops pipeline bleeding before reps or leaders even notice.
+            </p>
+          </div>
+
+          {/* Before vs After Comparison Grid */}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 320px), 1fr))", gap: 24, marginBottom: 48 }}>
+            
+            {/* The Old Broken Model */}
+            <div style={{ background: "rgba(220, 38, 38, 0.04)", border: "1px solid rgba(220, 38, 38, 0.3)", borderRadius: "18px", padding: "clamp(24px, 4vw, 36px) clamp(18px, 3.5vw, 30px)", boxShadow: "inset 0 1px 0 rgba(255,255,255,0.05)" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20 }}>
+                <span style={{ width: 30, height: 30, borderRadius: "50%", background: "#dc2626", color: "#ffffff", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: "14px", flexShrink: 0 }}>✕</span>
+                <h3 style={{ fontSize: "20px", fontWeight: 800, color: "#fca5a5", margin: 0 }}>The Broken Subjective Pipeline</h3>
+              </div>
+              <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 16 }}>
+                {[
+                  "Reps forecast close dates based on optimistic gut-feel rather than verifiable buyer telemetry.",
+                  "Economic buyers go dark for 18+ days with zero automatic alerts in standard HubSpot dashboards.",
+                  "Single-threaded commit deals suddenly collapse in the final week when the champion disengages.",
+                  "RevOps leaders waste 15+ hours every week building manual slide decks for executive reviews.",
+                  "Post-mortem deal forensics happen weeks after high-value pipeline was already lost to competitors.",
+                ].map((item, idx) => (
+                  <li key={idx} style={{ display: "flex", alignItems: "flex-start", gap: 10, fontSize: "14px", color: "#cbd5e1", lineHeight: 1.55 }}>
+                    <span style={{ color: "#ef4444", fontWeight: 800 }}>•</span>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* The DealSense Telemetry Model */}
+            <div style={{ background: "linear-gradient(180deg, rgba(18, 69, 72, 0.6) 0%, rgba(9, 33, 36, 0.9) 100%)", border: "2px solid #ff5c35", borderRadius: "18px", padding: "clamp(24px, 4vw, 36px) clamp(18px, 3.5vw, 30px)", position: "relative", boxShadow: "0 0 40px rgba(255,92,53,0.22), inset 0 1px 0 rgba(255,255,255,0.15)" }}>
+              <div style={{ position: "absolute", top: -13, right: 24, background: "linear-gradient(135deg, #ff6b48 0%, #ff5c35 100%)", color: "#ffffff", fontSize: "11px", fontWeight: 800, padding: "4px 14px", borderRadius: "9999px", letterSpacing: "0.05em", boxShadow: "0 4px 12px rgba(255,92,53,0.35)" }}>
+                👑 100% OBJECTIVE MATHEMATICS
+              </div>
+              <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20 }}>
+                <span style={{ width: 30, height: 30, borderRadius: "50%", background: "#10b981", color: "#ffffff", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: "14px", flexShrink: 0 }}>✓</span>
+                <h3 style={{ fontSize: "20px", fontWeight: 800, color: "#ffffff", margin: 0 }}>The DealSense Telemetry Engine</h3>
+              </div>
+              <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 16 }}>
+                {[
+                  "0% hallucination 0–100 health scoring calculated deterministically across 7 deep telemetry vectors.",
+                  "Sub-200ms HubSpot webhooks detect silent economic buyer disengagement and stage stall instantly.",
+                  "Automated MEDDICC qualification matrix identifies missing decision criteria before deals enter commit.",
+                  "1-Click Executive QBR briefs synthesize board-level dossiers and next-best actions in real-time.",
+                  "2-way automated CRM writeback and Slack alerts orchestrate rep remediation workflows automatically.",
+                ].map((item, idx) => (
+                  <li key={idx} style={{ display: "flex", alignItems: "flex-start", gap: 10, fontSize: "14px", color: "#f1f5f9", lineHeight: 1.55 }}>
+                    <span style={{ color: "#34d399", fontWeight: 800 }}>•</span>
+                    <span><strong>{item}</strong></span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+          </div>
+
+          {/* Quick Stats Strip */}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 14 }}>
+            {[
+              { num: "$180K+", label: "Average Deal Value Rescued", sub: "Based on active customer telemetry" },
+              { num: "0%", label: "LLM Hallucination Risk", sub: "Pure deterministic mathematics" },
+              { num: "< 180ms", label: "Webhook Streaming Latency", sub: "Redis Streams + PostgreSQL" },
+              { num: "7 Vectors", label: "Multi-Dimensional Risk Scoring", sub: "Stage aging, decay, MEDDICC" },
+            ].map((stat, i) => (
+              <div
+                key={i}
+                style={{
+                  background: "rgba(255, 255, 255, 0.04)",
+                  border: "1px solid rgba(255, 255, 255, 0.08)",
+                  borderRadius: "14px",
+                  padding: "18px 16px",
+                  textAlign: "center",
+                }}
+              >
+                <div style={{ fontSize: "clamp(20px, 3.2vw, 24px)", fontWeight: 900, color: "#ffffff", letterSpacing: "-0.03em" }}>{stat.num}</div>
+                <div style={{ fontSize: "12px", fontWeight: 800, color: "#ff5c35", marginTop: 4 }}>{stat.label}</div>
+                <div style={{ fontSize: "11px", color: "#94a3b8", marginTop: 2 }}>{stat.sub}</div>
+              </div>
+            ))}
+          </div>
+
+        </div>
+      </section>
+
+      {/* ── 5. Interactive Live Flowing Video Tour: How It Works ───────── */}
+      <HowItWorksVideoSection variant="landing" />
+
+      {/* ── 6. Coral Glow: Built-in AI Autonomous Agents ─────────────── */}
+      <section
+        style={{
+          padding: "clamp(48px, 6vw, 80px) clamp(16px, 4vw, 24px)",
+          background: "linear-gradient(135deg, #fff7f5 0%, #ffede8 50%, #fff7f5 100%)",
+          borderTop: "1px solid #ffd5cc",
+          borderBottom: "1px solid #ffd5cc",
+        }}
+      >
+        <div style={{ maxWidth: 1160, margin: "0 auto" }}>
+          <div style={{ textAlign: "center", marginBottom: 36 }}>
+            <span style={{ fontSize: "11.5px", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em", color: "#ff5c35" }}>
+              AUTONOMOUS REVENUE AGENTS
+            </span>
+            <h2 style={{ fontSize: "clamp(24px, 4.5vw, 38px)", fontWeight: 800, letterSpacing: "-0.03em", color: "#092124", margin: "8px 0 10px" }}>
+              Built-in AI agents working for your pipeline 24/7.
+            </h2>
+            <p style={{ fontSize: "14px", color: "#475569", maxWidth: 620, margin: "0 auto", lineHeight: 1.55 }}>
+              Autonomous RevOps agents that evaluate deal risk, draft executive QBR briefs, and trigger corrective workflows without human intervention.
+            </p>
+          </div>
+
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 18 }}>
+            {AI_AGENTS.map((agent, i) => (
+              <div
+                key={i}
+                style={{
+                  background: "#ffffff",
+                  borderRadius: "14px",
+                  padding: "24px 20px",
+                  border: "1px solid rgba(255, 92, 53, 0.2)",
+                  boxShadow: "0 8px 24px rgba(255, 92, 53, 0.08)",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "space-between",
+                }}
+              >
+                <div>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+                    <span style={{ fontSize: "11px", fontWeight: 700, color: "#ff5c35", background: "rgba(255, 92, 53, 0.1)", padding: "3px 9px", borderRadius: "var(--radius-pill)" }}>
+                      {agent.role}
+                    </span>
+                    <span style={{ fontSize: "11px", color: "#059669", fontWeight: 700 }}>● {agent.status}</span>
+                  </div>
+                  <h3 style={{ fontSize: "17px", fontWeight: 800, color: "#092124", margin: "0 0 6px" }}>
+                    {agent.title}
+                  </h3>
+                  <p style={{ fontSize: "13px", color: "#475569", lineHeight: 1.55, margin: 0 }}>
+                    {agent.desc}
+                  </p>
+                </div>
+                <div style={{ borderTop: "1px solid #e2e8f0", paddingTop: 14, marginTop: 18, display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "12px", color: "#334155" }}>
+                  <span style={{ fontWeight: 600 }}>Performance:</span>
+                  <span style={{ fontWeight: 800, color: "#ff5c35" }}>{agent.metric}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── 7. Product Hubs Bento Grid — HubSpot Native Style ─────── */}
       <section style={{ padding: "clamp(56px, 7vw, 96px) clamp(16px, 4vw, 24px)", background: "linear-gradient(180deg, #f8fafc 0%, #ffffff 100%)" }}>
         <div style={{ maxWidth: 1160, margin: "0 auto" }}>
           <div className="landing-hubs-layout">
@@ -1073,71 +1529,7 @@ export const LandingPage: React.FC = () => {
         </div>
       </section>
 
-      {/* ── 6. Coral Glow: Built-in AI Autonomous Agents ─────────────── */}
-      <section
-        style={{
-          padding: "clamp(48px, 6vw, 80px) clamp(16px, 4vw, 24px)",
-          background: "linear-gradient(135deg, #fff1eb 0%, #fde2e4 50%, #fff1eb 100%)",
-          borderTop: "1px solid #ffd5cc",
-          borderBottom: "1px solid #ffd5cc",
-        }}
-      >
-        <div style={{ maxWidth: 1160, margin: "0 auto" }}>
-          <div style={{ textAlign: "center", marginBottom: 36 }}>
-            <span style={{ fontSize: "11.5px", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em", color: "#ff5c35" }}>
-              AUTONOMOUS REVENUE AGENTS
-            </span>
-            <h2 style={{ fontSize: "clamp(24px, 4.5vw, 38px)", fontWeight: 800, letterSpacing: "-0.03em", color: "#092124", margin: "8px 0 10px" }}>
-              Built-in AI agents working for your pipeline 24/7.
-            </h2>
-            <p style={{ fontSize: "14px", color: "#64748b", maxWidth: 620, margin: "0 auto", lineHeight: 1.55 }}>
-              Autonomous RevOps agents that evaluate deal risk, draft executive QBR briefs, and trigger corrective workflows without human intervention.
-            </p>
-          </div>
-
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 18 }}>
-            {AI_AGENTS.map((agent, i) => (
-              <div
-                key={i}
-                style={{
-                  background: "#ffffff",
-                  borderRadius: "14px",
-                  padding: "24px 20px",
-                  border: "1px solid rgba(255, 92, 53, 0.2)",
-                  boxShadow: "0 8px 24px rgba(255, 92, 53, 0.08)",
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "space-between",
-                }}
-              >
-                <div>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
-                    <span style={{ fontSize: "11px", fontWeight: 700, color: "#ff5c35", background: "rgba(255, 92, 53, 0.1)", padding: "3px 9px", borderRadius: "var(--radius-pill)" }}>
-                      {agent.role}
-                    </span>
-                    <span style={{ fontSize: "11px", color: "#059669", fontWeight: 700 }}>● {agent.status}</span>
-                  </div>
-                  <h3 style={{ fontSize: "17px", fontWeight: 800, color: "#092124", margin: "0 0 6px" }}>
-                    {agent.title}
-                  </h3>
-                  <p style={{ fontSize: "13px", color: "#64748b", lineHeight: 1.55, margin: 0 }}>
-                    {agent.desc}
-                  </p>
-                </div>
-                <div style={{ borderTop: "1px solid #e2e8f0", paddingTop: 14, marginTop: 18, display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "12px", color: "#334155" }}>
-                  <span style={{ fontWeight: 600 }}>Performance:</span>
-                  <span style={{ fontWeight: 800, color: "#ff5c35" }}>{agent.metric}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── 6.5 Interactive Live Flowing Video Tour: How It Works ───────── */}
-      <HowItWorksVideoSection variant="landing" />
-
-      {/* ── 7. Live Interactive Deal Risk Simulator ──────────────────── */}
+      {/* ── 8. Live Interactive Deal Risk Simulator ──────────────────── */}
       <section style={{ padding: "clamp(56px, 7vw, 90px) clamp(16px, 4vw, 24px)", maxWidth: 1140, margin: "0 auto" }}>
         <div style={{ textAlign: "center", marginBottom: 36 }}>
           <span style={{ fontSize: "12px", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em", color: "#ff5c35" }}>
@@ -2120,8 +2512,8 @@ export const LandingPage: React.FC = () => {
           <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
             {[
               {
-                q: "How fast does the $99 pilot risk audit deliver findings?",
-                a: "Under 48 hours. Connect via read-only OAuth, and our 7-vector engine scores all active deals, detects ghosting, and generates an Executive PDF Dossier with a 10-min Architect Loom walkthrough.",
+                q: "How does the 7-day free trial work?",
+                a: "Instant access with $0 due today. Connect via read-only OAuth in 2 minutes, and our 7-vector engine scores all active deals, detects ghosting, and unlocks unlimited sales rep seats. 1-click self-serve cancellation anytime.",
               },
               {
                 q: "Is our CRM data secure during the read-only OAuth connection?",
@@ -2136,8 +2528,8 @@ export const LandingPage: React.FC = () => {
                 a: "Yes, complete source code handover. Full FastAPI backend, React 18 frontend, Postgres schema, Redis Streams, and HubSpot Canvas SDK with unlimited commercial rights.",
               },
               {
-                q: "How does the 'Find $25K Or It’s Free' guarantee work?",
-                a: "Zero-risk money-back guarantee. If our audit doesn't uncover at least $25,000 in pipeline slippage or ghosting risk, get a 100% full refund within 14 days. No questions asked.",
+                q: "How does the 100% money-back guarantee work?",
+                a: "Zero risk. In addition to your 7-day free trial ($0 due today), if DealSense doesn't uncover deal slippage or ghosting risk within your first 30 days, receive a 100% full refund. No questions asked.",
               },
               {
                 q: "Can this integrate with our agency's custom domain & branding?",
@@ -2240,12 +2632,12 @@ export const LandingPage: React.FC = () => {
             Make impossible pipeline growth feel impossibly easy.
           </h2>
           <p style={{ fontSize: "15px", color: "rgba(255, 255, 255, 0.88)", maxWidth: 640, margin: "0 auto 28px", lineHeight: 1.6 }}>
-            Ready to upgrade your revenue governance? Test the live interactive platform or start with our $99 pilot risk audit.
+            Ready to upgrade your revenue governance? Test the live interactive platform or activate your 7-day free trial.
           </p>
 
           <div style={{ display: "flex", justifyContent: "center", gap: 14, flexWrap: "wrap" }}>
             <button
-              onClick={() => openOrder("audit-99")}
+              onClick={() => openOrder("growth-499")}
               style={{
                 padding: "14px 30px",
                 background: "linear-gradient(135deg, #ff6b48 0%, #ff5c35 100%)",
@@ -2260,7 +2652,7 @@ export const LandingPage: React.FC = () => {
                 letterSpacing: "-0.02em",
               }}
             >
-              Start $99 Risk-Free Audit →
+              Start 7-Day Free Trial →
             </button>
             <button
               onClick={() => navigate("/pipeline")}

@@ -6,7 +6,6 @@ import {
   Text,
   Button,
   Box,
-  Divider,
   Tile,
   StatusTag,
   Link,
@@ -17,13 +16,14 @@ import {
   StatisticsItem,
   LoadingSpinner,
   ErrorState,
+  EmptyState,
   Table,
   TableHead,
   TableBody,
   TableRow,
   TableCell,
   Accordion,
-  Tag
+  Tag,
 } from '@hubspot/ui-extensions';
 import React, { useEffect, useState } from 'react';
 
@@ -37,11 +37,12 @@ hubspot.extend<'crm.record.tab'>(({ context, actions, runServerlessFunction }: C
   <DealExtension context={context} actions={actions} runServerlessFunction={runServerlessFunction} />
 ));
 
-const DealExtension = ({ context, actions, runServerlessFunction }: CrmExtensionProps) => {
+const DealExtension = ({ context }: CrmExtensionProps) => {
   const [snapshot, setSnapshot] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [analyzing, setAnalyzing] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  
+
   const dealId = context.crm.objectId;
   const portalId = context.portal.id;
 
@@ -49,28 +50,54 @@ const DealExtension = ({ context, actions, runServerlessFunction }: CrmExtension
     try {
       setLoading(true);
       setError(null);
-      
+
       const response = await hubspot.fetch(`https://dealsense-api-6o2h.onrender.com/api/v1/deals/${dealId}/snapshot`, {
-        method: "GET",
+        method: 'GET',
         headers: {
-          "X-HubSpot-Portal-Id": String(portalId),
+          'X-HubSpot-Portal-Id': String(portalId),
         },
       });
-      
+
       if (!response.ok) {
         if (response.status === 404) {
-           setSnapshot(null);
-           return;
+          setSnapshot(null);
+          return;
         }
         throw new Error(`Failed to fetch deal intelligence (HTTP ${response.status})`);
       }
-      
+
       const data = await response.json();
       setSnapshot(data);
     } catch (err: any) {
-      setError(err.message || "An error occurred fetching deal intelligence.");
+      setError(err.message || 'An error occurred fetching deal intelligence.');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleAnalyzeDeal = async () => {
+    try {
+      setAnalyzing(true);
+      setError(null);
+
+      const response = await hubspot.fetch(`https://dealsense-api-6o2h.onrender.com/api/v1/deals/${dealId}/score`, {
+        method: 'POST',
+        headers: {
+          'X-HubSpot-Portal-Id': String(portalId),
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Scoring analysis failed (HTTP ${response.status})`);
+      }
+
+      const newSnapshot = await response.json();
+      setSnapshot(newSnapshot);
+    } catch (err: any) {
+      setError(err.message || 'Failed to complete deal analysis.');
+    } finally {
+      setAnalyzing(false);
     }
   };
 
@@ -78,113 +105,158 @@ const DealExtension = ({ context, actions, runServerlessFunction }: CrmExtension
     fetchSnapshot();
   }, [dealId]);
 
-  if (loading) {
-    return <LoadingSpinner label="Loading DealSense Intelligence..." size="medium" layout="centered" />;
+  if (loading || analyzing) {
+    return (
+      <LoadingSpinner
+        label={analyzing ? 'DealSense AI analyzing deal telemetry & signals...' : 'Loading DealSense Intelligence...'}
+        size="medium"
+        layout="centered"
+      />
+    );
   }
 
   if (error) {
     return (
-      <ErrorState title="Telemetry Error" type="warning">
+      <ErrorState title="Telemetry Error" type="error">
         <Text>{error}</Text>
-        <Button onClick={fetchSnapshot} variant="secondary">Retry Connection</Button>
+        <Button onClick={fetchSnapshot} variant="secondary">
+          Retry Connection
+        </Button>
       </ErrorState>
     );
   }
 
   if (!snapshot) {
     return (
-      <Flex direction="column" gap="medium" align="center">
-        <Heading>Deal Not Yet Analyzed</Heading>
-        <Text>DealSense has not processed telemetry for this deal.</Text>
-        <Button variant="primary" onClick={() => { /* In a real app, trigger score endpoint */ }}>
-          Analyze Deal Now
-        </Button>
-      </Flex>
+      <EmptyState
+        title="Deal Not Yet Analyzed"
+        imageName="deals"
+        layout="vertical"
+      >
+        <Flex direction="column" gap="medium" align="center">
+          <Text>
+            DealSense has not processed telemetry for this deal yet. Run an autonomous risk and MEDDICC qualification analysis now.
+          </Text>
+          <Button variant="primary" onClick={handleAnalyzeDeal}>
+            Analyze Deal Now
+          </Button>
+        </Flex>
+      </EmptyState>
     );
   }
 
-  const getRiskVariant = (band: string) => {
-    switch (band) {
-      case "critical": return "error";
-      case "high": return "warning";
-      case "elevated": return "warning";
-      case "moderate": return "default";
-      case "healthy": return "success";
-      default: return "default";
+  const getRiskStatusVariant = (band: string): 'danger' | 'warning' | 'info' | 'success' | 'default' => {
+    switch (band?.toLowerCase()) {
+      case 'critical':
+        return 'danger';
+      case 'high':
+      case 'elevated':
+        return 'warning';
+      case 'moderate':
+        return 'info';
+      case 'healthy':
+        return 'success';
+      default:
+        return 'default';
     }
   };
 
-  const getAlertVariant = (band: string) => {
-    switch (band) {
-      case "critical": return "error";
-      case "high": return "warning";
-      case "elevated": return "warning";
-      case "moderate": return "info";
-      case "healthy": return "success";
-      default: return "info";
+  const getAlertVariant = (band: string): 'error' | 'warning' | 'info' | 'success' => {
+    switch (band?.toLowerCase()) {
+      case 'critical':
+        return 'error';
+      case 'high':
+      case 'elevated':
+        return 'warning';
+      case 'moderate':
+        return 'info';
+      case 'healthy':
+        return 'success';
+      default:
+        return 'info';
     }
   };
 
-  const dashboardUrl = `https://dealsense.peash.tech/deals`;
+  const getProgressVariant = (score: number): 'success' | 'warning' | 'danger' => {
+    if (score >= 70) return 'success';
+    if (score >= 40) return 'warning';
+    return 'danger';
+  };
+
+  const dashboardUrl = `https://dealsense-ai.peash.tech/deals/${dealId}`;
+  const riskBand = snapshot.risk_band ? snapshot.risk_band.toUpperCase() : 'UNKNOWN';
+  const scoreDelta = snapshot.score_delta || 0;
+  const deltaFormatted = scoreDelta > 0 ? `+${scoreDelta}` : `${scoreDelta}`;
 
   return (
     <Flex direction="column" gap="large">
-      
       {/* 1. Risk Narrative Alert */}
-      <Alert title={`Risk Band: ${snapshot.risk_band.toUpperCase()}`} variant={getAlertVariant(snapshot.risk_band)}>
-        {snapshot.risk_narrative || "No narrative available for this deal."}
+      <Alert title={`Deal Risk Assessment: ${riskBand}`} variant={getAlertVariant(snapshot.risk_band)}>
+        {snapshot.risk_narrative || 'Autonomous telemetry evaluation completed. Review signals below.'}
       </Alert>
 
-      {/* 2. Score & Statistics */}
+      {/* 2. Health Score & Key Statistics */}
       <Tile>
         <Flex direction="column" gap="medium">
           <Flex justify="between" align="center">
             <Heading>Health Overview</Heading>
-            <StatusTag variant={getRiskVariant(snapshot.risk_band)}>
-              {snapshot.health_score} / 100
+            <StatusTag variant={getRiskStatusVariant(snapshot.risk_band)}>
+              {`${snapshot.health_score ?? 0} / 100 — ${riskBand}`}
             </StatusTag>
           </Flex>
 
           <Box>
-            <ProgressBar value={snapshot.health_score} showValue={false} title="Health Score" />
+            <ProgressBar
+              value={Number(snapshot.health_score) || 0}
+              maxValue={100}
+              variant={getProgressVariant(Number(snapshot.health_score) || 0)}
+              title="Health Score Gauge"
+            />
           </Box>
 
           <Statistics>
-            <StatisticsItem label="Score Trend" number={snapshot.score_delta > 0 ? `+${snapshot.score_delta}` : `${snapshot.score_delta}`} />
+            <StatisticsItem label="Score Trend" number={deltaFormatted} />
             <StatisticsItem label="Signals Detected" number={`${snapshot.top_signals ? snapshot.top_signals.length : 0}`} />
-            <StatisticsItem label="Last Updated" number={new Date(snapshot.computed_at).toLocaleDateString()} />
+            <StatisticsItem
+              label="Last Computed"
+              number={snapshot.computed_at ? new Date(snapshot.computed_at).toLocaleDateString() : 'Just now'}
+            />
           </Statistics>
         </Flex>
       </Tile>
 
-      {/* 3. Top Risk Signals Accordion */}
+      {/* 3. Detected Risk Signals Accordion */}
       {snapshot.top_signals && snapshot.top_signals.length > 0 && (
         <Tile>
           <Flex direction="column" gap="medium">
             <Heading>Detected Risk Signals</Heading>
-            <Accordion>
-              {snapshot.top_signals.map((signal: any, idx: number) => (
-                <Accordion.Item key={idx} title={signal.signal_name.replace(/_/g, " ").toUpperCase()}>
-                  <Flex direction="column" gap="small">
-                    <Flex justify="between">
-                      <Text format={{ fontWeight: "bold" }}>Severity</Text>
-                      <StatusTag variant={getRiskVariant(signal.severity)}>{signal.severity.toUpperCase()}</StatusTag>
-                    </Flex>
-                    <Text>{signal.description}</Text>
-                    {signal.metadata && (
-                      <Text variant="microcopy" format={{ italic: true }}>
-                        {JSON.stringify(signal.metadata)}
-                      </Text>
-                    )}
+            {snapshot.top_signals.map((signal: any, idx: number) => (
+              <Accordion
+                key={idx}
+                title={`${signal.signal_name ? signal.signal_name.replace(/_/g, ' ').toUpperCase() : 'SIGNAL'} (${signal.severity ? signal.severity.toUpperCase() : 'INFO'})`}
+                defaultOpen={idx === 0}
+              >
+                <Flex direction="column" gap="small">
+                  <Flex justify="between" align="center">
+                    <Text format={{ fontWeight: 'bold' }}>Severity Level</Text>
+                    <StatusTag variant={getRiskStatusVariant(signal.severity)}>
+                      {signal.severity ? signal.severity.toUpperCase() : 'INFO'}
+                    </StatusTag>
                   </Flex>
-                </Accordion.Item>
-              ))}
-            </Accordion>
+                  <Text>{signal.description || signal.reason || 'No detailed description.'}</Text>
+                  {signal.weight !== undefined && (
+                    <Text variant="microcopy" format={{ italic: true }}>
+                      Score Impact Weight: {signal.weight}
+                    </Text>
+                  )}
+                </Flex>
+              </Accordion>
+            ))}
           </Flex>
         </Tile>
       )}
 
-      {/* 4. MEDDICC Matrix */}
+      {/* 4. MEDDICC Qualification Matrix */}
       {snapshot.meddicc_matrix && (
         <Tile>
           <Flex direction="column" gap="medium">
@@ -197,56 +269,60 @@ const DealExtension = ({ context, actions, runServerlessFunction }: CrmExtension
                 </TableRow>
               </TableHead>
               <TableBody>
-                {Object.entries(snapshot.meddicc_matrix).map(([key, value]: [string, any]) => (
-                  <TableRow key={key}>
-                    <TableCell><Text format={{ fontWeight: "bold" }}>{key.toUpperCase()}</Text></TableCell>
-                    <TableCell>
-                      <Tag variant={
-                        value === "confirmed" ? "success" : 
-                        value === "identified" ? "warning" : 
-                        value === "missing" ? "error" : "default"
-                      }>
-                        {value.toUpperCase()}
-                      </Tag>
-                    </TableCell>
-                  </TableRow>
-                ))}
+                {Object.entries(snapshot.meddicc_matrix).map(([key, value]: [string, any]) => {
+                  const statusVal = String(value).toLowerCase();
+                  const tagVariant: 'success' | 'warning' | 'error' | 'default' =
+                    statusVal === 'confirmed' ? 'success' :
+                    statusVal === 'identified' ? 'warning' :
+                    statusVal === 'missing' ? 'error' : 'default';
+
+                  return (
+                    <TableRow key={key}>
+                      <TableCell>
+                        <Text format={{ fontWeight: 'bold' }}>{key.toUpperCase()}</Text>
+                      </TableCell>
+                      <TableCell>
+                        <Tag variant={tagVariant}>
+                          {String(value).toUpperCase()}
+                        </Tag>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
               </TableBody>
             </Table>
           </Flex>
         </Tile>
       )}
 
-      {/* 5. Recommended Actions */}
+      {/* 5. Recommended Actions & Next Steps */}
       <Tile>
         <Flex direction="column" gap="medium">
-          <Heading>Next Best Actions</Heading>
-          <Text>Based on the telemetry, the AI recommends the following actions.</Text>
+          <Heading>Next Best Actions & RevOps Playbooks</Heading>
+          <Text>
+            Autonomous RevOps engine has evaluated real-time CRM stage velocity and buyer commitment gaps.
+          </Text>
           <Flex direction="row" gap="medium" align="center">
             <Button
               variant="primary"
-              onClick={() => {
-                actions.addIframeModal({
-                  uri: dashboardUrl,
-                  title: 'DealSense Command Deck',
-                  width: 1200,
-                  height: 800,
-                });
+              href={{
+                url: dashboardUrl,
+                external: true,
               }}
             >
               Open Command Deck for Approvals
             </Button>
             <Button
               variant="secondary"
-              onClick={fetchSnapshot}
+              onClick={handleAnalyzeDeal}
             >
-              Refresh Telemetry
+              Re-Analyze Deal Telemetry
             </Button>
           </Flex>
         </Flex>
       </Tile>
 
-      {/* Footer */}
+      {/* 6. Footer Compliance */}
       <Box>
         <Text format={{ italic: true }} variant="microcopy">
           Autonomous intelligence powered by DealSense AI ·{' '}
@@ -255,7 +331,6 @@ const DealExtension = ({ context, actions, runServerlessFunction }: CrmExtension
           </Link>
         </Text>
       </Box>
-
     </Flex>
   );
 };

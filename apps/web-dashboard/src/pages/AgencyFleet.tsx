@@ -55,8 +55,7 @@ export const AgencyFleet: React.FC = () => {
 
   const openOrder = (tier: string) => {
     let mappedTier = "scale-999";
-    if (tier === "starter-299" || tier === "audit-99") mappedTier = "audit-99";
-    else if (tier === "growth-499") mappedTier = "growth-499";
+    if (tier === "growth-499" || tier === "starter-299" || tier === "audit-99") mappedTier = "growth-499";
     else if (tier === "scale-999" || tier === "agency-1500" || tier === "deploy-1500") mappedTier = "scale-999";
     else if (tier === "enterprise-2499" || tier === "elite-3500" || tier === "agency-3500") mappedTier = "enterprise-2499";
     else if (tier === "custom-app") mappedTier = "custom-app";
@@ -104,8 +103,8 @@ export const AgencyFleet: React.FC = () => {
           }}
         >
           <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#ff5c35", display: "inline-block", boxShadow: "0 0 8px #ff5c35", flexShrink: 0 }} />
-          <span>✨ <strong>HubSpot Solutions Partner Fleet:</strong> Dedicated multi-tenant revenue intelligence</span>
-          <span style={{ color: "#ff8c6b", fontWeight: 800, textDecoration: "underline", marginLeft: "2px" }}>Explore Partner Fleet Plans →</span>
+          <span style={{ whiteSpace: "nowrap" }}>✨ <strong>HubSpot Partner Fleet:</strong> Multi-Tenant Intelligence</span>
+          <span style={{ color: "#ff8c6b", fontWeight: 800, textDecoration: "underline", marginLeft: "2px", whiteSpace: "nowrap" }}>Explore Partner Plans →</span>
         </a>
       </div>
 
@@ -573,87 +572,326 @@ export const AgencyFleet: React.FC = () => {
       <HowItWorksVideoSection variant="agency" />
 
       {/* ── 4. The Inbound Diagnostic Client Acquisition Playbook ─────────── */}
-      <section id="acquisition" style={{ padding: "84px clamp(16px, 4vw, 24px)", background: "#ffffff" }}>
-        <div style={{ maxWidth: 1140, margin: "0 auto" }}>
-          <div style={{ textAlign: "center", maxWidth: 760, margin: "0 auto 56px" }}>
-            <span style={{ fontSize: "12px", fontWeight: 800, color: "#ff5c35", letterSpacing: "0.08em", textTransform: "uppercase" }}>
-              INBOUND PIPELINE DIAGNOSTIC METHODOLOGY
-            </span>
-            <h2 style={{ fontSize: "clamp(28px, 4.5vw, 42px)", fontWeight: 900, color: "#092124", letterSpacing: "-0.03em", margin: "12px 0 16px" }}>
-              How Solutions Partners Use DealSense to Close $30,000 Retainers
+      <section
+        id="acquisition"
+        style={{
+          padding: "clamp(64px, 7vw, 96px) clamp(16px, 4vw, 24px)",
+          background: "linear-gradient(180deg, #f8fafc 0%, #edf5f6 40%, #f1f7f7 70%, #ffffff 100%)",
+          position: "relative",
+          overflow: "hidden",
+        }}
+      >
+        {/* Soft Ambient Background Glow */}
+        <div
+          style={{
+            position: "absolute",
+            top: 0,
+            left: "50%",
+            transform: "translateX(-50%)",
+            width: "100%",
+            maxWidth: 1200,
+            height: "100%",
+            pointerEvents: "none",
+            background: "radial-gradient(ellipse 60% 40% at 50% 10%, rgba(0, 164, 189, 0.08) 0%, rgba(255, 92, 53, 0.05) 45%, transparent 80%)",
+            zIndex: 0,
+          }}
+        />
+
+        <div style={{ maxWidth: 1180, margin: "0 auto", position: "relative", zIndex: 1 }}>
+          {/* Section Header */}
+          <div style={{ textAlign: "center", maxWidth: 780, margin: "0 auto 52px" }}>
+            <div
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 8,
+                background: "rgba(255, 92, 53, 0.08)",
+                border: "1px solid rgba(255, 92, 53, 0.25)",
+                padding: "4px 14px",
+                borderRadius: "9999px",
+                marginBottom: 14,
+                boxShadow: "0 2px 8px rgba(255, 92, 53, 0.06)",
+              }}
+            >
+              <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#ff5c35", display: "inline-block", boxShadow: "0 0 8px #ff5c35" }} />
+              <span style={{ fontSize: "11px", fontWeight: 800, color: "#ff5c35", letterSpacing: "0.05em", textTransform: "uppercase" }}>
+                INBOUND REVOPS PLAYBOOK · 3-STEP CONVERSION ENGINE
+              </span>
+            </div>
+
+            <h2
+              style={{
+                fontSize: "clamp(26px, 4vw, 40px)",
+                fontWeight: 900,
+                color: "#092124",
+                letterSpacing: "-0.035em",
+                margin: "0 0 16px",
+                fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif",
+                lineHeight: 1.18,
+              }}
+            >
+              How Solutions Partners Use DealSense to Close{" "}
+              <span
+                style={{
+                  background: "linear-gradient(135deg, #ff5c35 0%, #ff7b57 50%, #00a4bd 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                }}
+              >
+                $30,000 Retainers
+              </span>
             </h2>
-            <p style={{ fontSize: "16px", color: "#64748b", lineHeight: 1.6 }}>
-              Instead of pitching an abstract 6-month CRM overhaul, execute the <strong>3-Step Inbound Diagnostic Playbook</strong> that demonstrates immediate revenue risk to executive stakeholders.
+
+            <p style={{ fontSize: "15.5px", color: "#475569", lineHeight: 1.65, margin: "0 auto", maxWidth: 700 }}>
+              Instead of pitching an abstract 6-month CRM overhaul, execute the{" "}
+              <strong style={{ color: "#092124" }}>3-Step Inbound Diagnostic Playbook</strong> that proves immediate, mathematical revenue risk to executive stakeholders in 48 hours.
             </p>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 280px), 1fr))", gap: 20 }}>
+          {/* 3 Interactive Flowing Strategy Cards */}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 320px), 1fr))", gap: 20, position: "relative" }}>
             {[
               {
                 step: "01",
+                badge: "ZERO-FRICTION ENTRY",
+                badgeColor: "#00a4bd",
+                badgeBg: "rgba(0, 164, 189, 0.08)",
+                badgeBorder: "rgba(0, 164, 189, 0.25)",
+                icon: (
+                  <svg width={20} height={20} viewBox="0 0 24 24" fill="none" stroke="#00a4bd" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="11" cy="11" r="8" />
+                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                  </svg>
+                ),
+                iconBg: "rgba(0, 164, 189, 0.12)",
                 title: "The Low-Friction Diagnostic Audit",
-                tag: "Zero-Friction Entry",
                 desc: "Offer prospective or existing clients a rapid 48-hour pipeline diagnostic: connect HubSpot via read-only OAuth, evaluate active deals against 7 mathematical risk vectors, and surface hidden deal slippage.",
+                deliverables: ["48-Hour SLA Delivery", "100% Read-Only OAuth", "7-Vector Deterministic Scoring"],
+                roiTag: "⚡ Zero Rep Coaching Required",
               },
               {
                 step: "02",
+                badge: "QUANTIFIED RISK INSIGHTS",
+                badgeColor: "#ff5c35",
+                badgeBg: "rgba(255, 92, 53, 0.08)",
+                badgeBorder: "rgba(255, 92, 53, 0.25)",
+                icon: (
+                  <svg width={20} height={20} viewBox="0 0 24 24" fill="none" stroke="#ff5c35" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="18" y1="20" x2="18" y2="10" />
+                    <line x1="12" y1="20" x2="12" y2="4" />
+                    <line x1="6" y1="20" x2="6" y2="14" />
+                  </svg>
+                ),
+                iconBg: "rgba(255, 92, 53, 0.12)",
                 title: "The Executive Pipeline Risk Brief",
-                tag: "Quantified Pipeline Insights",
                 desc: "Deliver a board-ready Executive Risk Brief revealing stalled commit deals, single-threaded opportunities, and silent economic buyers before the quarter ends.",
+                deliverables: ["Board-Ready PDF Dossier", "CFO Ghosting Detection", "10-Min Video Briefing"],
+                roiTag: "🎯 100% Find $25K Or Free",
               },
               {
                 step: "03",
+                badge: "HIGH-RETENTION PARTNERSHIP",
+                badgeColor: "#059669",
+                badgeBg: "rgba(16, 185, 129, 0.08)",
+                badgeBorder: "rgba(16, 185, 129, 0.25)",
+                icon: (
+                  <svg width={20} height={20} viewBox="0 0 24 24" fill="none" stroke="#059669" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                    <path d="m9 12 2 2 4-4" />
+                  </svg>
+                ),
+                iconBg: "rgba(16, 185, 129, 0.12)",
                 title: "The Ongoing RevOps Fleet Retainer",
-                tag: "High-Retention Partnership",
                 desc: "Transition the one-time diagnostic into an ongoing $2,500–$5,000/mo RevOps intelligence retainer, embedding real-time DealSense risk monitoring directly inside their team's daily pipeline.",
+                deliverables: ["$2.5K–$5K/mo Client Retainer", "Embedded HubSpot CRM Card", "95% Partner Net Margin"],
+                roiTag: "💎 25x Annual Agency ROI",
               },
             ].map((col, i) => (
               <div
                 key={i}
-                className="enterprise-card"
                 style={{
-                  padding: "34px 28px",
+                  background: "#ffffff",
+                  borderRadius: "22px",
+                  border: "1.5px solid #e2e8f0",
+                  padding: "30px 24px 26px",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "space-between",
+                  boxShadow: "0 10px 30px -5px rgba(9, 33, 36, 0.04), 0 2px 8px rgba(0, 0, 0, 0.02), inset 0 1px 0 #ffffff",
                   position: "relative",
+                  overflow: "hidden",
+                  transition: "all 0.25s cubic-bezier(0.16, 1, 0.3, 1)",
                 }}
               >
-                <div style={{ fontSize: "36px", fontWeight: 900, color: "#ff5c35", opacity: 0.9, lineHeight: 1, marginBottom: 12 }}>
-                  {col.step}
+                {/* Top Glowing Hairline Stripe */}
+                <div
+                  style={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    height: "3px",
+                    background: i === 0 ? "linear-gradient(90deg, #00a4bd, #38bdf8)" : i === 1 ? "linear-gradient(90deg, #ff5c35, #ff8c6b)" : "linear-gradient(90deg, #10b981, #34d399)",
+                  }}
+                />
+
+                <div>
+                  {/* Top Navigation Row: Icon on Left, Step Pill on Right (No Absolute Overlap) */}
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
+                    <div
+                      style={{
+                        width: 42,
+                        height: 42,
+                        borderRadius: "12px",
+                        background: col.iconBg,
+                        border: `1px solid ${col.badgeBorder}`,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        flexShrink: 0,
+                      }}
+                    >
+                      {col.icon}
+                    </div>
+
+                    <div
+                      style={{
+                        background: col.badgeBg,
+                        color: col.badgeColor,
+                        border: `1px solid ${col.badgeBorder}`,
+                        fontSize: "12px",
+                        fontWeight: 900,
+                        padding: "3px 10px",
+                        borderRadius: "9999px",
+                        letterSpacing: "0.04em",
+                        fontFamily: "'Outfit', sans-serif",
+                      }}
+                    >
+                      STEP {col.step}
+                    </div>
+                  </div>
+
+                  {/* Category Pill Tag */}
+                  <div style={{ marginBottom: 10 }}>
+                    <span
+                      style={{
+                        display: "inline-block",
+                        background: "rgba(9, 33, 36, 0.04)",
+                        color: "#334155",
+                        border: "1px solid #e2e8f0",
+                        fontSize: "10px",
+                        fontWeight: 800,
+                        padding: "2px 8px",
+                        borderRadius: "6px",
+                        letterSpacing: "0.05em",
+                        textTransform: "uppercase",
+                      }}
+                    >
+                      {col.badge}
+                    </span>
+                  </div>
+
+                  <h3
+                    style={{
+                      fontSize: "19px",
+                      fontWeight: 900,
+                      color: "#092124",
+                      margin: "0 0 10px",
+                      fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif",
+                      letterSpacing: "-0.02em",
+                      lineHeight: 1.3,
+                    }}
+                  >
+                    {col.title}
+                  </h3>
+
+                  <p style={{ fontSize: "13.5px", color: "#475569", lineHeight: 1.6, margin: "0 0 18px" }}>
+                    {col.desc}
+                  </p>
+
+                  {/* Micro-Deliverables Checklist */}
+                  <div style={{ display: "flex", flexDirection: "column", gap: 7, marginBottom: 18 }}>
+                    {col.deliverables.map((d, dIdx) => (
+                      <div key={dIdx} style={{ display: "flex", alignItems: "center", gap: 7, fontSize: "11.5px", color: "#334155", fontWeight: 600 }}>
+                        <svg width={13} height={13} viewBox="0 0 24 24" fill="none" stroke={col.badgeColor} strokeWidth={3} strokeLinecap="round" strokeLinejoin="round">
+                          <polyline points="20 6 9 17 4 12" />
+                        </svg>
+                        <span>{d}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-                <div style={{ display: "inline-block", background: "rgba(18,69,72,0.08)", color: "#124548", fontSize: "11px", fontWeight: 800, padding: "3px 10px", borderRadius: "9999px", marginBottom: 12 }}>
-                  {col.tag}
+
+                {/* Bottom Outcome Ribbon */}
+                <div
+                  style={{
+                    background: col.badgeBg,
+                    border: `1px solid ${col.badgeBorder}`,
+                    borderRadius: "10px",
+                    padding: "8px 12px",
+                    fontSize: "11px",
+                    fontWeight: 800,
+                    color: col.badgeColor,
+                    textAlign: "center",
+                  }}
+                >
+                  {col.roiTag}
                 </div>
-                <h3 style={{ fontSize: "19px", fontWeight: 800, color: "#092124", margin: "0 0 12px" }}>{col.title}</h3>
-                <p style={{ fontSize: "14px", color: "#475569", lineHeight: 1.6, margin: 0 }}>{col.desc}</p>
               </div>
             ))}
           </div>
 
           {/* ── Multi-Tenant Fleet Cockpit Interactive Preview ──────────────── */}
-          <div style={{ marginTop: 64 }}>
+          <div style={{ marginTop: 56 }}>
             <div
               style={{
-                background: "#ffffff",
-                borderRadius: "20px",
-                border: "1.5px solid #e2e8f0",
-                boxShadow: "0 24px 56px -12px rgba(9, 33, 36, 0.14), 0 4px 16px rgba(0,0,0,0.04)",
+                background: "linear-gradient(180deg, #092124 0%, #0d2c30 60%, #092124 100%)",
+                borderRadius: "24px",
+                border: "1.5px solid rgba(52, 211, 153, 0.28)",
+                boxShadow: "0 28px 72px -12px rgba(9, 33, 36, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.15)",
                 overflow: "hidden",
+                color: "#ffffff",
               }}
             >
               {/* Cockpit Top Bar */}
-              <div style={{ background: "#092124", padding: "16px clamp(14px, 3vw, 24px)", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12, borderBottom: "1px solid rgba(255,255,255,0.1)", minWidth: 0, width: "100%" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 12, minWidth: 0 }}>
-                  <DealSenseIcon size={30} />
-                  <div>
-                    <div style={{ fontSize: "14px", fontWeight: 800, color: "#ffffff" }}>
-                      Apex RevOps Agency Fleet Cockpit
-                    </div>
-                    <div style={{ fontSize: "11px", color: "#94a3b8" }}>
-                      revops.apexrevops.com · 8 Active HubSpot Client Portals
+              <div
+                style={{
+                  padding: "16px clamp(16px, 3.5vw, 26px)",
+                  background: "rgba(9, 33, 36, 0.8)",
+                  backdropFilter: "blur(12px)",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  flexWrap: "wrap",
+                  gap: 14,
+                  borderBottom: "1px solid rgba(255, 255, 255, 0.1)",
+                }}
+              >
+                {/* Left: Window Controls + Agency Identity */}
+                <div style={{ display: "flex", alignItems: "center", gap: 14, minWidth: 0 }}>
+                  <div style={{ display: "flex", gap: 6 }}>
+                    <span style={{ width: 10, height: 10, borderRadius: "50%", background: "#ef4444", display: "inline-block" }} />
+                    <span style={{ width: 10, height: 10, borderRadius: "50%", background: "#f59e0b", display: "inline-block" }} />
+                    <span style={{ width: 10, height: 10, borderRadius: "50%", background: "#10b981", display: "inline-block" }} />
+                  </div>
+                  <div style={{ width: "1px", height: "20px", background: "rgba(255,255,255,0.15)" }} />
+                  <div style={{ display: "flex", alignItems: "center", gap: 10, minWidth: 0 }}>
+                    <DealSenseIcon size={28} />
+                    <div>
+                      <div style={{ fontSize: "14px", fontWeight: 800, color: "#ffffff", display: "flex", alignItems: "center", gap: 8 }}>
+                        <span>Apex RevOps Agency Fleet Cockpit</span>
+                        <span style={{ fontSize: "9.5px", fontWeight: 800, background: "rgba(16, 185, 129, 0.2)", color: "#34d399", border: "1px solid rgba(16, 185, 129, 0.4)", padding: "1px 6px", borderRadius: "9999px" }}>
+                          ● LIVE V3 WEBHOOKS
+                        </span>
+                      </div>
+                      <div style={{ fontSize: "11px", color: "#94a3b8" }}>
+                        revops.apexrevops.com · 8 Active HubSpot Client Portals · Sub-200ms Telemetry
+                      </div>
                     </div>
                   </div>
                 </div>
 
-                {/* Client Portal Selector (Horizontal Touch-Scroll on Mobile) */}
+                {/* Right: Client Portal Switcher Tabs */}
                 <div
                   className="no-scrollbar"
                   style={{
@@ -662,78 +900,191 @@ export const AgencyFleet: React.FC = () => {
                     overflowX: "auto",
                     WebkitOverflowScrolling: "touch",
                     maxWidth: "100%",
-                    minWidth: 0,
-                    flex: "1 1 auto",
-                    paddingBottom: 4,
+                    padding: "2px 0",
                   }}
                 >
                   {[
-                    { name: "TechCorp (HubSpot #49102)", score: 82, band: "Healthy" },
-                    { name: "FinanceGo (HubSpot #38204)", score: 31, band: "Critical" },
-                    { name: "RetailMax (HubSpot #29188)", score: 58, band: "Moderate" },
-                  ].map((portal, idx) => (
-                    <button
-                      key={idx}
-                      onClick={() => setActivePortalTab(idx)}
-                      style={{
-                        padding: "7px 13px",
-                        fontSize: "12px",
-                        fontWeight: 700,
-                        borderRadius: "8px",
-                        border: "1px solid",
-                        borderColor: activePortalTab === idx ? "#ff5c35" : "rgba(255,255,255,0.15)",
-                        background: activePortalTab === idx ? "rgba(255,92,53,0.18)" : "rgba(255,255,255,0.05)",
-                        color: activePortalTab === idx ? "#ff8c6b" : "#cbd5e1",
-                        cursor: "pointer",
-                        whiteSpace: "nowrap",
-                        flexShrink: 0,
-                        transition: "all 0.2s ease",
-                      }}
-                    >
-                      {portal.name}
-                    </button>
-                  ))}
+                    { name: "TechCorp", id: "#49102", score: 82, band: "Healthy", color: "#10b981" },
+                    { name: "FinanceGo", id: "#38204", score: 31, band: "Critical", color: "#ef4444" },
+                    { name: "RetailMax", id: "#29188", score: 58, band: "Moderate", color: "#f59e0b" },
+                  ].map((portal, idx) => {
+                    const isActive = activePortalTab === idx;
+                    return (
+                      <button
+                        key={idx}
+                        type="button"
+                        onClick={() => setActivePortalTab(idx)}
+                        style={{
+                          padding: "6px 12px",
+                          fontSize: "12px",
+                          fontWeight: 700,
+                          borderRadius: "10px",
+                          border: "1px solid",
+                          borderColor: isActive ? "#ff5c35" : "rgba(255,255,255,0.12)",
+                          background: isActive ? "linear-gradient(135deg, rgba(255,92,53,0.25) 0%, rgba(255,92,53,0.12) 100%)" : "rgba(255,255,255,0.04)",
+                          color: isActive ? "#ffffff" : "#cbd5e1",
+                          cursor: "pointer",
+                          whiteSpace: "nowrap",
+                          flexShrink: 0,
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 6,
+                          boxShadow: isActive ? "0 2px 10px rgba(255,92,53,0.3)" : "none",
+                          transition: "all 0.18s ease",
+                        }}
+                      >
+                        <span style={{ width: 6, height: 6, borderRadius: "50%", background: portal.color, display: "inline-block", boxShadow: `0 0 6px ${portal.color}` }} />
+                        <span>{portal.name} ({portal.id})</span>
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
 
               {/* Active Portal Intelligence Details */}
-              <div style={{ padding: "clamp(16px, 3vw, 28px)" }}>
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(135px, 1fr))", gap: 12, marginBottom: 20 }}>
-                  <div style={{ background: "#f8fafc", padding: "14px 12px", borderRadius: "12px", border: "1px solid #e2e8f0" }}>
-                    <div style={{ fontSize: "10.5px", fontWeight: 700, color: "#64748b", textTransform: "uppercase" }}>Active Pipeline</div>
-                    <div style={{ fontSize: "clamp(18px, 3.5vw, 24px)", fontWeight: 900, color: "#092124", margin: "3px 0" }}>$1,850,000</div>
-                    <div style={{ fontSize: "11px", color: "#059669", fontWeight: 600 }}>● 24 Active Deals</div>
-                  </div>
-                  <div style={{ background: "#f8fafc", padding: "14px 12px", borderRadius: "12px", border: "1px solid #e2e8f0" }}>
-                    <div style={{ fontSize: "10.5px", fontWeight: 700, color: "#64748b", textTransform: "uppercase" }}>Deal Health</div>
-                    <div style={{ fontSize: "clamp(18px, 3.5vw, 24px)", fontWeight: 900, color: activePortalTab === 1 ? "#dc2626" : activePortalTab === 2 ? "#d97706" : "#059669", margin: "3px 0" }}>
-                      {activePortalTab === 1 ? "31/100 · Critical" : activePortalTab === 2 ? "58/100 · Moderate" : "82/100 · Healthy"}
+              <div style={{ padding: "clamp(18px, 3.5vw, 28px)" }}>
+                {/* 4 Metrics Row */}
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: 14, marginBottom: 18 }}>
+                  {/* Metric 1 */}
+                  <div style={{ background: "rgba(255, 255, 255, 0.05)", padding: "16px 14px", borderRadius: "14px", border: "1px solid rgba(255, 255, 255, 0.1)" }}>
+                    <div style={{ fontSize: "10.5px", fontWeight: 800, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.04em" }}>
+                      Active Client Pipeline
                     </div>
-                    <div style={{ fontSize: "11px", color: "#64748b" }}>7-Vector Deterministic</div>
-                  </div>
-                  <div style={{ background: "#f8fafc", padding: "14px 12px", borderRadius: "12px", border: "1px solid #e2e8f0" }}>
-                    <div style={{ fontSize: "10.5px", fontWeight: 700, color: "#64748b", textTransform: "uppercase" }}>Slippage Leakage</div>
-                    <div style={{ fontSize: "clamp(18px, 3.5vw, 24px)", fontWeight: 900, color: "#dc2626", margin: "3px 0" }}>
-                      {activePortalTab === 1 ? "$480,000" : activePortalTab === 2 ? "$190,000" : "$45,000"}
+                    <div style={{ fontSize: "clamp(20px, 3.2vw, 26px)", fontWeight: 900, color: "#ffffff", margin: "4px 0 2px", fontFamily: "'Outfit', sans-serif" }}>
+                      {activePortalTab === 0 ? "$1,850,000" : activePortalTab === 1 ? "$3,420,000" : "$920,000"}
                     </div>
-                    <div style={{ fontSize: "11px", color: "#dc2626", fontWeight: 600 }}>⚠️ Stalled Risk</div>
+                    <div style={{ fontSize: "11px", color: "#34d399", fontWeight: 700, display: "flex", alignItems: "center", gap: 4 }}>
+                      <span>●</span>
+                      <span>{activePortalTab === 0 ? "24 Active Deals" : activePortalTab === 1 ? "42 Active Deals" : "16 Active Deals"}</span>
+                    </div>
                   </div>
-                  <div style={{ background: "#f8fafc", padding: "14px 12px", borderRadius: "12px", border: "1px solid #e2e8f0" }}>
-                    <div style={{ fontSize: "10.5px", fontWeight: 700, color: "#64748b", textTransform: "uppercase" }}>Agency Retainer</div>
-                    <div style={{ fontSize: "clamp(18px, 3.5vw, 24px)", fontWeight: 900, color: "#124548", margin: "3px 0" }}>$2,500/mo</div>
-                    <div style={{ fontSize: "11px", color: "#16a34a", fontWeight: 700 }}>95% Net Margin</div>
+
+                  {/* Metric 2 */}
+                  <div style={{ background: "rgba(255, 255, 255, 0.05)", padding: "16px 14px", borderRadius: "14px", border: "1px solid rgba(255, 255, 255, 0.1)" }}>
+                    <div style={{ fontSize: "10.5px", fontWeight: 800, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.04em" }}>
+                      Pipeline Health Score
+                    </div>
+                    <div
+                      style={{
+                        fontSize: "clamp(20px, 3.2vw, 26px)",
+                        fontWeight: 900,
+                        color: activePortalTab === 0 ? "#10b981" : activePortalTab === 1 ? "#ef4444" : "#f59e0b",
+                        margin: "4px 0 2px",
+                        fontFamily: "'Outfit', sans-serif",
+                      }}
+                    >
+                      {activePortalTab === 0 ? "82/100 · Healthy" : activePortalTab === 1 ? "31/100 · Critical" : "58/100 · Moderate"}
+                    </div>
+                    <div style={{ fontSize: "11px", color: "#94a3b8", fontWeight: 600 }}>
+                      7-Vector Deterministic Scoring
+                    </div>
+                  </div>
+
+                  {/* Metric 3 */}
+                  <div style={{ background: "rgba(255, 255, 255, 0.05)", padding: "16px 14px", borderRadius: "14px", border: "1px solid rgba(255, 255, 255, 0.1)" }}>
+                    <div style={{ fontSize: "10.5px", fontWeight: 800, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.04em" }}>
+                      Slippage & Stalled Leakage
+                    </div>
+                    <div
+                      style={{
+                        fontSize: "clamp(20px, 3.2vw, 26px)",
+                        fontWeight: 900,
+                        color: activePortalTab === 1 ? "#ef4444" : activePortalTab === 2 ? "#f59e0b" : "#ff5c35",
+                        margin: "4px 0 2px",
+                        fontFamily: "'Outfit', sans-serif",
+                      }}
+                    >
+                      {activePortalTab === 0 ? "$45,000" : activePortalTab === 1 ? "$480,000" : "$190,000"}
+                    </div>
+                    <div style={{ fontSize: "11px", color: activePortalTab === 1 ? "#ef4444" : "#ff8c6b", fontWeight: 700, display: "flex", alignItems: "center", gap: 4 }}>
+                      <span>⚠️</span>
+                      <span>{activePortalTab === 0 ? "Minor Slippage" : activePortalTab === 1 ? "Severe CFO Ghosting" : "Single-Threaded Risk"}</span>
+                    </div>
+                  </div>
+
+                  {/* Metric 4 */}
+                  <div style={{ background: "rgba(255, 255, 255, 0.05)", padding: "16px 14px", borderRadius: "14px", border: "1px solid rgba(255, 255, 255, 0.1)" }}>
+                    <div style={{ fontSize: "10.5px", fontWeight: 800, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.04em" }}>
+                      Monthly Client Retainer
+                    </div>
+                    <div style={{ fontSize: "clamp(20px, 3.2vw, 26px)", fontWeight: 900, color: "#34d399", margin: "4px 0 2px", fontFamily: "'Outfit', sans-serif" }}>
+                      {activePortalTab === 1 ? "$5,000/mo" : "$2,500/mo"}
+                    </div>
+                    <div style={{ fontSize: "11px", color: "#34d399", fontWeight: 800 }}>
+                      95% Net Profit Margin
+                    </div>
                   </div>
                 </div>
 
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12, background: "rgba(18,69,72,0.04)", padding: "14px 16px", borderRadius: "12px", border: "1px solid rgba(18,69,72,0.12)" }}>
-                  <div style={{ fontSize: "13px", color: "#092124", fontWeight: 600 }}>
-                    ⚡ <strong>Agency Action Ready:</strong> 1-Click Executive PDF Briefing ready for Client QBR.
+                {/* Specific Live Portal Vulnerability Alert Banner */}
+                <div
+                  style={{
+                    background: "rgba(0, 0, 0, 0.3)",
+                    border: "1px solid rgba(255, 255, 255, 0.12)",
+                    borderRadius: "12px",
+                    padding: "12px 16px",
+                    marginBottom: 16,
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 10,
+                    fontSize: "12.5px",
+                    color: "#cbd5e1",
+                  }}
+                >
+                  <span style={{ fontSize: "16px" }}>
+                    {activePortalTab === 0 ? "🔍" : activePortalTab === 1 ? "🚨" : "⚠️"}
+                  </span>
+                  <div style={{ flex: 1, lineHeight: 1.45 }}>
+                    <strong style={{ color: "#ffffff" }}>
+                      {activePortalTab === 0 ? "TechCorp Deal Telemetry:" : activePortalTab === 1 ? "FinanceGo Critical Alert:" : "RetailMax Pipeline Risk:"}
+                    </strong>{" "}
+                    {activePortalTab === 0
+                      ? "Acme Enterprise ($180K) · Champion disengaged for 16 days · 4-tier HubSpot CRM timeline write-back queued."
+                      : activePortalTab === 1
+                      ? "Global FinTech Expansion ($480K) · CFO unengaged in Stage 4 · Close date pushed 3x (42-day slip detected)."
+                      : "CloudRetail Stack ($190K) · Single-threaded on 1 contact · VP of Sales unassigned."}
                   </div>
+                </div>
+
+                {/* Bottom Action Dock */}
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    flexWrap: "wrap",
+                    gap: 12,
+                    background: "rgba(255, 255, 255, 0.04)",
+                    padding: "14px 18px",
+                    borderRadius: "14px",
+                    border: "1px solid rgba(255, 255, 255, 0.1)",
+                  }}
+                >
+                  <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: "13px", color: "#e2e8f0" }}>
+                    <span style={{ width: 8, height: 8, borderRadius: "50%", background: "#34d399", display: "inline-block", boxShadow: "0 0 8px #34d399" }} />
+                    <span><strong>Agency QBR Deliverable Ready:</strong> 1-Click Executive PDF Briefing prepared for client presentation.</span>
+                  </div>
+
                   <button
+                    type="button"
                     onClick={() => openOrder("scale-999")}
-                    style={{ padding: "9px 18px", background: "#ff5c35", color: "#ffffff", borderRadius: "8px", border: "none", fontSize: "13px", fontWeight: 800, cursor: "pointer", boxShadow: "0 2px 8px rgba(255,92,53,0.3)", width: "100%", maxWidth: 300 }}
+                    style={{
+                      padding: "11px 22px",
+                      background: "linear-gradient(135deg, #ff6b48 0%, #ff5c35 100%)",
+                      color: "#ffffff",
+                      borderRadius: "10px",
+                      border: "none",
+                      fontSize: "13.5px",
+                      fontWeight: 800,
+                      cursor: "pointer",
+                      boxShadow: "0 4px 16px rgba(255,92,53,0.4), inset 0 1px 0 rgba(255,255,255,0.3)",
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: 6,
+                      transition: "all 0.2s ease",
+                    }}
                   >
-                    Export Client QBR Dossier →
+                    <span>Export Client QBR Dossier →</span>
                   </button>
                 </div>
               </div>
@@ -1047,170 +1398,66 @@ export const AgencyFleet: React.FC = () => {
             </div>
           </div>
 
-          {/* 4 Clean Solutions Partner Pricing Cards */}
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 255px), 1fr))", gap: 14, alignItems: "stretch" }}>
-            {/* Tier 1: Pilot Deal Risk Audit ($99) */}
+          {/* 3 Clean Solutions Partner Subscription Pricing Cards */}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 300px), 1fr))", gap: 18, alignItems: "stretch" }}>
+            {/* Tier 1: Agency Growth Fleet ($499/mo or $399/mo) */}
             <div
               style={{
                 background: "#ffffff",
                 border: "1.5px solid #e2e8f0",
-                borderRadius: "16px",
-                padding: "18px 16px 16px",
+                borderRadius: "18px",
+                padding: "24px 20px 20px",
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "space-between",
-                boxShadow: "0 4px 16px rgba(9, 33, 36, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.9)",
+                boxShadow: "0 4px 20px rgba(9, 33, 36, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.9)",
                 transition: "all 0.25s cubic-bezier(0.16, 1, 0.3, 1)",
                 position: "relative",
               }}
             >
               <div>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
-                  <span style={{ fontSize: "10px", fontWeight: 800, color: "#ff5c35", letterSpacing: "0.06em", textTransform: "uppercase" }}>
-                    TIER 1 · DIAGNOSTIC PILOT
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+                  <span style={{ fontSize: "10.5px", fontWeight: 800, color: "#00a4bd", letterSpacing: "0.06em", textTransform: "uppercase" }}>
+                    TIER 1 · BOUTIQUE AGENCIES
                   </span>
-                  <span style={{ fontSize: "9.5px", fontWeight: 800, color: "#059669", background: "rgba(16, 185, 129, 0.1)", border: "1px solid rgba(16, 185, 129, 0.25)", padding: "1px 6px", borderRadius: "9999px" }}>
-                    1 PORTAL
-                  </span>
-                </div>
-                <h3 style={{ fontSize: "19px", fontWeight: 900, color: "#092124", margin: "0 0 4px", letterSpacing: "-0.02em", fontFamily: "'Outfit', sans-serif" }}>
-                  Pilot Risk Audit
-                </h3>
-                <p style={{ fontSize: "12px", color: "#64748b", margin: "0 0 10px", lineHeight: 1.4 }}>
-                  Deterministic 0–100 health scoring across 50 active deals. Catches hidden slippage in 48 hours.
-                </p>
-                
-                <div style={{ background: "rgba(255, 92, 53, 0.05)", padding: "10px 12px", borderRadius: "10px", border: "1px solid rgba(255, 92, 53, 0.2)", marginBottom: 12 }}>
-                  <div style={{ fontSize: "10.5px", color: "#94a3b8", fontWeight: 700 }}>
-                    One-Time Diagnostic
-                  </div>
-                  <div style={{ display: "flex", alignItems: "baseline", gap: 5, marginTop: 1 }}>
-                    <span style={{ fontSize: "30px", fontWeight: 900, color: "#092124", letterSpacing: "-0.03em", lineHeight: 1, fontFamily: "'Outfit', sans-serif" }}>
-                      $99
-                    </span>
-                    <span style={{ fontSize: "11.5px", fontWeight: 600, color: "#64748b" }}>
-                      / flat fee
-                    </span>
-                  </div>
-                  <div style={{ fontSize: "10px", fontWeight: 700, color: "#ff5c35", marginTop: 2 }}>
-                    🔥 100% 'Find $25K Or Free' Guarantee
-                  </div>
-                </div>
-
-                <div style={{ fontSize: "10px", fontWeight: 800, color: "#092124", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 6 }}>
-                  AUDIT DELIVERABLES:
-                </div>
-                
-                <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 5.5, fontSize: "11px", color: "#334155" }}>
-                  {[
-                    { bold: "50 Active Deals Scored", text: "full 7–vector deterministic breakdown" },
-                    { bold: "CFO Ghosting Detection", text: "identifies unengaged economic buyers" },
-                    { bold: "Executive PDF Dossier", text: "board-ready deal triage briefing" },
-                    { bold: "10–Min Loom Strategic Review", text: "senior architect strategic review" },
-                    { bold: "48–Hour SLA Turnaround", text: "guaranteed fast audit delivery" },
-                    { bold: "Find $25K Or It's Free", text: "100% no-risk money-back guarantee" },
-                  ].map((item, idx) => (
-                    <li key={idx} style={{ display: "flex", alignItems: "flex-start", gap: 6, lineHeight: 1.3 }}>
-                      <div style={{ width: 13, height: 13, borderRadius: "50%", background: "rgba(255, 92, 53, 0.15)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, marginTop: 1 }}>
-                        <svg width={8} height={8} viewBox="0 0 24 24" fill="none" stroke="#ff5c35" strokeWidth={3} strokeLinecap="round" strokeLinejoin="round">
-                          <polyline points="20 6 9 17 4 12" />
-                        </svg>
-                      </div>
-                      <div>
-                        <strong style={{ color: "#092124" }}>{item.bold}</strong> <span style={{ color: "#64748b" }}>({item.text})</span>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              
-              <div style={{ marginTop: 12 }}>
-                <div style={{ background: "rgba(255, 92, 53, 0.08)", border: "1px solid rgba(255, 92, 53, 0.2)", borderRadius: "7px", padding: "4px 6px", fontSize: "10px", color: "#e04a25", fontWeight: 800, textAlign: "center", marginBottom: 8 }}>
-                  🎯 Test-drive DealSense on 1 client portal
-                </div>
-                <button
-                  onClick={() => openOrder("audit-99")}
-                  style={{
-                    width: "100%",
-                    padding: "10px 14px",
-                    background: "linear-gradient(135deg, #ff6b48 0%, #ff5c35 100%)",
-                    color: "#ffffff",
-                    border: "none",
-                    borderRadius: "8px",
-                    fontSize: "13px",
-                    fontWeight: 800,
-                    fontFamily: "'Outfit', 'Plus Jakarta Sans', -apple-system, sans-serif",
-                    letterSpacing: "-0.01em",
-                    cursor: "pointer",
-                    boxShadow: "0 4px 16px rgba(255, 92, 53, 0.35)",
-                    display: "inline-flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    gap: "6px",
-                    transition: "all 0.2s ease",
-                  }}
-                >
-                  <span>Start $99 Risk Audit</span>
-                  <svg width={13} height={13} viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M5 12h14M12 5l7 7-7 7" />
-                  </svg>
-                </button>
-              </div>
-            </div>
-
-            {/* Tier 2: Agency Growth Fleet ($499/mo) */}
-            <div
-              style={{
-                background: "#ffffff",
-                border: "1.5px solid #e2e8f0",
-                borderRadius: "16px",
-                padding: "18px 16px 16px",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "space-between",
-                boxShadow: "0 4px 16px rgba(9, 33, 36, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.9)",
-                transition: "all 0.25s cubic-bezier(0.16, 1, 0.3, 1)",
-                position: "relative",
-              }}
-            >
-              <div>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
-                  <span style={{ fontSize: "10px", fontWeight: 800, color: "#00a4bd", letterSpacing: "0.06em", textTransform: "uppercase" }}>
-                    TIER 2 · BOUTIQUE AGENCIES
-                  </span>
-                  <span style={{ fontSize: "9.5px", fontWeight: 800, color: "#00a4bd", background: "rgba(0, 164, 189, 0.1)", border: "1px solid rgba(0, 164, 189, 0.25)", padding: "1px 6px", borderRadius: "9999px" }}>
+                  <span style={{ fontSize: "10px", fontWeight: 800, color: "#00a4bd", background: "rgba(0, 164, 189, 0.1)", border: "1px solid rgba(0, 164, 189, 0.25)", padding: "2px 8px", borderRadius: "9999px" }}>
                     UP TO 5 PORTALS
                   </span>
                 </div>
-                <h3 style={{ fontSize: "19px", fontWeight: 900, color: "#092124", margin: "0 0 4px", letterSpacing: "-0.02em", fontFamily: "'Outfit', sans-serif" }}>
+                <h3 style={{ fontSize: "22px", fontWeight: 900, color: "#092124", margin: "0 0 6px", letterSpacing: "-0.02em", fontFamily: "'Outfit', sans-serif" }}>
                   Agency Growth Fleet
                 </h3>
-                <p style={{ fontSize: "12px", color: "#64748b", margin: "0 0 10px", lineHeight: 1.4 }}>
+                <p style={{ fontSize: "12.5px", color: "#64748b", margin: "0 0 14px", lineHeight: 1.45 }}>
                   For boutique RevOps consultancies managing up to 5 client HubSpot portals.
                 </p>
                 
-                <div style={{ background: "rgba(0, 164, 189, 0.05)", padding: "10px 12px", borderRadius: "10px", border: "1px solid rgba(0, 164, 189, 0.2)", marginBottom: 12 }}>
-                  <div style={{ fontSize: "10.5px", color: "#94a3b8", fontWeight: 700 }}>
-                    {isAnnual ? "Billed Annually ($4,788/yr)" : "Billed Monthly"}
+                <div style={{ background: "rgba(0, 164, 189, 0.05)", padding: "12px 14px", borderRadius: "12px", border: "1px solid rgba(0, 164, 189, 0.2)", marginBottom: 16 }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <span style={{ fontSize: "11px", color: "#64748b", fontWeight: 700 }}>
+                      {isAnnual ? "Billed Annually ($4,788/yr)" : "Billed Monthly"}
+                    </span>
+                    <span style={{ fontSize: "10px", fontWeight: 800, color: "#059669", background: "rgba(16, 185, 129, 0.12)", border: "1px solid rgba(16, 185, 129, 0.3)", padding: "1px 6px", borderRadius: "9999px" }}>
+                      7-DAY FREE TRIAL
+                    </span>
                   </div>
-                  <div style={{ display: "flex", alignItems: "baseline", gap: 5, marginTop: 1 }}>
-                    <span style={{ fontSize: "30px", fontWeight: 900, color: "#092124", letterSpacing: "-0.03em", lineHeight: 1, fontFamily: "'Outfit', sans-serif" }}>
+                  <div style={{ display: "flex", alignItems: "baseline", gap: 5, marginTop: 3 }}>
+                    <span style={{ fontSize: "34px", fontWeight: 900, color: "#092124", letterSpacing: "-0.03em", lineHeight: 1, fontFamily: "'Outfit', sans-serif" }}>
                       ${isAnnual ? "399" : "499"}
                     </span>
-                    <span style={{ fontSize: "11.5px", fontWeight: 600, color: "#64748b" }}>
+                    <span style={{ fontSize: "12px", fontWeight: 600, color: "#64748b" }}>
                       / month
                     </span>
                   </div>
-                  <div style={{ fontSize: "10px", fontWeight: 700, color: "#00a4bd", marginTop: 2 }}>
-                    ✨ Unlimited Sales Rep Seats Included
+                  <div style={{ fontSize: "10.5px", fontWeight: 700, color: "#00a4bd", marginTop: 4 }}>
+                    ✨ Unlimited Sales Rep Seats · $0 Due Today
                   </div>
                 </div>
 
-                <div style={{ fontSize: "10px", fontWeight: 800, color: "#092124", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 6 }}>
+                <div style={{ fontSize: "10.5px", fontWeight: 800, color: "#092124", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 8 }}>
                   FLEET DELIVERABLES:
                 </div>
                 
-                <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 5.5, fontSize: "11px", color: "#334155" }}>
+                <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 7, fontSize: "11.5px", color: "#334155" }}>
                   {[
                     { bold: "Manage up to 5 Client Portals", text: "multi-client workspace switcher" },
                     { bold: "7-Vector Deterministic Engine", text: "sub-200ms real-time event pipeline" },
@@ -1219,9 +1466,9 @@ export const AgencyFleet: React.FC = () => {
                     { bold: "Standard Partner Support", text: "Slack & email support with RevOps team" },
                     { bold: "Zero Per-Seat Markups", text: "transparent flat fee for all client reps" },
                   ].map((item, idx) => (
-                    <li key={idx} style={{ display: "flex", alignItems: "flex-start", gap: 6, lineHeight: 1.3 }}>
-                      <div style={{ width: 13, height: 13, borderRadius: "50%", background: "rgba(0, 164, 189, 0.15)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, marginTop: 1 }}>
-                        <svg width={8} height={8} viewBox="0 0 24 24" fill="none" stroke="#00a4bd" strokeWidth={3} strokeLinecap="round" strokeLinejoin="round">
+                    <li key={idx} style={{ display: "flex", alignItems: "flex-start", gap: 7, lineHeight: 1.35 }}>
+                      <div style={{ width: 14, height: 14, borderRadius: "50%", background: "rgba(0, 164, 189, 0.15)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, marginTop: 1.5 }}>
+                        <svg width={9} height={9} viewBox="0 0 24 24" fill="none" stroke="#00a4bd" strokeWidth={3} strokeLinecap="round" strokeLinejoin="round">
                           <polyline points="20 6 9 17 4 12" />
                         </svg>
                       </div>
@@ -1233,20 +1480,20 @@ export const AgencyFleet: React.FC = () => {
                 </ul>
               </div>
               
-              <div style={{ marginTop: 12 }}>
-                <div style={{ background: "rgba(0, 164, 189, 0.08)", border: "1px solid rgba(0, 164, 189, 0.2)", borderRadius: "7px", padding: "4px 6px", fontSize: "10px", color: "#008a9e", fontWeight: 800, textAlign: "center", marginBottom: 8 }}>
+              <div style={{ marginTop: 18 }}>
+                <div style={{ background: "rgba(0, 164, 189, 0.08)", border: "1px solid rgba(0, 164, 189, 0.2)", borderRadius: "8px", padding: "6px 8px", fontSize: "10.5px", color: "#008a9e", fontWeight: 800, textAlign: "center", marginBottom: 10 }}>
                   💡 Bill 5 clients $2,500/mo = $150,000 ARR
                 </div>
                 <button
                   onClick={() => openOrder("growth-499")}
                   style={{
                     width: "100%",
-                    padding: "10px 14px",
+                    padding: "12px 16px",
                     background: "#124548",
                     color: "#ffffff",
                     border: "none",
-                    borderRadius: "8px",
-                    fontSize: "13px",
+                    borderRadius: "10px",
+                    fontSize: "14px",
                     fontWeight: 800,
                     fontFamily: "'Outfit', 'Plus Jakarta Sans', -apple-system, sans-serif",
                     letterSpacing: "-0.01em",
@@ -1259,26 +1506,29 @@ export const AgencyFleet: React.FC = () => {
                     transition: "all 0.2s ease",
                   }}
                 >
-                  <span>Deploy Growth Fleet</span>
-                  <svg width={13} height={13} viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
+                  <span>Start 7-Day Free Trial</span>
+                  <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
                     <path d="M5 12h14M12 5l7 7-7 7" />
                   </svg>
                 </button>
+                <div style={{ fontSize: "10.5px", color: "#64748b", textAlign: "center", marginTop: 6, fontWeight: 600 }}>
+                  7 days free · $0 due today · Cancel anytime
+                </div>
               </div>
             </div>
 
-            {/* Tier 3: Agency Pro Fleet ($999/mo) — FEATURED / MOST POPULAR */}
+            {/* Tier 2: Agency Pro Fleet ($999/mo or $799/mo) — FEATURED / MOST POPULAR */}
             <div
               style={{
-                background: "linear-gradient(180deg, #ffffff 0%, #fff7f4 100%)",
+                background: "linear-gradient(180deg, #ffffff 0%, #fff8f5 100%)",
                 border: "2px solid #ff5c35",
-                borderRadius: "16px",
-                padding: "18px 16px 16px",
+                borderRadius: "18px",
+                padding: "24px 20px 20px",
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "space-between",
                 position: "relative",
-                boxShadow: "0 14px 36px -6px rgba(255, 92, 53, 0.22), 0 4px 12px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255, 255, 255, 1)",
+                boxShadow: "0 16px 40px -8px rgba(255, 92, 53, 0.25), 0 4px 14px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255, 255, 255, 1)",
                 transform: "scale(1.02)",
                 zIndex: 2,
               }}
@@ -1292,61 +1542,66 @@ export const AgencyFleet: React.FC = () => {
                   transform: "translateX(-50%)",
                   background: "linear-gradient(135deg, #ff6b48 0%, #ff5c35 100%)",
                   color: "#ffffff",
-                  padding: "3px 12px",
+                  padding: "4px 14px",
                   borderRadius: "9999px",
-                  fontSize: "9.5px",
+                  fontSize: "10px",
                   fontWeight: 800,
                   letterSpacing: "0.05em",
                   textTransform: "uppercase",
-                  boxShadow: "0 4px 12px rgba(255, 92, 53, 0.4)",
+                  boxShadow: "0 4px 14px rgba(255, 92, 53, 0.45)",
                   display: "flex",
                   alignItems: "center",
-                  gap: 4,
+                  gap: 5,
                   whiteSpace: "nowrap",
                 }}
               >
                 <span>👑</span>
-                <span>MOST POPULAR · HUBSPOT PARTNERS</span>
+                <span>MOST POPULAR · 7-DAY FREE TRIAL</span>
               </div>
 
               <div>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6, marginTop: 2 }}>
-                  <span style={{ fontSize: "10px", fontWeight: 800, color: "#ff5c35", letterSpacing: "0.06em", textTransform: "uppercase" }}>
-                    TIER 3 · SCALING FLEET
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8, marginTop: 4 }}>
+                  <span style={{ fontSize: "10.5px", fontWeight: 800, color: "#ff5c35", letterSpacing: "0.06em", textTransform: "uppercase" }}>
+                    TIER 2 · SCALING FLEET
                   </span>
-                  <span style={{ fontSize: "9.5px", fontWeight: 800, color: "#ff5c35", background: "rgba(255,92,53,0.12)", border: "1px solid rgba(255,92,53,0.3)", padding: "1px 6px", borderRadius: "9999px" }}>
+                  <span style={{ fontSize: "10px", fontWeight: 800, color: "#ff5c35", background: "rgba(255,92,53,0.12)", border: "1px solid rgba(255,92,53,0.3)", padding: "2px 8px", borderRadius: "9999px" }}>
                     UP TO 15 PORTALS
                   </span>
                 </div>
-                <h3 style={{ fontSize: "19px", fontWeight: 900, color: "#092124", margin: "0 0 4px", letterSpacing: "-0.02em" }}>
+                <h3 style={{ fontSize: "22px", fontWeight: 900, color: "#092124", margin: "0 0 6px", letterSpacing: "-0.02em", fontFamily: "'Outfit', sans-serif" }}>
                   Agency Pro Fleet
                 </h3>
-                <p style={{ fontSize: "12px", color: "#64748b", margin: "0 0 10px", lineHeight: 1.4 }}>
+                <p style={{ fontSize: "12.5px", color: "#64748b", margin: "0 0 14px", lineHeight: 1.45 }}>
                   For scaling HubSpot partners managing up to 15 client portals with custom domain.
                 </p>
                 
-                <div style={{ background: "rgba(255, 92, 53, 0.06)", padding: "10px 12px", borderRadius: "10px", border: "1px solid rgba(255, 92, 53, 0.25)", marginBottom: 12 }}>
-                  <div style={{ fontSize: "10.5px", color: "#94a3b8", fontWeight: 700 }}>
-                    {isAnnual ? "Billed Annually ($9,588/yr)" : "Billed Monthly"}
+                <div style={{ background: "rgba(255, 92, 53, 0.06)", padding: "12px 14px", borderRadius: "12px", border: "1px solid rgba(255, 92, 53, 0.25)", marginBottom: 16 }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <span style={{ fontSize: "11px", color: "#64748b", fontWeight: 700 }}>
+                      {isAnnual ? "Billed Annually ($9,588/yr)" : "Billed Monthly"}
+                    </span>
+                    <span style={{ fontSize: "10px", fontWeight: 800, color: "#ff5c35", background: "rgba(255, 92, 53, 0.12)", border: "1px solid rgba(255, 92, 53, 0.3)", padding: "1px 6px", borderRadius: "9999px" }}>
+                      7-DAY FREE TRIAL
+                    </span>
                   </div>
-                  <div style={{ display: "flex", alignItems: "baseline", gap: 5, marginTop: 1 }}>
-                    <span style={{ fontSize: "30px", fontWeight: 900, color: "#092124", letterSpacing: "-0.03em", lineHeight: 1, fontFamily: "'Outfit', sans-serif" }}>
+                  <div style={{ display: "flex", alignItems: "baseline", gap: 5, marginTop: 3 }}>
+                    <span style={{ fontSize: "34px", fontWeight: 900, color: "#092124", letterSpacing: "-0.03em", lineHeight: 1, fontFamily: "'Outfit', sans-serif" }}>
                       ${isAnnual ? "799" : "999"}
                     </span>
-                    <span style={{ fontSize: "11.5px", fontWeight: 600, color: "#64748b" }}>
+                    <span style={{ fontSize: "12px", fontWeight: 600, color: "#64748b" }}>
                       / month
                     </span>
                   </div>
-                  <div style={{ fontSize: "10px", fontWeight: 700, color: "#ff5c35", marginTop: 2 }}>
+                  <div style={{ fontSize: "10.5px", fontWeight: 700, color: "#ff5c35", marginTop: 4 }}>
                     🔥 Solutions Partner Fleet · Co-Branded Domain
                   </div>
                 </div>
 
-                <div style={{ fontSize: "10px", fontWeight: 800, color: "#092124", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 6 }}>
+                <div style={{ fontSize: "10.5px", fontWeight: 800, color: "#092124", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 8 }}>
                   Complete Fleet Arsenal:
                 </div>
                 
-                <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 5.5, fontSize: "11px", color: "#092124" }}>
+                <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 7, fontSize: "11.5px", color: "#092124" }}>
                   {[
                     { bold: "Manage up to 15 Client Portals", text: "master switcher cockpit" },
                     { bold: "Co-Branded Client Portals", text: "revops.youragency.com + custom logo" },
@@ -1356,9 +1611,9 @@ export const AgencyFleet: React.FC = () => {
                     { bold: "Client Acquisition Toolkit", text: "diagnostic proposals & pitch decks" },
                     { bold: "Priority Partner Slack SLA", text: "2-hour direct team response" },
                   ].map((item, idx) => (
-                    <li key={idx} style={{ display: "flex", alignItems: "flex-start", gap: 6, lineHeight: 1.3 }}>
-                      <div style={{ width: 13, height: 13, borderRadius: "50%", background: "rgba(255, 92, 53, 0.15)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, marginTop: 1 }}>
-                        <svg width={8} height={8} viewBox="0 0 24 24" fill="none" stroke="#ff5c35" strokeWidth={3} strokeLinecap="round" strokeLinejoin="round">
+                    <li key={idx} style={{ display: "flex", alignItems: "flex-start", gap: 7, lineHeight: 1.35 }}>
+                      <div style={{ width: 14, height: 14, borderRadius: "50%", background: "rgba(255, 92, 53, 0.15)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, marginTop: 1.5 }}>
+                        <svg width={9} height={9} viewBox="0 0 24 24" fill="none" stroke="#ff5c35" strokeWidth={3} strokeLinecap="round" strokeLinejoin="round">
                           <polyline points="20 6 9 17 4 12" />
                         </svg>
                       </div>
@@ -1370,25 +1625,25 @@ export const AgencyFleet: React.FC = () => {
                 </ul>
               </div>
               
-              <div style={{ marginTop: 12 }}>
-                <div style={{ background: "rgba(255, 92, 53, 0.1)", border: "1px solid rgba(255, 92, 53, 0.25)", borderRadius: "7px", padding: "4px 6px", fontSize: "10px", color: "#e04a25", fontWeight: 800, textAlign: "center", marginBottom: 8 }}>
+              <div style={{ marginTop: 18 }}>
+                <div style={{ background: "rgba(255, 92, 53, 0.1)", border: "1px solid rgba(255, 92, 53, 0.25)", borderRadius: "8px", padding: "6px 8px", fontSize: "10.5px", color: "#e04a25", fontWeight: 800, textAlign: "center", marginBottom: 10 }}>
                   🔥 Bill 10 clients $2,500/mo = $300,000/yr ARR (25x ROI)
                 </div>
                 <button
                   onClick={() => openOrder("scale-999")}
                   style={{
                     width: "100%",
-                    padding: "10px 14px",
+                    padding: "12px 16px",
                     background: "linear-gradient(135deg, #ff6b48 0%, #ff5c35 100%)",
                     color: "#ffffff",
                     border: "none",
-                    borderRadius: "8px",
-                    fontSize: "13px",
+                    borderRadius: "10px",
+                    fontSize: "14px",
                     fontWeight: 800,
                     fontFamily: "'Outfit', 'Plus Jakarta Sans', -apple-system, sans-serif",
                     letterSpacing: "-0.01em",
                     cursor: "pointer",
-                    boxShadow: "0 6px 18px rgba(255, 92, 53, 0.4)",
+                    boxShadow: "0 6px 20px rgba(255, 92, 53, 0.4)",
                     display: "inline-flex",
                     alignItems: "center",
                     justifyContent: "center",
@@ -1396,67 +1651,75 @@ export const AgencyFleet: React.FC = () => {
                     transition: "all 0.2s ease",
                   }}
                 >
-                  <span>Deploy Agency Pro Fleet</span>
-                  <svg width={13} height={13} viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
+                  <span>Start 7-Day Free Trial</span>
+                  <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
                     <path d="M5 12h14M12 5l7 7-7 7" />
                   </svg>
                 </button>
+                <div style={{ fontSize: "10.5px", color: "#ff5c35", textAlign: "center", marginTop: 6, fontWeight: 700 }}>
+                  ⚡ Instant activation · $0 due today · Cancel anytime
+                </div>
               </div>
             </div>
 
-            {/* Tier 4: Enterprise Solutions Fleet ($2,499/mo) */}
+            {/* Tier 3: Enterprise Solutions Fleet ($2,499/mo or $1,999/mo) */}
             <div
               style={{
                 background: "linear-gradient(180deg, #092124 0%, #0d2c30 100%)",
                 border: "1.5px solid rgba(52, 211, 153, 0.4)",
-                borderRadius: "16px",
-                padding: "18px 16px 16px",
+                borderRadius: "18px",
+                padding: "24px 20px 20px",
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "space-between",
                 color: "#ffffff",
-                boxShadow: "0 14px 36px -6px rgba(9, 33, 36, 0.5), 0 0 20px rgba(18, 69, 72, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.1)",
+                boxShadow: "0 16px 40px -8px rgba(9, 33, 36, 0.5), 0 0 20px rgba(18, 69, 72, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.1)",
                 position: "relative",
               }}
             >
               <div>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
-                  <span style={{ fontSize: "10px", fontWeight: 800, color: "#34d399", letterSpacing: "0.06em", textTransform: "uppercase" }}>
-                    TIER 4 · ELITE & GLOBAL
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+                  <span style={{ fontSize: "10.5px", fontWeight: 800, color: "#34d399", letterSpacing: "0.06em", textTransform: "uppercase" }}>
+                    TIER 3 · ELITE & GLOBAL
                   </span>
-                  <span style={{ fontSize: "9.5px", fontWeight: 800, color: "#34d399", background: "rgba(52, 211, 153, 0.15)", border: "1px solid rgba(52, 211, 153, 0.35)", padding: "1px 6px", borderRadius: "9999px" }}>
+                  <span style={{ fontSize: "10px", fontWeight: 800, color: "#34d399", background: "rgba(52, 211, 153, 0.15)", border: "1px solid rgba(52, 211, 153, 0.35)", padding: "2px 8px", borderRadius: "9999px" }}>
                     UNLIMITED
                   </span>
                 </div>
-                <h3 style={{ fontSize: "19px", fontWeight: 900, color: "#ffffff", margin: "0 0 4px", letterSpacing: "-0.02em" }}>
+                <h3 style={{ fontSize: "22px", fontWeight: 900, color: "#ffffff", margin: "0 0 6px", letterSpacing: "-0.02em", fontFamily: "'Outfit', sans-serif" }}>
                   Enterprise Fleet
                 </h3>
-                <p style={{ fontSize: "12px", color: "#94a3b8", margin: "0 0 10px", lineHeight: 1.4 }}>
+                <p style={{ fontSize: "12.5px", color: "#94a3b8", margin: "0 0 14px", lineHeight: 1.45 }}>
                   For Elite HubSpot partners and global RevOps consultancies with private cloud VPC.
                 </p>
                 
-                <div style={{ background: "rgba(255, 255, 255, 0.05)", padding: "10px 12px", borderRadius: "10px", border: "1px solid rgba(255, 255, 255, 0.12)", marginBottom: 12 }}>
-                  <div style={{ fontSize: "10.5px", color: "#94a3b8", fontWeight: 700 }}>
-                    {isAnnual ? "Billed Annually ($23,988/yr)" : "Billed Monthly"}
+                <div style={{ background: "rgba(255, 255, 255, 0.05)", padding: "12px 14px", borderRadius: "12px", border: "1px solid rgba(255, 255, 255, 0.12)", marginBottom: 16 }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <span style={{ fontSize: "11px", color: "#94a3b8", fontWeight: 700 }}>
+                      {isAnnual ? "Billed Annually ($23,988/yr)" : "Billed Monthly"}
+                    </span>
+                    <span style={{ fontSize: "10px", fontWeight: 800, color: "#34d399", background: "rgba(52, 211, 153, 0.15)", border: "1px solid rgba(52, 211, 153, 0.35)", padding: "1px 6px", borderRadius: "9999px" }}>
+                      7-DAY FREE TRIAL
+                    </span>
                   </div>
-                  <div style={{ display: "flex", alignItems: "baseline", gap: 5, marginTop: 1 }}>
-                    <span style={{ fontSize: "30px", fontWeight: 900, color: "#ffffff", letterSpacing: "-0.03em", lineHeight: 1, fontFamily: "'Outfit', sans-serif" }}>
+                  <div style={{ display: "flex", alignItems: "baseline", gap: 5, marginTop: 3 }}>
+                    <span style={{ fontSize: "34px", fontWeight: 900, color: "#ffffff", letterSpacing: "-0.03em", lineHeight: 1, fontFamily: "'Outfit', sans-serif" }}>
                       ${isAnnual ? "1,999" : "2,499"}
                     </span>
-                    <span style={{ fontSize: "11.5px", fontWeight: 600, color: "#94a3b8" }}>
+                    <span style={{ fontSize: "12px", fontWeight: 600, color: "#94a3b8" }}>
                       / month
                     </span>
                   </div>
-                  <div style={{ fontSize: "10px", fontWeight: 700, color: "#34d399", marginTop: 2 }}>
+                  <div style={{ fontSize: "10.5px", fontWeight: 700, color: "#34d399", marginTop: 4 }}>
                     💎 Unlimited Portals & Private Cloud VPC
                   </div>
                 </div>
 
-                <div style={{ fontSize: "10px", fontWeight: 800, color: "#ffffff", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 6 }}>
+                <div style={{ fontSize: "10.5px", fontWeight: 800, color: "#ffffff", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 8 }}>
                   Enterprise Fleet Deliverables:
                 </div>
                 
-                <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 5.5, fontSize: "11px", color: "#f1f5f9" }}>
+                <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 7, fontSize: "11.5px", color: "#f1f5f9" }}>
                   {[
                     { bold: "UNLIMITED Multi-Tenant Portals", text: "zero client or volume caps" },
                     { bold: "Dedicated Database & VPC Options", text: "AWS, GCP, DigitalOcean, or On-Prem" },
@@ -1465,9 +1728,9 @@ export const AgencyFleet: React.FC = () => {
                     { bold: "Bi-Weekly Strategy War Rooms", text: "direct sessions with senior RevOps architect" },
                     { bold: "Direct 1-Hour Priority SLA", text: "private dedicated engineer access" },
                   ].map((item, idx) => (
-                    <li key={idx} style={{ display: "flex", alignItems: "flex-start", gap: 6, lineHeight: 1.3 }}>
-                      <div style={{ width: 13, height: 13, borderRadius: "50%", background: "rgba(52, 211, 153, 0.2)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, marginTop: 1 }}>
-                        <svg width={8} height={8} viewBox="0 0 24 24" fill="none" stroke="#34d399" strokeWidth={3} strokeLinecap="round" strokeLinejoin="round">
+                    <li key={idx} style={{ display: "flex", alignItems: "flex-start", gap: 7, lineHeight: 1.35 }}>
+                      <div style={{ width: 14, height: 14, borderRadius: "50%", background: "rgba(52, 211, 153, 0.2)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, marginTop: 1.5 }}>
+                        <svg width={9} height={9} viewBox="0 0 24 24" fill="none" stroke="#34d399" strokeWidth={3} strokeLinecap="round" strokeLinejoin="round">
                           <polyline points="20 6 9 17 4 12" />
                         </svg>
                       </div>
@@ -1479,20 +1742,20 @@ export const AgencyFleet: React.FC = () => {
                 </ul>
               </div>
               
-              <div style={{ marginTop: 12 }}>
-                <div style={{ background: "rgba(52, 211, 153, 0.1)", border: "1px solid rgba(52, 211, 153, 0.25)", borderRadius: "7px", padding: "4px 6px", fontSize: "10px", color: "#34d399", fontWeight: 800, textAlign: "center", marginBottom: 8 }}>
+              <div style={{ marginTop: 18 }}>
+                <div style={{ background: "rgba(52, 211, 153, 0.1)", border: "1px solid rgba(52, 211, 153, 0.25)", borderRadius: "8px", padding: "6px 8px", fontSize: "10.5px", color: "#34d399", fontWeight: 800, textAlign: "center", marginBottom: 10 }}>
                   💎 Unlimited Scale: Build a $500K+ ARR RevOps Practice
                 </div>
                 <button
-                  onClick={() => navigate("/app/enterprise")}
+                  onClick={() => openOrder("enterprise-2499")}
                   style={{
                     width: "100%",
-                    padding: "10px 14px",
+                    padding: "12px 16px",
                     background: "#ffffff",
                     color: "#092124",
                     border: "none",
-                    borderRadius: "8px",
-                    fontSize: "13px",
+                    borderRadius: "10px",
+                    fontSize: "14px",
                     fontWeight: 800,
                     fontFamily: "'Outfit', 'Plus Jakarta Sans', -apple-system, sans-serif",
                     letterSpacing: "-0.01em",
@@ -1505,12 +1768,55 @@ export const AgencyFleet: React.FC = () => {
                     transition: "all 0.2s ease",
                   }}
                 >
-                  <span>Deploy Enterprise Fleet</span>
-                  <svg width={13} height={13} viewBox="0 0 24 24" fill="none" stroke="#092124" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
+                  <span>Start 7-Day Free Trial</span>
+                  <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke="#092124" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
                     <path d="M5 12h14M12 5l7 7-7 7" />
                   </svg>
                 </button>
+                <div style={{ fontSize: "10.5px", color: "#34d399", textAlign: "center", marginTop: 6, fontWeight: 700 }}>
+                  💎 Full VPC access · $0 due today · Cancel anytime
+                </div>
               </div>
+            </div>
+          </div>
+
+          {/* Global 7-Day Free Trial Guarantee Bar */}
+          <div
+            style={{
+              marginTop: 20,
+              background: "#ffffff",
+              border: "1px solid #e2e8f0",
+              borderRadius: "14px",
+              padding: "14px 20px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              flexWrap: "wrap",
+              gap: 12,
+              boxShadow: "0 2px 8px rgba(9, 33, 36, 0.03)",
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+              <div style={{ width: 32, height: 32, borderRadius: "50%", background: "rgba(16, 185, 129, 0.12)", border: "1px solid rgba(16, 185, 129, 0.3)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="#059669" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                  <path d="m9 12 2 2 4-4" />
+                </svg>
+              </div>
+              <div>
+                <div style={{ fontSize: "13.5px", fontWeight: 800, color: "#092124" }}>
+                  All Partner Fleets Include A 7-Day Free Trial
+                </div>
+                <div style={{ fontSize: "12px", color: "#64748b" }}>
+                  $0 due today · Instant OAuth portal onboarding · 1-click self-serve cancellation anytime · Zero per-seat markups
+                </div>
+              </div>
+            </div>
+
+            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <span style={{ fontSize: "11px", fontWeight: 800, color: "#059669", background: "rgba(16, 185, 129, 0.1)", border: "1px solid rgba(16, 185, 129, 0.25)", padding: "5px 12px", borderRadius: "9999px" }}>
+                🔒 100% Risk-Free 7-Day Trial
+              </span>
             </div>
           </div>
         </div>
@@ -2091,13 +2397,13 @@ export const AgencyFleet: React.FC = () => {
               ) : (
                 <form onSubmit={handleOrderSubmit}>
                   <div style={{ display: "inline-block", background: "rgba(255,92,53,0.1)", color: "#ff5c35", fontSize: "11px", fontWeight: 800, padding: "4px 12px", borderRadius: "9999px", marginBottom: 12, letterSpacing: "0.04em" }}>
-                    {selectedTier === "audit-99" ? "TIER 1 · $99 PILOT RISK AUDIT (50 DEALS)" : selectedTier === "growth-499" ? "TIER 2 · $499/MO AGENCY GROWTH FLEET (5 PORTALS)" : selectedTier === "scale-999" ? "TIER 3 · $999/MO AGENCY PRO FLEET (15 PORTALS)" : "TIER 4 · $2,499/MO ENTERPRISE SOLUTIONS FLEET (UNLIMITED)"}
+                    {selectedTier === "growth-499" ? "TIER 1 · $499/MO AGENCY GROWTH FLEET (5 PORTALS) · 7-DAY FREE TRIAL" : selectedTier === "scale-999" ? "TIER 2 · $999/MO AGENCY PRO FLEET (15 PORTALS) · 7-DAY FREE TRIAL" : "TIER 3 · $2,499/MO ENTERPRISE SOLUTIONS FLEET (UNLIMITED) · 7-DAY FREE TRIAL"}
                   </div>
                   <h3 style={{ fontSize: "22px", fontWeight: 900, color: "#092124", margin: "0 0 6px" }}>
-                    Lock In Your Solutions Partner Fleet
+                    Start Your 7-Day Free Partner Fleet Trial
                   </h3>
                   <p style={{ fontSize: "13.5px", color: "#64748b", margin: "0 0 22px", lineHeight: 1.5 }}>
-                    Immediate onboarding, co-branded portal setup, and zero per-seat user markups.
+                    $0 due today. Immediate onboarding, co-branded portal setup, and zero per-seat user markups.
                   </p>
 
                   <div style={{ marginBottom: 16 }}>
@@ -2143,7 +2449,7 @@ export const AgencyFleet: React.FC = () => {
                       boxShadow: "0 4px 14px rgba(255,92,53,0.35)",
                     }}
                   >
-                    Confirm & Start Partner Onboarding →
+                    Start 7-Day Free Trial →
                   </button>
                 </form>
               )}

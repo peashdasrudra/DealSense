@@ -156,6 +156,21 @@ export const App: React.FC = () => {
     location.pathname === "/login" ||
     location.pathname === "/signup" ||
     location.pathname === "/oauth/callback" ||
+    location.pathname === "/agency" ||
+    location.pathname === "/partners" ||
+    location.pathname === "/agents" ||
+    location.pathname === "/agency-fleet" ||
+    location.pathname === "/checkout" ||
+    location.pathname === "/payment" ||
+    location.pathname === "/case-study" ||
+    location.pathname === "/portfolio" ||
+    location.pathname === "/privacy" ||
+    location.pathname === "/terms" ||
+    location.pathname === "/compliance" ||
+    location.pathname === "/certification" ||
+    location.pathname === "/onboarding" ||
+    location.pathname === "/marketplace-listing" ||
+    location.pathname === "/nav-test" ||
     location.pathname.startsWith("/app");
 
   useEffect(() => {
@@ -234,8 +249,30 @@ export const App: React.FC = () => {
               <Route path="/app/*" element={<HubSpotNativePipeline />} />
             </Routes>
           </HubSpotNativeLayout>
+        ) : isCheckoutPage ? (
+          <CheckoutPage />
+        ) : isAgencyPage ? (
+          <AgencyFleet />
+        ) : location.pathname === "/case-study" || location.pathname === "/portfolio" ? (
+          <CaseStudy />
+        ) : location.pathname === "/privacy" ? (
+          <PrivacyPolicy />
+        ) : location.pathname === "/terms" ? (
+          <TermsOfService />
+        ) : location.pathname === "/compliance" || location.pathname === "/certification" ? (
+          <MarketplaceAudit />
+        ) : location.pathname === "/onboarding" ? (
+          <MarketplaceOnboarding />
+        ) : location.pathname === "/marketplace-listing" ? (
+          <MarketplaceListingPreview />
+        ) : location.pathname === "/nav-test" ? (
+          <NavTestPage />
+        ) : location.pathname === "/login" || location.pathname === "/signup" ? (
+          <AuthPage />
+        ) : location.pathname === "/oauth/callback" ? (
+          <OAuthCallback />
         ) : (
-          isCheckoutPage ? <CheckoutPage /> : isAgencyPage ? <AgencyFleet /> : location.pathname === '/login' || location.pathname === '/signup' ? <AuthPage /> : location.pathname === '/oauth/callback' ? <OAuthCallback /> : <LandingPage />
+          <LandingPage />
         )}
       </div>
     );
