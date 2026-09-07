@@ -17,7 +17,7 @@ export const OAuthCallback: React.FC = () => {
 
       if (!code || !state) {
         setStatus("error");
-        setErrorMessage("Missing authorization code or state from HubSpot.");
+        setErrorMessage("Missing authorization code or state. Note: Do not use the 'Test URL' button in HubSpot Developer Portal as it omits the required security state parameter. Please install from the DealSense login page.");
         return;
       }
 
