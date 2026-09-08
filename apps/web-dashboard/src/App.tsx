@@ -143,30 +143,39 @@ export const App: React.FC = () => {
     };
   }, [sidebarOpen, isSearchOpen]);
 
-  // ── Initial Boot & Page-to-Page Telemetry Loaders ──────────────────────────
-  const [isInitialLoad, setIsInitialLoad] = useState(true);
+  // ── Initial Cold-Boot & Route Transition Telemetry ────────────────────────
+  const [isInitialLoad, setIsInitialLoad] = useState(() => {
+    // Strictly show initial cold-boot splash once per browser session
+    return !sessionStorage.getItem("dealsense_booted");
+  });
   const [isNavigating, setIsNavigating] = useState(false);
-  const [navTargetTitle, setNavTargetTitle] = useState("");
+  const prevPathRef = React.useRef(location.pathname);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsInitialLoad(false);
-    }, 720);
-    return () => clearTimeout(timer);
-  }, []);
+    if (isInitialLoad) {
+      const timer = setTimeout(() => {
+        sessionStorage.setItem("dealsense_booted", "true");
+        setIsInitialLoad(false);
+      }, 550);
+      return () => clearTimeout(timer);
+    }
+  }, [isInitialLoad]);
 
   useEffect(() => {
-    if (isInitialLoad) return;
-    setIsNavigating(true);
-    const title = PAGE_TITLES[location.pathname]?.title || "Workspace";
-    setNavTargetTitle(title);
-    const timer = setTimeout(() => setIsNavigating(false), 380);
-    return () => clearTimeout(timer);
+    // Only fire navigation laser when user actively changes route and initial boot is complete
+    if (prevPathRef.current !== location.pathname) {
+      prevPathRef.current = location.pathname;
+      if (!isInitialLoad) {
+        setIsNavigating(true);
+        const timer = setTimeout(() => setIsNavigating(false), 240);
+        return () => clearTimeout(timer);
+      }
+    }
   }, [location.pathname, isInitialLoad]);
 
   const renderGlobalTelemetryLoaders = () => (
     <>
-      {/* 1. Initial Boot Live Animated Telemetry Loader */}
+      {/* 1. Initial Cold-Boot Live Animated Gyroscopic Loader (Strictly once per session) */}
       <AnimatePresence>
         {isInitialLoad && (
           <DealSenseLoader
@@ -177,36 +186,28 @@ export const App: React.FC = () => {
         )}
       </AnimatePresence>
 
-      {/* 2. Route Transition Live Animated Telemetry Loader */}
+      {/* 2. Sleek Non-Blocking Enterprise Viewport Laser Bar (Linear/Stripe Standard) */}
       <AnimatePresence>
         {isNavigating && !isInitialLoad && (
-          <>
-            {/* Top Viewport Laser Progress Bar */}
-            <motion.div
-              initial={{ scaleX: 0, opacity: 1 }}
-              animate={{ scaleX: 1, opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.35, ease: "easeInOut" }}
-              style={{
-                position: "fixed",
-                top: 0,
-                left: 0,
-                right: 0,
-                height: 3,
-                background:
-                  "linear-gradient(90deg, #ff5c35 0%, #ff7a59 35%, #00bda5 70%, #00e5c9 100%)",
-                transformOrigin: "left",
-                zIndex: 999999,
-                boxShadow: "0 0 14px rgba(255, 92, 53, 0.8), 0 0 4px #00bda5",
-              }}
-            />
-            {/* Floating Live Animated Telemetry Capsule */}
-            <DealSenseLoader
-              variant="overlay"
-              message={`Loading ${navTargetTitle}...`}
-              subMessage="Deterministic Telemetry & Heuristic Verification"
-            />
-          </>
+          <motion.div
+            initial={{ scaleX: 0, opacity: 1 }}
+            animate={{ scaleX: 1, opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.22, ease: "easeInOut" }}
+            style={{
+              position: "fixed",
+              top: 0,
+              left: 0,
+              right: 0,
+              height: 3,
+              background:
+                "linear-gradient(90deg, #ff5c35 0%, #ff7a59 35%, #00bda5 70%, #00e5c9 100%)",
+              transformOrigin: "left",
+              zIndex: 999999,
+              boxShadow: "0 0 14px rgba(255, 92, 53, 0.8), 0 0 4px #00bda5",
+              pointerEvents: "none",
+            }}
+          />
         )}
       </AnimatePresence>
     </>

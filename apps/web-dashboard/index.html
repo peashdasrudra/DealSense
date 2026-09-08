@@ -126,45 +126,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&family=Outfit:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
 </head>
 <body>
-  <div id="root">
-    <div style="min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #f8fafc; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif; position: relative; overflow: hidden;">
-      <style>
-        @keyframes ds-spin-cw { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        @keyframes ds-spin-ccw { 0% { transform: rotate(360deg); } 100% { transform: rotate(0deg); } }
-        @keyframes ds-pulse { 0%, 100% { transform: scale(0.95); opacity: 0.6; } 50% { transform: scale(1.1); opacity: 0.9; } }
-        @keyframes ds-shimmer { 0% { width: 10%; } 50% { width: 85%; } 100% { width: 100%; } }
-      </style>
-      <!-- Ambient Glow -->
-      <div style="position: absolute; width: 300px; height: 300px; border-radius: 50%; background: radial-gradient(circle, rgba(255, 92, 53, 0.12) 0%, rgba(0, 189, 165, 0.05) 50%, transparent 70%); filter: blur(30px); animation: ds-pulse 2s ease-in-out infinite;"></div>
-      
-      <!-- Live Telemetry Emblem -->
-      <div style="position: relative; width: 72px; height: 72px; display: flex; align-items: center; justify-content: center;">
-        <svg width="72" height="72" viewBox="0 0 100 100" style="position: absolute; inset: 0;">
-          <circle cx="50" cy="50" r="46" fill="none" stroke="#e2e8f0" stroke-width="1.2" />
-          <circle cx="50" cy="50" r="46" fill="none" stroke="#ff5c35" stroke-width="2.4" stroke-dasharray="24 16 38 12" stroke-linecap="round" style="transform-origin: 50% 50%; animation: ds-spin-cw 3s linear infinite;" />
-          <circle cx="50" cy="50" r="37" fill="none" stroke="#00bda5" stroke-width="1.8" stroke-dasharray="50 180" stroke-linecap="round" style="transform-origin: 50% 50%; animation: ds-spin-ccw 2.4s linear infinite;" />
-          <circle cx="50" cy="13" r="3.2" fill="#00bda5" style="transform-origin: 50% 50%; animation: ds-spin-cw 2s linear infinite;" />
-          <circle cx="87" cy="50" r="3" fill="#ff5c35" style="transform-origin: 50% 50%; animation: ds-spin-ccw 2.8s linear infinite;" />
-        </svg>
-        <div style="position: relative; z-index: 2; width: 34px; height: 34px; border-radius: 50%; background: #ffffff; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(255, 92, 53, 0.25);">
-          <img src="/logo_icon.png" alt="DealSense" style="width: 24px; height: 24px; object-fit: contain;" />
-        </div>
-      </div>
-
-      <!-- Brand Typography -->
-      <div style="margin-top: 18px; display: flex; flex-direction: column; align-items: center; gap: 4px;">
-        <div style="font-size: 18px; font-weight: 800; letter-spacing: -0.03em;">
-          <span style="color: #1e293b;">Deal</span><span style="color: #ff5c35; font-weight: 800;">Sense</span>
-        </div>
-        <div style="font-size: 12px; color: #64748b; font-weight: 600; letter-spacing: 0.02em;">Initializing Revenue Intelligence...</div>
-      </div>
-
-      <!-- Micro Laser Bar -->
-      <div style="width: 140px; height: 3px; background: #e2e8f0; border-radius: 4px; margin-top: 16px; overflow: hidden;">
-        <div style="height: 100%; width: 50%; background: linear-gradient(90deg, #ff5c35, #ff7a59, #00bda5); border-radius: 4px; animation: ds-shimmer 1.2s ease-in-out infinite alternate;"></div>
-      </div>
-    </div>
-  </div>
+  <div id="root"></div>
   <script type="module" src="/src/main.tsx"></script>
 </body>
 </html>
