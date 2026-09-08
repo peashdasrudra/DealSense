@@ -59,19 +59,20 @@ Both lifecycle events are now locked in with automated unit tests in `apps/api/s
 To guarantee 1st-round approval by the HubSpot App Review team, complete these operational steps:
 
 ### Step 1: Production HTTPS Deployment
-* Deploy the FastAPI backend (`apps/api`) to a cloud container platform (e.g. Render, Railway, AWS ECS) with a custom domain:
-  * Base URL: `https://api.dealsense.peash.tech`
-  * Health Probe: `https://api.dealsense.peash.tech/health`
-  * Webhook Ingestion URL: `https://api.dealsense.peash.tech/api/v1/webhooks/hubspot`
-  * OAuth Redirect URI: `https://api.dealsense.peash.tech/api/v1/oauth/callback`
+* The platform is deployed live on cloud infrastructure:
+  * Web Dashboard: `https://dealsense.peash.tech`
+  * API Base URL: `https://dealsense-api-6o2h.onrender.com`
+  * Health Probe: `https://dealsense-api-6o2h.onrender.com/api/v1/health`
+  * Webhook Ingestion URL: `https://dealsense-api-6o2h.onrender.com/api/v1/webhooks/hubspot`
+  * OAuth Redirect URI: `https://dealsense.peash.tech/oauth/callback`
 
 ### Step 2: Configure App in HubSpot Developer Portal
 1. Navigate to **HubSpot Developer Account** (`developers.hubspot.com`) ➔ **Apps** ➔ **DealSense**.
 2. **Auth Tab**:
    * Scopes: Select `crm.objects.deals.read`, `crm.objects.deals.write`, `crm.objects.contacts.read`.
-   * Redirect URL: `https://api.dealsense.peash.tech/api/v1/oauth/callback`.
+   * Redirect URL: `https://dealsense.peash.tech/oauth/callback`.
 3. **Webhooks Tab**:
-   * Target URL: `https://api.dealsense.peash.tech/api/v1/webhooks/hubspot`.
+   * Target URL: `https://dealsense-api-6o2h.onrender.com/api/v1/webhooks/hubspot`.
    * Event Subscriptions:
      * `deal.propertyChange` (dealstage, amount, closedate)
      * `deal.creation`
@@ -79,16 +80,16 @@ To guarantee 1st-round approval by the HubSpot App Review team, complete these o
      * `app.uninstall`
      * `contact.privacy.deletion`
 4. **Listing Tab**:
-   * App Name: `DealSense — AI Revenue Intelligence & Deal Health`
+   * App Name: `DealSense — Autonomous Revenue Intelligence & Deal Health`
    * Category: **Sales > CRM & Sales Automation**
-   * Support Email: `support@hubailab.com`
+   * Support Email: `support@dealsense.peash.tech`
 
 ### Step 3: Reviewer Test Account Package
 HubSpot requires testing credentials when submitting:
 * Provide a pre-configured HubSpot Test Account ID.
 * Provide an install URL:
   ```text
-  https://app.hubspot.com/oauth/authorize?client_id=<YOUR_CLIENT_ID>&scope=crm.objects.deals.read%20crm.objects.deals.write%20crm.objects.contacts.read&redirect_uri=https://api.dealsense.peash.tech/api/v1/oauth/callback
+  https://app.hubspot.com/oauth/authorize?client_id=<YOUR_CLIENT_ID>&scope=crm.objects.deals.read%20crm.objects.deals.write%20crm.objects.contacts.read&redirect_uri=https://dealsense.peash.tech/oauth/callback
   ```
 * Include a 2-minute Loom/walkthrough video demonstrating the Deal Record card, the What-If Simulator, and the automatic 7-vector score write-back.
 

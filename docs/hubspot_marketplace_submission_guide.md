@@ -20,23 +20,23 @@ This document provides the exact, step-by-step instructions to list the DealSens
      - `crm.objects.contacts.read`
      - `crm.objects.deals.read`
      - `crm.objects.deals.write` (to write risk scores back)
-   - **Redirect URL:** Enter the production URL where you will host the app's onboarding screen. E.g., `https://app.dealsense.ai/onboarding`
+   - **Redirect URL:** Enter the production OAuth callback URL: `https://dealsense.peash.tech/oauth/callback`
    - *Save your `Client ID` and `Client Secret`. You will need these for your production backend.*
-4. **Configure Webhooks (Optional for V1 MVP)**
-   - If you are listening for deal stage changes in real-time, go to the **Webhooks** tab and enter your backend target URL (e.g., `https://api.dealsense.ai/v1/webhooks/hubspot`).
+4. **Configure Webhooks**
+   - In the **Webhooks** tab, enter the live target URL: `https://dealsense-api-6o2h.onrender.com/api/v1/webhooks/hubspot`.
 
 ---
 
 ## Phase 2: Host & Deploy the Application
 
-Before submitting for review, your app must be fully hosted and publicly accessible.
+The application is deployed live on cloud infrastructure:
 
-1. **Deploy the Web Dashboard (Frontend)**
-   - You can deploy the frontend (the Vite React app) easily using **Vercel** or **Netlify**.
-   - Make sure your custom domain is connected (e.g., `app.dealsense.ai`).
-2. **Deploy the API (Backend)**
-   - Deploy the Python FastAPI backend using a provider like **Render**, **Railway**, or **AWS/GCP**.
-   - Set your environment variables (the `Client ID` and `Client Secret` obtained in Phase 1).
+1. **Web Dashboard (Frontend)**
+   - Deployed on **Vercel**: `https://dealsense.peash.tech`
+   - Connects to the backend via zero-CORS API proxy with automatic SSL.
+2. **API Backend**
+   - Deployed on **Render**: `https://dealsense-api-6o2h.onrender.com`
+   - Environment variables configured with OAuth Client ID and Secret.
 
 ---
 
@@ -46,9 +46,9 @@ To get approved and rank well in the marketplace, you need high-quality listing 
 
 ### Mandatory Links
 HubSpot reviewers will check these specifically. DealSense already has these built-in:
-- **Terms of Service URL:** `https://app.dealsense.ai/terms`
-- **Privacy Policy URL:** `https://app.dealsense.ai/privacy`
-- **Setup Instructions URL:** Provide a link to a support article or the `/onboarding` page showing how easy it is to connect.
+- **Terms of Service URL:** `https://dealsense.peash.tech/terms`
+- **Privacy Policy URL:** `https://dealsense.peash.tech/privacy`
+- **Setup Instructions URL:** `https://dealsense.peash.tech/case-study` (or the `/login` page with 1-click install flow)
 
 ### Media Requirements
 - **App Logo:** 150x150 pixels minimum, PNG or JPG.
