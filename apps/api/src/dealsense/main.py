@@ -256,9 +256,10 @@ def _register_exception_handlers(app: FastAPI) -> None:
     @app.exception_handler(DealSenseError)
     async def handle_dealsense_error(request: Request, exc: DealSenseError) -> ORJSONResponse:
         logger.error("unhandled_domain_error", code=exc.code, message=exc.message)
+        status_code = 400 if isinstance(exc, OAuthError) else 500
         return ORJSONResponse(
-            status_code=500,
-            content={"error": exc.code, "message": "Internal server error"},
+            status_code=status_code,
+            content={"error": exc.code, "message": exc.message},
         )
 
     @app.exception_handler(Exception)

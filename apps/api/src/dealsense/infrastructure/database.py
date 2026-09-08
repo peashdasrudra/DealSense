@@ -25,12 +25,22 @@ def get_engine() -> AsyncEngine:
     global _engine
     if _engine is None:
         settings = get_settings()
+        db_url = settings.async_database_url
+        connect_args: dict[str, object] = {}
+
+        if any(host in db_url for host in ("neon.tech", "render.com", "supabase.co")) or "ssl=require" in db_url:
+            connect_args["ssl"] = "require"
+            # Strip query parameter from URL so asyncpg doesn't reject it
+            if "?" in db_url:
+                db_url = db_url.split("?")[0]
+
         _engine = create_async_engine(
-            settings.async_database_url,
+            db_url,
+            connect_args=connect_args,
             echo=settings.debug,
-            pool_size=20,
-            max_overflow=10,
-            pool_timeout=30,
+            pool_size=10,
+            max_overflow=5,
+            pool_timeout=10,
             pool_recycle=1800,
             pool_pre_ping=True,
         )

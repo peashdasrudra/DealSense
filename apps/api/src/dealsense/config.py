@@ -26,7 +26,10 @@ class Settings(BaseSettings):
     app_env: Literal["development", "staging", "production"] = "development"
     debug: bool = False
     log_level: str = "INFO"
-    secret_key: str = Field(min_length=32)
+    secret_key: str = Field(
+        default="dealsense-super-secure-production-secret-key-change-in-env-32b",
+        min_length=32,
+    )
     admin_api_key: str = "dealsense_admin_secret_key"
 
     # ---- API Server ----
@@ -90,7 +93,14 @@ class Settings(BaseSettings):
     def async_database_url(self) -> str:
         """Construct async database URL if not provided."""
         if self.database_url:
-            return self.database_url
+            url = self.database_url
+            if url.startswith("postgres://"):
+                url = url.replace("postgres://", "postgresql+asyncpg://", 1)
+            elif url.startswith("postgresql://") and not url.startswith("postgresql+asyncpg://"):
+                url = url.replace("postgresql://", "postgresql+asyncpg://", 1)
+            if "?sslmode=" in url:
+                url = url.replace("?sslmode=require", "?ssl=require").replace("&sslmode=require", "&ssl=require")
+            return url
         return (
             f"postgresql+asyncpg://{self.postgres_user}:{self.postgres_password}"
             f"@{self.postgres_host}:{self.postgres_port}/{self.postgres_db}"
@@ -102,6 +112,13 @@ class Settings(BaseSettings):
         """Construct sync database URL for Alembic migrations."""
         if self.database_url_sync:
             return self.database_url_sync
+        if self.database_url:
+            url = self.database_url
+            if url.startswith("postgres://"):
+                url = url.replace("postgres://", "postgresql://", 1)
+            elif url.startswith("postgresql+asyncpg://"):
+                url = url.replace("postgresql+asyncpg://", "postgresql://", 1)
+            return url
         return (
             f"postgresql://{self.postgres_user}:{self.postgres_password}"
             f"@{self.postgres_host}:{self.postgres_port}/{self.postgres_db}"

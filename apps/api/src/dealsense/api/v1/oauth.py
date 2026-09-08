@@ -17,7 +17,7 @@ from fastapi import APIRouter, Depends, Query, Request, Response
 from fastapi.responses import RedirectResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from dealsense.api.deps import get_db
+from dealsense.api.deps import get_db, get_db_optional
 from dealsense.api.schemas.oauth import (
     OAuthAuthorizeResponse,
     OAuthCallbackRequest,
@@ -64,7 +64,7 @@ async def oauth_callback_get(
     response: Response,
     code: str = Query(..., description="Authorization code from HubSpot"),
     state: str | None = Query(None, description="CSRF state parameter"),
-    db: AsyncSession = Depends(get_db),
+    db: AsyncSession | None = Depends(get_db_optional),
 ) -> Any:
     """Handle OAuth redirect callback from HubSpot.
 
@@ -120,7 +120,7 @@ async def oauth_callback_post(
     request: Request,
     response: Response,
     payload: OAuthCallbackRequest,
-    db: AsyncSession = Depends(get_db),
+    db: AsyncSession | None = Depends(get_db_optional),
 ) -> OAuthCallbackResponse:
     """Handle OAuth callback via POST JSON request."""
     settings = get_settings()

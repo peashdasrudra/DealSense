@@ -34,6 +34,7 @@ async def get_db() -> AsyncGenerator[AsyncSession, None]:
 
 async def get_db_optional() -> AsyncGenerator[AsyncSession | None, None]:
     """Provide a database session or None if database is offline/unreachable."""
+    session: AsyncSession | None = None
     try:
         factory = get_session_factory()
         session = factory()
@@ -45,12 +46,14 @@ async def get_db_optional() -> AsyncGenerator[AsyncSession | None, None]:
         yield session
         await session.commit()
     except Exception:
-        with suppress(Exception):
-            await session.rollback()
-        yield None
+        if session:
+            with suppress(Exception):
+                await session.rollback()
+        raise
     finally:
-        with suppress(Exception):
-            await session.close()
+        if session:
+            with suppress(Exception):
+                await session.close()
 
 
 async def get_redis_client():  # type: ignore[no-untyped-def]

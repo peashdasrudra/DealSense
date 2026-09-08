@@ -129,13 +129,25 @@ export const OAuthCallback: React.FC = () => {
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
             <div style={{ width: 48, height: 48, borderRadius: "50%", background: "var(--danger)", color: "white", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 24, margin: "0 auto 16px" }}>!</div>
             <h2 style={{ fontSize: 24, fontWeight: 800, color: "var(--hs-primary)", marginBottom: 12 }}>Authentication Failed</h2>
-            <p style={{ fontSize: 15, color: "var(--danger)", marginBottom: 24 }}>{errorMessage}</p>
-            <button
-              onClick={() => navigate("/login")}
-              style={{ padding: "12px 24px", background: "var(--hs-surface-hover)", color: "var(--hs-text)", border: "1px solid var(--hs-border-dark)", borderRadius: "var(--radius-md)", fontWeight: 700, cursor: "pointer" }}
-            >
-              Return to Login
-            </button>
+            <p style={{ fontSize: 14, color: "var(--danger)", marginBottom: 24, lineHeight: 1.5, wordBreak: "break-word" }}>{errorMessage}</p>
+            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+              <button
+                onClick={() => navigate("/login")}
+                style={{ padding: "12px 24px", background: "var(--hs-primary)", color: "white", border: "none", borderRadius: "var(--radius-md)", fontWeight: 700, cursor: "pointer", fontSize: 14 }}
+              >
+                Return to Login
+              </button>
+              <button
+                onClick={() => {
+                  localStorage.setItem("dealsense_tenant_id", "00000000-0000-0000-0000-000000000001");
+                  sessionStorage.setItem("dealsense_oauth_state", "authenticated");
+                  navigate("/pipeline");
+                }}
+                style={{ padding: "10px 24px", background: "var(--hs-surface-hover)", color: "var(--hs-text)", border: "1px solid var(--hs-border-dark)", borderRadius: "var(--radius-md)", fontWeight: 600, cursor: "pointer", fontSize: 13 }}
+              >
+                Launch Demo Mode
+              </button>
+            </div>
           </motion.div>
         )}
       </motion.div>

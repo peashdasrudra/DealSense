@@ -11,7 +11,7 @@ import json
 import secrets
 import time
 import urllib.parse
-from uuid import UUID, uuid4
+from uuid import NAMESPACE_DNS, UUID, uuid4, uuid5
 
 import httpx
 import jwt
@@ -153,7 +153,7 @@ async def generate_authorize_url(redirect_uri: str | None = None) -> tuple[str, 
 async def handle_oauth_callback(
     code: str,
     state: str | None,
-    db: AsyncSession,
+    db: AsyncSession | None = None,
     redirect_uri: str | None = None,
     ip_address: str | None = None,
     user_agent: str | None = None,
@@ -163,7 +163,7 @@ async def handle_oauth_callback(
     Args:
         code: Authorization code from HubSpot
         state: CSRF state parameter from HubSpot (or None/direct_install)
-        db: Database session
+        db: Optional database session with in-memory fallback
         redirect_uri: Optional override for redirect URI
         ip_address: Client IP
         user_agent: Client User Agent
@@ -232,9 +232,19 @@ async def handle_oauth_callback(
                         redirect_uri=effective_redirect_uri,
                         error_body=error_body,
                     )
+                    error_detail = error_body
+                    try:
+                        hubspot_error = token_resp.json()
+                        error_detail = (
+                            hubspot_error.get("message")
+                            or hubspot_error.get("error_description")
+                            or error_body
+                        )
+                    except Exception:
+                        pass
                     raise OAuthError(
-                        f"OAuth code exchange failed: HTTP {token_resp.status_code}. "
-                        f"Ensure redirect_uri '{effective_redirect_uri}' matches the registered URL in HubSpot."
+                        f"HubSpot OAuth code exchange failed ({token_resp.status_code}): {error_detail}. "
+                        "Please return to login and re-authenticate."
                     )
                 token_data = token_resp.json()
             except httpx.HTTPError as e:
@@ -263,71 +273,98 @@ async def handle_oauth_callback(
         if not portal_id:
             raise OAuthError("Could not determine HubSpot portal ID")
 
-        # 5. Upsert Tenant in database
-        stmt = select(Tenant).where(Tenant.hubspot_portal_id == portal_id)
-        result = await db.execute(stmt)
-        tenant = result.scalar_one_or_none()
+        # Deterministic tenant ID based on portal ID
+        deterministic_tenant_id = uuid5(NAMESPACE_DNS, f"hubspot:{portal_id}")
+        tenant_id = deterministic_tenant_id
 
-        is_new_tenant = False
-        if tenant is None:
-            is_new_tenant = True
-            tenant = Tenant(
-                id=uuid4(),
-                hubspot_portal_id=portal_id,
-                name=account_name,
-                status=TenantStatus.ACTIVE,
-                settings={},
-                white_label_config={},
-            )
-            db.add(tenant)
-            await db.flush()
-        else:
-            tenant.status = TenantStatus.ACTIVE
-            tenant.name = account_name
-            await db.flush()
+        # 5. Upsert Tenant in database (if db available)
+        if db is not None:
+            try:
+                stmt = select(Tenant).where(Tenant.hubspot_portal_id == portal_id)
+                result = await db.execute(stmt)
+                tenant = result.scalar_one_or_none()
 
-        # 6. Store encrypted tokens via token manager
-        await store_tokens(
-            tenant_id=tenant.id,
-            access_token=access_token,
-            refresh_token=refresh_token,
-            expires_in=expires_in,
-            scopes=scopes,
-            db=db,
+                is_new_tenant = False
+                if tenant is None:
+                    is_new_tenant = True
+                    tenant = Tenant(
+                        id=deterministic_tenant_id,
+                        hubspot_portal_id=portal_id,
+                        name=account_name,
+                        status=TenantStatus.ACTIVE,
+                        settings={},
+                        white_label_config={},
+                    )
+                    db.add(tenant)
+                    await db.flush()
+                else:
+                    tenant.status = TenantStatus.ACTIVE
+                    tenant.name = account_name
+                    await db.flush()
+
+                tenant_id = tenant.id
+
+                # 6. Store encrypted tokens via token manager
+                await store_tokens(
+                    tenant_id=tenant.id,
+                    access_token=access_token,
+                    refresh_token=refresh_token,
+                    expires_in=expires_in,
+                    scopes=scopes,
+                    db=db,
+                )
+
+                # 8. Record Audit Event
+                await record_audit_event(
+                    db=db,
+                    tenant_id=tenant.id,
+                    actor=f"hubspot:{portal_id}",
+                    actor_type="oauth",
+                    action="tenant.installed" if is_new_tenant else "tenant.reconnected",
+                    resource_type="tenant",
+                    resource_id=str(tenant.id),
+                    details={"portal_id": portal_id, "scopes": scopes, "name": account_name},
+                    ip_address=ip_address,
+                    user_agent=user_agent,
+                )
+            except Exception as db_err:
+                logger.warning(
+                    "oauth_database_upsert_fallback",
+                    portal_id=portal_id,
+                    error=str(db_err),
+                )
+
+        # Cache tokens in fast fallback storage
+        await cache_set(
+            f"tenant:tokens:{tenant_id}",
+            json.dumps({
+                "access_token": access_token,
+                "refresh_token": refresh_token,
+                "expires_in": expires_in,
+                "scopes": scopes,
+                "portal_id": portal_id,
+                "account_name": account_name,
+            }),
+            ttl_seconds=expires_in,
         )
 
         # 7. Issue Session JWT
-        session_jwt = create_tenant_session_jwt(tenant.id, portal_id, scopes)
+        session_jwt = create_tenant_session_jwt(tenant_id, portal_id, scopes)
 
         # Cache session data for 60 seconds to deduplicate duplicate mounts
         session_data = json.dumps({
-            "tenant_id": str(tenant.id),
+            "tenant_id": str(tenant_id),
             "portal_id": portal_id,
             "session_jwt": session_jwt,
         })
         await cache_set(f"oauth:session:{code_hash}", session_data, ttl_seconds=60)
 
-        # 8. Record Audit Event
-        await record_audit_event(
-            db=db,
-            tenant_id=tenant.id,
-            actor=f"hubspot:{portal_id}",
-            actor_type="oauth",
-            action="tenant.installed" if is_new_tenant else "tenant.reconnected",
-            resource_type="tenant",
-            resource_id=str(tenant.id),
-            details={"portal_id": portal_id, "scopes": scopes, "name": account_name},
-            ip_address=ip_address,
-            user_agent=user_agent,
-        )
-
         logger.info(
             "oauth_installation_completed",
-            tenant_id=str(tenant.id),
+            tenant_id=str(tenant_id),
             portal_id=portal_id,
-            is_new=is_new_tenant,
         )
-        return tenant.id, portal_id, session_jwt
+        return tenant_id, portal_id, session_jwt
 
     finally:
         if lock:
