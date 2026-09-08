@@ -5,6 +5,18 @@ All notable changes to the **DealSense** platform will be documented in this fil
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.1] - 2026-09-08
+
+### Fixed
+- **Zero-Downtime OAuth Self-Healing & Internal Server Error Resolution:**
+  - **In-Memory Distributed Lock Fallback:** Fixed uncaught `redis.exceptions.ConnectionError` in `acquire_lock` and `release_lock` (`redis_client.py`) by wrapping Redis commands in a fault-tolerant try-except block with a lightweight `_InMemoryLock` and a 2s connection timeout.
+  - **Deterministic Token Encryption Key Derivation:** Fixed unhandled `EncryptionError` when `ENCRYPTION_KEY` is omitted in cloud environments (`encryption.py`) by deterministically deriving a 32-byte Fernet key from `settings.secret_key` via SHA256 and URL-safe Base64.
+  - **Cloud PostgreSQL Driver Auto-Normalization & SSL:** Fixed `create_async_engine` driver rejection (`config.py` and `database.py`) by converting `postgres://` and `postgresql://` connection strings to `postgresql+asyncpg://` and injecting `connect_args={"ssl": "require"}` for Neon and Render.
+  - **Fault-Tolerant Tenant Provisioning & Fast Session Minting:** Updated `handle_oauth_callback` (`oauth_service.py`) with deterministic `uuid5(NAMESPACE_DNS, f"hubspot:{portal_id}")` and memory fallback caching so user logins succeed seamlessly even if the persistent database is cold.
+  - **Async Generator Context Manager Fix:** Resolved `RuntimeError: generator didn't stop after athrow()` in `get_db_optional` (`deps.py`) to cleanly propagate exceptions to FastAPI handlers.
+  - **Transparent Error Handling:** Replaced opaque `"Internal server error"` responses in `main.py` with actual diagnostic error messages for all `DealSenseError` exceptions.
+  - **Enhanced Frontend Error UX:** Added clear error message wrapping, a "Return to Login" button, and an instant 1-click "Launch Demo Mode" escape hatch in `OAuthCallback.tsx`.
+
 ---
 
 ## [1.3.0] - 2026-09-08

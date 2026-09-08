@@ -38,9 +38,13 @@ This guide covers how to deploy the entire **DealSense** production ecosystem fo
 4. Build Command: `pip install -e packages/scoring && pip install -e apps/api`
 5. Start Command: `uvicorn dealsense.main:app --host 0.0.0.0 --port $PORT --workers 2`
 6. Add Environment Variables:
-   - `HUBSPOT_ACCESS_TOKEN`: `pat-...` (from HubSpot Developer Private App)
-   - `SECRET_KEY`: `your_random_64_char_key`
-   - `ENCRYPTION_KEY`: `your_fernet_key`
+   - `HUBSPOT_CLIENT_ID`: (from HubSpot Developer App Auth tab)
+   - `HUBSPOT_CLIENT_SECRET`: (from HubSpot Developer App Auth tab)
+   - `HUBSPOT_REDIRECT_URI`: `https://dealsense.peash.tech/oauth/callback`
+   - `APP_BASE_URL`: `https://dealsense.peash.tech`
+   - `SECRET_KEY`: `your_random_64_char_key` (auto-derives Fernet token encryption key if ENCRYPTION_KEY omitted)
+   - `DATABASE_URL`: (from Neon, auto-normalized to `postgresql+asyncpg://` with SSL)
+   - `REDIS_URL`: (optional from Upstash, automatic in-memory fallback enabled if unlinked)
 7. Click **Create Web Service**. Your API will be live at `https://dealsense-api-6o2h.onrender.com`.
 
 ### 4. Web Dashboard: Vercel

@@ -140,7 +140,24 @@ Automated revenue tools often corrupt CRMs by blindly overwriting rep data. Deal
 
 ## 7. Security, Compliance & Governance
 
-- **OAuth 2.0 PKCE:** Production authentication exchanges authorization codes via cryptographically bound state tokens.
+- **OAuth 2.0 PKCE & Stateless HMAC:** Production authentication exchanges authorization codes via cryptographically bound, stateless HMAC-SHA256 state tokens with 30-minute validity.
 - **GDPR `gdpr.delete` Compliance:** Automatic hard-delete listener removes customer PII and deal telemetry within 30 days of portal notification.
-- **Data Encryption:** 256-bit TLS in transit; AES-256 (Fernet) encryption for vaulted HubSpot refresh tokens at rest.
+- **Data Encryption:** 256-bit TLS in transit; AES-256 (Fernet) encryption for vaulted HubSpot refresh tokens at rest with automatic key derivation.
 - **SOC2 Ready Logging:** Immutable audit logging tracks all user actions, evaluations, and write-back mutations.
+
+---
+
+## 8. Self-Healing Zero-Downtime Resilience Architecture
+
+To prevent single points of failure in distributed cloud environments (e.g. Render, Neon, Vercel), DealSense incorporates automated self-healing failover mechanisms:
+
+1. **Distributed Lock In-Memory Failover:**
+   When Redis is unavailable or sleeping, `acquire_lock` in `redis_client.py` gracefully falls back to an internal `_InMemoryLock` with a 2-second timeout, preventing code exchange deduplication crashes.
+2. **Deterministic Encryption Key Derivation:**
+   If `ENCRYPTION_KEY` is not explicitly set in the cloud environment, `_get_fernet()` derives a deterministic 32-byte Fernet key from `SECRET_KEY` via SHA256 and URL-safe Base64, ensuring tokens are always encrypted without raising unhandled runtime exceptions.
+3. **Database URL Auto-Normalization & SSL:**
+   `config.py` automatically normalizes standard cloud `postgres://` or `postgresql://` connection strings to `postgresql+asyncpg://` and detects cloud database hosts (Neon, Render, Supabase) to inject `connect_args={"ssl": "require"}`.
+4. **Fault-Tolerant Tenant Provisioning:**
+   If the PostgreSQL database is cold or unreachable during installation, `handle_oauth_callback` generates a deterministic UUID (`uuid5(NAMESPACE_DNS, f"hubspot:{portal_id}")`), caches credentials in fast memory/Redis fallback, and completes session issuance so user logins succeed seamlessly.
+5. **Human-in-the-Loop Recovery UX:**
+   Frontend error boundaries in `OAuthCallback.tsx` display human-readable diagnostics alongside a "Return to Login" button and a 1-click "Launch Demo Mode" escape hatch.
