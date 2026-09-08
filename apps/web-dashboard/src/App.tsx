@@ -46,6 +46,7 @@ import { HubSpotNativeLayout } from "./components/HubSpotNativeLayout";
 import { HubSpotNativePipeline } from "./pages/HubSpotNativePipeline";
 import { HubSpotNativeActionQueue } from "./pages/HubSpotNativeActionQueue";
 import { HubSpotNativePlaybooks } from "./pages/HubSpotNativePlaybooks";
+import { DealSenseLoader } from "./components/DealSenseLoader";
 // ── Page Title Mapping ───────────────────────────────────────────────────────
 
 const PAGE_TITLES: Record<string, { title: string; breadcrumb: string }> = {
@@ -142,13 +143,74 @@ export const App: React.FC = () => {
     };
   }, [sidebarOpen, isSearchOpen]);
 
+  // ── Initial Boot & Page-to-Page Telemetry Loaders ──────────────────────────
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
   const [isNavigating, setIsNavigating] = useState(false);
+  const [navTargetTitle, setNavTargetTitle] = useState("");
 
   useEffect(() => {
-    setIsNavigating(true);
-    const timer = setTimeout(() => setIsNavigating(false), 240);
+    const timer = setTimeout(() => {
+      setIsInitialLoad(false);
+    }, 720);
     return () => clearTimeout(timer);
-  }, [location.pathname]);
+  }, []);
+
+  useEffect(() => {
+    if (isInitialLoad) return;
+    setIsNavigating(true);
+    const title = PAGE_TITLES[location.pathname]?.title || "Workspace";
+    setNavTargetTitle(title);
+    const timer = setTimeout(() => setIsNavigating(false), 380);
+    return () => clearTimeout(timer);
+  }, [location.pathname, isInitialLoad]);
+
+  const renderGlobalTelemetryLoaders = () => (
+    <>
+      {/* 1. Initial Boot Live Animated Telemetry Loader */}
+      <AnimatePresence>
+        {isInitialLoad && (
+          <DealSenseLoader
+            variant="fullscreen"
+            message="Initializing Revenue Intelligence..."
+            subMessage="Connecting HubSpot Telemetry & 7-Vector Engine"
+          />
+        )}
+      </AnimatePresence>
+
+      {/* 2. Route Transition Live Animated Telemetry Loader */}
+      <AnimatePresence>
+        {isNavigating && !isInitialLoad && (
+          <>
+            {/* Top Viewport Laser Progress Bar */}
+            <motion.div
+              initial={{ scaleX: 0, opacity: 1 }}
+              animate={{ scaleX: 1, opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.35, ease: "easeInOut" }}
+              style={{
+                position: "fixed",
+                top: 0,
+                left: 0,
+                right: 0,
+                height: 3,
+                background:
+                  "linear-gradient(90deg, #ff5c35 0%, #ff7a59 35%, #00bda5 70%, #00e5c9 100%)",
+                transformOrigin: "left",
+                zIndex: 999999,
+                boxShadow: "0 0 14px rgba(255, 92, 53, 0.8), 0 0 4px #00bda5",
+              }}
+            />
+            {/* Floating Live Animated Telemetry Capsule */}
+            <DealSenseLoader
+              variant="overlay"
+              message={`Loading ${navTargetTitle}...`}
+              subMessage="Deterministic Telemetry & Heuristic Verification"
+            />
+          </>
+        )}
+      </AnimatePresence>
+    </>
+  );
 
   // Auth & Guest Mode Check
   const isAuthenticated = sessionStorage.getItem("dealsense_oauth_state") || localStorage.getItem("dealsense_guest_mode");
@@ -217,28 +279,7 @@ export const App: React.FC = () => {
     return (
       <div className="landing-layout" style={{ minHeight: "100vh", background: "#ffffff" }}>
         <ScrollToTop />
-        {/* Top Telemetry Loading Bar on Navigation */}
-        <AnimatePresence>
-          {isNavigating && (
-            <motion.div
-              initial={{ scaleX: 0, opacity: 1 }}
-              animate={{ scaleX: 1, opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.22, ease: "easeInOut" }}
-              style={{
-                position: "fixed",
-                top: 0,
-                left: 0,
-                right: 0,
-                height: 2.5,
-                background: "linear-gradient(90deg, #ff5c35 0%, #ff7a59 50%, #00a4bd 100%)",
-                transformOrigin: "left",
-                zIndex: 9999,
-                boxShadow: "0 0 8px rgba(255, 92, 53, 0.6)",
-              }}
-            />
-          )}
-        </AnimatePresence>
+        {renderGlobalTelemetryLoaders()}
         
         {location.pathname.startsWith("/app") ? (
           <HubSpotNativeLayout>
@@ -308,28 +349,7 @@ export const App: React.FC = () => {
       {/* Main Content */}
       <main className="main-content" style={{ position: "relative" }}>
 
-        {/* Top Telemetry Loading Bar on Navigation */}
-        <AnimatePresence>
-          {isNavigating && (
-            <motion.div
-              initial={{ scaleX: 0, opacity: 1 }}
-              animate={{ scaleX: 1, opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.22, ease: "easeInOut" }}
-              style={{
-                position: "absolute",
-                top: 0,
-                left: 0,
-                right: 0,
-                height: 2.5,
-                background: "linear-gradient(90deg, #ff5c35 0%, #ff7a59 50%, #00a4bd 100%)",
-                transformOrigin: "left",
-                zIndex: 9999,
-                boxShadow: "0 0 8px rgba(255, 92, 53, 0.6)",
-              }}
-            />
-          )}
-        </AnimatePresence>
+        {renderGlobalTelemetryLoaders()}
         <TopBar
           breadcrumb={pageMeta.breadcrumb}
           title={pageMeta.title}

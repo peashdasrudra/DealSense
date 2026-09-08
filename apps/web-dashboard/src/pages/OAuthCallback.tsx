@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import { DealSenseIcon } from "../components/DealSenseLogo";
+import { DealSenseTelemetryEmblem } from "../components/DealSenseLoader";
 
 export const OAuthCallback: React.FC = () => {
   const navigate = useNavigate();
@@ -80,20 +81,21 @@ export const OAuthCallback: React.FC = () => {
       >
         
         <div style={{ display: "flex", justifyContent: "center", marginBottom: 24 }}>
-          <DealSenseIcon size={48} />
+          {status === "processing" ? (
+            <DealSenseTelemetryEmblem size={68} showPulse={true} />
+          ) : (
+            <DealSenseIcon size={48} />
+          )}
         </div>
 
         {status === "processing" && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-            <h2 style={{ fontSize: 24, fontWeight: 800, color: "var(--hs-primary)", marginBottom: 12 }}>Connecting to HubSpot...</h2>
-            <p style={{ fontSize: 15, color: "var(--hs-text-muted)" }}>Please wait while we securely exchange your authorization code and provision your tenant.</p>
-            <div style={{ marginTop: 24, display: "flex", justifyContent: "center" }}>
-              <motion.div 
-                animate={{ rotate: 360 }}
-                transition={{ duration: 1, ease: "linear", repeat: Infinity }}
-                style={{ width: 32, height: 32, border: "3px solid var(--hs-accent-subtle)", borderTopColor: "var(--hs-accent)", borderRadius: "50%" }} 
-              />
-            </div>
+            <h2 style={{ fontSize: 24, fontWeight: 800, color: "var(--hs-primary)", marginBottom: 8 }}>
+              Connecting to HubSpot...
+            </h2>
+            <p style={{ fontSize: 14, color: "var(--hs-text-muted)", lineHeight: 1.5, maxWidth: 360, margin: "0 auto" }}>
+              Securely exchanging authorization code and calibrating your portal's 7-vector telemetry engine.
+            </p>
           </motion.div>
         )}
 
