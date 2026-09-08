@@ -65,7 +65,7 @@ export const MarketplaceListingPreview: React.FC = () => {
                   textTransform: "uppercase",
                 }}
               >
-                ★ HubSpot Certified App Partner
+                ★ HubSpot Marketplace App
               </span>
               <span
                 style={{
@@ -77,7 +77,7 @@ export const MarketplaceListingPreview: React.FC = () => {
                   borderRadius: "6px",
                 }}
               >
-                Sales Hub Certified
+                Sales Hub Ready
               </span>
             </div>
 
@@ -143,7 +143,7 @@ export const MarketplaceListingPreview: React.FC = () => {
       </div>
 
       {/* Overview & Feature Highlights */}
-      <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr", gap: "24px" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 340px), 1fr))", gap: "24px" }}>
         {/* Left Column: Details */}
         <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
           {/* Card: Why RevOps Teams Choose DealSense */}
@@ -151,7 +151,7 @@ export const MarketplaceListingPreview: React.FC = () => {
             <h2 style={{ fontSize: "18px", fontWeight: 800, color: "#092124", margin: "0 0 14px" }}>
               Key Features &amp; Capabilities
             </h2>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 240px), 1fr))", gap: 14 }}>
               {[
                 { title: "Native CRM Record Cards", desc: "Embeds directly into HubSpot deal sidebar with risk breakdown and recommended actions." },
                 { title: "7-Vector Deterministic Telemetry", desc: "0% hallucination mathematical scoring based on dwell time, stakeholder engagement, and velocity." },

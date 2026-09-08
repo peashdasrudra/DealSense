@@ -1,11 +1,6 @@
-/**
- * DealSense — Autonomous RevOps Playbook Engine.
- * Enables revenue leaders and agencies to automate conditional deal rescue workflows, multi-threading alerts, and date slip policies.
- */
-
-import React, { useState } from "react";
-
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { getLocalPlaybooks, saveLocalPlaybooks, logAuditEvent } from "../api";
 
 interface PlaybookRule {
   id: string;
@@ -20,60 +15,9 @@ interface PlaybookRule {
   lastFired: string;
 }
 
-const INITIAL_PLAYBOOKS: PlaybookRule[] = [
-  {
-    id: "pb-1",
-    name: "CFO Ghosting & Multi-Threading Protocol",
-    category: "Executive Multi-Threading",
-    isActive: true,
-    triggerEvent: "HubSpot Deal Ingestion Event",
-    condition: "Deal Value ≥ $100,000 AND Economic Buyer Silent for ≥ 14 Days",
-    automatedAction: "Auto-draft VP Sales peer-to-peer alignment email & dispatch High-Priority Slack alert",
-    dealsImpacted: 3,
-    revenueProtected: 430000,
-    lastFired: "18 mins ago",
-  },
-  {
-    id: "pb-2",
-    name: "Autonomous Past-Due Date Remediation",
-    category: "CRM Hygiene",
-    isActive: true,
-    triggerEvent: "Daily Scheduled RevOps Hygiene Audit",
-    condition: "Close Date Past Due by ≥ 7 Days AND Stage ≠ Closed Won/Lost",
-    automatedAction: "Auto-push close date +30 days, increment 'Date Slip Counter' property in HubSpot, notify owner",
-    dealsImpacted: 6,
-    revenueProtected: 545000,
-    lastFired: "2 hours ago",
-  },
-  {
-    id: "pb-3",
-    name: "Single-Threaded Champion Multi-Threading",
-    category: "Deal Velocity",
-    isActive: true,
-    triggerEvent: "Deal Moved to Proposal / Negotiation",
-    condition: "Contacts Count = 1 (Zero VP/C-Level Stakeholders Attached)",
-    automatedAction: "Auto-generate Mutual Action Plan (MAP) link & create 'Identify Economic Buyer' task for Rep",
-    dealsImpacted: 4,
-    revenueProtected: 365000,
-    lastFired: "Yesterday",
-  },
-  {
-    id: "pb-4",
-    name: "Gong / Clari Competitive Objection Killer",
-    category: "Competitive Defense",
-    isActive: true,
-    triggerEvent: "Meeting Note Synced via HubSpot Activity Stream",
-    condition: "Call Notes / Transcript mentions 'Gong', 'Clari', or 'Spreadsheets'",
-    automatedAction: "Instantly attach competitive battlecard & objection talk track to rep's deal dossier",
-    dealsImpacted: 2,
-    revenueProtected: 280000,
-    lastFired: "3 hours ago",
-  },
-];
-
 export const HubSpotNativePlaybooks: React.FC = () => {
-  
-  const [playbooks, setPlaybooks] = useState<PlaybookRule[]>(INITIAL_PLAYBOOKS);
+
+  const [playbooks, setPlaybooks] = useState<PlaybookRule[]>(getLocalPlaybooks);
   const [simulating, setSimulating] = useState(false);
   const [simResult, setSimResult] = useState<string | null>(null);
   const [newPlaybookOpen, setNewPlaybookOpen] = useState(false);
@@ -84,13 +28,55 @@ export const HubSpotNativePlaybooks: React.FC = () => {
     action: "",
   });
 
+  useEffect(() => {
+    const handleUpdated = (e: any) => {
+      if (e.detail && Array.isArray(e.detail)) {
+        setPlaybooks(e.detail);
+      } else {
+        setPlaybooks(getLocalPlaybooks());
+      }
+    };
+    window.addEventListener("dealsense:playbooks-updated", handleUpdated);
+    return () => window.removeEventListener("dealsense:playbooks-updated", handleUpdated);
+  }, []);
+
   const activeCount = playbooks.filter((p) => p.isActive).length;
   const totalProtected = playbooks.reduce((sum, p) => sum + (p.isActive ? p.revenueProtected : 0), 0);
 
   const togglePlaybook = (id: string) => {
-    setPlaybooks((prev) =>
-      prev.map((p) => (p.id === id ? { ...p, isActive: !p.isActive } : p))
-    );
+    const updated = playbooks.map((p) => (p.id === id ? { ...p, isActive: !p.isActive } : p));
+    setPlaybooks(updated);
+    saveLocalPlaybooks(updated);
+    const target = playbooks.find(p => p.id === id);
+    if (target) {
+      logAuditEvent({
+        actionType: target.isActive ? "Playbook Paused" : "Playbook Activated",
+        actor: "Peash Rudra",
+        role: "VP RevOps",
+        targetObject: `Playbook: ${target.name}`,
+        tier: "Tier 2 (Autonomous Config)",
+        status: "Success",
+        details: `${target.isActive ? "Paused" : "Activated"} autonomous rule "${target.name}".`,
+      });
+    }
+  };
+
+  const deletePlaybook = (id: string) => {
+    const target = playbooks.find(p => p.id === id);
+    const updated = playbooks.filter((p) => p.id !== id);
+    setPlaybooks(updated);
+    saveLocalPlaybooks(updated);
+    if (target) {
+      logAuditEvent({
+        actionType: "Playbook Deleted",
+        actor: "Peash Rudra",
+        role: "VP RevOps",
+        targetObject: `Playbook: ${target.name}`,
+        tier: "Tier 4 (Executive Action)",
+        status: "Success",
+        details: `Deleted autonomous rule "${target.name}".`,
+      });
+    }
   };
 
   const handleSimulateAll = () => {
@@ -98,8 +84,8 @@ export const HubSpotNativePlaybooks: React.FC = () => {
     setSimResult(null);
     setTimeout(() => {
       setSimulating(false);
-      setSimResult("✓ Simulated 20 active deals: 4 triggers fired, $1.62M in pipeline slip risk proactively remediated.");
-    }, 900);
+      setSimResult("✓ Simulated 25 active deals: 4 triggers fired, $1.62M in pipeline slip risk proactively remediated.");
+    }, 800);
   };
 
   const handleCreatePlaybook = (e: React.FormEvent) => {
@@ -116,96 +102,66 @@ export const HubSpotNativePlaybooks: React.FC = () => {
       revenueProtected: 120000,
       lastFired: "Just now",
     };
-    setPlaybooks([created, ...playbooks]);
+    const updated = [created, ...playbooks];
+    setPlaybooks(updated);
+    saveLocalPlaybooks(updated);
     setNewPlaybookOpen(false);
     setNewForm({ name: "", category: "Executive Multi-Threading", condition: "", action: "" });
+
+    logAuditEvent({
+      actionType: "Playbook Deployed",
+      actor: "Peash Rudra",
+      role: "VP RevOps",
+      targetObject: `Playbook: ${created.name}`,
+      tier: "Tier 2 (Autonomous Config)",
+      status: "Success",
+      details: `Deployed new autonomous playbook "${created.name}" targeting ${created.category}.`,
+    });
   };
 
   return (
       <div style={{ flex: 1 }}>
       <div style={{ display: "flex", flexDirection: "column", gap: "var(--sp-6)" }}>
       {/* ── Playbooks Header Card ─────────────────────────────────────── */}
-      <div
-        className="card"
-        style={{
-          background: "#ffffff",
-          padding: "20px 24px",
-          border: "1px solid #dfe3eb",
-          borderTop: "3px solid #ff7a59",
-          marginBottom: "var(--sp-5)",
-          boxShadow: "var(--shadow-sm)",
-        }}
-      >
+      <div className="page-header-card">
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 16 }}>
           <div>
-            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
-              <span className="badge" style={{ background: "var(--risk-healthy-bg)", color: "var(--risk-healthy)", fontWeight: 700 }}>
+            <div className="page-header-badge-row">
+              <span className="page-header-badge" style={{ background: "var(--risk-healthy-bg)", color: "var(--risk-healthy)", borderColor: "rgba(0, 189, 165, 0.3)" }}>
                 ● {activeCount} PLAYBOOKS LIVE
               </span>
-              <span style={{ fontSize: "12px", color: "#516f90" }}>HubSpot Automated Policy Engine</span>
             </div>
-            <h2 style={{ fontSize: "24px", fontWeight: 800, color: "var(--hs-heading)", margin: "4px 0 6px" }}>
+            <h2 className="page-header-title">
               Autonomous RevOps Playbooks & Trigger Engine
             </h2>
-            <p style={{ fontSize: "13.5px", color: "#33475b", margin: 0, maxWidth: 680 }}>
+            <p className="page-header-desc">
               Set conditional rules that automatically rescue stalled deals, auto-remediate past-due close dates, and multi-thread silent economic buyers without manual sales rep effort.
             </p>
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 4 }}>
+          <div className="page-header-actions">
             <button
-              style={{
-                padding: "6px 14px",
-                background: "#ffffff",
-                color: "#33475b",
-                border: "1px solid #dfe3eb",
-                borderRadius: "3px",
-                fontSize: "12px",
-                fontWeight: 600,
-                cursor: "pointer",
-                boxShadow: "0 1px 2px rgba(0,0,0,0.05)",
-                transition: "all 0.2s"
-              }}
-            >
-              Export Playbook
-            </button>
-            <button
-              style={{
-                padding: "6px 14px",
-                background: "#ff5c35",
-                color: "#33475b",
-                border: "none",
-                borderRadius: "3px",
-                fontSize: "12px",
-                fontWeight: 600,
-                cursor: "pointer",
-                boxShadow: "0 1px 2px rgba(0,0,0,0.05)",
-                transition: "all 0.2s"
-              }}
-            >
-              Create Playbook
-            </button>
-          </div>
-
-          <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-            <button
-              className="btn btn-secondary"
               onClick={handleSimulateAll}
               disabled={simulating}
+              className="btn btn-secondary"
               style={{
-                background: "rgba(255, 255, 255, 0.12)",
-                color: "#33475b",
-                borderColor: "rgba(255, 255, 255, 0.25)",
-                fontSize: "13px",
+                background: "#ffffff",
+                color: "#2d3e50",
+                border: "1px solid #dfe3eb",
               }}
             >
-              {simulating ? "↻ Simulating Pipeline..." : "⚡ Run Live Simulation"}
+              <span>{simulating ? "↻ Simulating..." : "⚡ Run Live Simulation"}</span>
             </button>
             <button
-              className="btn btn-primary"
               onClick={() => setNewPlaybookOpen(true)}
-              style={{ background: "#ff5c35", fontWeight: 700, fontSize: "13px" }}
+              className="btn btn-primary"
+              style={{
+                background: "#ff5c35",
+                color: "#ffffff",
+                border: "none",
+                boxShadow: "0 2px 6px rgba(255, 92, 53, 0.25)",
+              }}
             >
-              + Create New Playbook
+              <span>+ Create Playbook</span>
             </button>
           </div>
         </div>
@@ -315,6 +271,21 @@ export const HubSpotNativePlaybooks: React.FC = () => {
                     style={{ fontSize: "11.5px", fontWeight: 700, minWidth: 70 }}
                   >
                     {pb.isActive ? "Pause" : "Activate"}
+                  </button>
+                  <button
+                    onClick={() => deletePlaybook(pb.id)}
+                    style={{
+                      background: "none",
+                      border: "1px solid #cbd6e2",
+                      borderRadius: "var(--radius-sm)",
+                      padding: "6px 10px",
+                      cursor: "pointer",
+                      color: "var(--danger)",
+                      fontSize: "12px",
+                    }}
+                    title="Delete playbook"
+                  >
+                    🗑️
                   </button>
                 </div>
               </div>

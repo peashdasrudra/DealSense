@@ -5,6 +5,7 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { updateDeal, logAuditEvent } from "../api";
 
 export interface DealData {
   id: string;
@@ -100,10 +101,52 @@ export const DealDrawer: React.FC<DealDrawerProps> = ({
   };
 
   const handleExecuteAction = (actionTitle: string) => {
+    if (actionTitle.includes("Slip Close Date") || actionTitle.includes("Slip Date")) {
+      updateDeal(deal.id, {
+        slippageCount: (deal.slippageCount || 0) + 1,
+        closeDate: "2026-10-15",
+      });
+      logAuditEvent({
+        actor: "DealSense Auto-Remediator",
+        role: "Hygiene Daemon",
+        actionType: "Automated Close Date Slip",
+        targetObject: `Deal #${deal.id} (${deal.name})`,
+        tier: "Tier 3 (Automated Write-Back)",
+        status: "Success",
+        details: `Shifted close date +14 days to 2026-10-15 and incremented Date Slip Counter in HubSpot CRM.`,
+      });
+    } else if (actionTitle.includes("Re-Analyze")) {
+      const newScore = Math.min(95, deal.score + 5);
+      updateDeal(deal.id, {
+        score: newScore,
+        band: newScore >= 75 ? "Healthy" : "Moderate",
+      });
+      logAuditEvent({
+        actor: "DealSense AI Engine",
+        role: "Autonomous Telemetry Agent",
+        actionType: "7-Vector Vector Scoring",
+        targetObject: `Deal #${deal.id} (${deal.name})`,
+        tier: "Tier 1 (Continuous Telemetry)",
+        status: "Success",
+        details: `Re-scored 7 risk vectors based on latest telemetry; adjusted Health Score to ${newScore}.`,
+      });
+    } else {
+      logAuditEvent({
+        actor: "Peash Rudra",
+        role: "Enterprise AE Lead",
+        actionType: actionTitle,
+        targetObject: `Deal #${deal.id} (${deal.name})`,
+        tier: "Tier 2 (Assisted Task)",
+        status: "Success",
+        details: `Dispatched action "${actionTitle}" for ${deal.name} via HubSpot integration.`,
+      });
+    }
+
     if (onActionTrigger) onActionTrigger(actionTitle, deal.name);
     setActionSuccessMsg(`✓ Executed "${actionTitle}" — Written back to HubSpot CRM`);
     setTimeout(() => setActionSuccessMsg(null), 3000);
   };
+
 
   return (
     <AnimatePresence>

@@ -50,10 +50,10 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ onOpenMenu }) 
   const navigate = useNavigate();
 
   const NAV_TABS = [
-    { label: "Overview", icon: "overview", path: "/" },
+    { label: "Pipeline", icon: "overview", path: "/pipeline" },
     { label: "Deals", icon: "deals", path: "/deals" },
-    { label: "Actions", icon: "actions", path: "/actions", badge: "5", badgeColor: "#ff5c35" },
-    { label: "Hygiene", icon: "hygiene", path: "/hygiene", badge: "6", badgeColor: "var(--warning)" },
+    { label: "Actions", icon: "actions", path: "/actions", badge: "5", badgeColor: "#d93843" },
+    { label: "Hygiene", icon: "hygiene", path: "/hygiene", badge: "6", badgeColor: "#d93843" },
   ];
 
   return (
@@ -109,16 +109,22 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ onOpenMenu }) 
               <span
                 style={{
                   position: "absolute",
-                  top: 4,
+                  top: 3,
                   right: "calc(50% - 20px)",
-                  background: tab.badgeColor || "var(--danger)",
+                  background: tab.badgeColor || "#d93843",
                   color: "#ffffff",
-                  fontSize: "8.5px",
+                  fontSize: "9px",
                   fontWeight: 800,
-                  borderRadius: "var(--radius-pill)",
-                  padding: "1px 5px",
-                  lineHeight: 1.1,
-                  boxShadow: "0 1px 3px rgba(0,0,0,0.12)",
+                  borderRadius: "9999px",
+                  minWidth: 16,
+                  height: 16,
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  padding: "0 4px",
+                  lineHeight: 1,
+                  border: "1.5px solid #ffffff",
+                  boxShadow: "0 2px 5px rgba(217, 56, 67, 0.35)",
                 }}
               >
                 {tab.badge}

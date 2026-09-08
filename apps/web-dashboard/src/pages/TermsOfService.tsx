@@ -13,7 +13,7 @@ export const TermsOfService: React.FC = () => {
         {/* Header */}
         <div style={{ borderBottom: "1px solid #e2e8f0", paddingBottom: 24, marginBottom: 32 }}>
           <div style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "4px 12px", background: "rgba(0, 164, 189, 0.1)", borderRadius: 20, color: "#00a4bd", fontSize: 12, fontWeight: 700, marginBottom: 12 }}>
-            HubSpot Certified Application Terms
+            HubSpot Integration & Enterprise Service Terms
           </div>
           <h1 style={{ fontSize: 32, fontWeight: 800, color: "#0f172a", margin: "0 0 8px" }}>Terms of Service</h1>
           <p style={{ margin: 0, fontSize: 14, color: "#64748b" }}>Effective Date: September 4, 2026 • Version 2.4 (Enterprise Edition)</p>

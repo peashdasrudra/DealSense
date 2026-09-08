@@ -20,22 +20,12 @@ import {
   Cell,
 } from "recharts";
 import { fetchDeals, syncHubSpotDeals } from "../api";
+import { ENTERPRISE_DEALS, ENTERPRISE_TRENDS } from "../data/enterpriseData";
 
 import { DealDrawer, DealData } from "../components/DealDrawer";
 import { HubSpotNativeExecutiveAuditModal } from "../components/HubSpotNativeExecutiveAuditModal";
 
-// ── Deals will be fetched from the backend ────────
-
-const TREND_DATA = [
-  { date: "Jan", score: 62, value: 3200 },
-  { date: "Feb", score: 65, value: 3400 },
-  { date: "Mar", score: 59, value: 3100 },
-  { date: "Apr", score: 63, value: 3600 },
-  { date: "May", score: 71, value: 3900 },
-  { date: "Jun", score: 68, value: 4200 },
-  { date: "Jul", score: 72, value: 4100 },
-  { date: "Aug", score: 68, value: 4200 },
-];
+const TREND_DATA = ENTERPRISE_TRENDS;
 
 const BAND_COLORS: Record<string, string> = {
   Critical: "#f2545b",
@@ -60,7 +50,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
       <div style={{ fontSize: "12px", color: "#516f90", marginBottom: 6, fontWeight: 600 }}>{label}</div>
       {payload.map((entry: any, idx: number) => (
         <div key={idx} style={{ fontSize: "12px", color: entry.color || "#ff7a59", fontWeight: 600 }}>
-          {entry.name}: {entry.name === "value" ? `$${(entry.value / 1000).toFixed(0)}K` : entry.value}
+          {entry.name}: {entry.name === "value" ? `$${(entry.value / 1000).toFixed(1)}M` : entry.value}
         </div>
       ))}
     </div>
@@ -69,7 +59,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 
 export const HubSpotNativePipeline: React.FC = () => {
   const navigate = useNavigate();
-  const [deals, setDeals] = useState<any[]>([]);
+  const [deals, setDeals] = useState<any[]>(ENTERPRISE_DEALS);
   const [selectedDrawerDeal, setSelectedDrawerDeal] = useState<DealData | null>(null);
   const [isAuditModalOpen, setIsAuditModalOpen] = useState(false);
   const [isSyncing, setIsSyncing] = useState(false);
@@ -80,7 +70,7 @@ export const HubSpotNativePipeline: React.FC = () => {
       const saved = localStorage.getItem("dealsense_active_portal");
       if (saved) return JSON.parse(saved);
     } catch (e) {}
-    return { id: "48920193", name: "DealSense Enterprise Fleet", deals: 20 };
+    return { id: "48920193", name: "DealSense Enterprise Fleet", deals: 25 };
   });
 
   const loadDeals = () => {
@@ -98,6 +88,14 @@ export const HubSpotNativePipeline: React.FC = () => {
   useEffect(() => {
     loadDeals();
 
+    const handleDealsUpdated = (e: any) => {
+      if (e.detail && Array.isArray(e.detail)) {
+        setDeals(e.detail);
+      } else {
+        loadDeals();
+      }
+    };
+
     const handlePortalChange = (e: any) => {
       if (e.detail) {
         setActivePortal(e.detail);
@@ -106,8 +104,12 @@ export const HubSpotNativePipeline: React.FC = () => {
       }
     };
 
+    window.addEventListener("dealsense:deals-updated", handleDealsUpdated);
     window.addEventListener("dealsense:portal-changed", handlePortalChange);
-    return () => window.removeEventListener("dealsense:portal-changed", handlePortalChange);
+    return () => {
+      window.removeEventListener("dealsense:deals-updated", handleDealsUpdated);
+      window.removeEventListener("dealsense:portal-changed", handlePortalChange);
+    };
   }, []);
 
   const handleSync = async () => {
@@ -213,15 +215,15 @@ export const HubSpotNativePipeline: React.FC = () => {
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#ff7a59" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
                 </svg>
-                <strong style={{ color: "#33475b" }}>HubSpot REST v3</strong> Certified
+                <strong style={{ color: "#33475b" }}>HubSpot REST v3</strong> Connected
               </span>
               <span style={{ color: "#cbd6e2" }}>•</span>
               <span
                 onClick={() => navigate("/compliance")}
                 style={{ cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 5, background: "rgba(0, 164, 189, 0.08)", padding: "2px 8px", borderRadius: "10px", color: "#007a8c" }}
-                title="View Live HubSpot Marketplace Certification Suite"
+                title="View Live Enterprise Security & Compliance Console"
               >
-                <strong style={{ color: "#007a8c" }}>HubSpot Certified App Partner Architecture (100/100)</strong> ➔
+                <strong style={{ color: "#007a8c" }}>Enterprise Security & Compliance Engine (100/100)</strong> ➔
               </span>
             </div>
           </div>
@@ -230,9 +232,19 @@ export const HubSpotNativePipeline: React.FC = () => {
             <button
               onClick={() => setIsAuditModalOpen(true)}
               style={{
-                padding: "8px 18px", background: "linear-gradient(135deg, #092124 0%, #124548 100%)", color: "#33475b", fontSize: "13px", fontWeight: 700,
-                border: "1px solid rgba(0, 164, 189, 0.4)", borderRadius: "var(--radius-sm)", cursor: "pointer", boxShadow: "0 2px 8px rgba(9, 33, 36, 0.25)",
-                display: "inline-flex", alignItems: "center", gap: 6, transition: "all 0.2s ease"
+                padding: "8px 18px",
+                background: "#ffffff",
+                color: "var(--hs-primary)",
+                fontSize: "13px",
+                fontWeight: 700,
+                border: "1px solid var(--hs-border-dark)",
+                borderRadius: "var(--radius-sm)",
+                cursor: "pointer",
+                boxShadow: "var(--shadow-sm)",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 6,
+                transition: "all 0.2s ease"
               }}
             >
               <span>📑 Export Executive Pipeline Audit Brief</span>
@@ -240,12 +252,22 @@ export const HubSpotNativePipeline: React.FC = () => {
             <button
               onClick={() => navigate("/deals")}
               style={{
-                padding: "8px 18px", background: "#ff7a59", color: "#fff", fontSize: "13px", fontWeight: 700,
-                border: "none", borderRadius: "var(--radius-sm)", cursor: "pointer", boxShadow: "0 2px 6px rgba(255, 122, 89, 0.3)",
-                display: "inline-flex", alignItems: "center", gap: 6, transition: "all 0.2s ease"
+                padding: "8px 18px",
+                background: "#ff5c35",
+                color: "#ffffff",
+                fontSize: "13px",
+                fontWeight: 700,
+                border: "none",
+                borderRadius: "var(--radius-sm)",
+                cursor: "pointer",
+                boxShadow: "0 2px 6px rgba(255, 92, 53, 0.3)",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 6,
+                transition: "all 0.2s ease"
               }}
             >
-              <span>Inspect Deals in CRM (MVP)</span>
+              <span>Inspect Deals in CRM Workspace</span>
               <span>→</span>
             </button>
             <button

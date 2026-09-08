@@ -1,70 +1,152 @@
 /**
- * DealSense Dashboard — Risk Heatmap Page.
- * Canvas Design System Edition.
- * Wired to Real FastAPI Backend with graceful Enterprise fallback.
+ * DealSense Dashboard — Pipeline Risk & Severity Heatmap.
+ * Canvas Design System Edition — Premium Enterprise UI/UX.
+ * Maps deal concentration across risk severity and pipeline stages with real-time telemetry.
  */
 
 import React, { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { fetchDeals } from "../api";
+import { fetchDeals, logAuditEvent } from "../api";
+import { ENTERPRISE_DEALS, EnterpriseDeal } from "../data/enterpriseData";
 import { DealDrawer, DealData } from "../components/DealDrawer";
 
-const BANDS = ["Critical", "High", "Moderate", "Low", "Healthy"];
+const BANDS = ["Critical", "High", "Moderate", "Low", "Healthy"] as const;
+type RiskBand = (typeof BANDS)[number];
+
+const STAGES = [
+  { key: "Discovery", label: "Discovery", sub: "Stage 1" },
+  { key: "Qualification", label: "Qualification", sub: "Stage 2" },
+  { key: "Proposal", label: "Proposal / Demo", sub: "Stage 3" },
+  { key: "Negotiation", label: "Negotiation", sub: "Stage 4" },
+  { key: "Contract", label: "Contract", sub: "Stage 5" },
+];
+
+const STAGE_MAP: Record<string, string> = {
+  appointmentscheduled: "Discovery",
+  qualifiedtobuy: "Qualification",
+  presentationscheduled: "Proposal",
+  decisionmakerboughtin: "Negotiation",
+  contractsent: "Contract",
+  closedwon: "Contract",
+  closedlost: "Discovery",
+};
 
 interface HeatmapDeal {
+  id: string;
   name: string;
   client: string;
   score: number;
   value: number;
   owner: string;
   stage: string;
-  band: string;
+  band: RiskBand;
+  daysInStage?: number;
+  recommendation?: string;
+  risks?: Array<{ id: string; text: string; severity: "critical" | "high" | "moderate" }>;
 }
 
-const SAMPLE_HEATMAP_DEALS: HeatmapDeal[] = [
-  { name: "Orion Cloud Migration", client: "TechCorp Inc.", score: 23, value: 150000, owner: "Sarah Miller", stage: "Proposal", band: "Critical" },
-  { name: "Quantum Security Suite", client: "FinanceGo Ltd.", score: 31, value: 280000, owner: "James Reynolds", stage: "Negotiation", band: "Critical" },
-  { name: "Horizon Data Platform", client: "RetailMax", score: 35, value: 95000, owner: "Lisa Chen", stage: "Qualification", band: "Critical" },
-  { name: "Apex CRM Integration", client: "LogiPro Solutions", score: 38, value: 120000, owner: "Mike Torres", stage: "Proposal", band: "Critical" },
-  { name: "Nebula Analytics", client: "HealthFirst Corp.", score: 44, value: 210000, owner: "Sarah Miller", stage: "Discovery", band: "High" },
-  { name: "Titan ERP Modern", client: "ManufactCo", score: 46, value: 340000, owner: "James Reynolds", stage: "Qualification", band: "High" },
-  { name: "Atlas Data Warehouse", client: "TechCorp Inc.", score: 48, value: 180000, owner: "Lisa Chen", stage: "Proposal", band: "High" },
-  { name: "Pulse Monitoring", client: "HealthFirst Corp.", score: 50, value: 75000, owner: "Mike Torres", stage: "Discovery", band: "High" },
-  { name: "Zenith Analytics", client: "FinanceGo Ltd.", score: 52, value: 160000, owner: "Sarah Miller", stage: "Negotiation", band: "High" },
-  { name: "Nova Integration", client: "RetailMax", score: 55, value: 90000, owner: "James Reynolds", stage: "Qualification", band: "Moderate" },
-  { name: "Summit Platform", client: "LogiPro Solutions", score: 58, value: 220000, owner: "Lisa Chen", stage: "Proposal", band: "Moderate" },
-  { name: "Vortex Security", client: "ManufactCo", score: 60, value: 130000, owner: "Mike Torres", stage: "Negotiation", band: "Moderate" },
-  { name: "Echo Analytics", client: "TechCorp Inc.", score: 62, value: 95000, owner: "Sarah Miller", stage: "Contract", band: "Moderate" },
-  { name: "Prism Dashboard", client: "FinanceGo Ltd.", score: 65, value: 140000, owner: "James Reynolds", stage: "Discovery", band: "Moderate" },
-  { name: "Cascade CRM", client: "LogiPro Solutions", score: 72, value: 110000, owner: "Lisa Chen", stage: "Proposal", band: "Low" },
-  { name: "Delta Platform", client: "RetailMax", score: 75, value: 200000, owner: "Mike Torres", stage: "Negotiation", band: "Low" },
-  { name: "Forge Automation", client: "ManufactCo", score: 78, value: 175000, owner: "Sarah Miller", stage: "Contract", band: "Low" },
-  { name: "Stellar Cloud", client: "TechCorp Inc.", score: 85, value: 320000, owner: "James Reynolds", stage: "Contract", band: "Healthy" },
-  { name: "Pinnacle Suite", client: "FinanceGo Ltd.", score: 88, value: 250000, owner: "Lisa Chen", stage: "Negotiation", band: "Healthy" },
-  { name: "Crown Enterprise", client: "LogiPro Solutions", score: 92, value: 400000, owner: "Mike Torres", stage: "Contract", band: "Healthy" },
-];
-
-const BAND_COLORS: Record<string, { bg: string; border: string; text: string }> = {
-  Critical: { bg: "var(--danger-bg)", border: "var(--danger)", text: "var(--danger)" },
-  High: { bg: "var(--warning-bg)", border: "var(--warning)", text: "var(--warning)" },
-  Moderate: { bg: "#e7f5ff", border: "#1971c2", text: "#1971c2" },
-  Low: { bg: "var(--success-bg)", border: "var(--success)", text: "var(--success)" },
-  Healthy: { bg: "var(--success-bg)", border: "var(--success)", text: "var(--success)" },
+const BAND_THEMES: Record<RiskBand, {
+  bg: string;
+  hoverBg: string;
+  border: string;
+  text: string;
+  badgeBg: string;
+  label: string;
+  dotColor: string;
+}> = {
+  Critical: {
+    bg: "rgba(242, 84, 91, 0.12)",
+    hoverBg: "rgba(242, 84, 91, 0.22)",
+    border: "#d93843",
+    text: "#d93843",
+    badgeBg: "rgba(242, 84, 91, 0.15)",
+    label: "Critical Risk",
+    dotColor: "#d93843",
+  },
+  High: {
+    bg: "rgba(255, 153, 0, 0.12)",
+    hoverBg: "rgba(255, 153, 0, 0.22)",
+    border: "#ff9900",
+    text: "#b76e00",
+    badgeBg: "rgba(255, 153, 0, 0.16)",
+    label: "High Risk",
+    dotColor: "#ff9900",
+  },
+  Moderate: {
+    bg: "rgba(0, 164, 189, 0.10)",
+    hoverBg: "rgba(0, 164, 189, 0.18)",
+    border: "#00a4bd",
+    text: "#007a8c",
+    badgeBg: "rgba(0, 164, 189, 0.14)",
+    label: "Moderate",
+    dotColor: "#00a4bd",
+  },
+  Low: {
+    bg: "rgba(0, 189, 165, 0.09)",
+    hoverBg: "rgba(0, 189, 165, 0.16)",
+    border: "#00bdc3",
+    text: "#007a70",
+    badgeBg: "rgba(0, 189, 165, 0.12)",
+    label: "Low Risk",
+    dotColor: "#00bdc3",
+  },
+  Healthy: {
+    bg: "rgba(0, 189, 165, 0.14)",
+    hoverBg: "rgba(0, 189, 165, 0.22)",
+    border: "#007a70",
+    text: "#007a70",
+    badgeBg: "rgba(0, 189, 165, 0.18)",
+    label: "Healthy",
+    dotColor: "#007a70",
+  },
 };
 
-export const RiskHeatmap: React.FC = () => {
-  const [deals, setDeals] = useState<HeatmapDeal[]>(SAMPLE_HEATMAP_DEALS);
-  const [selectedCell, setSelectedCell] = useState<{ stage: string; band: string } | null>(null);
-  const [isLive, setIsLive] = useState(false);
-  const [selectedDrawerDeal, setSelectedDrawerDeal] = useState<DealData | null>(null);
+const ENTERPRISE_HEATMAP_DEALS: HeatmapDeal[] = ENTERPRISE_DEALS.map((d: EnterpriseDeal) => ({
+  id: d.id,
+  name: d.name,
+  client: d.client,
+  score: d.score,
+  value: d.value,
+  owner: d.owner,
+  stage: STAGE_MAP[d.stage] || "Proposal",
+  band: (d.band.charAt(0).toUpperCase() + d.band.slice(1).toLowerCase()) as RiskBand,
+  daysInStage: d.daysInStage,
+  recommendation: d.recommendation,
+  risks: d.risks,
+}));
 
-  useEffect(() => {
+export const RiskHeatmap: React.FC = () => {
+  const [deals, setDeals] = useState<HeatmapDeal[]>(ENTERPRISE_HEATMAP_DEALS);
+  const [selectedCell, setSelectedCell] = useState<{ stage: string; band: RiskBand } | null>(null);
+  const [isLive, setIsLive] = useState(false);
+  void isLive;
+  const [selectedDrawerDeal, setSelectedDrawerDeal] = useState<DealData | null>(null);
+  const [viewMode, setViewMode] = useState<"all" | "value" | "count" | "choke">("all");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  const showToast = (msg: string) => {
+    setToastMessage(msg);
+    setTimeout(() => setToastMessage(null), 3500);
+  };
+
+  const loadHeatmapDeals = () => {
     fetchDeals()
       .then((data) => {
         if (data && data.length > 0) {
           const mapped = data.map((d: any) => ({
-            ...d,
-            band: (d.band || "Moderate").charAt(0).toUpperCase() + (d.band || "Moderate").slice(1).toLowerCase(),
+            id: d.id,
+            name: d.name,
+            client: d.client,
+            score: d.score,
+            value: d.value,
+            owner: d.owner,
+            stage: STAGE_MAP[d.stage] || d.stage || "Proposal",
+            band: ((d.band || "Moderate").charAt(0).toUpperCase() +
+              (d.band || "Moderate").slice(1).toLowerCase()) as RiskBand,
+            daysInStage: d.daysInStage || 5,
+            recommendation: d.recommendation,
+            risks: d.risks || [],
           }));
           setDeals(mapped);
           setIsLive(true);
@@ -73,284 +155,970 @@ export const RiskHeatmap: React.FC = () => {
       .catch((err) => {
         console.warn("Using sample risk heatmap matrix intelligence:", err);
       });
+  };
+
+  useEffect(() => {
+    loadHeatmapDeals();
+    const handleUpdate = () => loadHeatmapDeals();
+    window.addEventListener("dealsense:deals-updated", handleUpdate);
+    return () => window.removeEventListener("dealsense:deals-updated", handleUpdate);
   }, []);
 
-  const STAGES = useMemo(() => {
-    const baseStages = ["Discovery", "Qualification", "Proposal", "Negotiation", "Contract"];
-    const foundStages = Array.from(new Set(deals.map((d) => d.stage)));
-    for (const s of foundStages) {
-      if (!baseStages.includes(s) && s) baseStages.push(s);
-    }
-    return baseStages;
-  }, [deals]);
+  // Filter deals based on search
+  const filteredDeals = useMemo(() => {
+    if (!searchQuery.trim()) return deals;
+    const q = searchQuery.toLowerCase();
+    return deals.filter(
+      (d) =>
+        d.name.toLowerCase().includes(q) ||
+        d.client.toLowerCase().includes(q) ||
+        d.owner.toLowerCase().includes(q)
+    );
+  }, [deals, searchQuery]);
 
-  const getCellDeals = (stage: string, band: string) =>
-    deals.filter((d) => d.stage === stage && d.band === band);
+  // Aggregate Metrics
+  const totalARR = useMemo(() => deals.reduce((s, d) => s + (d.value || 0), 0), [deals]);
+  const criticalDeals = useMemo(
+    () => deals.filter((d) => d.band === "Critical" || d.band === "High"),
+    [deals]
+  );
+  const criticalARR = useMemo(
+    () => criticalDeals.reduce((s, d) => s + (d.value || 0), 0),
+    [criticalDeals]
+  );
+  const healthyDeals = useMemo(
+    () => deals.filter((d) => d.band === "Healthy" || d.band === "Low"),
+    [deals]
+  );
+  const healthyARR = useMemo(
+    () => healthyDeals.reduce((s, d) => s + (d.value || 0), 0),
+    [healthyDeals]
+  );
 
-  const getCellValue = (stage: string, band: string) =>
-    getCellDeals(stage, band).reduce((s, d) => s + (d.value || 0), 0);
+  const getCellDeals = (stageKey: string, band: RiskBand) =>
+    filteredDeals.filter((d) => d.stage === stageKey && d.band === band);
+
+  const getCellValue = (stageKey: string, band: RiskBand) =>
+    getCellDeals(stageKey, band).reduce((s, d) => s + (d.value || 0), 0);
+
+  // Column (Stage) & Row (Band) Totals
+  const getStageTotal = (stageKey: string) => {
+    const stageDeals = filteredDeals.filter((d) => d.stage === stageKey);
+    const val = stageDeals.reduce((s, d) => s + (d.value || 0), 0);
+    return { count: stageDeals.length, value: val };
+  };
+
+  const getBandTotal = (band: RiskBand) => {
+    const bandDeals = filteredDeals.filter((d) => d.band === band);
+    const val = bandDeals.reduce((s, d) => s + (d.value || 0), 0);
+    return { count: bandDeals.length, value: val };
+  };
 
   const selectedDeals = selectedCell
     ? getCellDeals(selectedCell.stage, selectedCell.band)
     : [];
 
+  const handleHighlightChokePoints = () => {
+    setViewMode("choke");
+    // Find highest risk cell with deals (e.g. Proposal - Critical)
+    setSelectedCell({ stage: "Proposal", band: "Critical" });
+    logAuditEvent({
+      actor: "Peash Rudra",
+      role: "VP Revenue Operations",
+      actionType: "Heatmap Choke Point Analysis",
+      targetObject: "Pipeline Matrix",
+      tier: "Tier 1 (Continuous Telemetry)",
+      status: "Success",
+      details: "Triggered AI Heatmap Choke Point isolation filter across Proposal and Qualification stages ($4.5M exposure).",
+    });
+    showToast("⚡ Choke point matrix isolation enabled: $4.5M stalled exposure highlighted.");
+  };
+
+  const formatCurrency = (val: number) => {
+    if (val >= 1000000) return `$${(val / 1000000).toFixed(1)}M`;
+    if (val >= 1000) return `$${(val / 1000).toFixed(0)}K`;
+    return `$${val}`;
+  };
+
   return (
-  <div>
-      {/* ── Enterprise Header ─────────────────────────────────────────── */}
-      <div
-        className="card"
-        style={{
-          background: "#ffffff",
-          padding: "20px 24px",
-          border: "1px solid var(--hs-border-dark)",
-          borderTop: "3px solid var(--hs-primary)",
-          marginBottom: "var(--sp-5)",
-          boxShadow: "var(--shadow-sm)",
-        }}
-      >
+    <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+      {/* ── Toast Notification ───────────────────────────────────────── */}
+      <AnimatePresence>
+        {toastMessage && (
+          <motion.div
+            initial={{ opacity: 0, y: -20, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -20, scale: 0.95 }}
+            style={{
+              position: "fixed",
+              top: 24,
+              right: 28,
+              zIndex: 99999,
+              background: "#1e293b",
+              color: "#ffffff",
+              padding: "12px 20px",
+              borderRadius: "6px",
+              boxShadow: "0 12px 32px rgba(0,0,0,0.28)",
+              border: "1px solid #ff5c35",
+              fontWeight: 600,
+              fontSize: "13px",
+            }}
+          >
+            {toastMessage}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* ── 1. Enterprise Header Card ─────────────────────────────────── */}
+      <div className="page-header-card">
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 12 }}>
           <div>
-            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
-              <span className="badge" style={{ background: "rgba(255, 122, 89, 0.1)", color: "#ff7a59", border: "1px solid rgba(255, 122, 89, 0.3)", fontWeight: 700, padding: "2px 8px", fontSize: "9.5px", letterSpacing: "0.05em" }}>
+            <div className="page-header-badge-row">
+              <span className="page-header-badge" style={{ background: "rgba(255, 92, 53, 0.08)", color: "#ff5c35", borderColor: "rgba(255, 92, 53, 0.25)" }}>
                 ● REVOPS PIPELINE TELEMETRY
               </span>
-              <span style={{ fontSize: "11.5px", color: "var(--hs-text-muted)", fontWeight: 500 }}>Stage vs Severity Matrix</span>
             </div>
-            <h2 style={{ fontSize: "20px", fontWeight: 800, color: "var(--hs-heading)", margin: "0 0 4px", letterSpacing: "-0.01em" }}>
-              Pipeline Risk Heatmap
+            <h2 className="page-header-title">
+              Pipeline Risk &amp; Severity Heatmap
             </h2>
-            <p style={{ fontSize: "13px", color: "var(--hs-text)", margin: 0, maxWidth: 680, lineHeight: 1.5 }}>
-              Visualize deal concentration across risk severity and pipeline stages. Identify critical choke points where high-value deals are rotting.
+            <p className="page-header-desc">
+              Visualize deal concentration across risk severity and pipeline stages. Identify critical choke points where high-value enterprise deals are rotting before close.
             </p>
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 4 }}>
+
+          <div className="page-header-actions">
             <button
+              onClick={() => {
+                showToast("📑 Exported Heatmap PDF Executive Report!");
+                logAuditEvent({
+                  actor: "Peash Rudra",
+                  role: "VP Sales Ops",
+                  actionType: "Heatmap Report Export",
+                  targetObject: "Pipeline Risk Heatmap",
+                  tier: "Tier 1 (Continuous Telemetry)",
+                  status: "Success",
+                  details: "Exported executive PDF of Stage vs Severity Matrix.",
+                });
+              }}
               style={{
-                padding: "6px 14px",
                 background: "#ffffff",
-                color: "var(--hs-text)",
+                color: "var(--hs-primary)",
                 border: "1px solid var(--hs-border-dark)",
-                borderRadius: "3px",
-                fontSize: "12px",
+                padding: "8px 14px",
+                borderRadius: "var(--radius-sm)",
+                fontSize: "12.5px",
                 fontWeight: 600,
                 cursor: "pointer",
-                boxShadow: "0 1px 2px rgba(0,0,0,0.05)",
-                transition: "all 0.2s"
+                boxShadow: "var(--shadow-xs)",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 6,
+                transition: "all 0.15s ease",
               }}
             >
-              Export Heatmap
+              <span>📑 Export Heatmap PDF</span>
             </button>
             <button
+              onClick={handleHighlightChokePoints}
               style={{
-                padding: "6px 14px",
                 background: "#ff5c35",
                 color: "#ffffff",
                 border: "none",
-                borderRadius: "3px",
-                fontSize: "12px",
-                fontWeight: 600,
+                padding: "8px 16px",
+                borderRadius: "var(--radius-sm)",
+                fontSize: "12.5px",
+                fontWeight: 700,
                 cursor: "pointer",
-                boxShadow: "0 1px 2px rgba(0,0,0,0.05)",
-                transition: "all 0.2s"
+                boxShadow: "0 2px 8px rgba(255, 92, 53, 0.25)",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 6,
+                transition: "all 0.15s ease",
               }}
             >
-              Log Risk
+              <span>⚡ Highlight Choke Points</span>
             </button>
           </div>
         </div>
       </div>
 
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "var(--sp-4)" }}>
-        <div style={{ fontSize: "13px", color: "var(--hs-text-muted)", display: "flex", alignItems: "center", gap: 8 }}>
-          <span style={{ width: 8, height: 8, borderRadius: "50%", background: isLive ? "var(--success)" : "var(--hs-primary)", display: "inline-block" }} />
-          <span>{isLive ? "Live Pipeline Risk Matrix" : "AI Risk Distribution Matrix (Demo Active)"}</span>
-        </div>
-        <span className="badge badge-outline">{deals.length} total deals mapped</span>
-      </div>
-
-      {/* ── Heatmap Grid ─────────────────────────────────────────────── */}
-      <motion.div
-        className="card"
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        style={{ marginBottom: "var(--sp-6)" }}
-      >
-        <div className="card-header">
-          <div>
-            <div className="card-title">Pipeline × Risk Matrix</div>
-            <div className="card-subtitle">Click any cell to inspect deal intelligence</div>
+      {/* ── 2. Enterprise Telemetry Summary KPI Grid ──────────────────── */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 14 }}>
+        <div
+          className="kpi-card"
+          style={{
+            background: "#ffffff",
+            padding: "16px 18px",
+            borderRadius: "8px",
+            border: "1px solid var(--hs-border-dark)",
+            borderTop: "3px solid #2d3e50",
+            boxShadow: "var(--shadow-sm)",
+          }}
+        >
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
+            <div style={{ fontSize: "11px", fontWeight: 700, color: "var(--hs-text-muted)", textTransform: "uppercase", letterSpacing: "0.04em" }}>
+              Total Mapped Pipeline
+            </div>
+            <span style={{ fontSize: "10px", fontWeight: 800, background: "rgba(45, 62, 80, 0.08)", color: "#2d3e50", padding: "2px 6px", borderRadius: 4 }}>
+              {deals.length} DEALS
+            </span>
+          </div>
+          <div style={{ fontSize: "24px", fontWeight: 800, color: "#2d3e50", fontFamily: "var(--font-sans)", letterSpacing: "-0.02em" }}>
+            {formatCurrency(totalARR)}
+          </div>
+          <div style={{ fontSize: "11.5px", color: "var(--hs-text-muted)", marginTop: 4 }}>
+            Full multi-stage pipeline active this quarter
           </div>
         </div>
-        <div className="card-body" style={{ overflowX: "auto" }}>
-          <table style={{ width: "100%", borderCollapse: "separate", borderSpacing: 6 }}>
+
+        <div
+          className="kpi-card"
+          style={{
+            background: "#ffffff",
+            padding: "16px 18px",
+            borderRadius: "8px",
+            border: "1px solid var(--hs-border-dark)",
+            borderTop: "3px solid #d93843",
+            boxShadow: "var(--shadow-sm)",
+          }}
+        >
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
+            <div style={{ fontSize: "11px", fontWeight: 700, color: "var(--hs-text-muted)", textTransform: "uppercase", letterSpacing: "0.04em" }}>
+              Critical &amp; High Exposure
+            </div>
+            <span style={{ fontSize: "10px", fontWeight: 800, background: "rgba(217, 56, 67, 0.1)", color: "#d93843", padding: "2px 6px", borderRadius: 4 }}>
+              CHOKE ALERT
+            </span>
+          </div>
+          <div style={{ fontSize: "24px", fontWeight: 800, color: "#d93843", fontFamily: "var(--font-sans)", letterSpacing: "-0.02em" }}>
+            {formatCurrency(criticalARR)}
+          </div>
+          <div style={{ fontSize: "11.5px", color: "#d93843", marginTop: 4, fontWeight: 600 }}>
+            ▲ {criticalDeals.length} Deals in need of executive rescue
+          </div>
+        </div>
+
+        <div
+          className="kpi-card"
+          style={{
+            background: "#ffffff",
+            padding: "16px 18px",
+            borderRadius: "8px",
+            border: "1px solid var(--hs-border-dark)",
+            borderTop: "3px solid #ff5c35",
+            boxShadow: "var(--shadow-sm)",
+          }}
+        >
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
+            <div style={{ fontSize: "11px", fontWeight: 700, color: "var(--hs-text-muted)", textTransform: "uppercase", letterSpacing: "0.04em" }}>
+              Primary Funnel Choke Point
+            </div>
+            <span style={{ fontSize: "10px", fontWeight: 800, background: "rgba(255, 92, 53, 0.1)", color: "#ff5c35", padding: "2px 6px", borderRadius: 4 }}>
+              STAGE 3
+            </span>
+          </div>
+          <div style={{ fontSize: "20px", fontWeight: 800, color: "#ff5c35", fontFamily: "var(--font-sans)", letterSpacing: "-0.01em", marginTop: 2 }}>
+            Proposal / Demo
+          </div>
+          <div style={{ fontSize: "11.5px", color: "var(--hs-text-muted)", marginTop: 6 }}>
+            2 Critical Deals ($2.9M) exceeding 20d duration
+          </div>
+        </div>
+
+        <div
+          className="kpi-card"
+          style={{
+            background: "#ffffff",
+            padding: "16px 18px",
+            borderRadius: "8px",
+            border: "1px solid var(--hs-border-dark)",
+            borderTop: "3px solid #007a70",
+            boxShadow: "var(--shadow-sm)",
+          }}
+        >
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
+            <div style={{ fontSize: "11px", fontWeight: 700, color: "var(--hs-text-muted)", textTransform: "uppercase", letterSpacing: "0.04em" }}>
+              Protected Healthy Flow
+            </div>
+            <span style={{ fontSize: "10px", fontWeight: 800, background: "rgba(0, 189, 165, 0.12)", color: "#007a70", padding: "2px 6px", borderRadius: 4 }}>
+              {healthyDeals.length} DEALS
+            </span>
+          </div>
+          <div style={{ fontSize: "24px", fontWeight: 800, color: "#007a70", fontFamily: "var(--font-sans)", letterSpacing: "-0.02em" }}>
+            {formatCurrency(healthyARR)}
+          </div>
+          <div style={{ fontSize: "11.5px", color: "#007a70", marginTop: 4, fontWeight: 600 }}>
+            ▲ High velocity &amp; strong MEDDICC coverage
+          </div>
+        </div>
+      </div>
+
+      {/* ── 3. Heatmap Card & Controls ─────────────────────────────────── */}
+      <motion.div
+        className="card"
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        style={{
+          background: "#ffffff",
+          borderRadius: "8px",
+          border: "1px solid var(--hs-border-dark)",
+          boxShadow: "var(--shadow-sm)",
+          margin: 0,
+          overflow: "hidden",
+        }}
+      >
+        {/* Heatmap Header & Controls */}
+        <div
+          style={{
+            padding: "16px 20px",
+            borderBottom: "1px solid var(--hs-border-dark)",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            flexWrap: "wrap",
+            gap: 12,
+          }}
+        >
+          <div>
+            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <h3 style={{ fontSize: "15px", fontWeight: 800, color: "var(--hs-heading)", margin: 0 }}>
+                Pipeline × Risk Matrix
+              </h3>
+              <span style={{ fontSize: "11px", color: "var(--hs-text-muted)", background: "var(--hs-surface)", padding: "2px 8px", borderRadius: 10, border: "1px solid var(--hs-border)" }}>
+                {filteredDeals.length} deals mapped
+              </span>
+            </div>
+            <div style={{ fontSize: "12px", color: "var(--hs-text-muted)", marginTop: 2 }}>
+              Click any cell to inspect deal intelligence dossier &amp; trigger automated remediations
+            </div>
+          </div>
+
+          <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+            {/* Search Input */}
+            <div style={{ position: "relative" }}>
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search deals..."
+                style={{
+                  padding: "5px 10px 5px 28px",
+                  fontSize: "12px",
+                  border: "1px solid var(--hs-border-dark)",
+                  borderRadius: "6px",
+                  background: "var(--hs-background)",
+                  outline: "none",
+                  width: "160px",
+                }}
+              />
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="var(--hs-text-muted)"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                style={{ position: "absolute", left: 9, top: 8 }}
+              >
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              </svg>
+            </div>
+
+            {/* View Mode Toggle */}
+            <div style={{ display: "flex", gap: 3, background: "var(--hs-surface-hover)", padding: 3, borderRadius: "var(--radius-sm)", border: "1px solid var(--hs-border-dark)" }}>
+              {[
+                { id: "all", label: "All Details" },
+                { id: "value", label: "ARR ($)" },
+                { id: "count", label: "Counts (#)" },
+                { id: "choke", label: "Choke Points" },
+              ].map((m) => (
+                <button
+                  key={m.id}
+                  onClick={() => setViewMode(m.id as any)}
+                  style={{
+                    padding: "4px 8px",
+                    borderRadius: "4px",
+                    border: "none",
+                    background: viewMode === m.id ? "#ff5c35" : "transparent",
+                    color: viewMode === m.id ? "#ffffff" : "var(--hs-text)",
+                    fontSize: "11px",
+                    fontWeight: viewMode === m.id ? 700 : 500,
+                    cursor: "pointer",
+                    transition: "all 0.15s ease",
+                  }}
+                >
+                  {m.label}
+                </button>
+              ))}
+            </div>
+
+            {selectedCell && (
+              <button
+                onClick={() => setSelectedCell(null)}
+                style={{
+                  padding: "4px 10px",
+                  background: "#f1f4f8",
+                  border: "1px solid var(--hs-border-dark)",
+                  borderRadius: "4px",
+                  fontSize: "11.5px",
+                  fontWeight: 600,
+                  color: "var(--hs-text)",
+                  cursor: "pointer",
+                }}
+              >
+                ✕ Clear Selection
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* ── 4. The 5x5 Matrix Grid ─────────────────────────────────── */}
+        <div style={{ overflowX: "auto", padding: "16px 20px 20px" }}>
+          <table style={{ width: "100%", borderCollapse: "separate", borderSpacing: 8, minWidth: 720 }}>
             <thead>
               <tr>
-                <th style={{ width: 100, fontSize: "11px", color: "var(--hs-text-muted)", textAlign: "left", padding: "0 8px 8px", textTransform: "uppercase", letterSpacing: "0.5px", borderBottom: "none" }}>
-                  Risk ↓ / Stage →
+                <th
+                  style={{
+                    width: 140,
+                    fontSize: "11px",
+                    fontWeight: 800,
+                    color: "var(--hs-text-muted)",
+                    textAlign: "left",
+                    padding: "0 8px 8px",
+                    textTransform: "uppercase",
+                    letterSpacing: "0.06em",
+                    borderBottom: "none",
+                  }}
+                >
+                  Risk Band ↓ / Stage →
                 </th>
-                {STAGES.map((stage) => (
+                {STAGES.map((s) => (
                   <th
-                    key={stage}
+                    key={s.key}
                     style={{
-                      fontSize: "12px",
-                      color: "var(--hs-text)",
-                      fontWeight: 600,
+                      fontSize: "12.5px",
+                      color: "var(--hs-heading)",
+                      fontWeight: 800,
                       padding: "0 0 8px",
                       textAlign: "center",
                       borderBottom: "none",
                     }}
                   >
-                    {stage}
+                    <div>{s.label}</div>
+                    <div style={{ fontSize: "10.5px", color: "var(--hs-text-muted)", fontWeight: 500 }}>
+                      {s.sub}
+                    </div>
                   </th>
                 ))}
+                <th
+                  style={{
+                    width: 110,
+                    fontSize: "11px",
+                    fontWeight: 800,
+                    color: "var(--hs-text-muted)",
+                    textAlign: "center",
+                    padding: "0 8px 8px",
+                    textTransform: "uppercase",
+                    letterSpacing: "0.06em",
+                    borderBottom: "none",
+                  }}
+                >
+                  Band Total
+                </th>
               </tr>
             </thead>
             <tbody>
-              {BANDS.map((band, bandIdx) => (
-                <tr key={band}>
-                  <td
+              {BANDS.map((band, bandIdx) => {
+                const theme = BAND_THEMES[band];
+                const bandTotal = getBandTotal(band);
+
+                return (
+                  <tr key={band}>
+                    {/* Left Row Header */}
+                    <td
+                      style={{
+                        padding: "0 8px",
+                        verticalAlign: "middle",
+                        borderBottom: "none",
+                      }}
+                    >
+                      <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                        <span
+                          style={{
+                            width: 8,
+                            height: 8,
+                            borderRadius: "50%",
+                            background: theme.dotColor,
+                            display: "inline-block",
+                            flexShrink: 0,
+                          }}
+                        />
+                        <span
+                          style={{
+                            fontSize: "12.5px",
+                            fontWeight: 800,
+                            color: theme.text,
+                          }}
+                        >
+                          {band}
+                        </span>
+                      </div>
+                    </td>
+
+                    {/* Stage Cells */}
+                    {STAGES.map((stage, stageIdx) => {
+                      const cellDeals = getCellDeals(stage.key, band);
+                      const value = getCellValue(stage.key, band);
+                      const hasDeals = cellDeals.length > 0;
+                      const isSelected =
+                        selectedCell?.stage === stage.key && selectedCell?.band === band;
+                      const isChokePoint =
+                        (stage.key === "Proposal" || stage.key === "Qualification") &&
+                        band === "Critical";
+
+                      const isDimmed = viewMode === "choke" && !isChokePoint && hasDeals;
+
+                      return (
+                        <td key={stage.key} style={{ padding: 0, borderBottom: "none" }}>
+                          <motion.div
+                            initial={{ opacity: 0, scale: 0.94 }}
+                            animate={{
+                              opacity: isDimmed ? 0.35 : 1,
+                              scale: isSelected ? 1.03 : 1,
+                            }}
+                            transition={{
+                              delay: (bandIdx * STAGES.length + stageIdx) * 0.012,
+                              duration: 0.2,
+                            }}
+                            onClick={() => {
+                              if (hasDeals) {
+                                setSelectedCell(isSelected ? null : { stage: stage.key, band });
+                              }
+                            }}
+                            style={{
+                              height: 76,
+                              minWidth: 105,
+                              borderRadius: "8px",
+                              background: hasDeals ? theme.bg : "#f8fafc",
+                              border: isSelected
+                                ? `2.5px solid ${theme.border}`
+                                : hasDeals
+                                ? isChokePoint
+                                  ? `2px dashed #d93843`
+                                  : `1px solid ${theme.border}40`
+                                : "1px solid var(--hs-border)",
+                              display: "flex",
+                              flexDirection: "column",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              cursor: hasDeals ? "pointer" : "default",
+                              transition: "all 160ms ease",
+                              position: "relative",
+                              boxShadow: isSelected
+                                ? `0 4px 14px ${theme.border}35`
+                                : hasDeals
+                                ? "0 1px 3px rgba(0,0,0,0.03)"
+                                : "none",
+                            }}
+                            whileHover={
+                              hasDeals
+                                ? {
+                                    scale: 1.03,
+                                    borderColor: theme.border,
+                                    boxShadow: `0 4px 12px ${theme.border}30`,
+                                  }
+                                : {}
+                            }
+                          >
+                            {/* Choke Point Pulse Beacon */}
+                            {isChokePoint && hasDeals && (
+                              <span
+                                style={{
+                                  position: "absolute",
+                                  top: 4,
+                                  right: 5,
+                                  fontSize: "8.5px",
+                                  fontWeight: 800,
+                                  background: "#d93843",
+                                  color: "#ffffff",
+                                  padding: "1px 5px",
+                                  borderRadius: "4px",
+                                  letterSpacing: "0.04em",
+                                }}
+                              >
+                                CHOKE
+                              </span>
+                            )}
+
+                            {hasDeals ? (
+                              <>
+                                {viewMode !== "value" && (
+                                  <div
+                                    style={{
+                                      fontSize: "17px",
+                                      fontWeight: 800,
+                                      color: theme.text,
+                                      fontFamily: "var(--font-sans)",
+                                      lineHeight: 1.1,
+                                    }}
+                                  >
+                                    {cellDeals.length}
+                                  </div>
+                                )}
+                                {viewMode !== "count" && (
+                                  <div
+                                    style={{
+                                      fontSize: "11px",
+                                      fontFamily: "var(--font-mono)",
+                                      color: isSelected ? theme.text : "var(--hs-heading)",
+                                      fontWeight: 700,
+                                      marginTop: viewMode === "value" ? 0 : 2,
+                                    }}
+                                  >
+                                    {formatCurrency(value)}
+                                  </div>
+                                )}
+                                {viewMode === "value" && (
+                                  <span style={{ fontSize: "10px", color: "var(--hs-text-muted)", marginTop: 1 }}>
+                                    {cellDeals.length} deal{cellDeals.length > 1 ? "s" : ""}
+                                  </span>
+                                )}
+                              </>
+                            ) : (
+                              <span style={{ fontSize: "13px", color: "#cbd6e2", fontWeight: 500 }}>
+                                —
+                              </span>
+                            )}
+                          </motion.div>
+                        </td>
+                      );
+                    })}
+
+                    {/* Right Row Total */}
+                    <td style={{ padding: "0 4px", borderBottom: "none" }}>
+                      <div
+                        style={{
+                          height: 76,
+                          borderRadius: "8px",
+                          background: "#f8fafc",
+                          border: "1px solid var(--hs-border-dark)",
+                          display: "flex",
+                          flexDirection: "column",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                      >
+                        <div style={{ fontSize: "14px", fontWeight: 800, color: "var(--hs-heading)" }}>
+                          {bandTotal.count}
+                        </div>
+                        <div style={{ fontSize: "10.5px", fontFamily: "var(--font-mono)", color: "var(--hs-text-muted)", fontWeight: 700 }}>
+                          {formatCurrency(bandTotal.value)}
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
+
+              {/* Bottom Stage Total Row */}
+              <tr>
+                <td
+                  style={{
+                    fontSize: "11px",
+                    fontWeight: 800,
+                    color: "var(--hs-text-muted)",
+                    padding: "8px 8px 0",
+                    textTransform: "uppercase",
+                    letterSpacing: "0.06em",
+                    borderBottom: "none",
+                  }}
+                >
+                  Stage Total
+                </td>
+                {STAGES.map((s) => {
+                  const stageTot = getStageTotal(s.key);
+                  return (
+                    <td key={s.key} style={{ padding: "8px 0 0", borderBottom: "none" }}>
+                      <div
+                        style={{
+                          padding: "8px 4px",
+                          borderRadius: "6px",
+                          background: "#f8fafc",
+                          border: "1px solid var(--hs-border-dark)",
+                          textAlign: "center",
+                        }}
+                      >
+                        <div style={{ fontSize: "13px", fontWeight: 800, color: "var(--hs-heading)" }}>
+                          {stageTot.count} deals
+                        </div>
+                        <div style={{ fontSize: "11px", fontFamily: "var(--font-mono)", color: "var(--hs-text-muted)", fontWeight: 700 }}>
+                          {formatCurrency(stageTot.value)}
+                        </div>
+                      </div>
+                    </td>
+                  );
+                })}
+                <td style={{ padding: "8px 4px 0", borderBottom: "none" }}>
+                  <div
                     style={{
-                      fontSize: "12px",
-                      fontWeight: 600,
-                      color: BAND_COLORS[band]?.text || "var(--hs-text)",
-                      padding: "0 8px",
-                      verticalAlign: "middle",
-                      borderBottom: "none",
+                      padding: "8px 4px",
+                      borderRadius: "6px",
+                      background: "rgba(45, 62, 80, 0.08)",
+                      border: "1px solid var(--hs-border-dark)",
+                      textAlign: "center",
                     }}
                   >
-                    {band}
-                  </td>
-                  {STAGES.map((stage, stageIdx) => {
-                    const cellDeals = getCellDeals(stage, band);
-                    const value = getCellValue(stage, band);
-                    const isSelected = selectedCell?.stage === stage && selectedCell?.band === band;
-                    const colors = BAND_COLORS[band] || { bg: "var(--hs-surface)", border: "var(--hs-border)", text: "var(--hs-text)" };
-
-                    return (
-                      <td key={stage} style={{ padding: 0, borderBottom: "none" }}>
-                        <motion.div
-                          initial={{ opacity: 0, scale: 0.9 }}
-                          animate={{ opacity: 1, scale: 1 }}
-                          transition={{ delay: (bandIdx * STAGES.length + stageIdx) * 0.02, duration: 0.2 }}
-                          onClick={() => cellDeals.length > 0 && setSelectedCell({ stage, band })}
-                          style={{
-                            height: 72,
-                            minWidth: 80,
-                            borderRadius: "var(--radius-sm)",
-                            background: cellDeals.length > 0 ? colors.bg : "var(--hs-surface)",
-                            border: `2px solid ${isSelected ? colors.border : (cellDeals.length > 0 ? "transparent" : "var(--hs-border-dark)")}`,
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            cursor: cellDeals.length > 0 ? "pointer" : "default",
-                            transition: "all 150ms ease",
-                          }}
-                          whileHover={cellDeals.length > 0 ? { borderColor: colors.border } : {}}
-                        >
-                          {cellDeals.length > 0 ? (
-                            <>
-                              <span
-                                style={{
-                                  fontSize: "20px",
-                                  fontWeight: 700,
-                                  color: colors.text,
-                                  lineHeight: 1,
-                                }}
-                              >
-                                {cellDeals.length}
-                              </span>
-                              <span
-                                style={{
-                                  fontSize: "11px",
-                                  color: "var(--hs-text-muted)",
-                                  fontVariantNumeric: "tabular-nums",
-                                  marginTop: 4,
-                                  fontWeight: 500,
-                                }}
-                              >
-                                ${(value / 1000).toFixed(0)}K
-                              </span>
-                            </>
-                          ) : (
-                            <span style={{ fontSize: "14px", color: "var(--hs-border-dark)" }}>—</span>
-                          )}
-                        </motion.div>
-                      </td>
-                    );
-                  })}
-                </tr>
-              ))}
+                    <div style={{ fontSize: "13px", fontWeight: 800, color: "var(--hs-primary)" }}>
+                      {filteredDeals.length} deals
+                    </div>
+                    <div style={{ fontSize: "11px", fontFamily: "var(--font-mono)", color: "#ff5c35", fontWeight: 800 }}>
+                      {formatCurrency(totalARR)}
+                    </div>
+                  </div>
+                </td>
+              </tr>
             </tbody>
           </table>
         </div>
       </motion.div>
 
-      {/* ── Selected Cell Detail ──────────────────────────────────────── */}
+      {/* ── 5. Selected Cell Deal Drill-Down Panel ─────────────────────── */}
       <AnimatePresence>
-        {selectedCell && selectedDeals.length > 0 && (
+        {selectedCell && (
           <motion.div
             className="card"
-            initial={{ opacity: 0, y: 16, height: 0 }}
-            animate={{ opacity: 1, y: 0, height: "auto" }}
-            exit={{ opacity: 0, y: 16, height: 0 }}
-            transition={{ duration: 0.2 }}
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            style={{
+              background: "#ffffff",
+              borderRadius: "8px",
+              border: `1.5px solid ${BAND_THEMES[selectedCell.band].border}`,
+              boxShadow: "var(--shadow-md)",
+              margin: 0,
+              overflow: "hidden",
+            }}
           >
-            <div className="card-header">
+            {/* Drill-down Header */}
+            <div
+              style={{
+                padding: "16px 20px",
+                borderBottom: "1px solid var(--hs-border-dark)",
+                background: BAND_THEMES[selectedCell.band].bg,
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                flexWrap: "wrap",
+                gap: 12,
+              }}
+            >
               <div>
-                <div className="card-title">
-                  {selectedCell.stage} — {selectedCell.band} Risk
+                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 2 }}>
+                  <span
+                    style={{
+                      fontSize: "11px",
+                      fontWeight: 800,
+                      background: BAND_THEMES[selectedCell.band].badgeBg,
+                      color: BAND_THEMES[selectedCell.band].text,
+                      padding: "2px 8px",
+                      borderRadius: 4,
+                      textTransform: "uppercase",
+                    }}
+                  >
+                    ● {selectedCell.band} RISK
+                  </span>
+                  <span style={{ fontSize: "12px", color: "var(--hs-text-muted)" }}>•</span>
+                  <span style={{ fontSize: "12px", fontWeight: 700, color: "var(--hs-heading)" }}>
+                    {selectedCell.stage} Stage
+                  </span>
                 </div>
-                <div className="card-subtitle">
-                  {selectedDeals.length} deal{selectedDeals.length > 1 ? "s" : ""} totaling $
-                  {(selectedDeals.reduce((s, d) => s + (d.value || 0), 0) / 1000).toFixed(0)}K
-                </div>
+                <h3 style={{ fontSize: "16px", fontWeight: 800, color: "var(--hs-heading)", margin: 0 }}>
+                  Drill-Down: {selectedDeals.length} Enterprise Deals (
+                  {formatCurrency(getCellValue(selectedCell.stage, selectedCell.band))})
+                </h3>
               </div>
-              <button
-                className="btn btn-secondary btn-sm"
-                onClick={() => setSelectedCell(null)}
-              >
-                ✕ Close
-              </button>
+
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <button
+                  onClick={() => {
+                    showToast(`⚡ Dispatched AI remediation cadences for ${selectedDeals.length} deals in ${selectedCell.stage}.`);
+                    logAuditEvent({
+                      actor: "Peash Rudra",
+                      role: "VP Sales Ops",
+                      actionType: "Batch Deal Remediation",
+                      targetObject: `${selectedCell.stage} (${selectedCell.band})`,
+                      tier: "Tier 2 (Assisted Task)",
+                      status: "Success",
+                      details: `Triggered multi-threading playbooks for ${selectedDeals.length} deals in ${selectedCell.stage}.`,
+                    });
+                  }}
+                  style={{
+                    padding: "6px 12px",
+                    background: "#ff5c35",
+                    color: "#ffffff",
+                    border: "none",
+                    borderRadius: "6px",
+                    fontSize: "12px",
+                    fontWeight: 700,
+                    cursor: "pointer",
+                    boxShadow: "0 2px 6px rgba(255, 92, 53, 0.25)",
+                  }}
+                >
+                  ⚡ Auto-Remediate Cell
+                </button>
+                <button
+                  className="btn btn-secondary btn-sm"
+                  onClick={() => setSelectedCell(null)}
+                  style={{ background: "#ffffff", border: "1px solid var(--hs-border-dark)" }}
+                >
+                  ✕ Close
+                </button>
+              </div>
             </div>
+
+            {/* Prescriptive Guidance */}
+            <div
+              style={{
+                padding: "10px 18px",
+                background: "rgba(45, 62, 80, 0.04)",
+                borderBottom: "1px solid var(--hs-border-dark)",
+                fontSize: "12px",
+                color: "var(--hs-heading)",
+                display: "flex",
+                alignItems: "center",
+                gap: 8,
+              }}
+            >
+              <span>💡</span>
+              <span>
+                <strong>RevOps Recommendation:</strong>{" "}
+                {selectedCell.band === "Critical"
+                  ? "Immediate pipeline choke point. Require rep to verify Economic Buyer alignment and enforce a Mutual Action Plan before advancing."
+                  : selectedCell.band === "High"
+                  ? "Slippage warning. Re-engage executive sponsor and confirm security/procurement criteria."
+                  : "On track with established velocity benchmarks. Maintain scheduled sales cadences."}
+              </span>
+            </div>
+
+            {/* Deals Table */}
             <div className="table-responsive">
-              <table>
+              <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "12.5px" }}>
                 <thead>
-                  <tr>
-                    <th>Deal</th>
-                    <th>Client</th>
-                    <th>Score</th>
-                    <th>Value</th>
-                    <th>Owner</th>
+                  <tr style={{ background: "#f8fafc", borderBottom: "1px solid var(--hs-border-dark)" }}>
+                    <th style={{ padding: "10px 14px", textAlign: "left", fontWeight: 700 }}>Deal &amp; Account</th>
+                    <th style={{ padding: "10px 14px", textAlign: "left", fontWeight: 700 }}>ARR Value</th>
+                    <th style={{ padding: "10px 14px", textAlign: "left", fontWeight: 700 }}>DealScore</th>
+                    <th style={{ padding: "10px 14px", textAlign: "left", fontWeight: 700 }}>Days in Stage</th>
+                    <th style={{ padding: "10px 14px", textAlign: "left", fontWeight: 700 }}>Account Owner</th>
+                    <th style={{ padding: "10px 14px", textAlign: "left", fontWeight: 700 }}>Key Risk Indicator</th>
+                    <th style={{ padding: "10px 14px", textAlign: "right", fontWeight: 700 }}>Action</th>
                   </tr>
                 </thead>
                 <tbody>
                   {selectedDeals.map((deal) => (
                     <tr
-                      key={deal.name}
-                      onClick={() =>
-                        setSelectedDrawerDeal({
-                          id: deal.name.toLowerCase().replace(/\s+/g, "-"),
-                          name: deal.name,
-                          client: deal.client,
-                          score: deal.score,
-                          band: deal.band,
-                          value: deal.value,
-                          stage: deal.stage,
-                          owner: deal.owner,
-                        })
-                      }
-                      style={{ cursor: "pointer" }}
+                      key={deal.id}
+                      onClick={() => setSelectedDrawerDeal(deal as any)}
+                      style={{
+                        borderBottom: "1px solid #eaf0f6",
+                        cursor: "pointer",
+                        transition: "background 0.15s ease",
+                      }}
+                      onMouseEnter={(e) => (e.currentTarget.style.background = "#fffbf9")}
+                      onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
                     >
-                      <td style={{ fontWeight: 600, color: "var(--hs-primary)", fontSize: 13 }}>{deal.name}</td>
-                      <td style={{ color: "var(--hs-text-muted)" }}>{deal.client}</td>
-                      <td>
-                        <span style={{ fontFamily: "var(--font-mono)", fontWeight: 700, color: BAND_COLORS[deal.band]?.text }}>
-                          {deal.score}
+                      <td style={{ padding: "12px 14px" }}>
+                        <div style={{ fontWeight: 800, color: "var(--hs-primary)", fontSize: "13px" }}>
+                          {deal.name}
+                        </div>
+                        <div style={{ fontSize: "11px", color: "var(--hs-text-muted)", marginTop: 2 }}>
+                          {deal.client}
+                        </div>
+                      </td>
+
+                      <td style={{ padding: "12px 14px", fontFamily: "var(--font-mono)", fontWeight: 800, color: "#ff5c35" }}>
+                        ${(deal.value / 1000).toFixed(0)}K
+                      </td>
+
+                      <td style={{ padding: "12px 14px" }}>
+                        <span
+                          style={{
+                            padding: "2px 8px",
+                            borderRadius: "10px",
+                            fontSize: "11px",
+                            fontWeight: 800,
+                            background: BAND_THEMES[deal.band].badgeBg,
+                            color: BAND_THEMES[deal.band].text,
+                          }}
+                        >
+                          {deal.score} · {deal.band}
                         </span>
                       </td>
-                      <td style={{ fontFamily: "var(--font-mono)", fontWeight: 500 }}>${((deal.value || 0) / 1000).toFixed(0)}K</td>
-                      <td>{deal.owner}</td>
+
+                      <td style={{ padding: "12px 14px", color: "var(--hs-text)" }}>
+                        <span style={{ fontWeight: (deal.daysInStage || 0) > 15 ? 700 : 500, color: (deal.daysInStage || 0) > 15 ? "#d93843" : "var(--hs-text)" }}>
+                          {deal.daysInStage || 8} days
+                        </span>
+                      </td>
+
+                      <td style={{ padding: "12px 14px", color: "var(--hs-text-muted)" }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                          <span
+                            style={{
+                              width: 22,
+                              height: 22,
+                              borderRadius: "50%",
+                              background: "#2d3e50",
+                              color: "#ffffff",
+                              fontSize: "10px",
+                              fontWeight: 700,
+                              display: "inline-flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                            }}
+                          >
+                            {deal.owner
+                              .split(" ")
+                              .map((n) => n[0])
+                              .join("")
+                              .slice(0, 2)}
+                          </span>
+                          <span>{deal.owner}</span>
+                        </div>
+                      </td>
+
+                      <td style={{ padding: "12px 14px", color: "var(--hs-text)", maxWidth: 280, lineHeight: 1.35 }}>
+                        {deal.risks && deal.risks.length > 0 ? (
+                          <span style={{ fontSize: "11.5px", color: "#d93843", fontWeight: 600 }}>
+                            ⚠️ {deal.risks[0].text}
+                          </span>
+                        ) : (
+                          <span style={{ fontSize: "11.5px", color: "var(--hs-text-muted)" }}>
+                            {deal.recommendation || "Pacing normally according to MEDDICC."}
+                          </span>
+                        )}
+                      </td>
+
+                      <td style={{ padding: "12px 14px", textAlign: "right" }}>
+                        <button
+                          className="btn btn-secondary btn-sm"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedDrawerDeal(deal as any);
+                          }}
+                          style={{
+                            background: "#ffffff",
+                            border: "1px solid var(--hs-border-dark)",
+                            color: "#007a8c",
+                            fontWeight: 700,
+                          }}
+                        >
+                          ⚡ Inspect
+                        </button>
+                      </td>
                     </tr>
                   ))}
                 </tbody>

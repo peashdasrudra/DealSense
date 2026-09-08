@@ -4,9 +4,18 @@
  * Unified Case Study Pricing: $99 (Pilot Audit), $1,500 (Full Deployment), $3,500 (Agency Fleet).
  */
 
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import {
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
 import { DealSenseIcon } from "../components/DealSenseLogo";
 import { Footer } from "../components/Footer";
 import { HowItWorksVideoSection } from "../components/HowItWorksVideoSection";
@@ -21,6 +30,58 @@ export const LandingPage: React.FC = () => {
 
   // ── Hero Interactive Tab Showcase ──────────────────────────────────────────
   const [heroTab, setHeroTab] = useState<"scoring" | "forecast" | "warroom" | "hygiene">("scoring");
+
+  // ── Landing Interactive Health Trend Visualizer State ─────────────────────
+  const [landingTrendMode, setLandingTrendMode] = useState<"health" | "velocity" | "revenue">("health");
+
+  const landingTrendSeries = useMemo(() => {
+    if (landingTrendMode === "velocity") {
+      return [
+        { date: "Oct", value: 38, label: "38 days", insight: "Legacy baseline sales cycle" },
+        { date: "Nov", value: 36, label: "36 days", insight: "Stage 2 discovery expedited" },
+        { date: "Dec", value: 35, label: "35 days", insight: "Q4 fast-track procurement" },
+        { date: "Jan", value: 34, label: "34 days", insight: "Automated MAP alignment" },
+        { date: "Feb", value: 31, label: "31 days", insight: "CFO outreach sequence" },
+        { date: "Mar", value: 29, label: "29 days", insight: "Single-threading eliminated" },
+        { date: "Apr", value: 28, label: "28 days", insight: "Auto-remediation playbook v2" },
+        { date: "May", value: 26, label: "26 days", insight: "MEDDICC gate enforcement" },
+        { date: "Jun", value: 25, label: "25 days", insight: "MSA turnaround in 48h" },
+        { date: "Jul", value: 23, label: "23 days", insight: "Executive sponsor triggered" },
+        { date: "Aug", value: 22, label: "22 days", insight: "0 stale deals in pipeline" },
+        { date: "Sep", value: 21, label: "21 days", insight: "Record 21d cycle (-44% YoY)" },
+      ];
+    }
+    if (landingTrendMode === "revenue") {
+      return [
+        { date: "Oct", value: 1200, label: "$1.2M", insight: "Baseline protected revenue" },
+        { date: "Nov", value: 1800, label: "$1.8M", insight: "2 stalled deals recovered" },
+        { date: "Dec", value: 2400, label: "$2.4M", insight: "Year-end expansion secured" },
+        { date: "Jan", value: 3100, label: "$3.1M", insight: "Q1 pipeline safeguarded" },
+        { date: "Feb", value: 3600, label: "$3.6M", insight: "C-suite buy-in established" },
+        { date: "Mar", value: 4200, label: "$4.2M", insight: "Multi-threading protection" },
+        { date: "Apr", value: 4800, label: "$4.8M", insight: "Competitive deflection active" },
+        { date: "May", value: 5200, label: "$5.2M", insight: "Tier-4 automation active" },
+        { date: "Jun", value: 5800, label: "$5.8M", insight: "Mid-year expansion surge" },
+        { date: "Jul", value: 6100, label: "$6.1M", insight: "Zero unassigned actions" },
+        { date: "Aug", value: 6300, label: "$6.3M", insight: "Global logistics expansion" },
+        { date: "Sep", value: 6480, label: "$6.48M", insight: "Record $6.48M protected revenue" },
+      ];
+    }
+    return [
+      { date: "Oct", value: 68, label: "68 / 100", insight: "Initial baseline (4 at-risk deals)" },
+      { date: "Nov", value: 71, label: "71 / 100", insight: "HubSpot webhook sync deployed" },
+      { date: "Dec", value: 74, label: "74 / 100", insight: "Executive sponsor sequences active" },
+      { date: "Jan", value: 72, label: "72 / 100", insight: "Post-holiday stakeholder realignment" },
+      { date: "Feb", value: 76, label: "76 / 100", insight: "MEDDICC scoring threshold raised" },
+      { date: "Mar", value: 79, label: "79 / 100", insight: "Single-threaded deal recovery" },
+      { date: "Apr", value: 81, label: "81 / 100", insight: "Auto-remediation playbooks online" },
+      { date: "May", value: 80, label: "80 / 100", insight: "Enterprise expansion wave" },
+      { date: "Jun", value: 83, label: "83 / 100", insight: "MSA velocity accelerated to 4d" },
+      { date: "Jul", value: 84, label: "84 / 100", insight: "0 overdue close dates" },
+      { date: "Aug", value: 86, label: "86 / 100", insight: "99.4% SLA adherence recorded" },
+      { date: "Sep", value: 87, label: "87 / 100", insight: "Peak +18pt portfolio health index" },
+    ];
+  }, [landingTrendMode]);
 
   // ── Interactive Deal Risk Simulator State ──────────────────────────────────
   const [simBuyerSilent, setSimBuyerSilent] = useState(true);
@@ -716,13 +777,15 @@ export const LandingPage: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
             className="landing-hero-btns"
-            style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 12, flexWrap: "wrap", maxWidth: 680, margin: "0 auto" }}
+            style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 14, flexWrap: "wrap", maxWidth: 680, margin: "0 auto" }}
           >
-            {/* 1. Orange Button: Install Free in HubSpot */}
-            <button
+            {/* 1. Exactly as this: Install Free in HubSpot */}
+            <motion.button
+              whileHover={{ scale: 1.025, y: -2 }}
+              whileTap={{ scale: 0.98, y: 0 }}
               className="hero-btn-primary"
               onClick={() => navigate("/login")}
-              id="hero-claim-discount-btn"
+              id="hero-install-hubspot-btn"
               style={{
                 padding: "14px 28px",
                 fontSize: "14.5px",
@@ -732,21 +795,27 @@ export const LandingPage: React.FC = () => {
                 justifyContent: "center",
                 gap: "8px",
                 borderRadius: "12px",
-                boxShadow: "0 8px 24px rgba(255, 92, 53, 0.42), inset 0 1px 0 rgba(255,255,255,0.3)",
+                background: "linear-gradient(135deg, #ff5c35 0%, #ff7a59 100%)",
+                color: "#ffffff",
+                border: "1px solid #e04a25",
+                boxShadow: "0 8px 24px rgba(255, 92, 53, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.35)",
                 cursor: "pointer",
+                transition: "box-shadow 0.2s ease",
               }}
             >
               <span>Install Free in HubSpot</span>
               <svg width={17} height={17} viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
                 <path d="M5 12h14M12 5l7 7-7 7" />
               </svg>
-            </button>
+            </motion.button>
 
-            {/* 2. Secondary Button: Access Agency Portal */}
-            <button
+            {/* 2. Claim Agency Discount (Highly engaging) */}
+            <motion.button
+              whileHover={{ scale: 1.025, y: -2 }}
+              whileTap={{ scale: 0.98, y: 0 }}
               className="hero-btn-secondary"
-              onClick={() => navigate("/agency")}
-              id="hero-agency-portal-btn"
+              onClick={() => navigate("/agency#pricing")}
+              id="hero-claim-agency-discount-btn"
               style={{
                 padding: "14px 26px",
                 fontSize: "14.5px",
@@ -761,13 +830,29 @@ export const LandingPage: React.FC = () => {
                 gap: "8px",
                 boxShadow: "0 2px 8px rgba(9, 33, 36, 0.04), inset 0 1px 0 #ffffff",
                 cursor: "pointer",
+                transition: "all 0.2s ease",
               }}
             >
-              <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="#124548" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
-                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+              <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="#ff5c35" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+                <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z" />
+                <line x1={7} y1={7} x2={7.01} y2={7} />
               </svg>
-              <span style={{ color: "#124548", fontWeight: 700, fontSize: "14.5px" }}>Access Agency Portal</span>
-            </button>
+              <span style={{ color: "#124548", fontWeight: 700, fontSize: "14.5px" }}>Claim Agency Discount</span>
+              <span style={{
+                fontSize: "10.5px",
+                fontWeight: 800,
+                background: "rgba(255, 92, 53, 0.12)",
+                color: "#ff5c35",
+                padding: "2px 7px",
+                borderRadius: "6px",
+                border: "1px solid rgba(255, 92, 53, 0.28)",
+                lineHeight: 1,
+                display: "inline-flex",
+                alignItems: "center",
+              }}>
+                -20%
+              </span>
+            </motion.button>
           </motion.div>
 
           {/* Premium Enterprise Trust Badges */}
@@ -1358,6 +1443,266 @@ export const LandingPage: React.FC = () => {
                 <div style={{ fontSize: "11px", color: "#94a3b8", marginTop: 2 }}>{stat.sub}</div>
               </div>
             ))}
+          </div>
+
+        </div>
+      </section>
+
+      {/* ── 4.8 Interactive 12-Month Revenue Health Trend Visualizer ───────── */}
+      <section
+        id="health-trend-section"
+        style={{
+          padding: "clamp(54px, 6vw, 84px) clamp(16px, 4vw, 24px)",
+          background: "linear-gradient(180deg, #ffffff 0%, #f8fafc 100%)",
+          borderBottom: "1px solid #e2e8f0",
+          position: "relative",
+          overflow: "hidden",
+        }}
+      >
+        <div style={{ maxWidth: 1140, margin: "0 auto" }}>
+          
+          {/* Section Header */}
+          <div style={{ textAlign: "center", maxWidth: 780, margin: "0 auto 36px" }}>
+            <span
+              style={{
+                fontSize: "11px",
+                fontWeight: 800,
+                color: "#ff5c35",
+                letterSpacing: "0.08em",
+                textTransform: "uppercase",
+                background: "rgba(255, 92, 53, 0.1)",
+                border: "1px solid rgba(255, 92, 53, 0.28)",
+                padding: "3px 12px",
+                borderRadius: "9999px",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 6,
+                marginBottom: 12,
+              }}
+            >
+              <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#ff5c35", animation: "pulse-live 2s infinite" }} />
+              LIVE TELEMETRY VISUALIZER
+            </span>
+            <h2 style={{ fontSize: "clamp(26px, 4.2vw, 40px)", fontWeight: 900, color: "#092124", letterSpacing: "-0.03em", margin: "4px 0 14px", lineHeight: 1.2 }}>
+              12-Month Revenue Health Trend &amp; Slippage Telemetry
+            </h2>
+            <p style={{ fontSize: "15px", color: "#475569", lineHeight: 1.6, margin: 0 }}>
+              See how DealSense transforms stalled pipeline into accelerated closed-won revenue over 12 months. Toggle telemetry modes and scrub through real-time quarterly benchmarks below.
+            </p>
+          </div>
+
+          {/* Interactive Card Container */}
+          <div
+            style={{
+              background: "#ffffff",
+              borderRadius: "18px",
+              border: "1px solid #cbd5e1",
+              boxShadow: "0 18px 48px -10px rgba(9, 33, 36, 0.12), 0 0 0 1px rgba(9, 33, 36, 0.04)",
+              overflow: "hidden",
+            }}
+          >
+            {/* Header Controls Bar */}
+            <div
+              style={{
+                background: "#f8fafc",
+                padding: "16px 22px",
+                borderBottom: "1px solid #e2e8f0",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                flexWrap: "wrap",
+                gap: 12,
+              }}
+            >
+              <div>
+                <div style={{ fontSize: "15px", fontWeight: 800, color: "#092124" }}>
+                  Quarterly Telemetry Progression (2026)
+                </div>
+                <div style={{ fontSize: "12px", color: "#64748b", marginTop: 2 }}>
+                  25 Enterprise Accounts ($28.4M Total Pipeline) · HubSpot Multi-Tenant Telemetry
+                </div>
+              </div>
+
+              {/* Mode Toggle Buttons */}
+              <div style={{ display: "flex", gap: 6, background: "#e2e8f0", padding: "4px", borderRadius: "8px" }}>
+                {[
+                  { key: "health", label: "📈 Health Index (+18pt)", color: "#ff5c35" },
+                  { key: "velocity", label: "⚡ Cycle Velocity (-44%)", color: "#007a8c" },
+                  { key: "revenue", label: "🛡️ Protected ARR ($6.5M)", color: "#007a70" },
+                ].map((tab) => {
+                  const active = landingTrendMode === tab.key;
+                  return (
+                    <button
+                      key={tab.key}
+                      onClick={() => setLandingTrendMode(tab.key as any)}
+                      style={{
+                        padding: "6px 12px",
+                        fontSize: "12px",
+                        fontWeight: 700,
+                        borderRadius: "6px",
+                        border: "none",
+                        cursor: "pointer",
+                        background: active ? "#ffffff" : "transparent",
+                        color: active ? tab.color : "#475569",
+                        boxShadow: active ? "0 2px 6px rgba(0,0,0,0.08)" : "none",
+                        transition: "all 0.15s ease",
+                      }}
+                    >
+                      {tab.label}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Chart Area */}
+            <div style={{ padding: "24px 20px 16px" }}>
+              <ResponsiveContainer width="100%" height={260}>
+                <AreaChart data={landingTrendSeries} margin={{ top: 10, right: 12, left: -20, bottom: 0 }}>
+                  <defs>
+                    <linearGradient id="landingTrendGrad" x1="0" y1="0" x2="0" y2="1">
+                      <stop
+                        offset="0%"
+                        stopColor={landingTrendMode === "health" ? "#ff5c35" : landingTrendMode === "velocity" ? "#00a4bd" : "#007a70"}
+                        stopOpacity={0.25}
+                      />
+                      <stop
+                        offset="100%"
+                        stopColor={landingTrendMode === "health" ? "#ff5c35" : landingTrendMode === "velocity" ? "#00a4bd" : "#007a70"}
+                        stopOpacity={0}
+                      />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                  <XAxis dataKey="date" tick={{ fontSize: 11, fill: "#64748b" }} axisLine={false} tickLine={false} />
+                  <YAxis
+                    domain={landingTrendMode === "health" ? [55, 95] : landingTrendMode === "velocity" ? [15, 45] : [0, 7500]}
+                    tick={{ fontSize: 11, fill: "#64748b" }}
+                    axisLine={false}
+                    tickLine={false}
+                  />
+                  <Tooltip
+                    content={({ active, payload, label }: any) => {
+                      if (!active || !payload?.length) return null;
+                      const item = payload[0]?.payload;
+                      return (
+                        <div
+                          style={{
+                            background: "#ffffff",
+                            border: "1px solid #cbd5e1",
+                            borderRadius: "8px",
+                            padding: "10px 14px",
+                            boxShadow: "0 6px 18px rgba(9, 33, 36, 0.16)",
+                          }}
+                        >
+                          <div style={{ fontSize: "11px", color: "#64748b", fontWeight: 700 }}>{label} 2026 Telemetry</div>
+                          <div
+                            style={{
+                              fontSize: "14px",
+                              fontWeight: 900,
+                              color: landingTrendMode === "health" ? "#ff5c35" : landingTrendMode === "velocity" ? "#007a8c" : "#007a70",
+                              marginTop: 2,
+                            }}
+                          >
+                            {landingTrendMode === "health"
+                              ? `Portfolio Health: ${item.value}/100`
+                              : landingTrendMode === "velocity"
+                              ? `Sales Cycle: ${item.value} days`
+                              : `Protected ARR: $${(item.value / 1000).toFixed(2)}M`}
+                          </div>
+                          <div style={{ fontSize: "11.5px", color: "#092124", marginTop: 4, maxWidth: 240, lineHeight: 1.35 }}>
+                            💡 {item.insight}
+                          </div>
+                        </div>
+                      );
+                    }}
+                  />
+                  <Area
+                    type="monotone"
+                    dataKey="value"
+                    stroke={landingTrendMode === "health" ? "#ff5c35" : landingTrendMode === "velocity" ? "#00a4bd" : "#007a70"}
+                    strokeWidth={3}
+                    fill="url(#landingTrendGrad)"
+                    isAnimationActive={true}
+                    animationDuration={1000}
+                    dot={{ fill: landingTrendMode === "health" ? "#ff5c35" : landingTrendMode === "velocity" ? "#00a4bd" : "#007a70", strokeWidth: 0, r: 4 }}
+                    activeDot={{ r: 6.5, strokeWidth: 2, stroke: "#ffffff", fill: "#092124" }}
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+
+            {/* 4 Factor Telemetry Pillar Grid */}
+            <div style={{ background: "#f8fafc", borderTop: "1px solid #e2e8f0", padding: "16px 20px", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 12 }}>
+              <div style={{ background: "#ffffff", padding: "12px 14px", borderRadius: "10px", border: "1px solid #e2e8f0" }}>
+                <div style={{ fontSize: "10.5px", color: "#64748b", fontWeight: 700, textTransform: "uppercase" }}>Buyer Engagement Depth</div>
+                <div style={{ fontSize: "16px", fontWeight: 900, color: "#059669", marginTop: 2 }}>92% Active</div>
+                <div style={{ fontSize: "11px", color: "#64748b" }}>0 silent CFOs detected</div>
+              </div>
+
+              <div style={{ background: "#ffffff", padding: "12px 14px", borderRadius: "10px", border: "1px solid #e2e8f0" }}>
+                <div style={{ fontSize: "10.5px", color: "#64748b", fontWeight: 700, textTransform: "uppercase" }}>Multi-Threading Ratio</div>
+                <div style={{ fontSize: "16px", fontWeight: 900, color: "#007a8c", marginTop: 2 }}>4.8 Stakeholders</div>
+                <div style={{ fontSize: "11px", color: "#64748b" }}>Avg per enterprise deal</div>
+              </div>
+
+              <div style={{ background: "#ffffff", padding: "12px 14px", borderRadius: "10px", border: "1px solid #e2e8f0" }}>
+                <div style={{ fontSize: "10.5px", color: "#64748b", fontWeight: 700, textTransform: "uppercase" }}>Cycle Duration Delta</div>
+                <div style={{ fontSize: "16px", fontWeight: 900, color: "#ff5c35", marginTop: 2 }}>21 Days Avg</div>
+                <div style={{ fontSize: "11px", color: "#64748b" }}>-44% acceleration YoY</div>
+              </div>
+
+              <div style={{ background: "#ffffff", padding: "12px 14px", borderRadius: "10px", border: "1px solid #e2e8f0" }}>
+                <div style={{ fontSize: "10.5px", color: "#64748b", fontWeight: 700, textTransform: "uppercase" }}>Autonomous Writeback</div>
+                <div style={{ fontSize: "16px", fontWeight: 900, color: "#092124", marginTop: 2 }}>99.4% Adherence</div>
+                <div style={{ fontSize: "11px", color: "#64748b" }}>180ms webhook sync</div>
+              </div>
+            </div>
+
+            {/* Bottom Section Action Bar */}
+            <div style={{ padding: "14px 22px", background: "#ffffff", borderTop: "1px solid #e2e8f0", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 10 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: "12.5px", color: "#475569" }}>
+                <span>⚡ <strong>Telemetry Ready:</strong> Connect your HubSpot portal to view your team's live trajectory curve.</span>
+              </div>
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <button
+                  onClick={() => navigate("/pipeline")}
+                  style={{
+                    padding: "8px 16px",
+                    background: "#092124",
+                    color: "#ffffff",
+                    fontSize: "12.5px",
+                    fontWeight: 700,
+                    borderRadius: "8px",
+                    border: "none",
+                    cursor: "pointer",
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 6,
+                  }}
+                >
+                  <span>Launch Live Telemetry in App</span>
+                  <span>→</span>
+                </button>
+                <button
+                  onClick={() => navigate("/login")}
+                  style={{
+                    padding: "8px 16px",
+                    background: "linear-gradient(135deg, #ff6b48 0%, #ff5c35 100%)",
+                    color: "#ffffff",
+                    fontSize: "12.5px",
+                    fontWeight: 800,
+                    borderRadius: "8px",
+                    border: "none",
+                    cursor: "pointer",
+                    boxShadow: "0 2px 8px rgba(255, 92, 53, 0.3)",
+                  }}
+                >
+                  Install Free in HubSpot
+                </button>
+              </div>
+            </div>
+
           </div>
 
         </div>
@@ -2217,7 +2562,7 @@ export const LandingPage: React.FC = () => {
                 {[
                   { icon: "⏱️", text: "5–10 Day Rapid Sprint" },
                   { icon: "💎", text: "100% Code Ownership" },
-                  { icon: "🛡️", text: "HubSpot Canvas Certified" },
+                  { icon: "🛡️", text: "Native Canvas Architecture" },
                   { icon: "🔒", text: "Zero Per-Seat Fees" },
                 ].map((item, idx) => (
                   <div key={idx} style={{ display: "flex", alignItems: "center", gap: 7, fontSize: "12px", fontWeight: 700, color: "#f1f5f9" }}>

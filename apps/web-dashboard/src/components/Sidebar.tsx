@@ -152,7 +152,8 @@ const NAV_SECTIONS: NavSection[] = [
     items: [
       { id: "overview", label: "Pipeline Overview", iconKey: "overview", path: "/pipeline" },
       { id: "deals", label: "Deal Inspector", iconKey: "deals", path: "/deals" },
-      { id: "actions", label: "Action Queue", iconKey: "actions", path: "/actions", badge: "Pro" },
+      { id: "clients", label: "Client Health", iconKey: "clients", path: "/clients" },
+      { id: "actions", label: "Action Queue", iconKey: "actions", path: "/actions" },
     ],
   },
   {
@@ -164,28 +165,24 @@ const NAV_SECTIONS: NavSection[] = [
       { id: "warroom", label: "Deal War Room", iconKey: "warroom", path: "/war-room" },
       { id: "stakeholders", label: "Stakeholder Matrix", iconKey: "stakeholders", path: "/stakeholders" },
       { id: "heatmap", label: "Risk Heatmap", iconKey: "heatmap", path: "/heatmap" },
-      { id: "map", label: "Mutual Action Plans", iconKey: "map", path: "/map", badge: "Pro" },
-      { id: "battlecards", label: "Battlecards", iconKey: "battlecards", path: "/battlecards", badge: "Pro" },
-      { id: "reps", label: "Rep Coaching", iconKey: "reps", path: "/reps", badge: "Pro" },
+      { id: "map", label: "Mutual Action Plans", iconKey: "map", path: "/map" },
+      { id: "battlecards", label: "Battlecards", iconKey: "battlecards", path: "/battlecards" },
+      { id: "reps", label: "Rep Coaching", iconKey: "reps", path: "/reps" },
     ],
   },
   {
     title: "Solutions & Operations",
     defaultOpen: true,
     items: [
-      { id: "playbooks", label: "RevOps Playbooks", iconKey: "playbooks", path: "/playbooks", badge: "Pro" },
-      { id: "hygiene", label: "CRM Hygiene", iconKey: "hygiene", path: "/hygiene", badge: "Pro" },
-      { id: "clients", label: "Client Health", iconKey: "clients", path: "/clients" },
+      { id: "playbooks", label: "RevOps Playbooks", iconKey: "playbooks", path: "/playbooks" },
+      { id: "hygiene", label: "CRM Hygiene", iconKey: "hygiene", path: "/hygiene" },
       { id: "settings", label: "Integration & Settings", iconKey: "settings", path: "/settings" },
     ],
   },
   {
-    title: "Developer & Marketplace Tools",
-    defaultOpen: false,
+    title: "Architecture & Governance",
+    defaultOpen: true,
     items: [
-      { id: "compliance", label: "App Partner Certification", iconKey: "audit", path: "/compliance" },
-      { id: "onboarding", label: "Marketplace Setup Flow", iconKey: "playbooks", path: "/onboarding" },
-      { id: "listing", label: "Marketplace Directory View", iconKey: "casestudy", path: "/marketplace-listing" },
       { id: "case-study", label: "Architecture Case Study", iconKey: "casestudy", path: "/case-study" },
       { id: "audit", label: "Audit Log & Telemetry", iconKey: "audit", path: "/audit" },
     ],
@@ -479,10 +476,10 @@ export const Sidebar: React.FC<SidebarProps> = ({ onClose, onNavigateHome }) => 
         }}
       >
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <div style={{ fontSize: "10.5px", color: "var(--hs-text-muted)" }}>
-            <span style={{ fontWeight: 600 }}>v1.0.0</span> · 48/48 tests
+          <div style={{ fontSize: "11px", color: "var(--hs-text-muted)" }}>
+            <span style={{ fontWeight: 700, color: "var(--hs-text)" }}>HubSpot Sync</span> · Live v3
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
             <span
               style={{
                 width: 6,
@@ -490,10 +487,11 @@ export const Sidebar: React.FC<SidebarProps> = ({ onClose, onNavigateHome }) => 
                 borderRadius: "50%",
                 background: "var(--risk-healthy)",
                 display: "inline-block",
+                boxShadow: "0 0 6px rgba(0, 163, 141, 0.4)",
               }}
             />
-            <span style={{ fontSize: "10px", fontWeight: 600, color: "var(--risk-healthy)" }}>
-              Healthy
+            <span style={{ fontSize: "10.5px", fontWeight: 700, color: "var(--risk-healthy)" }}>
+              Operational
             </span>
           </div>
         </div>

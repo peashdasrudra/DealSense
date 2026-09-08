@@ -46,7 +46,6 @@ import { HubSpotNativeLayout } from "./components/HubSpotNativeLayout";
 import { HubSpotNativePipeline } from "./pages/HubSpotNativePipeline";
 import { HubSpotNativeActionQueue } from "./pages/HubSpotNativeActionQueue";
 import { HubSpotNativePlaybooks } from "./pages/HubSpotNativePlaybooks";
-import { ProGate } from "./components/ProGate";
 // ── Page Title Mapping ───────────────────────────────────────────────────────
 
 const PAGE_TITLES: Record<string, { title: string; breadcrumb: string }> = {
@@ -80,21 +79,14 @@ const PAGE_TITLES: Record<string, { title: string; breadcrumb: string }> = {
   "/settings": { title: "Settings & Scoring Weights", breadcrumb: "Settings" },
   "/privacy": { title: "Privacy Policy & GDPR", breadcrumb: "Privacy" },
   "/terms": { title: "Terms of Service", breadcrumb: "Terms" },
-  "/compliance": { title: "App Partner Certification", breadcrumb: "Certification" },
-  "/certification": { title: "App Partner Certification", breadcrumb: "Certification" },
+  "/compliance": { title: "Security & Compliance Console", breadcrumb: "Security" },
+  "/certification": { title: "Security & Compliance Console", breadcrumb: "Security" },
   "/onboarding": { title: "Marketplace Setup Flow", breadcrumb: "Onboarding" },
   "/marketplace-listing": { title: "Marketplace Directory Preview", breadcrumb: "Marketplace" },
   "/nav-test": { title: "Navigation & CTA Test Suite", breadcrumb: "Dev / QA" },
 };
 
-const SEARCHABLE_DEALS = [
-  { id: "deal-101", name: "Orion Cloud Migration", client: "TechCorp Inc.", score: 23, band: "Critical", value: 150000, stage: "Proposal Sent", owner: "Sarah Miller" },
-  { id: "deal-102", name: "Quantum Security Suite", client: "FinanceGo Ltd.", score: 31, band: "Critical", value: 280000, stage: "Negotiation", owner: "James Reynolds" },
-  { id: "deal-103", name: "Horizon Data Platform", client: "RetailMax", score: 35, band: "Critical", value: 95000, stage: "Qualification", owner: "Lisa Chen" },
-  { id: "deal-104", name: "Apex CRM Integration", client: "LogiPro Solutions", score: 62, band: "Moderate", value: 120000, stage: "Proposal Sent", owner: "Mike Torres" },
-  { id: "deal-105", name: "Crown Global Enterprise", client: "LogiPro Solutions", score: 92, band: "Healthy", value: 400000, stage: "Contract", owner: "Mike Torres" },
-  { id: "deal-106", name: "Nebula Analytics Engine", client: "HealthFirst Corp.", score: 44, band: "High", value: 210000, stage: "Discovery", owner: "Sarah Miller" },
-];
+import { getLocalDeals } from "./api";
 
 export const App: React.FC = () => {
   const location = useLocation();
@@ -103,6 +95,19 @@ export const App: React.FC = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedDeal, setSelectedDeal] = useState<DealData | null>(null);
+  const [allDeals, setAllDeals] = useState(getLocalDeals);
+
+  useEffect(() => {
+    const handleDealsUpdated = (e: any) => {
+      if (e.detail && Array.isArray(e.detail)) {
+        setAllDeals(e.detail);
+      } else {
+        setAllDeals(getLocalDeals());
+      }
+    };
+    window.addEventListener("dealsense:deals-updated", handleDealsUpdated);
+    return () => window.removeEventListener("dealsense:deals-updated", handleDealsUpdated);
+  }, []);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -118,7 +123,7 @@ export const App: React.FC = () => {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
-  const filteredSearchDeals = SEARCHABLE_DEALS.filter(
+  const filteredSearchDeals = allDeals.filter(
     (d) =>
       d.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       d.client.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -147,7 +152,6 @@ export const App: React.FC = () => {
 
   // Auth & Guest Mode Check
   const isAuthenticated = sessionStorage.getItem("dealsense_oauth_state") || localStorage.getItem("dealsense_guest_mode");
-  const isGuestMode = localStorage.getItem("dealsense_guest_mode") === "true";
 
   const isStandalonePage =
     location.pathname === "/" ||
@@ -162,8 +166,6 @@ export const App: React.FC = () => {
     location.pathname === "/agency-fleet" ||
     location.pathname === "/checkout" ||
     location.pathname === "/payment" ||
-    location.pathname === "/case-study" ||
-    location.pathname === "/portfolio" ||
     location.pathname === "/privacy" ||
     location.pathname === "/terms" ||
     location.pathname === "/compliance" ||
@@ -184,7 +186,7 @@ export const App: React.FC = () => {
     breadcrumb: "Dashboard",
   };
 
-  const handleSelectDealFromSearch = (deal: typeof SEARCHABLE_DEALS[0]) => {
+  const handleSelectDealFromSearch = (deal: any) => {
     setSelectedDeal({
       id: deal.id,
       name: deal.name,
@@ -194,10 +196,10 @@ export const App: React.FC = () => {
       value: deal.value,
       stage: deal.stage,
       owner: deal.owner,
-      closeDate: "Dec 15, 2026",
-      daysInStage: 18,
-      risks: ["Economic buyer silent for 14d", "Close date pushed 2x"],
-      recommendation: "Auto-trigger executive alignment sequence to CFO.",
+      closeDate: deal.closeDate || "Dec 15, 2026",
+      daysInStage: deal.daysInStage || 18,
+      risks: deal.risks?.map((r: any) => typeof r === "string" ? r : r.text) || ["Economic buyer silent for 14d", "Close date pushed 2x"],
+      recommendation: deal.recommendation || "Auto-trigger executive alignment sequence to CFO.",
     });
     setIsSearchOpen(false);
     setSearchQuery("");
@@ -245,7 +247,7 @@ export const App: React.FC = () => {
               <Route path="/app/upgrade" element={<AgencyFleet />} />
               <Route path="/app/action-queue" element={<HubSpotNativeActionQueue />} />
               <Route path="/app/playbooks" element={<HubSpotNativePlaybooks />} />
-              <Route path="/app/hygiene" element={<ProGate featureName="CRM Hygiene" description="Unlock AI-driven hygiene sweeps."><div style={{ height: "800px", background: "#ffffff", borderRadius: 8, border: "1px solid #dfe3eb" }}></div></ProGate>} />
+              <Route path="/app/hygiene" element={<CrmHygiene />} />
               <Route path="/app/*" element={<HubSpotNativePipeline />} />
             </Routes>
           </HubSpotNativeLayout>
@@ -253,8 +255,6 @@ export const App: React.FC = () => {
           <CheckoutPage />
         ) : isAgencyPage ? (
           <AgencyFleet />
-        ) : location.pathname === "/case-study" || location.pathname === "/portfolio" ? (
-          <CaseStudy />
         ) : location.pathname === "/privacy" ? (
           <PrivacyPolicy />
         ) : location.pathname === "/terms" ? (
@@ -307,31 +307,6 @@ export const App: React.FC = () => {
 
       {/* Main Content */}
       <main className="main-content" style={{ position: "relative" }}>
-        {/* Top Navbar */}
-        <div className="main-header" style={{ position: "relative" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "var(--sp-4)" }}>
-            <button className="mobile-menu-btn" onClick={() => setSidebarOpen(true)}>
-              <svg width={20} height={20} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
-                <line x1={3} y1={12} x2={21} y2={12} />
-                <line x1={3} y1={6} x2={21} y2={6} />
-                <line x1={3} y1={18} x2={21} y2={18} />
-              </svg>
-            </button>
-            <div className="page-breadcrumb">
-              {pageMeta.breadcrumb}
-              <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
-                <polyline points="9 18 15 12 9 6" />
-              </svg>
-              <span>{pageMeta.title}</span>
-            </div>
-            {isGuestMode && (
-              <div style={{ marginLeft: 16, background: "var(--warning-bg)", color: "var(--warning)", padding: "4px 8px", borderRadius: "var(--radius-sm)", fontSize: 12, fontWeight: 600, display: "flex", alignItems: "center", gap: 6 }}>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-                Guest View (Mock Data)
-              </div>
-            )}
-          </div>
-        </div>
 
         {/* Top Telemetry Loading Bar on Navigation */}
         <AnimatePresence>

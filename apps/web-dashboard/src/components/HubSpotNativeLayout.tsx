@@ -114,22 +114,22 @@ export const HubSpotNativeLayout: React.FC<{ children: React.ReactNode }> = ({ c
           )
         })}
 
-        <div style={{ marginLeft: "auto" }}>
-           <button 
-            onClick={() => navigate("/agency")} 
-            style={{ 
-              backgroundColor: "#ff7a59", 
-              color: "#ffffff", 
-              border: "none", 
-              borderRadius: 3, 
-              padding: "6px 14px", 
-              fontSize: 13, 
-              fontWeight: 600, 
-              cursor: "pointer",
-              boxShadow: "0 2px 4px rgba(255,122,89,0.3)"
-            }}>
-            ⭐ Upgrade to Enterprise Pro
-          </button>
+        <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 12 }}>
+          <span style={{ 
+            background: "rgba(0, 189, 165, 0.12)", 
+            color: "#00838f", 
+            border: "1px solid rgba(0, 189, 165, 0.3)", 
+            borderRadius: 3, 
+            padding: "4px 10px", 
+            fontSize: 12, 
+            fontWeight: 700,
+            display: "flex",
+            alignItems: "center",
+            gap: 6
+          }}>
+            <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#00bda5", display: "inline-block" }} />
+            Enterprise Suite Active
+          </span>
         </div>
       </div>
 

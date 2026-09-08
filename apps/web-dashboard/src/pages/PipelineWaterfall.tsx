@@ -1,9 +1,12 @@
 /**
  * DealSense — Pipeline Waterfall & Stage Velocity Bottleneck Engine.
+ * Premium Enterprise Edition.
  * Built for RevOps leaders and CROs to track pipeline inflows, slippages, stage stagnation, and velocity leaks.
  */
 
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { logAuditEvent } from "../api";
 
 interface WaterfallItem {
   category: string;
@@ -11,9 +14,12 @@ interface WaterfallItem {
   type: "start" | "add" | "subtract" | "end";
   count: number;
   description: string;
+  contributingAccounts: string[];
 }
 
 interface StageVelocity {
+  id: string;
+  stageNumber: number;
   stage: string;
   avgDays: number;
   benchmarkDays: number;
@@ -23,273 +29,742 @@ interface StageVelocity {
   revenueAtRisk: number;
   bottleneckSeverity: "Critical" | "Moderate" | "Optimal";
   recommendedAction: string;
+  keyBlocker: string;
 }
 
 const WATERFALL_DATA: WaterfallItem[] = [
-  { category: "Starting Pipeline (Nov 1)", amount: 2450000, type: "start", count: 24, description: "Pipeline brought forward into the month" },
-  { category: "+ Inbound & SDR Created", amount: 620000, type: "add", count: 8, description: "New qualified deals added this month" },
-  { category: "+ Stage Expansion", amount: 140000, type: "add", count: 3, description: "Upsell & seat additions on active proposals" },
-  { category: "− Closed Won Revenue", amount: -480000, type: "subtract", count: 4, description: "Successfully executed contracts" },
-  { category: "− Pushed / Slipped Close Dates", amount: -390000, type: "subtract", count: 5, description: "Deals pushed past current calendar month" },
-  { category: "− Closed Lost / Ghosted", amount: -210000, type: "subtract", count: 3, description: "Lost to competitor or budget freeze" },
-  { category: "Ending Active Pipeline", amount: 2130000, type: "end", count: 23, description: "Current active deals closing this quarter" },
+  {
+    category: "Starting Pipeline (Q3)",
+    amount: 18400000,
+    type: "start",
+    count: 18,
+    description: "Enterprise pipeline brought forward into the quarter",
+    contributingAccounts: ["Maersk Digital", "IKEA Retail", "Snowflake", "Twilio"],
+  },
+  {
+    category: "+ Inbound & SDR Created",
+    amount: 12400000,
+    type: "add",
+    count: 12,
+    description: "New qualified enterprise opportunities added",
+    contributingAccounts: ["Palantir Tech", "Klarna Bank", "Adyen Global", "CrowdStrike"],
+  },
+  {
+    category: "+ Scope Expansion & Upsell",
+    amount: 2450000,
+    type: "add",
+    count: 6,
+    description: "Seat expansions on active proposals and pilot upgrades",
+    contributingAccounts: ["Epic Health Systems", "SAP America", "Datadog"],
+  },
+  {
+    category: "− Closed Won Revenue",
+    amount: -4820000,
+    type: "subtract",
+    count: 5,
+    description: "Successfully executed contracts (Maersk, IKEA, Cloudflare)",
+    contributingAccounts: ["Maersk Digital Global", "IKEA Digital Retail", "Cloudflare EMEA"],
+  },
+  {
+    category: "− Pushed / Slipped Close Dates",
+    amount: -2650000,
+    type: "subtract",
+    count: 4,
+    description: "Deals pushed past current fiscal quarter target",
+    contributingAccounts: ["DHL Global Supply Chain", "CrowdStrike Global", "Twilio API"],
+  },
+  {
+    category: "− Closed Lost / Frozen",
+    amount: -1350000,
+    type: "subtract",
+    count: 2,
+    description: "Lost to competitor or frozen budget freeze",
+    contributingAccounts: ["Legacy FinTech RFP", "Regional Logistics Pilot"],
+  },
+  {
+    category: "Ending Active Pipeline",
+    amount: 28430000,
+    type: "end",
+    count: 25,
+    description: "Current active enterprise deals closing this quarter",
+    contributingAccounts: ["25 Active Enterprise Accounts Across 5 Stages"],
+  },
 ];
 
 const STAGE_VELOCITY_DATA: StageVelocity[] = [
   {
-    stage: "1. Discovery Call",
-    avgDays: 7.2,
-    benchmarkDays: 9.0,
-    conversionRate: 72,
+    id: "stage-1",
+    stageNumber: 1,
+    stage: "Appointment Scheduled (Discovery)",
+    avgDays: 6.2,
+    benchmarkDays: 8.0,
+    conversionRate: 74,
     benchmarkConversion: 65,
     stalledDeals: 1,
-    revenueAtRisk: 45000,
+    revenueAtRisk: 580000,
     bottleneckSeverity: "Optimal",
-    recommendedAction: "Pacing ahead of target. Maintain current SDR qualification criteria.",
+    keyBlocker: "Minor scheduling lag across EMEA reps",
+    recommendedAction: "Pacing ahead of target. Maintain current enterprise SDR qualification cadences.",
   },
   {
-    stage: "2. Technical Validation",
-    avgDays: 21.4,
-    benchmarkDays: 12.0,
-    conversionRate: 54,
-    benchmarkConversion: 62,
-    stalledDeals: 4,
-    revenueAtRisk: 380000,
-    bottleneckSeverity: "Critical",
-    recommendedAction: "Pre-seed standard Infosec & SOC2 packages to eliminate 9 days of security review delay.",
-  },
-  {
-    stage: "3. Proposal Sent",
-    avgDays: 18.6,
+    id: "stage-2",
+    stageNumber: 2,
+    stage: "Qualified to Buy (Qualification)",
+    avgDays: 14.8,
     benchmarkDays: 10.0,
-    conversionRate: 48,
+    conversionRate: 62,
+    benchmarkConversion: 68,
+    stalledDeals: 3,
+    revenueAtRisk: 1450000,
+    bottleneckSeverity: "Moderate",
+    keyBlocker: "Unassigned Economic Buyer budget authorization",
+    recommendedAction: "Mandate CFO/VP Economic Buyer engagement before issuing pricing quotes.",
+  },
+  {
+    id: "stage-3",
+    stageNumber: 3,
+    stage: "Presentation Scheduled (Proposal & Demo)",
+    avgDays: 22.4,
+    benchmarkDays: 12.0,
+    conversionRate: 46,
     benchmarkConversion: 58,
     stalledDeals: 5,
-    revenueAtRisk: 420000,
+    revenueAtRisk: 3780000,
     bottleneckSeverity: "Critical",
-    recommendedAction: "Enforce Mutual Action Plan (MAP) requirement before sending proposal pricing.",
+    keyBlocker: "Stalled customized demo sandbox queue & missing MAP",
+    recommendedAction: "Stalled demo queue: Enforce Mutual Action Plan (MAP) before delivering customized demo sandbox.",
   },
   {
-    stage: "4. Negotiation & Legal",
-    avgDays: 16.2,
-    benchmarkDays: 11.0,
+    id: "stage-4",
+    stageNumber: 4,
+    stage: "Decision Maker Bought-In (Negotiation)",
+    avgDays: 18.2,
+    benchmarkDays: 14.0,
     conversionRate: 68,
     benchmarkConversion: 75,
     stalledDeals: 3,
-    revenueAtRisk: 510000,
+    revenueAtRisk: 2850000,
     bottleneckSeverity: "Moderate",
-    recommendedAction: "Offer pre-approved fallback redline terms for cyber indemnification.",
+    keyBlocker: "InfoSec & SOC2 compliance legal redlines",
+    recommendedAction: "Pre-seed standard Infosec & SOC2 compliance packages to resolve 9 days of legal friction.",
   },
   {
-    stage: "5. Contract Ready",
-    avgDays: 4.1,
-    benchmarkDays: 5.0,
-    conversionRate: 91,
+    id: "stage-5",
+    stageNumber: 5,
+    stage: "Contract Sent (Closing)",
+    avgDays: 5.4,
+    benchmarkDays: 7.0,
+    conversionRate: 92,
     benchmarkConversion: 90,
-    stalledDeals: 0,
-    revenueAtRisk: 0,
+    stalledDeals: 1,
+    revenueAtRisk: 1650000,
     bottleneckSeverity: "Optimal",
-    recommendedAction: "DocuSign turnaround is healthy. Maintain automated reminder cadences.",
+    keyBlocker: "Awaiting DocuSign counter-signature",
+    recommendedAction: "DocuSign turnaround is healthy. Maintain automated CEO signature reminders.",
   },
 ];
 
 export const PipelineWaterfall: React.FC = () => {
-  const [selectedTimeframe, setSelectedTimeframe] = useState<"This Month" | "This Quarter" | "Year to Date">("This Month");
+  const [selectedTimeframe, setSelectedTimeframe] = useState<"This Month" | "This Quarter" | "Year to Date">("This Quarter");
   const [activeStageFilter, setActiveStageFilter] = useState<string>("All");
+  const [hoveredStep, setHoveredStep] = useState<number | null>(null);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [isSimulating, setIsSimulating] = useState(false);
 
-  const totalSlippedRevenue = Math.abs(WATERFALL_DATA.find((w) => w.category.includes("Pushed"))?.amount || 0);
-  const totalCreatedRevenue = WATERFALL_DATA.find((w) => w.category.includes("Created"))?.amount || 0;
-  const criticalBottleneckRevenue = STAGE_VELOCITY_DATA.filter((s) => s.bottleneckSeverity === "Critical").reduce((sum, s) => sum + s.revenueAtRisk, 0);
+  const showToast = (msg: string) => {
+    setToastMessage(msg);
+    setTimeout(() => setToastMessage(null), 3500);
+  };
 
-  const filteredStages = activeStageFilter === "All" ? STAGE_VELOCITY_DATA : STAGE_VELOCITY_DATA.filter((s) => s.bottleneckSeverity === activeStageFilter);
+  const totalSlippedRevenue = Math.abs(
+    WATERFALL_DATA.find((w) => w.category.includes("Pushed"))?.amount || 0
+  );
+  const totalCreatedRevenue =
+    WATERFALL_DATA.find((w) => w.category.includes("Created"))?.amount || 0;
+  const criticalBottleneckRevenue = STAGE_VELOCITY_DATA.filter(
+    (s) => s.bottleneckSeverity === "Critical"
+  ).reduce((sum, s) => sum + s.revenueAtRisk, 0);
+
+  const filteredStages = useMemo(() => {
+    if (activeStageFilter === "All") return STAGE_VELOCITY_DATA;
+    return STAGE_VELOCITY_DATA.filter((s) => s.bottleneckSeverity === activeStageFilter);
+  }, [activeStageFilter]);
+
+  const formatCurrency = (val: number) => {
+    const absVal = Math.abs(val);
+    if (absVal >= 1000000) return `$${(absVal / 1000000).toFixed(2)}M`;
+    if (absVal >= 1000) return `$${(absVal / 1000).toFixed(0)}K`;
+    return `$${absVal}`;
+  };
+
+  const handleRunSimulation = () => {
+    setIsSimulating(true);
+    setTimeout(() => {
+      setIsSimulating(false);
+      showToast("⚡ Velocity Simulation complete: Accelerating Proposal stage by 8 days recovers +$1.85M in Q3 closed revenue!");
+      logAuditEvent({
+        actor: "Peash Rudra",
+        role: "VP Revenue Operations",
+        actionType: "Pipeline Velocity Simulation",
+        targetObject: "Funnel Velocity Engine",
+        tier: "Tier 1 (Continuous Telemetry)",
+        status: "Success",
+        details: "Simulated 8-day acceleration in Stage 3 (Proposal). Projected ARR impact: +$1.85M recovery.",
+      });
+    }, 600);
+  };
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "var(--sp-6)" }}>
-      {/* ── Header Card ───────────────────────────────────────────────── */}
+    <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+      {/* ── Toast Notification ───────────────────────────────────────── */}
+      <AnimatePresence>
+        {toastMessage && (
+          <motion.div
+            initial={{ opacity: 0, y: -20, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -20, scale: 0.95 }}
+            style={{
+              position: "fixed",
+              top: 24,
+              right: 28,
+              zIndex: 99999,
+              background: "#1e293b",
+              color: "#ffffff",
+              padding: "12px 20px",
+              borderRadius: "6px",
+              boxShadow: "0 12px 32px rgba(0,0,0,0.28)",
+              border: "1px solid #ff5c35",
+              fontWeight: 600,
+              fontSize: "13px",
+            }}
+          >
+            {toastMessage}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* ── 1. Enterprise Header Card ─────────────────────────────────── */}
+      <div className="page-header-card">
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 12 }}>
+          <div>
+            <div className="page-header-badge-row">
+              <span className="page-header-badge" style={{ background: "rgba(255, 92, 53, 0.08)", color: "#ff5c35", borderColor: "rgba(255, 92, 53, 0.25)" }}>
+                ● REVOPS PIPELINE TELEMETRY
+              </span>
+            </div>
+            <h2 className="page-header-title">
+              Pipeline Waterfall &amp; Stage Velocity Bottleneck Diagnostic
+            </h2>
+            <p className="page-header-desc">
+              Track pipeline creation, stage duration decay, and deal slippage across every stage of your sales funnel. Surface exact bottlenecks before they derail quarterly revenue targets.
+            </p>
+          </div>
+
+          <div className="page-header-actions">
+            {/* Timeframe Selector */}
+            <div style={{ display: "flex", gap: 3, background: "var(--hs-surface-hover)", padding: 3, borderRadius: "var(--radius-sm)", border: "1px solid var(--hs-border-dark)" }}>
+              {(["This Month", "This Quarter", "Year to Date"] as const).map((t) => (
+                <button
+                  key={t}
+                  onClick={() => setSelectedTimeframe(t)}
+                  style={{
+                    padding: "4px 10px",
+                    borderRadius: "4px",
+                    border: "none",
+                    background: selectedTimeframe === t ? "#ff5c35" : "transparent",
+                    color: selectedTimeframe === t ? "#ffffff" : "var(--hs-text)",
+                    fontSize: "11.5px",
+                    fontWeight: selectedTimeframe === t ? 700 : 500,
+                    cursor: "pointer",
+                    transition: "all 0.15s ease",
+                  }}
+                >
+                  {t}
+                </button>
+              ))}
+            </div>
+
+            <button
+              onClick={() => {
+                showToast("📥 Exported Pipeline Waterfall & Stage Velocity Model (CSV/PDF)!");
+                logAuditEvent({
+                  actor: "Peash Rudra",
+                  role: "VP Sales Ops",
+                  actionType: "Waterfall Export",
+                  targetObject: "Pipeline Waterfall Model",
+                  tier: "Tier 1 (Continuous Telemetry)",
+                  status: "Success",
+                  details: `Exported pipeline waterfall model for ${selectedTimeframe}.`,
+                });
+              }}
+              style={{
+                background: "#ffffff",
+                color: "var(--hs-primary)",
+                border: "1px solid var(--hs-border-dark)",
+                padding: "8px 14px",
+                borderRadius: "var(--radius-sm)",
+                fontSize: "12.5px",
+                fontWeight: 600,
+                cursor: "pointer",
+                boxShadow: "var(--shadow-xs)",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 6,
+                transition: "all 0.15s ease",
+              }}
+            >
+              <span>📥 Export Forecast</span>
+            </button>
+
+            <button
+              onClick={handleRunSimulation}
+              disabled={isSimulating}
+              style={{
+                background: "#ff5c35",
+                color: "#ffffff",
+                border: "none",
+                padding: "8px 16px",
+                borderRadius: "var(--radius-sm)",
+                fontSize: "12.5px",
+                fontWeight: 700,
+                cursor: "pointer",
+                boxShadow: "0 2px 8px rgba(255, 92, 53, 0.25)",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 6,
+                transition: "all 0.15s ease",
+              }}
+            >
+              <span>{isSimulating ? "⏳ Simulating..." : "⚡ Run Simulation"}</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* ── 2. Enterprise Telemetry KPI Grid ──────────────────────────── */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 14 }}>
+        <div
+          className="kpi-card"
+          style={{
+            background: "#ffffff",
+            padding: "16px 18px",
+            borderRadius: "8px",
+            border: "1px solid var(--hs-border-dark)",
+            borderTop: "3px solid #007a70",
+            boxShadow: "var(--shadow-sm)",
+          }}
+        >
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
+            <div style={{ fontSize: "11px", fontWeight: 700, color: "var(--hs-text-muted)", textTransform: "uppercase", letterSpacing: "0.04em" }}>
+              New Pipeline Created
+            </div>
+            <span style={{ fontSize: "10px", fontWeight: 800, background: "rgba(0, 189, 165, 0.12)", color: "#007a70", padding: "2px 6px", borderRadius: 4 }}>
+              +34% INFLOW
+            </span>
+          </div>
+          <div style={{ fontSize: "24px", fontWeight: 800, color: "#007a70", fontFamily: "var(--font-sans)", letterSpacing: "-0.02em" }}>
+            +{formatCurrency(totalCreatedRevenue)}
+          </div>
+          <div style={{ fontSize: "11.5px", color: "var(--hs-text-muted)", marginTop: 4 }}>
+            8 new qualified enterprise opportunities
+          </div>
+        </div>
+
+        <div
+          className="kpi-card"
+          style={{
+            background: "#ffffff",
+            padding: "16px 18px",
+            borderRadius: "8px",
+            border: "1px solid var(--hs-border-dark)",
+            borderTop: "3px solid #d93843",
+            boxShadow: "var(--shadow-sm)",
+          }}
+        >
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
+            <div style={{ fontSize: "11px", fontWeight: 700, color: "var(--hs-text-muted)", textTransform: "uppercase", letterSpacing: "0.04em" }}>
+              Pipeline Slipped / Pushed
+            </div>
+            <span style={{ fontSize: "10px", fontWeight: 800, background: "rgba(217, 56, 67, 0.1)", color: "#d93843", padding: "2px 6px", borderRadius: 4 }}>
+              LEAK DETECTED
+            </span>
+          </div>
+          <div style={{ fontSize: "24px", fontWeight: 800, color: "#d93843", fontFamily: "var(--font-sans)", letterSpacing: "-0.02em" }}>
+            −{formatCurrency(totalSlippedRevenue)}
+          </div>
+          <div style={{ fontSize: "11.5px", color: "#d93843", marginTop: 4, fontWeight: 600 }}>
+            ▲ 5 deals pushed past current quarter target
+          </div>
+        </div>
+
+        <div
+          className="kpi-card"
+          style={{
+            background: "#ffffff",
+            padding: "16px 18px",
+            borderRadius: "8px",
+            border: "1px solid var(--hs-border-dark)",
+            borderTop: "3px solid #ff5c35",
+            boxShadow: "var(--shadow-sm)",
+          }}
+        >
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
+            <div style={{ fontSize: "11px", fontWeight: 700, color: "var(--hs-text-muted)", textTransform: "uppercase", letterSpacing: "0.04em" }}>
+              Bottleneck Revenue Exposure
+            </div>
+            <span style={{ fontSize: "10px", fontWeight: 800, background: "rgba(255, 92, 53, 0.1)", color: "#ff5c35", padding: "2px 6px", borderRadius: 4 }}>
+              5 DEALS AT RISK
+            </span>
+          </div>
+          <div style={{ fontSize: "24px", fontWeight: 800, color: "#ff5c35", fontFamily: "var(--font-sans)", letterSpacing: "-0.02em" }}>
+            {formatCurrency(criticalBottleneckRevenue)}
+          </div>
+          <div style={{ fontSize: "11.5px", color: "var(--hs-text-muted)", marginTop: 4 }}>
+            Stalled in Presentation &amp; Proposal stage
+          </div>
+        </div>
+
+        <div
+          className="kpi-card"
+          style={{
+            background: "#ffffff",
+            padding: "16px 18px",
+            borderRadius: "8px",
+            border: "1px solid var(--hs-border-dark)",
+            borderTop: "3px solid #2d3e50",
+            boxShadow: "var(--shadow-sm)",
+          }}
+        >
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
+            <div style={{ fontSize: "11px", fontWeight: 700, color: "var(--hs-text-muted)", textTransform: "uppercase", letterSpacing: "0.04em" }}>
+              Average Sales Cycle
+            </div>
+            <span style={{ fontSize: "10px", fontWeight: 800, background: "rgba(45, 62, 80, 0.08)", color: "#2d3e50", padding: "2px 6px", borderRadius: 4 }}>
+              +9.2D DELAY
+            </span>
+          </div>
+          <div style={{ fontSize: "24px", fontWeight: 800, color: "#2d3e50", fontFamily: "var(--font-sans)", letterSpacing: "-0.02em" }}>
+            67.5 Days
+          </div>
+          <div style={{ fontSize: "11.5px", color: "var(--hs-text-muted)", marginTop: 4 }}>
+            Benchmark target is 58.3 days
+          </div>
+        </div>
+      </div>
+
+      {/* ── 3. Pipeline Movement Waterfall Financial Bridge ───────────── */}
       <div
         className="card"
         style={{
           background: "#ffffff",
-          padding: "20px 24px",
+          borderRadius: "8px",
           border: "1px solid var(--hs-border-dark)",
-          borderTop: "3px solid var(--hs-primary)",
-          marginBottom: "var(--sp-5)",
           boxShadow: "var(--shadow-sm)",
+          margin: 0,
+          overflow: "hidden",
         }}
       >
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 16 }}>
+        <div
+          style={{
+            padding: "16px 20px",
+            borderBottom: "1px solid var(--hs-border-dark)",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            flexWrap: "wrap",
+            gap: 12,
+          }}
+        >
           <div>
-            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
-              <span className="badge" style={{ background: "rgba(255, 122, 89, 0.1)", color: "#ff7a59", border: "1px solid #00a4bd", fontWeight: 700 }}>
-                ● REVOPS PIPELINE TELEMETRY
+            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <h3 style={{ fontSize: "15px", fontWeight: 800, color: "var(--hs-heading)", margin: 0 }}>
+                Pipeline Movement Waterfall Bridge ({selectedTimeframe})
+              </h3>
+              <span style={{ fontSize: "11px", fontWeight: 700, background: "rgba(0, 164, 189, 0.1)", color: "#007a8c", padding: "2px 8px", borderRadius: 10 }}>
+                7 Movement Drivers
               </span>
-              <span style={{ fontSize: "12px", color: "var(--hs-text-muted)" }}>HubSpot Webhook Stream Ingestion</span>
             </div>
-            <h2 style={{ fontSize: "24px", fontWeight: 800, color: "var(--hs-heading)", margin: "4px 0 6px" }}>
-              Pipeline Waterfall & Stage Velocity Bottleneck Diagnostic
-            </h2>
-            <p style={{ fontSize: "13.5px", color: "var(--hs-text)", margin: 0, maxWidth: 680 }}>
-              Track pipeline creation, stage duration decay, and deal slippage across every stage of your sales funnel. Surface exact bottlenecks before they derail quarterly revenue targets.
-            </p>
+            <div style={{ fontSize: "12px", color: "var(--hs-text-muted)", marginTop: 2 }}>
+              Detailed inflow additions, closed conversions, slippage leaks, and ending balance
+            </div>
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 4 }}>
-            <button
+
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <span style={{ fontSize: "12px", color: "var(--hs-text-muted)" }}>Active Baseline:</span>
+            <span
               style={{
-                padding: "6px 14px",
-                background: "#ffffff",
-                color: "var(--hs-text)",
+                fontSize: "14px",
+                fontWeight: 800,
+                color: "#2d3e50",
+                fontFamily: "var(--font-mono)",
+                background: "var(--hs-surface)",
+                padding: "4px 12px",
+                borderRadius: "6px",
                 border: "1px solid var(--hs-border-dark)",
-                borderRadius: "3px",
-                fontSize: "12px",
-                fontWeight: 600,
-                cursor: "pointer",
-                boxShadow: "0 1px 2px rgba(0,0,0,0.05)",
-                transition: "all 0.2s"
               }}
             >
-              Export Forecast
-            </button>
-            <button
-              style={{
-                padding: "6px 14px",
-                background: "#ff5c35",
-                color: "#ffffff",
-                border: "none",
-                borderRadius: "3px",
-                fontSize: "12px",
-                fontWeight: 600,
-                cursor: "pointer",
-                boxShadow: "0 1px 2px rgba(0,0,0,0.05)",
-                transition: "all 0.2s"
-              }}
-            >
-              Run Simulation
-            </button>
-          </div>
-
-          <div style={{ display: "flex", gap: 8, background: "rgba(255, 255, 255, 0.1)", padding: 4, borderRadius: "var(--radius-sm)" }}>
-            {(["This Month", "This Quarter", "Year to Date"] as const).map((t) => (
-              <button
-                key={t}
-                onClick={() => setSelectedTimeframe(t)}
-                style={{
-                  padding: "6px 12px",
-                  borderRadius: "var(--radius-sm)",
-                  border: "none",
-                  background: selectedTimeframe === t ? "#ff5c35" : "transparent",
-                  color: "#ffffff",
-                  fontSize: "12px",
-                  fontWeight: selectedTimeframe === t ? 700 : 500,
-                  cursor: "pointer",
-                }}
-              >
-                {t}
-              </button>
-            ))}
+              $28.43M Active Pipeline
+            </span>
           </div>
         </div>
-      </div>
 
-      {/* ── KPI Row ───────────────────────────────────────────────────── */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16 }}>
-        <div className="kpi-card" style={{ borderTopColor: "var(--risk-healthy)" }}>
-          <div className="kpi-title">New Pipeline Created</div>
-          <div className="kpi-value" style={{ color: "var(--risk-healthy)" }}>
-            +${(totalCreatedRevenue / 1000).toFixed(0)}K
+        {/* Visual Waterfall Bridge Flow Bars */}
+        <div style={{ padding: "20px 20px 10px", background: "#fbfcfe", borderBottom: "1px solid var(--hs-border)" }}>
+          <div style={{ fontSize: "11px", fontWeight: 700, color: "var(--hs-text-muted)", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 12 }}>
+            Financial Waterfall Bridge Flow
           </div>
-          <div className="kpi-subtitle">8 new qualified opportunities</div>
-        </div>
 
-        <div className="kpi-card" style={{ borderTopColor: "var(--danger)" }}>
-          <div className="kpi-title">Pipeline Slipped / Pushed</div>
-          <div className="kpi-value" style={{ color: "var(--danger)" }}>
-            −${(totalSlippedRevenue / 1000).toFixed(0)}K
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(130px, 1fr))",
+              gap: 8,
+              alignItems: "end",
+              minHeight: 140,
+            }}
+          >
+            {WATERFALL_DATA.map((item, idx) => {
+              const isAdd = item.type === "add";
+              const isSub = item.type === "subtract";
+              const isStart = item.type === "start";
+              const isEnd = item.type === "end";
+
+              const barColor = isAdd
+                ? "#00a38d"
+                : isSub
+                ? item.category.includes("Won")
+                  ? "#00a4bd"
+                  : "#d93843"
+                : isStart
+                ? "#516f90"
+                : "#2d3e50";
+
+              // Scale height relative to max value ($28.43M)
+              const heightPercent = Math.max(24, Math.min(100, (Math.abs(item.amount) / 28430000) * 100));
+
+              return (
+                <div
+                  key={idx}
+                  onMouseEnter={() => setHoveredStep(idx)}
+                  onMouseLeave={() => setHoveredStep(null)}
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    cursor: "pointer",
+                  }}
+                >
+                  {/* Amount Chip */}
+                  <div
+                    style={{
+                      fontSize: "11px",
+                      fontWeight: 800,
+                      fontFamily: "var(--font-mono)",
+                      color: barColor,
+                      marginBottom: 6,
+                    }}
+                  >
+                    {item.amount > 0 && !isStart && !isEnd ? "+" : ""}
+                    {formatCurrency(item.amount)}
+                  </div>
+
+                  {/* Visual Step Pillar Bar */}
+                  <motion.div
+                    initial={{ height: 0 }}
+                    animate={{ height: `${heightPercent}px` }}
+                    transition={{ duration: 0.4, delay: idx * 0.05 }}
+                    style={{
+                      width: "85%",
+                      background: barColor,
+                      borderRadius: "4px 4px 0 0",
+                      boxShadow: hoveredStep === idx ? `0 4px 12px ${barColor}50` : "none",
+                      transform: hoveredStep === idx ? "scaleY(1.04)" : "scaleY(1)",
+                      transition: "transform 0.15s ease",
+                    }}
+                  />
+
+                  {/* Step Label */}
+                  <div
+                    style={{
+                      fontSize: "10.5px",
+                      fontWeight: 700,
+                      color: hoveredStep === idx ? "var(--hs-primary)" : "var(--hs-text)",
+                      textAlign: "center",
+                      marginTop: 8,
+                      lineHeight: 1.25,
+                    }}
+                  >
+                    {item.category.split(" ")[0]} {item.category.split(" ")[1] || ""}
+                  </div>
+                </div>
+              );
+            })}
           </div>
-          <div className="kpi-subtitle">5 deals pushed past current month</div>
         </div>
 
-        <div className="kpi-card" style={{ borderTopColor: "#ff5c35" }}>
-          <div className="kpi-title">Bottleneck Revenue Exposure</div>
-          <div className="kpi-value" style={{ color: "#ff5c35" }}>
-            ${(criticalBottleneckRevenue / 1000).toFixed(0)}K
-          </div>
-          <div className="kpi-subtitle">Stalled in Tech Eval & Proposal</div>
-        </div>
-
-        <div className="kpi-card" style={{ borderTopColor: "var(--hs-primary)" }}>
-          <div className="kpi-title">Average Sales Cycle</div>
-          <div className="kpi-value">67.5 Days</div>
-          <div className="kpi-subtitle">+9.2 days above target benchmark</div>
-        </div>
-      </div>
-
-      {/* ── Pipeline Waterfall Breakdown ──────────────────────────────── */}
-      <div className="card">
-        <div className="card-header">
-          <div>
-            <div className="card-title">Pipeline Movement Waterfall ({selectedTimeframe})</div>
-            <div className="card-subtitle">Detailed inflow, outflow, and net pipeline velocity dynamics</div>
-          </div>
-          <span className="badge" style={{ background: "var(--hs-surface)", color: "var(--hs-primary)", fontWeight: 700 }}>
-            $2.13M Active Pipeline
-          </span>
-        </div>
-        <div className="card-body" style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+        {/* Detailed Waterfall Ledger Rows */}
+        <div style={{ padding: "16px 20px", display: "flex", flexDirection: "column", gap: 8 }}>
           {WATERFALL_DATA.map((item, idx) => {
             const isAdd = item.type === "add";
             const isSub = item.type === "subtract";
-            const isTotal = item.type === "start" || item.type === "end";
-            const color = isAdd ? "var(--risk-healthy)" : isSub ? "var(--danger)" : "var(--hs-primary)";
+            const isStart = item.type === "start";
+            const isEnd = item.type === "end";
+            const isTotal = isStart || isEnd;
+
+            const tagColor = isAdd
+              ? { bg: "rgba(0, 189, 165, 0.1)", text: "#007a70", border: "rgba(0, 189, 165, 0.3)" }
+              : isSub
+              ? item.category.includes("Won")
+                ? { bg: "rgba(0, 164, 189, 0.1)", text: "#007a8c", border: "rgba(0, 164, 189, 0.3)" }
+                : { bg: "rgba(217, 56, 67, 0.1)", text: "#d93843", border: "rgba(217, 56, 67, 0.3)" }
+              : { bg: "rgba(45, 62, 80, 0.08)", text: "#2d3e50", border: "rgba(45, 62, 80, 0.25)" };
+
+            const tagLabel = isStart
+              ? "STARTING BASE"
+              : isEnd
+              ? "ENDING BALANCE"
+              : isAdd
+              ? "+ INFLOW"
+              : "- OUTFLOW";
 
             return (
-              <div
+              <motion.div
                 key={idx}
+                whileHover={{ scale: 1.005 }}
                 style={{
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
                   padding: "12px 16px",
-                  borderRadius: "var(--radius-sm)",
+                  borderRadius: "6px",
                   background: isTotal ? "var(--hs-surface)" : "#ffffff",
                   border: isTotal ? "1.5px solid var(--hs-border-dark)" : "1px solid var(--hs-border)",
-                  borderLeft: `4px solid ${color}`,
+                  borderLeft: `4px solid ${tagColor.text}`,
+                  flexWrap: "wrap",
+                  gap: 10,
+                  transition: "all 0.15s ease",
                 }}
               >
-                <div>
-                  <div style={{ fontSize: "13.5px", fontWeight: 700, color: "var(--hs-primary)" }}>
-                    {item.category}
+                <div style={{ flex: 1, minWidth: 260 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                    <span
+                      style={{
+                        fontSize: "9.5px",
+                        fontWeight: 800,
+                        padding: "2px 6px",
+                        borderRadius: 4,
+                        background: tagColor.bg,
+                        color: tagColor.text,
+                        border: `1px solid ${tagColor.border}`,
+                        letterSpacing: "0.04em",
+                      }}
+                    >
+                      {tagLabel}
+                    </span>
+                    <span style={{ fontSize: "13.5px", fontWeight: 800, color: "var(--hs-primary)" }}>
+                      {item.category}
+                    </span>
                   </div>
-                  <div style={{ fontSize: "11.5px", color: "var(--hs-text-muted)" }}>
-                    {item.description} · {item.count} Deals
+                  <div style={{ fontSize: "11.5px", color: "var(--hs-text-muted)", marginTop: 3 }}>
+                    {item.description} · <strong style={{ color: "var(--hs-text)" }}>{item.count} Deals</strong>
                   </div>
                 </div>
 
-                <div style={{ textAlign: "right" }}>
-                  <div style={{ fontSize: "15px", fontWeight: 800, color }}>
-                    {item.amount > 0 && item.type !== "start" && item.type !== "end" ? "+" : ""}
-                    ${(Math.abs(item.amount) / 1000).toFixed(0)}K
+                <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+                  {/* Contributing Accounts Pills */}
+                  <div style={{ display: "flex", gap: 4 }}>
+                    {item.contributingAccounts.slice(0, 2).map((acc, aIdx) => (
+                      <span
+                        key={aIdx}
+                        style={{
+                          fontSize: "10.5px",
+                          color: "var(--hs-text-muted)",
+                          background: "#f1f4f8",
+                          padding: "2px 8px",
+                          borderRadius: "4px",
+                          border: "1px solid var(--hs-border)",
+                        }}
+                      >
+                        {acc}
+                      </span>
+                    ))}
+                  </div>
+
+                  {/* Formatted Amount */}
+                  <div style={{ textAlign: "right", minWidth: 100 }}>
+                    <div
+                      style={{
+                        fontSize: "16px",
+                        fontWeight: 800,
+                        color: tagColor.text,
+                        fontFamily: "var(--font-mono)",
+                        letterSpacing: "-0.01em",
+                      }}
+                    >
+                      {item.amount > 0 && !isStart && !isEnd ? "+" : ""}
+                      {formatCurrency(item.amount)}
+                    </div>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             );
           })}
         </div>
       </div>
 
-      {/* ── Stage Velocity & Bottleneck Diagnostic ────────────────────── */}
-      <div className="card">
-        <div className="card-header">
+      {/* ── 4. Stage Velocity & Bottleneck Diagnostic ─────────────────── */}
+      <div
+        className="card"
+        style={{
+          background: "#ffffff",
+          borderRadius: "8px",
+          border: "1px solid var(--hs-border-dark)",
+          boxShadow: "var(--shadow-sm)",
+          margin: 0,
+          overflow: "hidden",
+        }}
+      >
+        <div
+          style={{
+            padding: "16px 20px",
+            borderBottom: "1px solid var(--hs-border-dark)",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            flexWrap: "wrap",
+            gap: 12,
+          }}
+        >
           <div>
-            <div className="card-title">Stage Velocity & Funnel Duration Bottlenecks</div>
-            <div className="card-subtitle">Comparing actual days in stage against historical benchmarks</div>
+            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <h3 style={{ fontSize: "15px", fontWeight: 800, color: "var(--hs-heading)", margin: 0 }}>
+                Stage Velocity &amp; Funnel Duration Bottlenecks
+              </h3>
+              <span style={{ fontSize: "11px", color: "var(--hs-text-muted)", background: "var(--hs-surface)", padding: "2px 8px", borderRadius: 10, border: "1px solid var(--hs-border)" }}>
+                Target Benchmark vs Actual Duration
+              </span>
+            </div>
+            <div style={{ fontSize: "12px", color: "var(--hs-text-muted)", marginTop: 2 }}>
+              Comparing average days in stage against historical benchmarks with prescriptive RevOps remedies
+            </div>
           </div>
-          <div style={{ display: "flex", gap: 6 }}>
+
+          <div style={{ display: "flex", gap: 4 }}>
             {(["All", "Critical", "Moderate", "Optimal"] as const).map((f) => (
               <button
                 key={f}
                 onClick={() => setActiveStageFilter(f)}
-                className={`btn ${activeStageFilter === f ? "btn-primary" : "btn-secondary"} btn-sm`}
-                style={{ fontSize: "11px", padding: "3px 8px" }}
+                style={{
+                  padding: "4px 10px",
+                  borderRadius: "4px",
+                  border: activeStageFilter === f ? "none" : "1px solid var(--hs-border-dark)",
+                  background: activeStageFilter === f ? "#ff5c35" : "#ffffff",
+                  color: activeStageFilter === f ? "#ffffff" : "var(--hs-text)",
+                  fontSize: "11.5px",
+                  fontWeight: activeStageFilter === f ? 700 : 500,
+                  cursor: "pointer",
+                  transition: "all 0.15s ease",
+                }}
               >
                 {f}
               </button>
@@ -297,79 +772,206 @@ export const PipelineWaterfall: React.FC = () => {
           </div>
         </div>
 
-        <div className="card-body">
-          <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-            {filteredStages.map((stage) => {
-              const isCrit = stage.bottleneckSeverity === "Critical";
-              const isMod = stage.bottleneckSeverity === "Moderate";
-              const badgeBg = isCrit ? "var(--risk-critical-bg)" : isMod ? "var(--risk-high-bg)" : "var(--risk-healthy-bg)";
-              const badgeColor = isCrit ? "var(--danger)" : isMod ? "var(--warning)" : "var(--risk-healthy)";
+        {/* Stage List Cards */}
+        <div style={{ padding: "16px 20px", display: "flex", flexDirection: "column", gap: 12 }}>
+          {filteredStages.map((stage) => {
+            const isCrit = stage.bottleneckSeverity === "Critical";
+            const isMod = stage.bottleneckSeverity === "Moderate";
 
-              return (
-                <div
-                  key={stage.stage}
-                  style={{
-                    padding: "16px 18px",
-                    borderRadius: "var(--radius-md)",
-                    border: "1px solid var(--hs-border-dark)",
-                    background: isCrit ? "rgba(201, 42, 42, 0.02)" : "#ffffff",
-                  }}
-                >
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 10, marginBottom: 10 }}>
-                    <div>
-                      <div style={{ fontSize: "14.5px", fontWeight: 800, color: "var(--hs-primary)" }}>
+            const badgeBg = isCrit
+              ? "rgba(217, 56, 67, 0.1)"
+              : isMod
+              ? "rgba(255, 153, 0, 0.12)"
+              : "rgba(0, 189, 165, 0.12)";
+            const badgeColor = isCrit
+              ? "#d93843"
+              : isMod
+              ? "#b76e00"
+              : "#007a70";
+            const barFill = isCrit
+              ? "#d93843"
+              : isMod
+              ? "#ff9900"
+              : "#00a38d";
+
+            const daysDiff = (stage.avgDays - stage.benchmarkDays).toFixed(1);
+            const isSlow = stage.avgDays > stage.benchmarkDays;
+
+            return (
+              <motion.div
+                key={stage.id}
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                style={{
+                  padding: "16px 18px",
+                  borderRadius: "8px",
+                  border: isCrit ? "1.5px solid rgba(217, 56, 67, 0.35)" : "1px solid var(--hs-border-dark)",
+                  background: isCrit ? "#fff9f8" : "#ffffff",
+                  boxShadow: "0 1px 3px rgba(0, 0, 0, 0.02)",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 12,
+                }}
+              >
+                {/* Header Row */}
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 10 }}>
+                  <div>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                      <span
+                        style={{
+                          width: 22,
+                          height: 22,
+                          borderRadius: "50%",
+                          background: "#2d3e50",
+                          color: "#ffffff",
+                          fontSize: "11px",
+                          fontWeight: 800,
+                          display: "inline-flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                      >
+                        {stage.stageNumber}
+                      </span>
+                      <span style={{ fontSize: "14.5px", fontWeight: 800, color: "var(--hs-primary)" }}>
                         {stage.stage}
-                      </div>
-                      <div style={{ fontSize: "12px", color: "var(--hs-text-muted)", marginTop: 2 }}>
-                        Conversion: <strong>{stage.conversionRate}%</strong> (Benchmark: {stage.benchmarkConversion}%)
-                      </div>
+                      </span>
                     </div>
 
-                    <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                      <div style={{ textAlign: "right" }}>
-                        <div style={{ fontSize: "13px", fontWeight: 700, color: isCrit ? "var(--danger)" : "var(--hs-primary)" }}>
-                          {stage.avgDays} Days Avg
-                        </div>
-                        <div style={{ fontSize: "11px", color: "var(--hs-text-muted)" }}>
-                          Target: {stage.benchmarkDays}d ({stage.avgDays > stage.benchmarkDays ? `+${(stage.avgDays - stage.benchmarkDays).toFixed(1)}d slow` : "On pace"})
-                        </div>
-                      </div>
-
-                      <span className="badge" style={{ background: badgeBg, color: badgeColor, fontWeight: 700, fontSize: "10.5px" }}>
-                        {stage.bottleneckSeverity}
+                    <div style={{ fontSize: "12px", color: "var(--hs-text-muted)", marginTop: 4, display: "flex", alignItems: "center", gap: 6 }}>
+                      <span>Conversion Rate: <strong style={{ color: "var(--hs-heading)" }}>{stage.conversionRate}%</strong></span>
+                      <span>•</span>
+                      <span>Target Benchmark: {stage.benchmarkConversion}%</span>
+                      <span
+                        style={{
+                          fontWeight: 700,
+                          color: stage.conversionRate >= stage.benchmarkConversion ? "#007a70" : "#d93843",
+                        }}
+                      >
+                        ({stage.conversionRate >= stage.benchmarkConversion ? "+" : ""}
+                        {stage.conversionRate - stage.benchmarkConversion}pts)
                       </span>
                     </div>
                   </div>
 
-                  {/* Visual Duration Comparison Bar */}
-                  <div style={{ marginBottom: 10 }}>
-                    <div style={{ height: 6, width: "100%", background: "var(--hs-surface)", borderRadius: 3, overflow: "hidden", position: "relative" }}>
-                      <div
-                        style={{
-                          height: "100%",
-                          width: `${Math.min(100, (stage.avgDays / 25) * 100)}%`,
-                          background: isCrit ? "var(--danger)" : isMod ? "var(--warning)" : "var(--risk-healthy)",
-                          borderRadius: 3,
-                        }}
-                      />
+                  <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                    <div style={{ textAlign: "right" }}>
+                      <div style={{ fontSize: "14px", fontWeight: 800, color: isCrit ? "#d93843" : "var(--hs-primary)", fontFamily: "var(--font-mono)" }}>
+                        {stage.avgDays} Days Avg
+                      </div>
+                      <div style={{ fontSize: "11px", color: "var(--hs-text-muted)" }}>
+                        Target: {stage.benchmarkDays}d (
+                        <span style={{ fontWeight: 700, color: isSlow ? "#d93843" : "#007a70" }}>
+                          {isSlow ? `+${daysDiff}d slow ⚠️` : "On pace ✓"}
+                        </span>
+                        )
+                      </div>
                     </div>
+
+                    <span
+                      style={{
+                        padding: "3px 8px",
+                        borderRadius: "12px",
+                        background: badgeBg,
+                        color: badgeColor,
+                        fontWeight: 800,
+                        fontSize: "11px",
+                        letterSpacing: "0.02em",
+                      }}
+                    >
+                      ● {stage.bottleneckSeverity}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Dual-Bar Comparison Duration Meter */}
+                <div>
+                  <div style={{ display: "flex", justifyContent: "space-between", fontSize: "11px", color: "var(--hs-text-muted)", marginBottom: 4 }}>
+                    <span>Actual Duration: <strong>{stage.avgDays} days</strong></span>
+                    <span>Target Max: <strong>{stage.benchmarkDays} days</strong> (Funnel Limit: 25d)</span>
                   </div>
 
-                  {/* RevOps Prescriptive Action */}
-                  <div style={{ padding: "8px 12px", background: "var(--hs-surface)", borderRadius: "var(--radius-sm)", border: "1px solid var(--hs-border)", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 8 }}>
-                    <div style={{ fontSize: "12px", color: "var(--hs-text)", lineHeight: 1.4 }}>
-                      🎯 <strong>RevOps Remedy:</strong> {stage.recommendedAction}
-                    </div>
+                  {/* Actual Progress Bar */}
+                  <div style={{ height: 8, width: "100%", background: "#eaf0f6", borderRadius: 4, overflow: "hidden", position: "relative" }}>
+                    <motion.div
+                      initial={{ width: 0 }}
+                      animate={{ width: `${Math.min(100, (stage.avgDays / 25) * 100)}%` }}
+                      transition={{ duration: 0.5 }}
+                      style={{
+                        height: "100%",
+                        background: barFill,
+                        borderRadius: 4,
+                      }}
+                    />
+                  </div>
+                </div>
+
+                {/* Prescriptive RevOps Remedy Strip */}
+                <div
+                  style={{
+                    padding: "10px 14px",
+                    background: "rgba(45, 62, 80, 0.04)",
+                    borderRadius: "6px",
+                    border: "1px solid var(--hs-border)",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    flexWrap: "wrap",
+                    gap: 8,
+                  }}
+                >
+                  <div style={{ fontSize: "12px", color: "var(--hs-text)", lineHeight: 1.4, flex: 1, minWidth: 260 }}>
+                    🎯 <strong>Prescriptive AI Remedy:</strong> {stage.recommendedAction}
+                  </div>
+
+                  <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                     {stage.stalledDeals > 0 && (
-                      <span className="badge" style={{ background: "var(--risk-high-bg)", color: "var(--warning)", fontSize: "10px", fontWeight: 700 }}>
+                      <span
+                        style={{
+                          background: "rgba(255, 153, 0, 0.14)",
+                          color: "#b76e00",
+                          fontSize: "11px",
+                          fontWeight: 800,
+                          padding: "3px 8px",
+                          borderRadius: "4px",
+                          border: "1px solid rgba(255, 153, 0, 0.3)",
+                        }}
+                      >
                         {stage.stalledDeals} Stalled Deals (${(stage.revenueAtRisk / 1000).toFixed(0)}K)
                       </span>
                     )}
+
+                    <button
+                      onClick={() => {
+                        showToast(`⚡ Enforced automated RevOps acceleration playbooks for ${stage.stage}.`);
+                        logAuditEvent({
+                          actor: "Peash Rudra",
+                          role: "VP Sales Ops",
+                          actionType: "Funnel Acceleration Triggered",
+                          targetObject: stage.stage,
+                          tier: "Tier 2 (Assisted Task)",
+                          status: "Success",
+                          details: `Enforced prescriptive acceleration action: ${stage.recommendedAction}`,
+                        });
+                      }}
+                      style={{
+                        padding: "4px 10px",
+                        background: "#ff5c35",
+                        color: "#ffffff",
+                        border: "none",
+                        borderRadius: "4px",
+                        fontSize: "11px",
+                        fontWeight: 700,
+                        cursor: "pointer",
+                      }}
+                    >
+                      ⚡ Accelerate Stage
+                    </button>
                   </div>
                 </div>
-              );
-            })}
-          </div>
+              </motion.div>
+            );
+          })}
         </div>
       </div>
     </div>

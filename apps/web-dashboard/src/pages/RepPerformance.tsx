@@ -5,199 +5,116 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ProGate } from "../components/ProGate";
-
-interface RepProfile {
-  id: string;
-  name: string;
-  role: string;
-  quotaAttainment: number;
-  pipelineValue: number;
-  dealCount: number;
-  avgHealthScore: number;
-  multiThreadingRate: number;
-  slippageRate: number;
-  avgCycleDays: number;
-  topGaps: string[];
-  coachingAction: string;
-}
-
-const SAMPLE_REPS: RepProfile[] = [
-  {
-    id: "rep-001",
-    name: "Sarah Miller",
-    role: "Senior Account Executive",
-    quotaAttainment: 78,
-    pipelineValue: 695000,
-    dealCount: 5,
-    avgHealthScore: 48,
-    multiThreadingRate: 40,
-    slippageRate: 45,
-    avgCycleDays: 62,
-    topGaps: ["Single-threaded deals (missing Economic Buyers)", "High stage aging in Proposal Sent"],
-    coachingAction: "Conduct executive multi-threading session; align VP Sales on Orion Cloud deal.",
-  },
-  {
-    id: "rep-002",
-    name: "James Reynolds",
-    role: "Enterprise Account Executive",
-    quotaAttainment: 86,
-    pipelineValue: 1110000,
-    dealCount: 6,
-    avgHealthScore: 56,
-    multiThreadingRate: 67,
-    slippageRate: 60,
-    avgCycleDays: 54,
-    topGaps: ["High close date slippage rate (2.4× avg)", "Legal / Procurement contract friction"],
-    coachingAction: "Assist with standardizing FinServ compliance addendum on Quantum Security.",
-  },
-  {
-    id: "rep-003",
-    name: "Mike Torres",
-    role: "Strategic Account Executive",
-    quotaAttainment: 114,
-    pipelineValue: 940000,
-    dealCount: 5,
-    avgHealthScore: 82,
-    multiThreadingRate: 85,
-    slippageRate: 10,
-    avgCycleDays: 38,
-    topGaps: ["CRM custom object documentation lag"],
-    coachingAction: "Top velocity performer. Share multi-threading playbook with broader team.",
-  },
-  {
-    id: "rep-004",
-    name: "Lisa Chen",
-    role: "Mid-Market Account Executive",
-    quotaAttainment: 82,
-    pipelineValue: 565000,
-    dealCount: 4,
-    avgHealthScore: 65,
-    multiThreadingRate: 50,
-    slippageRate: 25,
-    avgCycleDays: 44,
-    topGaps: ["Discovery to Qualification gate conversion", "Unquantified buyer ROI metrics"],
-    coachingAction: "Review value engineering calculator during Thursday 1-on-1.",
-  },
-];
+import { ENTERPRISE_REPS, EnterpriseRep } from "../data/enterpriseData";
 
 export const RepPerformance: React.FC = () => {
-  const [reps] = useState<RepProfile[]>(SAMPLE_REPS);
-  const [selectedRep, setSelectedRep] = useState<RepProfile | null>(null);
+  const [reps] = useState<EnterpriseRep[]>(ENTERPRISE_REPS);
+  const [selectedRep, setSelectedRep] = useState<EnterpriseRep | null>(null);
+  const [toastMsg, setToastMsg] = useState<string | null>(null);
+
+  const totalPipeline = reps.reduce((s, r) => s + r.pipelineValue, 0);
+  const avgAttainment = Math.round(reps.reduce((s, r) => s + r.quotaAttainment, 0) / reps.length);
+  const avgMultiThreading = Math.round(reps.reduce((s, r) => s + r.multiThreadingRate, 0) / reps.length);
+  const avgCycle = Math.round(reps.reduce((s, r) => s + r.avgCycleDays, 0) / reps.length);
+
+  const showToast = (msg: string) => {
+    setToastMsg(msg);
+    setTimeout(() => setToastMsg(null), 3500);
+  };
 
   return (
-    <ProGate featureName="AI Rep Coaching" description="Automatically generate individualized coaching dossiers for your reps based on deterministic CRM adherence and historical win rates.">
-      <div>
+    <div style={{ display: "flex", flexDirection: "column", gap: "var(--sp-5)" }}>
       {/* ── Enterprise Header ─────────────────────────────────────────── */}
-      <div
-        className="card"
-        style={{
-          background: "#ffffff",
-          padding: "20px 24px",
-          border: "1px solid var(--hs-border-dark)",
-          borderTop: "3px solid var(--hs-primary)",
-          marginBottom: "var(--sp-5)",
-          boxShadow: "var(--shadow-sm)",
-        }}
-      >
+      <div className="page-header-card">
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 12 }}>
           <div>
-            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
-              <span className="badge" style={{ background: "rgba(255, 122, 89, 0.1)", color: "#ff7a59", border: "1px solid rgba(255, 122, 89, 0.3)", fontWeight: 700, padding: "2px 8px", fontSize: "9.5px", letterSpacing: "0.05em" }}>
+            <div className="page-header-badge-row">
+              <span className="page-header-badge">
                 ● REVOPS PIPELINE TELEMETRY
               </span>
-              <span style={{ fontSize: "11.5px", color: "var(--hs-text-muted)", fontWeight: 500 }}>Rep Coaching & Enablement</span>
             </div>
-            <h2 style={{ fontSize: "20px", fontWeight: 800, color: "var(--hs-heading)", margin: "0 0 4px", letterSpacing: "-0.01em" }}>
-              Rep Performance & Coaching
+            <h2 className="page-header-title">
+              Enterprise Rep Performance &amp; AI Velocity Coaching
             </h2>
-            <p style={{ fontSize: "13px", color: "var(--hs-text)", margin: 0, maxWidth: 680, lineHeight: 1.5 }}>
-              Identify coaching opportunities across your sales floor. Analyze velocity gaps, win rates, and pipeline generation per AE.
+            <p className="page-header-desc">
+              Benchmark individual AE velocity, stage aging bottlenecks, and multi-threading adherence across ${(totalPipeline / 1000000).toFixed(1)}M in active enterprise pipeline.
             </p>
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 4 }}>
+          <div className="page-header-actions">
             <button
+              onClick={() => showToast("✓ Team Velocity Audit Exported to PDF")}
+              className="btn btn-secondary"
               style={{
-                padding: "6px 14px",
                 background: "#ffffff",
                 color: "var(--hs-text)",
                 border: "1px solid var(--hs-border-dark)",
-                borderRadius: "3px",
-                fontSize: "12px",
-                fontWeight: 600,
-                cursor: "pointer",
-                boxShadow: "0 1px 2px rgba(0,0,0,0.05)",
-                transition: "all 0.2s"
               }}
             >
-              Export Performance
+              📑 Export Rep Audit
             </button>
             <button
+              onClick={() => showToast("✓ AI 1-on-1 Coaching Agendas Generated & Synced with HubSpot")}
+              className="btn btn-primary"
               style={{
-                padding: "6px 14px",
                 background: "#ff5c35",
                 color: "#ffffff",
                 border: "none",
-                borderRadius: "3px",
-                fontSize: "12px",
-                fontWeight: 600,
-                cursor: "pointer",
-                boxShadow: "0 1px 2px rgba(0,0,0,0.05)",
-                transition: "all 0.2s"
+                boxShadow: "0 2px 6px rgba(255, 92, 53, 0.25)",
               }}
             >
-              Schedule Coaching
+              ⚡ Schedule 1-on-1 Syncs
             </button>
           </div>
         </div>
       </div>
 
-      {/* ── Status Banner ─────────────────────────────────────────────── */}
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "var(--sp-4)" }}>
-        <div style={{ fontSize: "13px", color: "var(--hs-text-muted)", display: "flex", alignItems: "center", gap: 8 }}>
-          <span style={{ width: 8, height: 8, borderRadius: "50%", background: "var(--risk-healthy)", display: "inline-block" }} />
-          <span>Rep Velocity & AI Pipeline Coaching Intelligence</span>
-        </div>
-        <span className="badge badge-outline">{reps.length} Reps Monitored</span>
-      </div>
+      {toastMsg && (
+        <motion.div
+          initial={{ opacity: 0, y: -6 }}
+          animate={{ opacity: 1, y: 0 }}
+          style={{ padding: "10px 16px", background: "rgba(0, 189, 165, 0.12)", border: "1px solid rgba(0, 189, 165, 0.3)", borderRadius: "var(--radius-sm)", color: "#007a70", fontSize: "12.5px", fontWeight: 700 }}
+        >
+          {toastMsg}
+        </motion.div>
+      )}
 
       {/* ── Team KPI Bar ─────────────────────────────────────────────── */}
       <div className="kpi-grid">
-        <div className="kpi-card">
+        <div className="kpi-card" style={{ borderTopColor: "var(--success)" }}>
           <div className="kpi-label">Team Quota Attainment</div>
-          <div className="kpi-value">88%</div>
-          <div style={{ fontSize: "11px", color: "var(--risk-healthy)", fontWeight: 600, marginTop: 4 }}>
-            ▲ 12% vs prior quarter
+          <div className="kpi-value">{avgAttainment}%</div>
+          <div style={{ fontSize: "11px", color: "var(--success)", fontWeight: 600, marginTop: 4 }}>
+            ▲ +14% vs prior quarter
           </div>
         </div>
 
-        <div className="kpi-card">
-          <div className="kpi-label">Average Sales Cycle</div>
-          <div className="kpi-value">48 Days</div>
-          <div style={{ fontSize: "11px", color: "var(--risk-healthy)", fontWeight: 600, marginTop: 4 }}>
-            ▼ 6 days velocity acceleration
+        <div className="kpi-card" style={{ borderTopColor: "var(--hs-primary)" }}>
+          <div className="kpi-label">Total Rep Pipeline</div>
+          <div className="kpi-value">${(totalPipeline / 1000000).toFixed(1)}M</div>
+          <div style={{ fontSize: "11px", color: "var(--hs-text-muted)", marginTop: 4 }}>
+            {reps.reduce((s, r) => s + r.dealCount, 0)} Active Enterprise Deals
           </div>
         </div>
 
-        <div className="kpi-card">
+        <div className="kpi-card" style={{ borderTopColor: "#00a4bd" }}>
           <div className="kpi-label">Multi-Threading Adherence</div>
-          <div className="kpi-value">61%</div>
-          <div style={{ fontSize: "11px", color: "var(--warning)", fontWeight: 600, marginTop: 4 }}>
-            Target: &gt;75% multi-threaded
+          <div className="kpi-value">{avgMultiThreading}%</div>
+          <div style={{ fontSize: "11px", color: "#007a8c", fontWeight: 600, marginTop: 4 }}>
+            ● Target: &gt;75% multi-threaded
           </div>
         </div>
 
-        <div className="kpi-card">
-          <div className="kpi-label">Stalled Deal Recovery Rate</div>
-          <div className="kpi-value" style={{ color: "var(--risk-healthy)" }}>34%</div>
-          <div style={{ fontSize: "11px", color: "var(--risk-healthy)", fontWeight: 600, marginTop: 4 }}>
-            Recovered via AI early warning
+        <div className="kpi-card" style={{ borderTopColor: "var(--warning)" }}>
+          <div className="kpi-label">Average Sales Cycle</div>
+          <div className="kpi-value">{avgCycle} Days</div>
+          <div style={{ fontSize: "11px", color: "var(--success)", fontWeight: 600, marginTop: 4 }}>
+            ▼ 8 days velocity acceleration
           </div>
         </div>
       </div>
 
       {/* ── Rep Scorecard Grid ────────────────────────────────────────── */}
-      <div className="grid-2" style={{ marginBottom: "var(--sp-6)" }}>
+      <div className="grid-2" style={{ marginBottom: "var(--sp-2)" }}>
         {reps.map((rep, idx) => (
           <motion.div
             key={rep.id}
@@ -205,68 +122,79 @@ export const RepPerformance: React.FC = () => {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: idx * 0.05 }}
+            style={{ margin: 0, display: "flex", flexDirection: "column", justifyContent: "space-between" }}
           >
-            <div className="card-header">
-              <div>
-                <div className="card-title" style={{ fontSize: "16px" }}>{rep.name}</div>
-                <div className="card-subtitle">{rep.role}</div>
+            <div>
+              <div className="card-header">
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  <div style={{ width: 36, height: 36, borderRadius: "50%", background: "rgba(255, 92, 53, 0.12)", color: "#ff5c35", fontWeight: 800, fontSize: "13px", display: "flex", alignItems: "center", justifyContent: "center", border: "1px solid rgba(255, 92, 53, 0.3)" }}>
+                    {rep.avatar}
+                  </div>
+                  <div>
+                    <div className="card-title" style={{ fontSize: "15px", fontWeight: 800 }}>{rep.name}</div>
+                    <div className="card-subtitle">{rep.role}</div>
+                  </div>
+                </div>
+                <span
+                  className="badge"
+                  style={{
+                    background: rep.quotaAttainment >= 100 ? "rgba(0, 189, 165, 0.1)" : "rgba(245, 194, 107, 0.15)",
+                    color: rep.quotaAttainment >= 100 ? "#007a70" : "#b36b00",
+                    border: `1px solid ${rep.quotaAttainment >= 100 ? "rgba(0, 189, 165, 0.3)" : "rgba(245, 194, 107, 0.3)"}`,
+                    fontWeight: 700,
+                    fontSize: "12px",
+                  }}
+                >
+                  {rep.quotaAttainment}% Quota
+                </span>
               </div>
-              <span
-                className="badge"
-                style={{
-                  background: rep.quotaAttainment >= 100 ? "var(--risk-healthy-bg)" : "var(--hs-surface)",
-                  color: rep.quotaAttainment >= 100 ? "var(--risk-healthy)" : "var(--hs-primary)",
-                  fontWeight: 700,
-                  fontSize: "12px",
-                }}
-              >
-                {rep.quotaAttainment}% Quota
-              </span>
+
+              <div className="card-body">
+                {/* Rep Stats */}
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10, marginBottom: 14 }}>
+                  <div style={{ padding: "10px", background: "var(--hs-surface-hover)", borderRadius: "var(--radius-sm)", border: "1px solid var(--hs-border-dark)" }}>
+                    <div style={{ fontSize: "10px", color: "var(--hs-text-muted)", textTransform: "uppercase", fontWeight: 700 }}>Pipeline</div>
+                    <div style={{ fontSize: "15px", fontWeight: 800, color: "var(--hs-heading)", fontFamily: "var(--font-mono)", marginTop: 2 }}>
+                      ${(rep.pipelineValue / 1000000).toFixed(2)}M
+                    </div>
+                  </div>
+
+                  <div style={{ padding: "10px", background: "var(--hs-surface-hover)", borderRadius: "var(--radius-sm)", border: "1px solid var(--hs-border-dark)" }}>
+                    <div style={{ fontSize: "10px", color: "var(--hs-text-muted)", textTransform: "uppercase", fontWeight: 700 }}>Health Index</div>
+                    <div style={{ fontSize: "15px", fontWeight: 800, color: rep.avgHealthScore < 60 ? "var(--danger)" : "var(--success)", fontFamily: "var(--font-mono)", marginTop: 2 }}>
+                      {rep.avgHealthScore}/100
+                    </div>
+                  </div>
+
+                  <div style={{ padding: "10px", background: "var(--hs-surface-hover)", borderRadius: "var(--radius-sm)", border: "1px solid var(--hs-border-dark)" }}>
+                    <div style={{ fontSize: "10px", color: "var(--hs-text-muted)", textTransform: "uppercase", fontWeight: 700 }}>Multi-Thread %</div>
+                    <div style={{ fontSize: "15px", fontWeight: 800, color: rep.multiThreadingRate < 50 ? "var(--danger)" : "#007a70", fontFamily: "var(--font-mono)", marginTop: 2 }}>
+                      {rep.multiThreadingRate}%
+                    </div>
+                  </div>
+                </div>
+
+                {/* Coaching Insight */}
+                <div
+                  style={{
+                    padding: "12px 14px",
+                    borderRadius: "var(--radius-sm)",
+                    background: "var(--hs-surface-hover)",
+                    border: "1px solid var(--hs-border-dark)",
+                    marginBottom: 14,
+                  }}
+                >
+                  <div style={{ fontSize: "11px", fontWeight: 700, color: "var(--hs-primary)", textTransform: "uppercase", marginBottom: 4 }}>
+                    💡 AI 1-on-1 Coaching Focus
+                  </div>
+                  <div style={{ fontSize: "12.5px", color: "var(--hs-text)", lineHeight: 1.45 }}>
+                    {rep.coachingAction}
+                  </div>
+                </div>
+              </div>
             </div>
 
-            <div className="card-body">
-              {/* Rep Stats */}
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10, marginBottom: 16 }}>
-                <div style={{ padding: "10px", background: "var(--hs-surface)", borderRadius: "var(--radius-sm)", border: "1px solid var(--hs-border-dark)" }}>
-                  <div style={{ fontSize: "10.5px", color: "var(--hs-text-muted)", textTransform: "uppercase", fontWeight: 700 }}>Pipeline</div>
-                  <div style={{ fontSize: "16px", fontWeight: 700, color: "var(--hs-primary)", marginTop: 2 }}>
-                    ${(rep.pipelineValue / 1000).toFixed(0)}K
-                  </div>
-                </div>
-
-                <div style={{ padding: "10px", background: "var(--hs-surface)", borderRadius: "var(--radius-sm)", border: "1px solid var(--hs-border-dark)" }}>
-                  <div style={{ fontSize: "10.5px", color: "var(--hs-text-muted)", textTransform: "uppercase", fontWeight: 700 }}>Health Index</div>
-                  <div style={{ fontSize: "16px", fontWeight: 700, color: rep.avgHealthScore < 50 ? "var(--danger)" : "var(--risk-healthy)", marginTop: 2 }}>
-                    {rep.avgHealthScore}/100
-                  </div>
-                </div>
-
-                <div style={{ padding: "10px", background: "var(--hs-surface)", borderRadius: "var(--radius-sm)", border: "1px solid var(--hs-border-dark)" }}>
-                  <div style={{ fontSize: "10.5px", color: "var(--hs-text-muted)", textTransform: "uppercase", fontWeight: 700 }}>Multi-Thread %</div>
-                  <div style={{ fontSize: "16px", fontWeight: 700, color: rep.multiThreadingRate < 50 ? "var(--warning)" : "var(--risk-healthy)", marginTop: 2 }}>
-                    {rep.multiThreadingRate}%
-                  </div>
-                </div>
-              </div>
-
-              {/* Coaching Insight */}
-              <div
-                style={{
-                  padding: "12px 14px",
-                  borderRadius: "var(--radius-sm)",
-                  background: "var(--hs-surface)",
-                  border: "1px solid var(--hs-border-dark)",
-                  marginBottom: 14,
-                }}
-              >
-                <div style={{ fontSize: "11px", fontWeight: 700, color: "var(--hs-primary)", textTransform: "uppercase", marginBottom: 4 }}>
-                  💡 AI 1-on-1 Coaching Focus
-                </div>
-                <div style={{ fontSize: "12.5px", color: "var(--hs-text)", lineHeight: 1.45 }}>
-                  {rep.coachingAction}
-                </div>
-              </div>
-
+            <div style={{ padding: "0 20px 18px" }}>
               <button
                 className="btn btn-secondary btn-sm"
                 style={{ width: "100%", justifyContent: "center" }}
@@ -291,7 +219,7 @@ export const RepPerformance: React.FC = () => {
               style={{
                 position: "fixed",
                 inset: 0,
-                background: "rgba(18, 69, 72, 0.4)",
+                background: "rgba(18, 69, 72, 0.45)",
                 backdropFilter: "blur(4px)",
                 zIndex: 200,
               }}
@@ -316,11 +244,11 @@ export const RepPerformance: React.FC = () => {
             >
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
                 <div>
-                  <h3 style={{ fontSize: "18px", fontWeight: 700, color: "var(--hs-primary)", margin: 0 }}>
+                  <h3 style={{ fontSize: "18px", fontWeight: 800, color: "var(--hs-heading)", margin: 0 }}>
                     1-on-1 Coaching Agenda: {selectedRep.name}
                   </h3>
-                  <div style={{ fontSize: "12px", color: "var(--hs-text-muted)" }}>
-                    {selectedRep.role} · Active Pipeline ${(selectedRep.pipelineValue / 1000).toFixed(0)}K
+                  <div style={{ fontSize: "12px", color: "var(--hs-text-muted)", marginTop: 2 }}>
+                    {selectedRep.role} · Active Pipeline ${(selectedRep.pipelineValue / 1000000).toFixed(2)}M ({selectedRep.dealCount} Deals)
                   </div>
                 </div>
                 <button
@@ -332,25 +260,23 @@ export const RepPerformance: React.FC = () => {
               </div>
 
               <div style={{ display: "flex", flexDirection: "column", gap: 14, marginBottom: 20 }}>
-                <div style={{ padding: "12px", background: "var(--hs-surface)", borderRadius: "var(--radius-sm)", border: "1px solid var(--hs-border-dark)" }}>
+                <div style={{ padding: "14px", background: "var(--hs-surface-hover)", borderRadius: "var(--radius-sm)", border: "1px solid var(--hs-border-dark)" }}>
                   <div style={{ fontSize: "11px", fontWeight: 700, color: "var(--hs-primary)", textTransform: "uppercase", marginBottom: 6 }}>
                     Key Pipeline Risk Themes
                   </div>
-                  <ul style={{ paddingLeft: 18, fontSize: "13px", color: "var(--hs-text)", lineHeight: 1.6 }}>
-                    {selectedRep.topGaps.map((gap, i) => (
-                      <li key={i}>{gap}</li>
-                    ))}
-                  </ul>
+                  <div style={{ fontSize: "13px", color: "var(--hs-text)", lineHeight: 1.5 }}>
+                    ▲ <strong>Primary Risk:</strong> {selectedRep.topRiskFactor}
+                  </div>
                 </div>
 
-                <div style={{ padding: "12px", background: "var(--risk-healthy-bg)", borderRadius: "var(--radius-sm)", border: "1px solid var(--risk-healthy-border)" }}>
-                  <div style={{ fontSize: "11px", fontWeight: 700, color: "var(--risk-healthy)", textTransform: "uppercase", marginBottom: 4 }}>
-                    Suggested Discussion Questions
+                <div style={{ padding: "14px", background: "rgba(0, 189, 165, 0.08)", borderRadius: "var(--radius-sm)", border: "1px solid rgba(0, 189, 165, 0.25)" }}>
+                  <div style={{ fontSize: "11px", fontWeight: 700, color: "#007a70", textTransform: "uppercase", marginBottom: 6 }}>
+                    Suggested 1-on-1 Discussion Plan
                   </div>
-                  <div style={{ fontSize: "12.5px", color: "var(--hs-text)", lineHeight: 1.5 }}>
-                    1. "What is our plan to engage the CFO on the top 2 stalled opportunities?"<br />
-                    2. "How can sales leadership assist with procurement terms this week?"<br />
-                    3. "Let's review the mutual action plan timeline for current month commits."
+                  <div style={{ fontSize: "12.5px", color: "var(--hs-text)", lineHeight: 1.55 }}>
+                    1. "What is our plan to engage the CFO/VP level on stalled contracts?"<br />
+                    2. "How can sales leadership assist with procurement legal redlines this week?"<br />
+                    3. "Let's review the DocuSign mutual action plan timeline for end-of-quarter commitments."
                   </div>
                 </div>
               </div>
@@ -362,7 +288,7 @@ export const RepPerformance: React.FC = () => {
                 <button
                   className="btn btn-primary btn-sm"
                   onClick={() => {
-                    alert(`✓ Coaching agenda exported & synced with HubSpot 1-on-1 notes for ${selectedRep.name}!`);
+                    showToast(`✓ Coaching agenda exported & synced with HubSpot 1-on-1 notes for ${selectedRep.name}!`);
                     setSelectedRep(null);
                   }}
                 >
@@ -374,6 +300,5 @@ export const RepPerformance: React.FC = () => {
         )}
       </AnimatePresence>
     </div>
-    </ProGate>
   );
 };

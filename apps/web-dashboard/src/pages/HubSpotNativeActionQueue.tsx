@@ -35,27 +35,33 @@ const URGENCY_STYLES: Record<string, { color: string; dot: string }> = {
   normal: { color: "var(--hs-text-disabled)", dot: "var(--hs-text-disabled)" },
 };
 
+import { ENTERPRISE_ACTIONS } from "../data/enterpriseData";
+
+const SAMPLE_ACTIONS: ActionItem[] = ENTERPRISE_ACTIONS as unknown as ActionItem[];
+
 export const HubSpotNativeActionQueue: React.FC = () => {
-  const [actions, setActions] = useState<ActionItem[]>([]);
+  const [actions, setActions] = useState<ActionItem[]>(SAMPLE_ACTIONS);
   const [filter, setFilter] = useState<string>("all");
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [isLive, setIsLive] = useState(false);
 
-  useEffect(() => {
+  const [toastMsg, setToastMsg] = useState<string | null>(null);
+
+  const loadActions = () => {
     fetchActions()
       .then((data) => {
         if (data && data.length > 0) {
           const mapped = data.map((d: any) => ({
             id: d.id,
-            dealName: d.deal_name || `Deal #${d.deal_id?.substring(0, 8)}`,
-            clientName: d.client_name || "CRM Account",
+            dealName: d.deal_name || d.dealName || `Deal #${d.deal_id?.substring(0, 8) || "101"}`,
+            clientName: d.client_name || d.clientName || "CRM Account",
             tier: d.tier || "tier_3",
             title: d.title,
             description: d.description,
             rationale: d.rationale,
-            impact: d.impact_estimate || "+5-10 score points",
+            impact: d.impact_estimate || d.impact || "+5-10 score points",
             status: d.status || "pending",
-            createdAt: new Date(d.created_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+            createdAt: d.created_at ? new Date(d.created_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : (d.createdAt || "Just now"),
             urgency: (d.tier === "tier_4" ? "critical" : d.tier === "tier_3" ? "high" : "normal") as any,
           }));
           setActions(mapped);
@@ -65,6 +71,34 @@ export const HubSpotNativeActionQueue: React.FC = () => {
       .catch((err) => {
         console.warn("Using sample actions queue intelligence:", err);
       });
+  };
+
+  useEffect(() => {
+    loadActions();
+
+    const handleActionsUpdated = (e: any) => {
+      if (e.detail && Array.isArray(e.detail)) {
+        const mapped = e.detail.map((d: any) => ({
+          id: d.id,
+          dealName: d.deal_name || d.dealName || `Deal #${d.deal_id?.substring(0, 8) || "101"}`,
+          clientName: d.client_name || d.clientName || "CRM Account",
+          tier: d.tier || "tier_3",
+          title: d.title,
+          description: d.description,
+          rationale: d.rationale,
+          impact: d.impact_estimate || d.impact || "+5-10 score points",
+          status: d.status || "pending",
+          createdAt: d.created_at ? new Date(d.created_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : (d.createdAt || "Just now"),
+          urgency: (d.tier === "tier_4" ? "critical" : d.tier === "tier_3" ? "high" : "normal") as any,
+        }));
+        setActions(mapped);
+      } else {
+        loadActions();
+      }
+    };
+
+    window.addEventListener("dealsense:actions-updated", handleActionsUpdated);
+    return () => window.removeEventListener("dealsense:actions-updated", handleActionsUpdated);
   }, []);
 
   const filtered = filter === "all"
@@ -73,32 +107,71 @@ export const HubSpotNativeActionQueue: React.FC = () => {
 
   const pendingCount = actions.filter((a) => a.status === "pending").length;
 
+  const showToast = (msg: string) => {
+    setToastMsg(msg);
+    setTimeout(() => setToastMsg(null), 3500);
+  };
+
   const handleApprove = async (id: string) => {
     try {
-      if (isLive) await submitActionDecision(id, "approve");
+      await submitActionDecision(id, "approve");
       setActions((prev) => prev.map((a) => a.id === id ? { ...a, status: "approved" as const } : a));
       setSelectedIds((prev) => { const next = new Set(prev); next.delete(id); return next; });
+      showToast("✓ Action approved and dispatched to HubSpot CRM");
     } catch (err) {
       console.error("Approve failed:", err);
     }
   };
 
-  // @ts-ignore
   const handleReject = async (id: string) => {
     try {
-      if (isLive) await submitActionDecision(id, "reject");
+      await submitActionDecision(id, "reject");
       setActions((prev) => prev.map((a) => a.id === id ? { ...a, status: "rejected" as const } : a));
       setSelectedIds((prev) => { const next = new Set(prev); next.delete(id); return next; });
+      showToast("✓ Action rejected and archived");
     } catch (err) {
       console.error("Reject failed:", err);
     }
   };
 
-  // @ts-ignore
   const handleBulkApprove = async () => {
     for (const id of Array.from(selectedIds)) {
       await handleApprove(id);
     }
+    showToast(`✓ Approved ${selectedIds.size} actions in batch`);
+  };
+
+  const handleApproveAll = async () => {
+    const pending = actions.filter((a) => a.status === "pending");
+    for (const item of pending) {
+      await submitActionDecision(item.id, "approve");
+    }
+    setActions((prev) => prev.map((a) => ({ ...a, status: "approved" })));
+    setSelectedIds(new Set());
+    showToast(`✓ Approved all ${pending.length} pending actions`);
+  };
+
+  const handleExportQueue = () => {
+    const headers = ["ID", "Title", "Deal", "Client", "Tier", "Impact", "Status", "Created"];
+    const rows = actions.map((a) => [
+      a.id,
+      `"${(a.title || "").replace(/"/g, '""')}"`,
+      `"${(a.dealName || "").replace(/"/g, '""')}"`,
+      `"${(a.clientName || "").replace(/"/g, '""')}"`,
+      a.tier,
+      `"${(a.impact || "").replace(/"/g, '""')}"`,
+      a.status,
+      a.createdAt,
+    ]);
+    const csvContent = "data:text/csv;charset=utf-8," + [headers.join(","), ...rows.map((r) => r.join(","))].join("\n");
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", `hubspot_action_queue_${Date.now()}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    showToast("✓ Exported Action Approval Queue to CSV");
   };
 
   const toggleSelect = (id: string) => {
@@ -112,67 +185,68 @@ export const HubSpotNativeActionQueue: React.FC = () => {
   return (
       <div>
       {/* ── Enterprise Header ─────────────────────────────────────────── */}
-      <div
-        className="card"
-        style={{
-          background: "#ffffff",
-          padding: "20px 24px",
-          border: "1px solid #dfe3eb",
-          borderTop: "3px solid #ff7a59",
-          marginBottom: "var(--sp-5)",
-          boxShadow: "var(--shadow-sm)",
-        }}
-      >
+      <div className="page-header-card">
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 12 }}>
           <div>
-            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
-              <span className="badge" style={{ background: "rgba(255, 122, 89, 0.1)", color: "#ff7a59", border: "1px solid rgba(255, 122, 89, 0.3)", fontWeight: 700, padding: "2px 8px", fontSize: "9.5px", letterSpacing: "0.05em" }}>
+            <div className="page-header-badge-row">
+              <span className="page-header-badge">
                 ● REVOPS PIPELINE TELEMETRY
               </span>
-              <span style={{ fontSize: "11.5px", color: "#516f90", fontWeight: 500 }}>Action Batching & Approval</span>
             </div>
-            <h2 style={{ fontSize: "20px", fontWeight: 800, color: "var(--hs-heading)", margin: "0 0 4px", letterSpacing: "-0.01em" }}>
+            <h2 className="page-header-title">
               Action Approval Queue
             </h2>
-            <p style={{ fontSize: "13px", color: "#33475b", margin: 0, maxWidth: 680, lineHeight: 1.5 }}>
+            <p className="page-header-desc">
               Review, approve, and dispatch automated RevOps interventions. DealSense algorithms suggest the optimal action to unstick pipeline bottlenecks.
             </p>
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 4 }}>
+          <div className="page-header-actions">
             <button
+              onClick={handleExportQueue}
+              className="btn btn-secondary"
               style={{
-                padding: "6px 14px",
                 background: "#ffffff",
                 color: "#33475b",
                 border: "1px solid #dfe3eb",
-                borderRadius: "3px",
-                fontSize: "12px",
-                fontWeight: 600,
-                cursor: "pointer",
-                boxShadow: "0 1px 2px rgba(0,0,0,0.05)",
-                transition: "all 0.2s"
               }}
             >
               Export Queue
             </button>
             <button
+              onClick={handleApproveAll}
+              disabled={pendingCount === 0}
+              className="btn btn-primary"
               style={{
-                padding: "6px 14px",
-                background: "#ff5c35",
-                color: "#33475b",
+                background: pendingCount > 0 ? "#ff5c35" : "#e5e7eb",
+                color: pendingCount > 0 ? "#ffffff" : "#9ca3af",
                 border: "none",
-                borderRadius: "3px",
-                fontSize: "12px",
-                fontWeight: 600,
-                cursor: "pointer",
-                boxShadow: "0 1px 2px rgba(0,0,0,0.05)",
-                transition: "all 0.2s"
+                cursor: pendingCount > 0 ? "pointer" : "default",
+                boxShadow: pendingCount > 0 ? "0 2px 6px rgba(255, 92, 53, 0.25)" : "none",
               }}
             >
-              Approve All
+              Approve All ({pendingCount})
             </button>
           </div>
         </div>
+
+        {toastMsg && (
+          <motion.div
+            initial={{ opacity: 0, y: -4 }}
+            animate={{ opacity: 1, y: 0 }}
+            style={{
+              marginTop: 12,
+              padding: "8px 14px",
+              background: "rgba(0, 189, 165, 0.1)",
+              border: "1px solid rgba(0, 189, 165, 0.3)",
+              borderRadius: "4px",
+              color: "#007a8c",
+              fontSize: "12.5px",
+              fontWeight: 700,
+            }}
+          >
+            {toastMsg}
+          </motion.div>
+        )}
       </div>
 
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "var(--sp-4)" }}>

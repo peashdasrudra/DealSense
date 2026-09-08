@@ -412,11 +412,18 @@ export const AgencyFleet: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
             className="landing-hero-btns"
-            style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 12, flexWrap: "wrap", maxWidth: 640, margin: "0 auto" }}
+            style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 14, flexWrap: "wrap", maxWidth: 640, margin: "0 auto" }}
           >
-            <button
-              onClick={() => openOrder("audit-99")}
+            {/* 4. Start free trial (Route to pricing part) — Primary Orange Button */}
+            <motion.button
+              whileHover={{ scale: 1.025, y: -2 }}
+              whileTap={{ scale: 0.98, y: 0 }}
+              onClick={(e) => {
+                e.preventDefault();
+                scrollToSection("pricing", 54);
+              }}
               className="hero-btn-primary"
+              id="agency-hero-start-trial-btn"
               style={{
                 padding: "14px 28px",
                 fontSize: "14.5px",
@@ -426,17 +433,27 @@ export const AgencyFleet: React.FC = () => {
                 justifyContent: "center",
                 gap: "8px",
                 borderRadius: "12px",
-                boxShadow: "0 8px 24px rgba(255, 92, 53, 0.42), inset 0 1px 0 rgba(255,255,255,0.3)",
+                background: "linear-gradient(135deg, #ff5c35 0%, #ff7a59 100%)",
+                color: "#ffffff",
+                border: "1px solid #e04a25",
+                boxShadow: "0 8px 24px rgba(255, 92, 53, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.35)",
+                cursor: "pointer",
+                transition: "box-shadow 0.2s ease",
               }}
             >
-              <span>Start with $99 Plan</span>
+              <span>Start Free Trial</span>
               <svg width={17} height={17} viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
                 <path d="M5 12h14M12 5l7 7-7 7" />
               </svg>
-            </button>
-            <button
+            </motion.button>
+
+            {/* 3. See Live Demo — Engaging Secondary Button */}
+            <motion.button
+              whileHover={{ scale: 1.025, y: -2 }}
+              whileTap={{ scale: 0.98, y: 0 }}
               onClick={() => navigate("/pipeline")}
               className="hero-btn-secondary"
+              id="agency-hero-live-demo-btn"
               style={{
                 padding: "14px 26px",
                 fontSize: "14.5px",
@@ -450,13 +467,15 @@ export const AgencyFleet: React.FC = () => {
                 justifyContent: "center",
                 gap: "8px",
                 boxShadow: "0 2px 8px rgba(9, 33, 36, 0.04), inset 0 1px 0 #ffffff",
+                cursor: "pointer",
+                transition: "all 0.2s ease",
               }}
             >
               <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="#124548" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
                 <polygon points="5 3 19 12 5 21 5 3" />
               </svg>
               <span style={{ color: "#124548", fontWeight: 700, fontSize: "14.5px" }}>See Live Demo</span>
-            </button>
+            </motion.button>
           </motion.div>
 
           {/* Why DealSense Section Header — Full HubSpot UI Style */}
@@ -1890,7 +1909,7 @@ export const AgencyFleet: React.FC = () => {
                 {[
                   { icon: "⏱️", text: "5–10 Day Rapid Sprint" },
                   { icon: "💎", text: "100% Code Ownership" },
-                  { icon: "🛡️", text: "HubSpot Canvas Certified" },
+                  { icon: "🛡️", text: "Native Canvas Architecture" },
                   { icon: "🔒", text: "Zero Per-Seat Fees" },
                 ].map((item, idx) => (
                   <div key={idx} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: "13px", fontWeight: 700, color: "#f1f5f9" }}>

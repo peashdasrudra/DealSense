@@ -16,7 +16,7 @@ export const PrivacyPolicy: React.FC = () => {
             HubSpot App Marketplace Compliance & GDPR Policy
           </div>
           <h1 style={{ fontSize: 32, fontWeight: 800, color: "#0f172a", margin: "0 0 8px" }}>Privacy & Data Governance Policy</h1>
-          <p style={{ margin: 0, fontSize: 14, color: "#64748b" }}>Effective Date: September 4, 2026 • Version 2.4 (Marketplace Certified Edition)</p>
+          <p style={{ margin: 0, fontSize: 14, color: "#64748b" }}>Effective Date: September 4, 2026 • Version 2.4 (Enterprise Edition)</p>
         </div>
 
         {/* Content Sections */}
@@ -58,7 +58,7 @@ export const PrivacyPolicy: React.FC = () => {
           <section>
             <h2 style={{ fontSize: 20, fontWeight: 700, color: "#0f172a", marginBottom: 10 }}>4. GDPR & CCPA Compliance (Right to Erasure)</h2>
             <p>
-              In accordance with GDPR Article 17 (&ldquo;Right to Erasure&rdquo;) and HubSpot Marketplace Certification standards, DealSense operates dedicated automated privacy endpoints:
+              In accordance with GDPR Article 17 (&ldquo;Right to Erasure&rdquo;) and enterprise compliance standards, DealSense operates dedicated automated privacy endpoints:
             </p>
             <ul style={{ paddingLeft: 20, margin: "8px 0" }}>
               <li><strong>Automated Contact Deletion:</strong> Upon receiving a HubSpot <code>contact.privacy.deletion</code> webhook event, all cached records, vectors, and associations belonging to that contact ID are permanently wiped within 48 hours.</li>

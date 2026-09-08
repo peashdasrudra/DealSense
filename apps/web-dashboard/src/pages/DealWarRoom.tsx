@@ -3,140 +3,143 @@
  * Built for VP Sales, CROs, and RevOps leaders for high-stakes Friday pipeline reviews and board meetings.
  */
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { getLocalDeals, updateDeal, logAuditEvent, DealItem } from "../api";
+import { ENTERPRISE_WAR_ROOM, EnterpriseWarRoomDeal } from "../data/enterpriseData";
 
-interface WarRoomDeal {
-  id: string;
-  name: string;
-  client: string;
-  value: number;
-  stage: string;
-  riskScore: number;
-  band: "Critical" | "High" | "Moderate" | "Healthy";
-  closeDate: string;
-  daysStalled: number;
-  economicBuyer: { name: string; title: string; engagement: "Silent 18d" | "Engaged" | "Unknown" | "Hostile" };
-  champion: { name: string; title: string; sentiment: "Strong" | "Hesitant" | "Disengaged" };
-  competitor?: string;
-  keyBlocker: string;
-  goNoGoStatus: "High Risk" | "Conditional" | "Commit";
-  nextExecAction: string;
+function mergeWarRoomDeals(localDeals: DealItem[]): EnterpriseWarRoomDeal[] {
+  if (localDeals.length === 0) return ENTERPRISE_WAR_ROOM;
+
+  return localDeals.slice(0, 10).map((d, index) => {
+    const defaultTemplate = ENTERPRISE_WAR_ROOM[index % ENTERPRISE_WAR_ROOM.length];
+    const band = d.score < 50 ? "Critical" : d.score < 75 ? "High" : "Moderate";
+    const goNoGoStatus = d.score >= 75 ? "Commit" : d.score < 50 ? "High Risk" : "Conditional";
+
+    return {
+      id: d.id,
+      name: d.name,
+      client: d.client,
+      value: d.value,
+      stage: d.stage,
+      closeDate: d.closeDate || "2026-09-30",
+      riskScore: d.score,
+      band: band as any,
+      daysStalled: d.daysInStage || 14 + index * 4,
+      keyBlocker:
+        d.risks && d.risks.length > 0
+          ? typeof d.risks[0] === "string"
+            ? (d.risks[0] as string)
+            : (d.risks[0] as any).text || "Missing economic buyer sign-off"
+          : defaultTemplate?.keyBlocker || "Missing economic buyer sign-off and pricing alignment.",
+
+      economicBuyer: {
+        name: d.contacts?.find((c: any) => c.role === "Economic Buyer")?.name || defaultTemplate?.economicBuyer?.name || "Marcus Vance",
+        title: "Chief Financial Officer",
+        engagement: d.score < 50 ? "Silent 18d" : "Engaged",
+      },
+
+      champion: {
+        name: d.contacts?.find((c: any) => c.role === "Champion")?.name || defaultTemplate?.champion?.name || "Sarah Jenkins",
+        title: "VP Revenue Operations",
+        sentiment: d.score >= 70 ? "Strong" : "Hesitant",
+      },
+
+      nextExecAction:
+        d.recommendation || defaultTemplate?.nextExecAction || "Host 15-minute VP-to-CFO ROI alignment call before month-end.",
+      goNoGoStatus: goNoGoStatus as any,
+    };
+
+  });
 }
 
-const INITIAL_WAR_ROOM_DEALS: WarRoomDeal[] = [
-  {
-    id: "deal-101",
-    name: "Orion Cloud Migration",
-    client: "TechCorp Inc.",
-    value: 150000,
-    stage: "Proposal Sent",
-    riskScore: 23,
-    band: "Critical",
-    closeDate: "Nov 30, 2026 (Past Due 2d)",
-    daysStalled: 18,
-    economicBuyer: { name: "David Chen", title: "Chief Financial Officer", engagement: "Silent 18d" },
-    champion: { name: "Marcus Vance", title: "VP Infrastructure", sentiment: "Hesitant" },
-    competitor: "Clari / Internal Build",
-    keyBlocker: "CFO has not approved ROI justification; single-threaded through VP Eng.",
-    goNoGoStatus: "High Risk",
-    nextExecAction: "VP Sales to initiate peer-to-peer CFO outreach with Forrester ROI model.",
-  },
-  {
-    id: "deal-102",
-    name: "Quantum Security Suite",
-    client: "FinanceGo Ltd.",
-    value: 280000,
-    stage: "Negotiation",
-    riskScore: 31,
-    band: "Critical",
-    closeDate: "Dec 15, 2026",
-    daysStalled: 22,
-    economicBuyer: { name: "Sarah Jenkins", title: "Chief Information Security Officer", engagement: "Silent 18d" },
-    champion: { name: "Arthur Dent", title: "Director of SecOps", sentiment: "Strong" },
-    competitor: "Gong Reality",
-    keyBlocker: "Legal redlines pending on SOC2 indemnification clause for 14 days.",
-    goNoGoStatus: "High Risk",
-    nextExecAction: "Offer standard cyber insurance addendum to unblock General Counsel.",
-  },
-  {
-    id: "deal-106",
-    name: "Nebula Analytics Engine",
-    client: "HealthFirst Corp.",
-    value: 210000,
-    stage: "Discovery",
-    riskScore: 44,
-    band: "High",
-    closeDate: "Dec 20, 2026",
-    daysStalled: 14,
-    economicBuyer: { name: "Dr. Elena Rostova", title: "Chief Medical Officer", engagement: "Unknown" },
-    champion: { name: "Kevin Patel", title: "Head of Data Ops", sentiment: "Hesitant" },
-    keyBlocker: "HIPAA BAA agreement requirement unconfirmed by procurement team.",
-    goNoGoStatus: "Conditional",
-    nextExecAction: "Send pre-signed HIPAA BAA package directly to Head of Compliance.",
-  },
-  {
-    id: "deal-104",
-    name: "Apex CRM Integration",
-    client: "LogiPro Solutions",
-    value: 120000,
-    stage: "Proposal Sent",
-    riskScore: 62,
-    band: "Moderate",
-    closeDate: "Dec 28, 2026",
-    daysStalled: 6,
-    economicBuyer: { name: "Rachel Adams", title: "VP Sales Operations", engagement: "Engaged" },
-    champion: { name: "Tom Holland", title: "Sales Systems Lead", sentiment: "Strong" },
-    keyBlocker: "Awaiting final commercial sign-off on 2-year payment terms.",
-    goNoGoStatus: "Conditional",
-    nextExecAction: "Grant 8% multi-year discount incentive if signed by Dec 24.",
-  },
-  {
-    id: "deal-105",
-    name: "Crown Global Enterprise",
-    client: "LogiPro Solutions",
-    value: 400000,
-    stage: "Contract",
-    riskScore: 92,
-    band: "Healthy",
-    closeDate: "Dec 31, 2026",
-    daysStalled: 2,
-    economicBuyer: { name: "Robert Sterling", title: "Chief Executive Officer", engagement: "Engaged" },
-    champion: { name: "Victoria Stone", title: "VP Revenue Operations", sentiment: "Strong" },
-    keyBlocker: "None. Ready for DocuSign final execution.",
-    goNoGoStatus: "Commit",
-    nextExecAction: "Send DocuSign envelope with CEO sign-off notification.",
-  },
-];
-
 export const DealWarRoom: React.FC = () => {
-  const [deals, setDeals] = useState<WarRoomDeal[]>(INITIAL_WAR_ROOM_DEALS);
-  const [selectedDeal, setSelectedDeal] = useState<WarRoomDeal>(INITIAL_WAR_ROOM_DEALS[0]);
+  const [deals, setDeals] = useState<EnterpriseWarRoomDeal[]>([]);
+  const [selectedDealId, setSelectedDealId] = useState<string>("");
   const [actionSuccessMsg, setActionSuccessMsg] = useState<string | null>(null);
   const [qbrModalOpen, setQbrModalOpen] = useState(false);
   const [copiedQbr, setCopiedQbr] = useState(false);
+
+  const loadWarRoom = () => {
+    const localDeals = getLocalDeals();
+    const merged = mergeWarRoomDeals(localDeals);
+    setDeals(merged);
+    if (!selectedDealId && merged.length > 0) {
+      setSelectedDealId(merged[0].id);
+    }
+  };
+
+  useEffect(() => {
+    loadWarRoom();
+    const handleUpdate = () => loadWarRoom();
+    window.addEventListener("dealsense:deals-updated", handleUpdate);
+    return () => window.removeEventListener("dealsense:deals-updated", handleUpdate);
+  }, []);
+
+  const selectedDeal = deals.find((d) => d.id === selectedDealId) || deals[0];
 
   const totalAtStake = deals.reduce((sum, d) => sum + d.value, 0);
   const criticalAtRisk = deals.filter((d) => d.band === "Critical").reduce((sum, d) => sum + d.value, 0);
   const commitRevenue = deals.filter((d) => d.goNoGoStatus === "Commit").reduce((sum, d) => sum + d.value, 0);
 
   const handleExecuteIntervention = (dealId: string, actionName: string) => {
-    setActionSuccessMsg(`✓ Triggered: "${actionName}" for ${selectedDeal.name} (HubSpot Task Created)`);
-    setDeals((prev) =>
-      prev.map((d) => (d.id === dealId ? { ...d, goNoGoStatus: "Conditional", riskScore: Math.min(85, d.riskScore + 18) } : d))
-    );
+    const deal = deals.find((d) => d.id === dealId) || selectedDeal;
+    if (!deal) return;
+
+    if (actionName.includes("Rescue") || actionName.includes("Peer-to-Peer")) {
+      const newScore = Math.min(92, deal.riskScore + 16);
+      updateDeal(dealId, {
+        score: newScore,
+        band: newScore >= 75 ? "Healthy" : "Moderate",
+      });
+      logAuditEvent({
+        actor: "James Reynolds",
+        role: "VP of Revenue Operations",
+        actionType: "Executive Intervention Dispatched",
+        targetObject: `Deal #${deal.id} (${deal.name})`,
+        tier: "Tier 4 (Executive Action)",
+        status: "Success",
+        details: `Dispatched CFO Peer-to-Peer outreach sequence. Increased deal health score to ${newScore} and updated stage confidence in HubSpot.`,
+      });
+    } else if (actionName.includes("Push Close Date")) {
+      updateDeal(dealId, {
+        closeDate: "2026-10-31",
+      });
+      logAuditEvent({
+        actor: "James Reynolds",
+        role: "VP of Revenue Operations",
+        actionType: "War Room Close Date Slip",
+        targetObject: `Deal #${deal.id} (${deal.name})`,
+        tier: "Tier 3 (Automated Write-Back)",
+        status: "Success",
+        details: `Pushed close date +30 days to 2026-10-31 and notified assigned enterprise rep.`,
+      });
+    } else if (actionName.includes("MAP")) {
+      logAuditEvent({
+        actor: "James Reynolds",
+        role: "VP of Revenue Operations",
+        actionType: "Mutual Action Plan Dispatched",
+        targetObject: `Deal #${deal.id} (${deal.name})`,
+        tier: "Tier 2 (Assisted Task)",
+        status: "Success",
+        details: `Generated interactive Mutual Action Plan and dispatched link to ${deal.champion.name} (${deal.champion.title}).`,
+      });
+    }
+
+    setActionSuccessMsg(`✓ Triggered: "${actionName}" for ${deal.name} (HubSpot Task Created & Webhook Dispatched)`);
     setTimeout(() => setActionSuccessMsg(null), 3800);
   };
 
   const qbrBriefText = `### DEAL SENSE — EXECUTIVE REVENUE BRIEFING (QBR)
-**Total Pipeline Under Review:** $${(totalAtStake / 1000).toFixed(0)}K
-**Critical Slippage Risk:** $${(criticalAtRisk / 1000).toFixed(0)}K (${deals.filter((d) => d.band === "Critical").length} Deals)
-**Forecast Commit Realization:** $${(commitRevenue / 1000).toFixed(0)}K
+**Total Pipeline Under Review:** $${(totalAtStake / 1000000).toFixed(1)}M (${deals.length} Deals)
+**Critical Slippage Risk:** $${(criticalAtRisk / 1000000).toFixed(1)}M (${deals.filter((d) => d.band === "Critical").length} Deals)
+**Forecast Commit Realization:** $${(commitRevenue / 1000000).toFixed(1)}M
 
-#### Top Action Items:
-1. **${deals[0].name} ($${(deals[0].value / 1000).toFixed(0)}K)**: ${deals[0].nextExecAction}
-2. **${deals[1].name} ($${(deals[1].value / 1000).toFixed(0)}K)**: ${deals[1].nextExecAction}
-3. **${deals[2].name} ($${(deals[2].value / 1000).toFixed(0)}K)**: ${deals[2].nextExecAction}
+#### Top Executive Action Items:
+${deals
+  .slice(0, 3)
+  .map((d, i) => `${i + 1}. **${d.name} ($${(d.value / 1000).toFixed(0)}K)**: ${d.nextExecAction}`)
+  .join("\n")}
 
 *Generated autonomously via DealSense Sub-200ms Webhook Engine.*`;
 
@@ -146,73 +149,61 @@ export const DealWarRoom: React.FC = () => {
     setTimeout(() => setCopiedQbr(false), 2500);
   };
 
+  const handleDownloadQbr = () => {
+    const blob = new Blob([qbrBriefText], { type: "text/markdown;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `qbr_executive_brief_${new Date().toISOString().slice(0, 10)}.md`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
-  <div style={{ display: "flex", flexDirection: "column", gap: "var(--sp-6)" }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: "var(--sp-6)" }}>
       {/* ── Enterprise Header ─────────────────────────────────────────── */}
-      <div
-        className="card"
-        style={{
-          background: "#ffffff",
-          padding: "20px 24px",
-          border: "1px solid var(--hs-border-dark)",
-          borderTop: "3px solid var(--hs-primary)",
-          marginBottom: "var(--sp-5)",
-          boxShadow: "var(--shadow-sm)",
-        }}
-      >
+      <div className="page-header-card">
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 12 }}>
           <div>
-            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
-              <span className="badge" style={{ background: "rgba(255, 122, 89, 0.1)", color: "#ff7a59", border: "1px solid rgba(255, 122, 89, 0.3)", fontWeight: 700, padding: "2px 8px", fontSize: "9.5px", letterSpacing: "0.05em" }}>
+            <div className="page-header-badge-row">
+              <span className="page-header-badge">
                 ● REVOPS PIPELINE TELEMETRY
               </span>
-              <span style={{ fontSize: "11.5px", color: "var(--hs-text-muted)", fontWeight: 500 }}>Executive Deal Review</span>
             </div>
-            <h2 style={{ fontSize: "20px", fontWeight: 800, color: "var(--hs-heading)", margin: "0 0 4px", letterSpacing: "-0.01em" }}>
-              Deal War Room & Executive QBR Decision Matrix
+            <h2 className="page-header-title">
+              Deal War Room &amp; Executive QBR Decision Matrix
             </h2>
-            <p style={{ fontSize: "13px", color: "var(--hs-text)", margin: 0, maxWidth: 680, lineHeight: 1.5 }}>
+            <p className="page-header-desc">
               Live decision hub for closing high-ticket stalled deals this month. Evaluate single-threaded risks, unblock economic buyers, and trigger interventions.
             </p>
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 4 }}>
+          <div className="page-header-actions">
             <button
+              onClick={() => setQbrModalOpen(true)}
               style={{
-                padding: "6px 14px",
                 background: "#ffffff",
-                color: "var(--hs-text)",
+                color: "var(--hs-primary)",
                 border: "1px solid var(--hs-border-dark)",
-                borderRadius: "3px",
-                fontSize: "12px",
-                fontWeight: 600,
-                cursor: "pointer",
-                boxShadow: "0 1px 2px rgba(0,0,0,0.05)",
-                transition: "all 0.2s"
               }}
             >
-              Export Brief
+              <span>📑 Export QBR Brief</span>
             </button>
-            <button
-              style={{
-                padding: "6px 14px",
-                background: "#ff5c35",
-                color: "#ffffff",
-                border: "none",
-                borderRadius: "3px",
-                fontSize: "12px",
-                fontWeight: 600,
-                cursor: "pointer",
-                boxShadow: "0 1px 2px rgba(0,0,0,0.05)",
-                transition: "all 0.2s"
-              }}
-            >
-              Create Intervention
-            </button>
+            {selectedDeal && (
+              <button
+                onClick={() => handleExecuteIntervention(selectedDeal.id, "Auto-Trigger Peer-to-Peer CFO Multi-Threading Email")}
+                style={{
+                  background: "#ff5c35",
+                  color: "#ffffff",
+                  border: "none",
+                  boxShadow: "0 2px 6px rgba(255, 92, 53, 0.25)",
+                }}
+              >
+                <span>⚡ Auto-Rescue CFO Sequence</span>
+              </button>
+            )}
           </div>
         </div>
-      </div>
-
-      
 
         {/* Action Success Alert Banner */}
         {actionSuccessMsg && (
@@ -227,34 +218,36 @@ export const DealWarRoom: React.FC = () => {
               borderRadius: "var(--radius-sm)",
               fontSize: "12.5px",
               fontWeight: 600,
-              color: "#e6ffff",
+              color: "#007a8c",
             }}
           >
             {actionSuccessMsg}
           </motion.div>
         )}
+      </div>
+
       {/* ── High-Impact KPI Metrics ───────────────────────────────────── */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16 }}>
         <div className="kpi-card" style={{ borderTopColor: "var(--hs-primary)" }}>
           <div className="kpi-title">Total Revenue at Stake</div>
-          <div className="kpi-value">${(totalAtStake / 1000).toFixed(0)}K</div>
-          <div className="kpi-subtitle">5 high-ticket deals closing this cycle</div>
+          <div className="kpi-value">${(totalAtStake / 1000000).toFixed(1)}M</div>
+          <div className="kpi-subtitle">{deals.length} strategic deals under QBR review</div>
         </div>
 
         <div className="kpi-card" style={{ borderTopColor: "var(--danger)" }}>
           <div className="kpi-title">Critical Slippage Exposure</div>
           <div className="kpi-value" style={{ color: "var(--danger)" }}>
-            ${(criticalAtRisk / 1000).toFixed(0)}K
+            ${(criticalAtRisk / 1000000).toFixed(1)}M
           </div>
-          <div className="kpi-subtitle">Requires immediate VP Sales triage</div>
+          <div className="kpi-subtitle">Requires immediate executive triage</div>
         </div>
 
         <div className="kpi-card" style={{ borderTopColor: "var(--risk-healthy)" }}>
           <div className="kpi-title">Forecast Commit Target</div>
           <div className="kpi-value" style={{ color: "var(--risk-healthy)" }}>
-            ${(commitRevenue / 1000).toFixed(0)}K
+            ${(commitRevenue / 1000000).toFixed(1)}M
           </div>
-          <div className="kpi-subtitle">Pre-contract & final approval</div>
+          <div className="kpi-subtitle">Pre-contract &amp; final PO approval</div>
         </div>
 
         <div className="kpi-card" style={{ borderTopColor: "#00a4bd" }}>
@@ -271,7 +264,7 @@ export const DealWarRoom: React.FC = () => {
           <div className="card-header">
             <div>
               <div className="card-title">Active War Room Deals</div>
-              <div className="card-subtitle">Select a deal to inspect stakeholders & trigger interventions</div>
+              <div className="card-subtitle">Select a deal to inspect stakeholders &amp; trigger interventions</div>
             </div>
             <span className="badge" style={{ background: "var(--hs-surface)", color: "var(--hs-primary)", fontWeight: 700 }}>
               {deals.length} DEALS
@@ -280,11 +273,11 @@ export const DealWarRoom: React.FC = () => {
           <div className="card-body" style={{ padding: "8px" }}>
             <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
               {deals.map((deal) => {
-                const isSelected = selectedDeal.id === deal.id;
+                const isSelected = selectedDeal?.id === deal.id;
                 return (
                   <div
                     key={deal.id}
-                    onClick={() => setSelectedDeal(deal)}
+                    onClick={() => setSelectedDealId(deal.id)}
                     style={{
                       padding: "12px 14px",
                       borderRadius: "var(--radius-sm)",
@@ -332,111 +325,113 @@ export const DealWarRoom: React.FC = () => {
         </div>
 
         {/* Right Column: Deep Triage & Executive Intervention Command Center */}
-        <div className="card">
-          <div className="card-header">
-            <div>
-              <div className="card-title">Executive Triage: {selectedDeal.name}</div>
-              <div className="card-subtitle">Account: {selectedDeal.client} · Value: ${(selectedDeal.value / 1000).toFixed(0)}K</div>
-            </div>
-            <span className={`risk-pill`} data-band={selectedDeal.band}>
-              Score: {selectedDeal.riskScore} · {selectedDeal.band}
-            </span>
-          </div>
-
-          <div className="card-body" style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-            {/* Key Blocker Callout */}
-            <div style={{ padding: "12px 14px", background: "var(--risk-critical-bg)", borderRadius: "var(--radius-sm)", border: "1px solid var(--risk-critical-border)" }}>
-              <div style={{ fontSize: "11px", fontWeight: 800, color: "var(--danger)", textTransform: "uppercase" }}>
-                ⚠️ Primary Deal Slip Blocker
+        {selectedDeal ? (
+          <div className="card">
+            <div className="card-header">
+              <div>
+                <div className="card-title">Executive Triage: {selectedDeal.name}</div>
+                <div className="card-subtitle">Account: {selectedDeal.client} · Value: ${(selectedDeal.value / 1000).toFixed(0)}K</div>
               </div>
-              <div style={{ fontSize: "12.5px", color: "var(--hs-text)", marginTop: 4, lineHeight: 1.5 }}>
-                {selectedDeal.keyBlocker}
-              </div>
+              <span className={`risk-pill`} data-band={selectedDeal.band}>
+                Score: {selectedDeal.riskScore} · {selectedDeal.band}
+              </span>
             </div>
 
-            {/* Stakeholder Multi-Threading Grid */}
-            <div>
-              <div style={{ fontSize: "11.5px", fontWeight: 700, textTransform: "uppercase", color: "var(--hs-text-muted)", marginBottom: 8 }}>
-                Stakeholder Engagement Map
-              </div>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
-                {/* Economic Buyer */}
-                <div style={{ padding: "10px 12px", background: "var(--hs-surface)", borderRadius: "var(--radius-sm)", border: "1px solid var(--hs-border-dark)" }}>
-                  <div style={{ fontSize: "10.5px", color: "var(--hs-text-muted)", textTransform: "uppercase" }}>
-                    Economic Buyer (CFO/Exec)
-                  </div>
-                  <div style={{ fontWeight: 700, fontSize: "12.5px", color: "var(--hs-primary)", marginTop: 2 }}>
-                    {selectedDeal.economicBuyer.name}
-                  </div>
-                  <div style={{ fontSize: "11px", color: "var(--hs-text-muted)" }}>
-                    {selectedDeal.economicBuyer.title}
-                  </div>
-                  <div style={{ marginTop: 6 }}>
-                    <span className="badge" style={{ background: selectedDeal.economicBuyer.engagement.includes("Silent") ? "var(--risk-critical-bg)" : "var(--risk-healthy-bg)", color: selectedDeal.economicBuyer.engagement.includes("Silent") ? "var(--danger)" : "var(--risk-healthy)", fontSize: "9.5px" }}>
-                      {selectedDeal.economicBuyer.engagement}
-                    </span>
-                  </div>
+            <div className="card-body" style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+              {/* Key Blocker Callout */}
+              <div style={{ padding: "12px 14px", background: "var(--risk-critical-bg)", borderRadius: "var(--radius-sm)", border: "1px solid var(--risk-critical-border)" }}>
+                <div style={{ fontSize: "11px", fontWeight: 800, color: "var(--danger)", textTransform: "uppercase" }}>
+                  ⚠️ Primary Deal Slip Blocker
                 </div>
-
-                {/* Champion */}
-                <div style={{ padding: "10px 12px", background: "var(--hs-surface)", borderRadius: "var(--radius-sm)", border: "1px solid var(--hs-border-dark)" }}>
-                  <div style={{ fontSize: "10.5px", color: "var(--hs-text-muted)", textTransform: "uppercase" }}>
-                    Internal Champion
-                  </div>
-                  <div style={{ fontWeight: 700, fontSize: "12.5px", color: "var(--hs-primary)", marginTop: 2 }}>
-                    {selectedDeal.champion.name}
-                  </div>
-                  <div style={{ fontSize: "11px", color: "var(--hs-text-muted)" }}>
-                    {selectedDeal.champion.title}
-                  </div>
-                  <div style={{ marginTop: 6 }}>
-                    <span className="badge" style={{ background: selectedDeal.champion.sentiment === "Strong" ? "var(--risk-healthy-bg)" : "var(--risk-high-bg)", color: selectedDeal.champion.sentiment === "Strong" ? "var(--risk-healthy)" : "var(--warning)", fontSize: "9.5px" }}>
-                      Sentiment: {selectedDeal.champion.sentiment}
-                    </span>
-                  </div>
+                <div style={{ fontSize: "12.5px", color: "var(--hs-text)", marginTop: 4, lineHeight: 1.5 }}>
+                  {selectedDeal.keyBlocker}
                 </div>
               </div>
-            </div>
 
-            {/* Recommended Executive Next Move */}
-            <div style={{ padding: "12px 14px", background: "var(--hs-surface)", borderRadius: "var(--radius-sm)", border: "1px solid var(--hs-border-dark)" }}>
-              <div style={{ fontSize: "11px", fontWeight: 700, color: "var(--hs-primary)", textTransform: "uppercase" }}>
-                🎯 Recommended Executive Intervention
+              {/* Stakeholder Multi-Threading Grid */}
+              <div>
+                <div style={{ fontSize: "11.5px", fontWeight: 700, textTransform: "uppercase", color: "var(--hs-text-muted)", marginBottom: 8 }}>
+                  Stakeholder Engagement Map
+                </div>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+                  {/* Economic Buyer */}
+                  <div style={{ padding: "10px 12px", background: "var(--hs-surface)", borderRadius: "var(--radius-sm)", border: "1px solid var(--hs-border-dark)" }}>
+                    <div style={{ fontSize: "10.5px", color: "var(--hs-text-muted)", textTransform: "uppercase" }}>
+                      Economic Buyer (CFO/Exec)
+                    </div>
+                    <div style={{ fontWeight: 700, fontSize: "12.5px", color: "var(--hs-primary)", marginTop: 2 }}>
+                      {selectedDeal.economicBuyer.name}
+                    </div>
+                    <div style={{ fontSize: "11px", color: "var(--hs-text-muted)" }}>
+                      {selectedDeal.economicBuyer.title}
+                    </div>
+                    <div style={{ marginTop: 6 }}>
+                      <span className="badge" style={{ background: selectedDeal.economicBuyer.engagement.includes("Silent") ? "var(--risk-critical-bg)" : "var(--risk-healthy-bg)", color: selectedDeal.economicBuyer.engagement.includes("Silent") ? "var(--danger)" : "var(--risk-healthy)", fontSize: "9.5px" }}>
+                        {selectedDeal.economicBuyer.engagement}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Champion */}
+                  <div style={{ padding: "10px 12px", background: "var(--hs-surface)", borderRadius: "var(--radius-sm)", border: "1px solid var(--hs-border-dark)" }}>
+                    <div style={{ fontSize: "10.5px", color: "var(--hs-text-muted)", textTransform: "uppercase" }}>
+                      Internal Champion
+                    </div>
+                    <div style={{ fontWeight: 700, fontSize: "12.5px", color: "var(--hs-primary)", marginTop: 2 }}>
+                      {selectedDeal.champion.name}
+                    </div>
+                    <div style={{ fontSize: "11px", color: "var(--hs-text-muted)" }}>
+                      {selectedDeal.champion.title}
+                    </div>
+                    <div style={{ marginTop: 6 }}>
+                      <span className="badge" style={{ background: selectedDeal.champion.sentiment === "Strong" ? "var(--risk-healthy-bg)" : "var(--risk-high-bg)", color: selectedDeal.champion.sentiment === "Strong" ? "var(--risk-healthy)" : "var(--warning)", fontSize: "9.5px" }}>
+                        Sentiment: {selectedDeal.champion.sentiment}
+                      </span>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div style={{ fontSize: "13px", fontWeight: 600, color: "var(--hs-primary)", marginTop: 4, lineHeight: 1.5 }}>
-                {selectedDeal.nextExecAction}
+
+              {/* Recommended Executive Next Move */}
+              <div style={{ padding: "12px 14px", background: "var(--hs-surface)", borderRadius: "var(--radius-sm)", border: "1px solid var(--hs-border-dark)" }}>
+                <div style={{ fontSize: "11px", fontWeight: 700, color: "var(--hs-primary)", textTransform: "uppercase" }}>
+                  🎯 Recommended Executive Intervention
+                </div>
+                <div style={{ fontSize: "13px", fontWeight: 600, color: "var(--hs-primary)", marginTop: 4, lineHeight: 1.5 }}>
+                  {selectedDeal.nextExecAction}
+                </div>
               </div>
-            </div>
 
-            {/* 1-Click Executive Intervention Buttons */}
-            <div style={{ display: "flex", flexDirection: "column", gap: 8, marginTop: 4 }}>
-              <button
-                className="btn btn-primary"
-                onClick={() => handleExecuteIntervention(selectedDeal.id, "Auto-Trigger Peer-to-Peer CFO Multi-Threading Email")}
-                style={{ width: "100%", padding: "11px 0", fontWeight: 700, background: "#ff5c35", fontSize: "13px" }}
-              >
-                ⚡ 1-Click Trigger CFO Peer-to-Peer Rescue
-              </button>
+              {/* 1-Click Executive Intervention Buttons */}
+              <div style={{ display: "flex", flexDirection: "column", gap: 8, marginTop: 4 }}>
+                <button
+                  className="btn btn-primary"
+                  onClick={() => handleExecuteIntervention(selectedDeal.id, "Auto-Trigger Peer-to-Peer CFO Multi-Threading Email")}
+                  style={{ width: "100%", padding: "11px 0", fontWeight: 700, background: "#ff5c35", fontSize: "13px" }}
+                >
+                  ⚡ 1-Click Trigger CFO Peer-to-Peer Rescue
+                </button>
 
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
-                <button
-                  className="btn btn-secondary"
-                  onClick={() => handleExecuteIntervention(selectedDeal.id, "Push Close Date +30 Days & Notify Rep")}
-                  style={{ padding: "9px 0", fontSize: "12px", fontWeight: 600 }}
-                >
-                  📅 Push Close Date +30d
-                </button>
-                <button
-                  className="btn btn-secondary"
-                  onClick={() => handleExecuteIntervention(selectedDeal.id, "Send Mutual Action Plan (MAP) to Champion")}
-                  style={{ padding: "9px 0", fontSize: "12px", fontWeight: 600 }}
-                >
-                  🗺️ Dispatch MAP Link
-                </button>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+                  <button
+                    className="btn btn-secondary"
+                    onClick={() => handleExecuteIntervention(selectedDeal.id, "Push Close Date +30 Days & Notify Rep")}
+                    style={{ padding: "9px 0", fontSize: "12px", fontWeight: 600 }}
+                  >
+                    📅 Push Close Date +30d
+                  </button>
+                  <button
+                    className="btn btn-secondary"
+                    onClick={() => handleExecuteIntervention(selectedDeal.id, "Send Mutual Action Plan (MAP) to Champion")}
+                    style={{ padding: "9px 0", fontSize: "12px", fontWeight: 600 }}
+                  >
+                    🗺️ Dispatch MAP Link
+                  </button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        ) : null}
       </div>
 
       {/* ── Executive QBR Export Modal ───────────────────────────────── */}
@@ -494,6 +489,9 @@ export const DealWarRoom: React.FC = () => {
                 />
                 <div style={{ display: "flex", justifyContent: "flex-end", gap: 10, marginTop: 14 }}>
                   <button className="btn btn-secondary" onClick={() => setQbrModalOpen(false)}>Close</button>
+                  <button className="btn btn-secondary" onClick={handleDownloadQbr}>
+                    📥 Download .md
+                  </button>
                   <button className="btn btn-primary" onClick={handleCopyQbr} style={{ background: "#ff5c35", fontWeight: 700 }}>
                     {copiedQbr ? "✓ Copied to Clipboard!" : "📋 Copy Executive Brief"}
                   </button>
@@ -506,3 +504,4 @@ export const DealWarRoom: React.FC = () => {
     </div>
   );
 };
+

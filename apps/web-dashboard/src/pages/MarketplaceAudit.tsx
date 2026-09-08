@@ -137,8 +137,8 @@ export const MarketplaceAudit: React.FC = () => {
         application: "DealSense AI Revenue Intelligence",
         developer: "HubAiLab / Peash Das Rudra",
         marketplace_category: "Sales > CRM & Sales Automation",
-        certification_score: "100/100",
-        hubspot_tier: "Certified App Partner Architecture",
+        compliance_score: "100/100",
+        security_tier: "Enterprise Production Grade",
         automated_checks: checks,
         verified_timestamp: new Date().toISOString(),
       },
@@ -150,7 +150,7 @@ export const MarketplaceAudit: React.FC = () => {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = "dealsense_hubspot_marketplace_certification.json";
+    a.download = "dealsense_security_compliance_audit.json";
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -204,10 +204,10 @@ export const MarketplaceAudit: React.FC = () => {
             </div>
 
             <h1 style={{ fontSize: "24px", fontWeight: 800, color: "#092124", margin: "0 0 6px" }}>
-              HubSpot App Marketplace Certification &amp; Compliance Console
+              HubSpot Integration &amp; Security Compliance Console
             </h1>
             <p style={{ fontSize: "13.5px", color: "#64748b", margin: 0, maxWidth: "680px", lineHeight: 1.55 }}>
-              Continuous automated verification of the 8 technical mandates required by the HubSpot App Review Team to secure the <strong>Certified App Partner</strong> title and ensure enterprise-grade security.
+              Continuous automated verification of the 8 technical mandates ensuring enterprise-grade encryption, rate limiting, GDPR webhook response SLAs, and tenant isolation.
             </p>
           </div>
 
@@ -263,7 +263,7 @@ export const MarketplaceAudit: React.FC = () => {
               </>
             ) : (
               <>
-                <span>⚡ Run Live HubSpot Certification Audit</span>
+                <span>⚡ Run Live Security Compliance Audit</span>
               </>
             )}
           </button>

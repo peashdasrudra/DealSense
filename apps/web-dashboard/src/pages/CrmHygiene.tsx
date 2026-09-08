@@ -3,10 +3,10 @@
  * Automates detection and batch remediation of dirty CRM data, stale deals, and overdue close dates.
  */
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { DealDrawer, DealData } from "../components/DealDrawer";
-import { ProGate } from "../components/ProGate";
+import { getLocalHygieneIssues, saveLocalHygieneIssues, logAuditEvent } from "../api";
 
 interface HygieneIssue {
   id: string;
@@ -15,106 +15,39 @@ interface HygieneIssue {
   client: string;
   owner: string;
   value: number;
-  issueType: "Stale Activity" | "Overdue Close Date" | "Missing Next Step" | "Single-Threaded";
+  issueType: "Stale Activity" | "Overdue Close Date" | "Missing Next Step" | "Single-Threaded" | "Missing MEDDICC";
   severity: "critical" | "high" | "moderate";
   details: string;
   recommendedAction: string;
   status: "pending" | "resolved";
 }
 
-const SAMPLE_HYGIENE_ISSUES: HygieneIssue[] = [
-  {
-    id: "hyg-001",
-    dealId: "deal-101",
-    dealName: "Orion Cloud Migration",
-    client: "TechCorp Inc.",
-    owner: "Sarah Miller",
-    value: 150000,
-    issueType: "Stale Activity",
-    severity: "critical",
-    details: "18 days since last logged call, meeting, or email. Stage aging limit breached.",
-    recommendedAction: "Auto-create high-priority HubSpot task for Sarah Miller",
-    status: "pending",
-  },
-  {
-    id: "hyg-002",
-    dealId: "deal-102",
-    dealName: "Quantum Security Suite",
-    client: "FinanceGo Ltd.",
-    owner: "James Reynolds",
-    value: 280000,
-    issueType: "Overdue Close Date",
-    severity: "critical",
-    details: "Close date was August 15 (18 days in past) while deal remains in Negotiation stage.",
-    recommendedAction: "Slip close date by +14 days and prompt rep for updated timeline",
-    status: "pending",
-  },
-  {
-    id: "hyg-003",
-    dealId: "deal-103",
-    dealName: "Horizon Data Platform",
-    client: "RetailMax",
-    owner: "Lisa Chen",
-    value: 95000,
-    issueType: "Single-Threaded",
-    severity: "high",
-    details: "Only 1 contact associated with $95K deal in Qualification stage.",
-    recommendedAction: "Enrich account contacts & prompt rep to multi-thread economic buyer",
-    status: "pending",
-  },
-  {
-    id: "hyg-004",
-    dealId: "deal-104",
-    dealName: "Apex CRM Integration",
-    client: "LogiPro Solutions",
-    owner: "Mike Torres",
-    value: 120000,
-    issueType: "Missing Next Step",
-    severity: "moderate",
-    details: "Next Step field is blank; last meeting was 5 days ago.",
-    recommendedAction: "Populate Next Step from meeting transcript: 'Board presentation Tuesday'",
-    status: "pending",
-  },
-  {
-    id: "hyg-005",
-    dealId: "deal-106",
-    dealName: "Nebula Analytics Engine",
-    client: "HealthFirst Corp.",
-    owner: "Sarah Miller",
-    value: 210000,
-    issueType: "Overdue Close Date",
-    severity: "critical",
-    details: "Close date passed 7 days ago with zero stage movement.",
-    recommendedAction: "Slip close date by +21 days to end of month",
-    status: "pending",
-  },
-  {
-    id: "hyg-006",
-    dealId: "deal-107",
-    dealName: "Titan ERP Modernization",
-    client: "ManufactCo",
-    owner: "James Reynolds",
-    value: 340000,
-    issueType: "Stale Activity",
-    severity: "high",
-    details: "14 days without outbound communication from rep.",
-    recommendedAction: "Send Slack alert to James Reynolds with suggested re-engagement draft",
-    status: "pending",
-  },
-];
-
 const ISSUE_BADGES: Record<string, { bg: string; color: string }> = {
-  "Stale Activity": { bg: "var(--risk-critical-bg)", color: "var(--danger)" },
-  "Overdue Close Date": { bg: "var(--risk-high-bg)", color: "var(--warning)" },
-  "Single-Threaded": { bg: "#e7f5ff", color: "#1971c2" },
-  "Missing Next Step": { bg: "var(--risk-moderate-bg)", color: "var(--risk-moderate)" },
+  "Stale Activity": { bg: "rgba(242, 84, 91, 0.1)", color: "var(--danger)" },
+  "Overdue Close Date": { bg: "rgba(245, 194, 107, 0.15)", color: "#b36b00" },
+  "Single-Threaded": { bg: "rgba(25, 113, 194, 0.1)", color: "#1971c2" },
+  "Missing Next Step": { bg: "rgba(0, 164, 189, 0.1)", color: "#007a8c" },
+  "Missing MEDDICC": { bg: "rgba(128, 90, 213, 0.1)", color: "#805ad5" },
 };
 
 export const CrmHygiene: React.FC = () => {
-  const [issues, setIssues] = useState<HygieneIssue[]>(SAMPLE_HYGIENE_ISSUES);
+  const [issues, setIssues] = useState<HygieneIssue[]>(getLocalHygieneIssues as any);
   const [filter, setFilter] = useState("All");
   const [batchSuccess, setBatchSuccess] = useState<string | null>(null);
   const [selectedDrawerDeal, setSelectedDrawerDeal] = useState<DealData | null>(null);
+
+  useEffect(() => {
+    const handleUpdated = (e: any) => {
+      if (e.detail && Array.isArray(e.detail)) {
+        setIssues(e.detail);
+
+      } else {
+        setIssues(getLocalHygieneIssues() as any);
+      }
+    };
+    window.addEventListener("dealsense:hygiene-updated", handleUpdated);
+    return () => window.removeEventListener("dealsense:hygiene-updated", handleUpdated);
+  }, []);
 
   const pendingIssues = issues.filter((i) => i.status === "pending");
 
@@ -124,79 +57,114 @@ export const CrmHygiene: React.FC = () => {
   });
 
   const handleResolve = (id: string, actionName: string) => {
-    setIssues((prev) => prev.map((i) => (i.id === id ? { ...i, status: "resolved" } : i)));
+    const target = issues.find(i => i.id === id);
+    const updated = issues.map((i) => (i.id === id ? { ...i, status: "resolved" as const } : i));
+    setIssues(updated);
+    saveLocalHygieneIssues(updated as any);
     setBatchSuccess(`✓ Action executed: ${actionName}`);
     setTimeout(() => setBatchSuccess(null), 3000);
+
+    if (target) {
+      logAuditEvent({
+        actionType: "CRM Hygiene Remediated",
+        actor: "DealSense Auto-Remediator",
+        role: "RevOps Remediation Engine",
+        targetObject: `${target.dealName} (${target.issueType})`,
+        tier: "Tier 3 (Automated Write-Back)",
+        status: "Success",
+        details: `Remediated ${target.issueType} on deal "${target.dealName}": ${actionName}.`,
+      });
+    }
   };
 
   const handleBatchFixAll = () => {
-    setIssues((prev) => prev.map((i) => ({ ...i, status: "resolved" })));
-    setBatchSuccess(`✓ Successfully remediated all ${pendingIssues.length} CRM hygiene issues in HubSpot!`);
+    const count = pendingIssues.length;
+    const updated = issues.map((i) => ({ ...i, status: "resolved" as const }));
+    setIssues(updated);
+    saveLocalHygieneIssues(updated as any);
+    setBatchSuccess(`✓ Successfully remediated all ${count} CRM hygiene issues in HubSpot!`);
     setTimeout(() => setBatchSuccess(null), 4000);
+
+    logAuditEvent({
+      actionType: "Batch CRM Clean Executed",
+      actor: "Peash Rudra",
+      role: "VP RevOps",
+      targetObject: "HubSpot Deal Pipeline",
+      tier: "Tier 4 (Executive Action)",
+      status: "Success",
+      details: `Batch remediated ${count} CRM hygiene discrepancies across pipeline.`,
+    });
+  };
+
+  const handleExportReport = () => {
+    const headers = ["ID", "Deal", "Account", "Owner", "Value", "Issue Type", "Severity", "Status", "Discrepancy", "Recommended Action"];
+    const rows = issues.map((i) => [
+      i.id,
+      `"${(i.dealName || "").replace(/"/g, '""')}"`,
+      `"${(i.client || "").replace(/"/g, '""')}"`,
+      `"${(i.owner || "").replace(/"/g, '""')}"`,
+      i.value,
+      `"${i.issueType}"`,
+      i.severity,
+      i.status,
+      `"${(i.details || "").replace(/"/g, '""')}"`,
+      `"${(i.recommendedAction || "").replace(/"/g, '""')}"`,
+    ]);
+    const csvContent = "data:text/csv;charset=utf-8," + [headers.join(","), ...rows.map((r) => r.join(","))].join("\n");
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", `dealsense_crm_hygiene_report_${Date.now()}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    setBatchSuccess("✓ Exported CRM Hygiene Audit Report to CSV");
+    setTimeout(() => setBatchSuccess(null), 3000);
   };
 
   return (
-    <ProGate featureName="CRM Data Hygiene & Auto-Remediation" description="Scan your HubSpot CRM for stale dates, missing next steps, and single-threaded deals. Fix them all with a single click.">
-      <div>
+    <div>
       {/* ── Enterprise Header ─────────────────────────────────────────── */}
-      <div
-        className="card"
-        style={{
-          background: "#ffffff",
-          padding: "20px 24px",
-          border: "1px solid var(--hs-border-dark)",
-          borderTop: "3px solid var(--hs-primary)",
-          marginBottom: "var(--sp-5)",
-          boxShadow: "var(--shadow-sm)",
-        }}
-      >
+      <div className="page-header-card">
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 12 }}>
           <div>
-            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
-              <span className="badge" style={{ background: "rgba(255, 122, 89, 0.1)", color: "#ff7a59", border: "1px solid rgba(255, 122, 89, 0.3)", fontWeight: 700, padding: "2px 8px", fontSize: "9.5px", letterSpacing: "0.05em" }}>
+            <div className="page-header-badge-row">
+              <span className="page-header-badge">
                 ● REVOPS PIPELINE TELEMETRY
               </span>
-              <span style={{ fontSize: "11.5px", color: "var(--hs-text-muted)", fontWeight: 500 }}>Automated Data Remediation</span>
             </div>
-            <h2 style={{ fontSize: "20px", fontWeight: 800, color: "var(--hs-heading)", margin: "0 0 4px", letterSpacing: "-0.01em" }}>
-              CRM Hygiene & Remediation Engine
+            <h2 className="page-header-title">
+              CRM Hygiene &amp; Remediation Engine
             </h2>
-            <p style={{ fontSize: "13px", color: "var(--hs-text)", margin: 0, maxWidth: 680, lineHeight: 1.5 }}>
+            <p className="page-header-desc">
               Detect missing properties, stale close dates, and unassigned deals autonomously. Fix pipeline data integrity issues before they skew your forecast.
             </p>
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 4 }}>
+          <div className="page-header-actions">
             <button
+              onClick={handleExportReport}
+              className="btn btn-secondary"
               style={{
-                padding: "6px 14px",
                 background: "#ffffff",
                 color: "var(--hs-text)",
                 border: "1px solid var(--hs-border-dark)",
-                borderRadius: "3px",
-                fontSize: "12px",
-                fontWeight: 600,
-                cursor: "pointer",
-                boxShadow: "0 1px 2px rgba(0,0,0,0.05)",
-                transition: "all 0.2s"
               }}
             >
               Export Hygiene Report
             </button>
             <button
+              onClick={handleBatchFixAll}
+              disabled={pendingIssues.length === 0}
+              className="btn btn-primary"
               style={{
-                padding: "6px 14px",
-                background: "#ff5c35",
-                color: "#ffffff",
+                background: pendingIssues.length > 0 ? "#ff5c35" : "#e5e7eb",
+                color: pendingIssues.length > 0 ? "#ffffff" : "#9ca3af",
                 border: "none",
-                borderRadius: "3px",
-                fontSize: "12px",
-                fontWeight: 600,
-                cursor: "pointer",
-                boxShadow: "0 1px 2px rgba(0,0,0,0.05)",
-                transition: "all 0.2s"
+                cursor: pendingIssues.length > 0 ? "pointer" : "default",
+                boxShadow: pendingIssues.length > 0 ? "0 2px 6px rgba(255, 92, 53, 0.25)" : "none",
               }}
             >
-              Run Auto-Clean
+              ⚡ 1-Click Auto-Remediate ({pendingIssues.length})
             </button>
           </div>
         </div>
@@ -515,6 +483,5 @@ export const CrmHygiene: React.FC = () => {
         onClose={() => setSelectedDrawerDeal(null)}
       />
     </div>
-    </ProGate>
   );
 };
