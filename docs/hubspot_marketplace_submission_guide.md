@@ -16,12 +16,21 @@ This document provides the exact, step-by-step instructions to list the DealSens
    - Add your company logo and a short description.
 3. **Configure Authentication (OAuth 2.0)**
    - Navigate to the **Auth** tab in your app settings.
-   - **Scopes Required:** Select the minimum scopes needed (based on the MVP):
-     - `crm.objects.contacts.read`
-     - `crm.objects.deals.read`
-     - `crm.objects.deals.write` (to write risk scores back)
-   - **Redirect URL:** Enter the production OAuth callback URL: `https://dealsense.peash.tech/oauth/callback`
-   - *Save your `Client ID` and `Client Secret`. You will need these for your production backend.*
+    - **Scopes Required:** Select the scopes configured in the app:
+      - `crm.objects.deals.read`
+      - `crm.objects.deals.write` (to write risk scores back)
+      - `crm.objects.contacts.read`
+      - `crm.objects.companies.read`
+      - `crm.schemas.deals.read`
+      - `crm.objects.notes.read`
+      - `crm.objects.notes.write`
+      - `crm.objects.owners.read`
+      - `timeline` (optional)
+    - **Redirect URLs:** Enter all registered OAuth callback URLs:
+      - `https://dealsense.peash.tech/oauth/callback` (Production Frontend)
+      - `https://dealsense-api-6o2h.onrender.com/api/v1/oauth/callback` (Production Backend Direct)
+      - `http://localhost:3000/oauth/callback` (Local Development / Testing)
+    - *Save your `Client ID` and `Client Secret`. You will need these for your production backend.*
 4. **Configure Webhooks**
    - In the **Webhooks** tab, enter the live target URL: `https://dealsense-api-6o2h.onrender.com/api/v1/webhooks/hubspot`.
 

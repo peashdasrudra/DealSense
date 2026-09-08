@@ -55,7 +55,11 @@ class Settings(BaseSettings):
     hubspot_client_id: str = ""
     hubspot_client_secret: str = ""
     hubspot_redirect_uri: str = "https://dealsense.peash.tech/oauth/callback"
-    hubspot_scopes: str = "oauth,crm.objects.deals.read,crm.objects.deals.write,crm.objects.contacts.read"
+    hubspot_scopes: str = (
+        "crm.objects.deals.read,crm.objects.deals.write,crm.objects.contacts.read,"
+        "crm.objects.companies.read,crm.schemas.deals.read,crm.objects.notes.read,"
+        "crm.objects.notes.write,crm.objects.owners.read,timeline"
+    )
     hubspot_app_id: str = ""
     hubspot_access_token: str = ""
     app_base_url: str = "https://dealsense.peash.tech"

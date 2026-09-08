@@ -16,7 +16,7 @@ class OAuthCallbackRequest(BaseModel):
     """Request payload / query parameters for HubSpot OAuth callback."""
 
     code: str
-    state: str
+    state: str | None = None
     redirect_uri: str | None = None
 
 
@@ -27,6 +27,7 @@ class OAuthCallbackResponse(BaseModel):
     tenant_id: UUID
     hubspot_portal_id: str
     message: str = "HubSpot integration successfully connected"
+    session_jwt: str | None = None
 
 
 class OAuthConnectionStatusResponse(BaseModel):

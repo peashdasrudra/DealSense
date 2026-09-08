@@ -10,9 +10,10 @@ Handles HubSpot OAuth 2.0 flow:
 - POST /api/v1/oauth/disconnect: Disconnects integration and revokes active status
 """
 
+from typing import Any
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, Query, Request
+from fastapi import APIRouter, Depends, Query, Request, Response
 from fastapi.responses import RedirectResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -24,6 +25,7 @@ from dealsense.api.schemas.oauth import (
     OAuthConnectionStatusResponse,
     OAuthDisconnectResponse,
 )
+from dealsense.config import get_settings
 from dealsense.security.rbac import Permission, require_permission
 from dealsense.security.token_manager import get_access_token
 from dealsense.services.oauth_service import (
@@ -42,7 +44,7 @@ async def install_url() -> dict[str, str]:
     """Generate a one-click HubSpot OAuth install URL.
 
     This is the URL you share with customers for frictionless app installation.
-    Uses the production redirect URI — no localhost involved.
+    Uses the production redirect URI with pre-signed state.
     """
     return generate_install_url()
 
@@ -56,27 +58,59 @@ async def authorize(
     return OAuthAuthorizeResponse(authorization_url=auth_url, state=state)
 
 
-@router.get("/callback", response_model=OAuthCallbackResponse)
+@router.get("/callback")
 async def oauth_callback_get(
     request: Request,
+    response: Response,
     code: str = Query(..., description="Authorization code from HubSpot"),
-    state: str = Query(..., description="CSRF state parameter"),
+    state: str | None = Query(None, description="CSRF state parameter"),
     db: AsyncSession = Depends(get_db),
-) -> OAuthCallbackResponse:
-    """Handle OAuth redirect callback from HubSpot."""
+) -> Any:
+    """Handle OAuth redirect callback from HubSpot.
+
+    If invoked by a web browser (accepting HTML), redirects smoothly to the frontend dashboard.
+    If invoked as an API call, returns JSON response. Sets secure session cookie in all cases.
+    """
+    settings = get_settings()
     client_ip = request.client.host if request.client else None
     user_agent = request.headers.get("user-agent")
 
-    tenant_id, portal_id = await handle_oauth_callback(
+    tenant_id, portal_id, session_jwt = await handle_oauth_callback(
         code=code,
         state=state,
         db=db,
         ip_address=client_ip,
         user_agent=user_agent,
     )
+
+    accept_header = request.headers.get("accept", "")
+    is_browser_request = "text/html" in accept_header or "application/xhtml+xml" in accept_header
+
+    if is_browser_request:
+        redirect_url = f"{settings.app_base_url}/pipeline?auth=success&tenant_id={tenant_id}"
+        redirect_resp = RedirectResponse(url=redirect_url, status_code=302)
+        redirect_resp.set_cookie(
+            key="dealsense_session",
+            value=session_jwt,
+            httponly=True,
+            secure=settings.is_production,
+            samesite="lax",
+            max_age=86400 * 14,
+        )
+        return redirect_resp
+
+    response.set_cookie(
+        key="dealsense_session",
+        value=session_jwt,
+        httponly=True,
+        secure=settings.is_production,
+        samesite="lax",
+        max_age=86400 * 14,
+    )
     return OAuthCallbackResponse(
         tenant_id=tenant_id,
         hubspot_portal_id=portal_id,
+        session_jwt=session_jwt,
         message="HubSpot integration successfully connected",
     )
 
@@ -84,14 +118,16 @@ async def oauth_callback_get(
 @router.post("/callback", response_model=OAuthCallbackResponse)
 async def oauth_callback_post(
     request: Request,
+    response: Response,
     payload: OAuthCallbackRequest,
     db: AsyncSession = Depends(get_db),
 ) -> OAuthCallbackResponse:
     """Handle OAuth callback via POST JSON request."""
+    settings = get_settings()
     client_ip = request.client.host if request.client else None
     user_agent = request.headers.get("user-agent")
 
-    tenant_id, portal_id = await handle_oauth_callback(
+    tenant_id, portal_id, session_jwt = await handle_oauth_callback(
         code=payload.code,
         state=payload.state,
         db=db,
@@ -99,9 +135,20 @@ async def oauth_callback_post(
         ip_address=client_ip,
         user_agent=user_agent,
     )
+
+    response.set_cookie(
+        key="dealsense_session",
+        value=session_jwt,
+        httponly=True,
+        secure=settings.is_production,
+        samesite="lax",
+        max_age=86400 * 14,
+    )
+
     return OAuthCallbackResponse(
         tenant_id=tenant_id,
         hubspot_portal_id=portal_id,
+        session_jwt=session_jwt,
         message="HubSpot integration successfully connected",
     )
 

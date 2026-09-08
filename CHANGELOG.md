@@ -7,6 +7,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.3.0] - 2026-09-08
+
+### Added
+- **HubSpot OAuth 2.0 Marketplace Certification Overhaul:**
+  - **Stateless HMAC-SHA256 CSRF Protection:** Cryptographically signed and tamper-proof state tokens with 30-minute enterprise approval tolerance, eliminating Redis TTL expiration during multi-factor authentication (MFA).
+  - **HubSpot Developer Portal Direct-Install Fallback:** Graceful fallback for test account installs and HubSpot App Reviewers where the `state` parameter is omitted by the Developer Portal "Install app" button.
+  - **In-Flight Code Exchange Deduplication:** Backend locking and Redis caching (`oauth:session:{code_hash}`) to absorb React 18 StrictMode double-mount collisions and prevent single-use authorization code invalidation (`EXPIRED_AUTH_CODE`).
+  - **Browser Canonical 302 Redirection:** Automated browser detection on `GET /api/v1/oauth/callback` to set an `HttpOnly` session cookie and seamlessly redirect users to `/pipeline?auth=success` rather than returning raw JSON.
+  - **Cryptographic Tenant Session Isolation (Anti-BOLA):** Issued signed Session JWTs (`create_tenant_session_jwt`) on callback completion, verified by `TenantGuardMiddleware` and attached on frontend API requests (`Authorization: Bearer <jwt>`).
+  - **Edge-of-Cliff Token Refresh Margin:** 5-minute proactive expiration safety threshold (`EXPIRATION_SAFETY_MARGIN_SECONDS = 300`) in `token_manager.py` to prevent in-flight 401 Unauthorized errors.
+- **Hardware-Accelerated Gyroscopic Animated Telemetry Loader (`DealSenseLoader.tsx`):**
+  - High-performance SVG rings with counter-rotational gyroscopic physics (`rotate: 360deg` & `-360deg`).
+  - Pulsing center telemetry core with SVG radar sweep gradients (`#ff5c35` to `#00bda5`).
+  - Dynamic laser progress bar across viewport top edge during page-to-page navigation.
+  - Pre-hydration zero-delay HTML loader embedded in `index.html`.
+
+### Changed
+- **CRM API v3 Scope Harmonization:**
+  - Removed deprecated umbrella `oauth` scope string from `config.py` and `app-hsmeta.json`.
+  - Added required granular permissions: `crm.objects.notes.read`, `crm.objects.notes.write`, `crm.objects.owners.read`, `crm.objects.companies.read`, `crm.schemas.deals.read`, and `timeline`.
+- **Content Security Policy (CSP) & Iframe Permitted URLs:**
+  - Updated `app-hsmeta.json` to whitelist `https://dealsense.peash.tech`, `https://dealsense-api-6o2h.onrender.com`, and `http://localhost:3000/oauth/callback`.
+
+---
+
 ## [1.2.0] - 2026-09-08
 
 ### Added

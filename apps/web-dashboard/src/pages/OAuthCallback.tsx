@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import { DealSenseIcon } from "../components/DealSenseLogo";
@@ -10,57 +10,75 @@ export const OAuthCallback: React.FC = () => {
   const [status, setStatus] = useState<"processing" | "success" | "error">("processing");
   const [errorMessage, setErrorMessage] = useState("");
 
+  // Guard against React 18 StrictMode double-invocations burning single-use codes
+  const hasExecutedRef = useRef(false);
+
   useEffect(() => {
+    if (hasExecutedRef.current) return;
+    hasExecutedRef.current = true;
+
     const handleCallback = async () => {
       const params = new URLSearchParams(location.search);
       const code = params.get("code");
       const state = params.get("state");
 
-      if (!code || !state) {
+      if (!code) {
         setStatus("error");
-        setErrorMessage("Missing authorization code or state. Note: Do not use the 'Test URL' button in HubSpot Developer Portal as it omits the required security state parameter. Please install from the DealSense login page.");
+        setErrorMessage("No authorization code received from HubSpot. Please restart the installation.");
         return;
       }
+
+      // Immediately sanitize URL history so refresh does not re-submit burned authorization code
+      window.history.replaceState({}, document.title, window.location.pathname);
 
       try {
         const apiBase = (import.meta as any).env?.VITE_API_URL
           ? `${(import.meta as any).env.VITE_API_URL}/api/v1`
           : "/api/v1";
 
-        // Production redirect_uri must exactly match what's registered in HubSpot
-        // and what was used in the authorize URL. Never use window.location.origin
-        // as it may differ between environments.
-        const redirectUri = "https://dealsense.peash.tech/oauth/callback";
+        // Must match registered URL in HubSpot Developer Portal
+        const redirectUri =
+          window.location.origin.includes("localhost") || window.location.origin.includes("127.0.0.1")
+            ? "http://localhost:3000/oauth/callback"
+            : "https://dealsense.peash.tech/oauth/callback";
+
         const response = await fetch(`${apiBase}/oauth/callback`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ code, state, redirect_uri: redirectUri }),
+          body: JSON.stringify({
+            code,
+            state: state || "direct_install", // Graceful fallback for Developer Portal & Directory installs
+            redirect_uri: redirectUri,
+          }),
         });
 
         if (!response.ok) {
           const errorData = await response.json().catch(() => ({}));
           throw new Error(
-            errorData.message || errorData.detail || `OAuth exchange failed (HTTP ${response.status})`
+            errorData.detail || errorData.message || `HubSpot OAuth exchange failed (HTTP ${response.status})`
           );
         }
-        
+
         const responseData = await response.json();
         if (responseData.tenant_id) {
           localStorage.setItem("dealsense_tenant_id", responseData.tenant_id);
-          sessionStorage.setItem("dealsense_oauth_state", "authenticated"); // simple flag for App.tsx
+          sessionStorage.setItem("dealsense_oauth_state", "authenticated");
+        }
+        if (responseData.session_jwt) {
+          localStorage.setItem("dealsense_session_jwt", responseData.session_jwt);
         }
 
         setStatus("success");
         setTimeout(() => {
           navigate("/pipeline");
-        }, 1500);
+        }, 1200);
 
       } catch (err: any) {
-        console.error("Backend OAuth exchange failed:", err);
+        console.error("[DealSense OAuth] Authentication failed:", err);
         setStatus("error");
-        setErrorMessage(err.message || "Failed to connect HubSpot.");
+        setErrorMessage(err.message || "Failed to establish secure connection with HubSpot.");
       }
     };
 

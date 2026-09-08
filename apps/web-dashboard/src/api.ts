@@ -219,8 +219,12 @@ const getAuthHeaders = (tenantId?: string) => {
   const headers: Record<string, string> = {
     "X-Tenant-ID": getTenantId(tenantId),
   };
+  const sessionJwt = localStorage.getItem("dealsense_session_jwt");
   const apiKey = localStorage.getItem("dealsense_api_key");
-  if (apiKey) {
+
+  if (sessionJwt) {
+    headers["Authorization"] = `Bearer ${sessionJwt}`;
+  } else if (apiKey) {
     headers["Authorization"] = `Bearer ${apiKey}`;
   }
   return headers;

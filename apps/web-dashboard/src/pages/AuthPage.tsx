@@ -14,8 +14,11 @@ export const AuthPage: React.FC = () => {
         ? `${(import.meta as any).env.VITE_API_URL}/api/v1`
         : "/api/v1";
 
-      // Production redirect_uri — must match the registered URL in HubSpot
-      const redirectUri = "https://dealsense.peash.tech/oauth/callback";
+      // Dynamically select redirect_uri matching registered URLs in HubSpot Developer Portal
+      const redirectUri =
+        window.location.origin.includes("localhost") || window.location.origin.includes("127.0.0.1")
+          ? "http://localhost:3000/oauth/callback"
+          : "https://dealsense.peash.tech/oauth/callback";
       const response = await fetch(
         `${apiBase}/oauth/authorize?redirect_uri=${encodeURIComponent(redirectUri)}`
       );

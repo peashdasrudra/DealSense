@@ -66,12 +66,29 @@ class TenantGuardMiddleware(BaseHTTPMiddleware):
         from dealsense.config import get_settings
         settings = get_settings()
 
-        # Check for single-server admin authentication
+        # Check for single-server admin authentication or Session JWT
         is_admin = False
+        jwt_tenant_id = None
+
+        jwt_token = None
         if auth_header and auth_header.startswith("Bearer "):
-            token = auth_header.replace("Bearer ", "")
-            if token == settings.admin_api_key:
+            jwt_token = auth_header.replace("Bearer ", "")
+        elif "dealsense_session" in request.cookies:
+            jwt_token = request.cookies.get("dealsense_session")
+
+        if jwt_token:
+            if jwt_token == settings.admin_api_key:
                 is_admin = True
+            else:
+                try:
+                    import jwt
+                    payload = jwt.decode(jwt_token, settings.secret_key, algorithms=["HS256"])
+                    jwt_tenant_id = payload.get("tenant_id")
+                except Exception:
+                    pass
+
+        if jwt_tenant_id:
+            tenant_id_header = jwt_tenant_id
 
         portal_id_header = request.headers.get("X-HubSpot-Portal-Id")
         if not tenant_id_header and portal_id_header:

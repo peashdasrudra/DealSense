@@ -9,14 +9,18 @@
       "type": "oauth",
       "redirectUrls": [
         "https://dealsense.peash.tech/oauth/callback",
-        "https://dealsense-api-6o2h.onrender.com/api/v1/oauth/callback"
+        "https://dealsense-api-6o2h.onrender.com/api/v1/oauth/callback",
+        "http://localhost:3000/oauth/callback"
       ],
       "requiredScopes": [
         "crm.objects.deals.read",
         "crm.objects.deals.write",
         "crm.objects.contacts.read",
         "crm.objects.companies.read",
-        "crm.schemas.deals.read"
+        "crm.schemas.deals.read",
+        "crm.objects.notes.read",
+        "crm.objects.notes.write",
+        "crm.objects.owners.read"
       ],
       "optionalScopes": [
         "timeline"
@@ -26,12 +30,16 @@
     "permittedUrls": {
       "fetch": [
         "https://dealsense-api-6o2h.onrender.com",
+        "https://dealsense.peash.tech",
         "https://dealsense-ai.peash.tech"
       ],
       "iframe": [
+        "https://dealsense.peash.tech",
         "https://dealsense-ai.peash.tech"
       ],
-      "img": []
+      "img": [
+        "https://dealsense.peash.tech"
+      ]
     },
     "support": {
       "supportEmail": "support@dealsense.ai",

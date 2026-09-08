@@ -9,7 +9,7 @@ Manages HubSpot OAuth tokens with:
 """
 
 import time
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from uuid import UUID
 
 import httpx
@@ -37,6 +37,7 @@ logger = structlog.get_logger(__name__)
 
 # Cache TTL: slightly less than token expiry (30 min for HubSpot tokens)
 ACCESS_TOKEN_CACHE_TTL = 25 * 60  # 25 minutes
+EXPIRATION_SAFETY_MARGIN_SECONDS = 300  # 5 minutes safety buffer before token expiration
 REFRESH_LOCK_TTL = 30  # 30 seconds max lock hold time
 REFRESH_LOCK_WAIT = 10  # 10 seconds max wait for lock
 
@@ -71,21 +72,24 @@ async def get_access_token(
     # 2. Load connection from database
     connection = await _get_connection(tenant_id, db)
 
-    # 3. Check if token is still valid
+    # 3. Check if token is still valid (enforcing 5-minute safety margin)
     now = datetime.now(UTC)
-    if connection.token_expires_at.replace(tzinfo=UTC) > now:
+    safety_buffer = timedelta(seconds=EXPIRATION_SAFETY_MARGIN_SECONDS)
+    if connection.token_expires_at.replace(tzinfo=UTC) > (now + safety_buffer):
         # Token is still valid — decrypt and cache
         access_token = decrypt_value(connection.encrypted_access_token)
+        remaining_seconds = int((connection.token_expires_at.replace(tzinfo=UTC) - (now + safety_buffer)).total_seconds())
+        cache_ttl = min(ACCESS_TOKEN_CACHE_TTL, max(remaining_seconds, 60))
         await cache_set(
             _cache_key(tenant_id),
             access_token,
-            ttl_seconds=ACCESS_TOKEN_CACHE_TTL,
+            ttl_seconds=cache_ttl,
         )
         logger.debug("token_loaded_from_db", tenant_id=str(tenant_id))
         return access_token
 
-    # 4. Token is expired — refresh with distributed lock
-    logger.info("token_expired_refreshing", tenant_id=str(tenant_id))
+    # 4. Token is expired or approaching expiry — refresh with distributed lock
+    logger.info("token_expired_or_near_expiry_refreshing", tenant_id=str(tenant_id))
     return await _refresh_token_with_lock(tenant_id, connection, db)
 
 
