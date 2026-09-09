@@ -26,6 +26,8 @@ class OAuthCallbackResponse(BaseModel):
     status: str = "connected"
     tenant_id: UUID
     hubspot_portal_id: str
+    portal_name: str | None = None
+    hub_domain: str | None = None
     message: str = "HubSpot integration successfully connected"
     session_jwt: str | None = None
 

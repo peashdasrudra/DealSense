@@ -36,46 +36,44 @@ export const ConnectHubSpotModal: React.FC<ConnectHubSpotModalProps> = ({
   }, [isOpen, onClose]);
 
   const handleConnect = async (portal: { id: string; name: string; tier: string; deals: number }) => {
-    setStep("connecting");
     setErrorMessage("");
 
-    setTimeout(() => {
-      setStep("success");
-      const connectedData = {
-        id: portal.id,
-        name: portal.name,
-        tier: portal.tier,
-        deals: portal.deals,
-        latency: "0.18s",
-      };
+    const connectedData = {
+      id: portal.id,
+      name: portal.name,
+      tier: portal.tier,
+      deals: portal.deals,
+      latency: "0.18s",
+    };
 
-      try {
-        localStorage.setItem("dealsense_active_portal", JSON.stringify(connectedData));
-        
-        // Update portals list in localStorage
-        const savedPortalsStr = localStorage.getItem("dealsense_portals_list");
-        let list = savedPortalsStr ? JSON.parse(savedPortalsStr) : DEMO_PORTALS;
-        if (!list.some((p: any) => p.id === connectedData.id)) {
-          list = [connectedData, ...list];
-        }
-        localStorage.setItem("dealsense_portals_list", JSON.stringify(list));
+    try {
+      localStorage.setItem("dealsense_active_portal", JSON.stringify(connectedData));
+      // Set deterministic tenant ID for this portal
+      localStorage.setItem("dealsense_tenant_id", `00000000-0000-0000-0000-${portal.id.padStart(12, "0")}`);
 
-        window.dispatchEvent(new CustomEvent("dealsense:portal-changed", { detail: connectedData }));
-        window.dispatchEvent(new CustomEvent("dealsense:deals-updated"));
-      } catch (e) {
-        console.warn("Storage sync:", e);
+      // Update portals list in localStorage
+      const savedPortalsStr = localStorage.getItem("dealsense_portals_list");
+      let list = savedPortalsStr ? JSON.parse(savedPortalsStr) : DEMO_PORTALS;
+      if (!list.some((p: any) => p.id === connectedData.id)) {
+        list = [connectedData, ...list];
       }
+      localStorage.setItem("dealsense_portals_list", JSON.stringify(list));
 
-      setTimeout(() => {
-        onConnected(connectedData);
-        setStep("select");
-        onClose();
-      }, 900);
-    }, 1000);
+      window.dispatchEvent(new CustomEvent("dealsense:portal-changed", { detail: connectedData }));
+      window.dispatchEvent(new CustomEvent("dealsense:deals-updated"));
+    } catch (e) {
+      console.warn("Storage sync:", e);
+    }
+
+    setStep("success");
+    setTimeout(() => {
+      onConnected(connectedData);
+      setStep("select");
+      onClose();
+    }, 600);
   };
 
-  const handleLiveOAuth = async () => {
-    setStep("connecting");
+  const handleLiveOAuth = () => {
     setErrorMessage("");
 
     const redirectUri =
@@ -83,34 +81,17 @@ export const ConnectHubSpotModal: React.FC<ConnectHubSpotModalProps> = ({
         ? "http://localhost:3000/oauth/callback"
         : "https://dealsense.peash.tech/oauth/callback";
 
-    const directAuthUrl = `https://app.hubspot.com/oauth/authorize?client_id=b70e4bd1-26ac-4470-b6e6-c06d8b4c7920&redirect_uri=${encodeURIComponent(
+    const clientId = "b70e4bd1-26ac-4470-b6e6-c06d8b4c7920";
+    const scopes =
+      "crm.objects.deals.read crm.objects.deals.write crm.objects.contacts.read crm.objects.companies.read crm.schemas.deals.read crm.objects.notes.read crm.objects.notes.write crm.objects.owners.read timeline";
+
+    const directAuthUrl = `https://app.hubspot.com/oauth/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent(
       redirectUri
-    )}&scope=crm.objects.deals.read+crm.objects.deals.write+crm.objects.contacts.read+crm.objects.companies.read+crm.schemas.deals.read+crm.objects.notes.read+crm.objects.notes.write+crm.objects.owners.read+timeline&response_type=code`;
+    )}&scope=${encodeURIComponent(scopes)}&response_type=code`;
 
-    try {
-      const apiBase =
-        (import.meta as any).env?.VITE_API_URL || "https://dealsense-api-6o2h.onrender.com/api/v1";
+    sessionStorage.setItem("dealsense_oauth_state", "direct_install");
 
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 2200);
-
-      const res = await fetch(`${apiBase}/oauth/authorize?redirect_uri=${encodeURIComponent(redirectUri)}`, {
-        signal: controller.signal,
-      });
-      clearTimeout(timeoutId);
-
-      if (res.ok) {
-        const data = await res.json();
-        if (data.authorization_url) {
-          window.location.href = data.authorization_url;
-          return;
-        }
-      }
-    } catch (e) {
-      console.warn("Direct OAuth URL redirection invoked:", e);
-    }
-
-    // Direct redirection to official HubSpot OAuth authorization flow
+    // Direct zero-latency redirection to official HubSpot OAuth consent screen
     window.location.href = directAuthUrl;
   };
 

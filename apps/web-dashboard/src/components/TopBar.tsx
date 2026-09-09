@@ -335,13 +335,70 @@ export const TopBar: React.FC<TopBarProps> = ({
             title="Click to trigger instant webhook sync"
           >
             <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#00bda5", display: "inline-block", boxShadow: "0 0 6px #00bda5" }} />
-            <span>Portal #{selectedPortal.id} ({selectedPortal.latency})</span>
+            <span>HubSpot Live v3 · {selectedPortal.latency || "0.18s"}</span>
           </div>
         </div>
       </div>
 
-      {/* ── Right: Search + Notifications + HubSpot Profile Avatar ─── */}
+      {/* ── Right: Portal Badge + Search + Notifications + HubSpot Profile Avatar ─── */}
       <div className="header-right" style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
+        {/* Dedicated Live HubSpot Portal Badge */}
+        <div
+          className="topbar-portal-quick-pill hide-on-mobile"
+          onClick={() => setIsConnectModalOpen(true)}
+          title={`Connected Portal #${selectedPortal.id}: ${selectedPortal.name} (${selectedPortal.deals} Deals). Click to switch or connect another portal.`}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 8,
+            padding: "5px 12px",
+            borderRadius: 8,
+            background: "linear-gradient(180deg, #ffffff 0%, #f8fafc 100%)",
+            border: "1px solid #cbd6e2",
+            cursor: "pointer",
+            transition: "all 0.15s ease",
+            boxShadow: "0 1px 3px rgba(45, 62, 80, 0.04)",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.borderColor = "#ff7a59";
+            e.currentTarget.style.background = "#fffbf9";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.borderColor = "#cbd6e2";
+            e.currentTarget.style.background = "linear-gradient(180deg, #ffffff 0%, #f8fafc 100%)";
+          }}
+        >
+          <div
+            style={{
+              width: 20,
+              height: 20,
+              borderRadius: 5,
+              background: "linear-gradient(135deg, #ff7a59 0%, #ff5c35 100%)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              color: "#ffffff",
+              fontSize: 10,
+              fontWeight: 800,
+              boxShadow: "0 1px 3px rgba(255, 92, 53, 0.3)",
+            }}
+          >
+            HS
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", lineHeight: 1.15 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
+              <span style={{ fontSize: "11.5px", fontWeight: 800, color: "#2d3e50" }}>
+                Portal #{selectedPortal.id}
+              </span>
+              <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#00bda5", display: "inline-block", boxShadow: "0 0 5px #00bda5" }} />
+            </div>
+            <span style={{ fontSize: "10px", color: "#64748b", maxWidth: 140, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+              {selectedPortal.name} • <strong style={{ color: "#ff5c35" }}>{selectedPortal.deals} deals</strong>
+            </span>
+          </div>
+          <span style={{ fontSize: "10px", color: "#94a3b8", marginLeft: 2 }}>▼</span>
+        </div>
+
         {/* Global Quick Search Button */}
         <button
           className="header-search-btn"

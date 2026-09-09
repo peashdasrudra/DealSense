@@ -7,33 +7,25 @@ export const AuthPage: React.FC = () => {
   const navigate = useNavigate();
   const [isAuthenticating, setIsAuthenticating] = useState(false);
 
-  const handleOAuthLogin = async () => {
+  const handleOAuthLogin = () => {
     setIsAuthenticating(true);
-    try {
-      const apiBase = (import.meta as any).env?.VITE_API_URL
-        ? `${(import.meta as any).env.VITE_API_URL}/api/v1`
-        : "/api/v1";
 
-      // Dynamically select redirect_uri matching registered URLs in HubSpot Developer Portal
-      const redirectUri =
-        window.location.origin.includes("localhost") || window.location.origin.includes("127.0.0.1")
-          ? "http://localhost:3000/oauth/callback"
-          : "https://dealsense.peash.tech/oauth/callback";
-      const response = await fetch(
-        `${apiBase}/oauth/authorize?redirect_uri=${encodeURIComponent(redirectUri)}`
-      );
+    // Dynamically select redirect_uri matching registered URLs in HubSpot Developer Portal
+    const redirectUri =
+      window.location.origin.includes("localhost") || window.location.origin.includes("127.0.0.1")
+        ? "http://localhost:3000/oauth/callback"
+        : "https://dealsense.peash.tech/oauth/callback";
 
-      if (!response.ok) {
-        throw new Error("Failed to generate authorization URL");
-      }
+    const clientId = "b70e4bd1-26ac-4470-b6e6-c06d8b4c7920";
+    const scopes =
+      "crm.objects.deals.read crm.objects.deals.write crm.objects.contacts.read crm.objects.companies.read crm.schemas.deals.read crm.objects.notes.read crm.objects.notes.write crm.objects.owners.read timeline";
 
-      const data = await response.json();
-      sessionStorage.setItem("dealsense_oauth_state", data.state);
-      window.location.href = data.authorization_url;
-    } catch (err) {
-      console.warn("Failed to initiate OAuth flow", err);
-      setIsAuthenticating(false);
-    }
+    const directAuthUrl = `https://app.hubspot.com/oauth/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent(
+      redirectUri
+    )}&scope=${encodeURIComponent(scopes)}&response_type=code`;
+
+    sessionStorage.setItem("dealsense_oauth_state", "direct_install");
+    window.location.href = directAuthUrl;
   };
 
   const handleGuestLogin = () => {

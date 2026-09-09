@@ -195,9 +195,22 @@ class TenantGuardMiddleware(BaseHTTPMiddleware):
 
     async def _resolve_tenant_by_portal(self, portal_id: str) -> str | None:
         """Resolve a HubSpot portal ID to a DealSense tenant ID."""
+        if not portal_id or portal_id in ("DISCONNECTED", "null", "undefined"):
+            return None
+
         if portal_id == "982341":  # Demo portal
             return "00000000-0000-0000-0000-000000000002"
 
+        # 1. Check Redis cache
+        try:
+            from dealsense.infrastructure.redis_client import cache_get
+            cached_tid = await cache_get(f"portal:{portal_id}:tenant_id")
+            if cached_tid:
+                return cached_tid
+        except Exception:
+            pass
+
+        # 2. Check Database
         factory = get_session_factory()
         session = factory()
         try:
@@ -206,9 +219,11 @@ class TenantGuardMiddleware(BaseHTTPMiddleware):
             row = result.scalar_one_or_none()
             if row:
                 return str(row)
-            return None
         except Exception as e:
             logger.warning("tenant_resolution_error", error=str(e))
-            return None
         finally:
             await session.close()
+
+        # 3. Deterministic UUID5 fallback matching oauth_service.py
+        from uuid import NAMESPACE_DNS, uuid5
+        return str(uuid5(NAMESPACE_DNS, f"hubspot:{portal_id}"))

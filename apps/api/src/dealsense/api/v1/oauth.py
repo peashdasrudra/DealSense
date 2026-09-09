@@ -75,7 +75,7 @@ async def oauth_callback_get(
     client_ip = request.client.host if request.client else None
     user_agent = request.headers.get("user-agent")
 
-    tenant_id, portal_id, session_jwt = await handle_oauth_callback(
+    tenant_id, portal_id, session_jwt, portal_name = await handle_oauth_callback(
         code=code,
         state=state,
         db=db,
@@ -110,6 +110,8 @@ async def oauth_callback_get(
     return OAuthCallbackResponse(
         tenant_id=tenant_id,
         hubspot_portal_id=portal_id,
+        portal_name=portal_name,
+        hub_domain=portal_name,
         session_jwt=session_jwt,
         message="HubSpot integration successfully connected",
     )
@@ -127,7 +129,7 @@ async def oauth_callback_post(
     client_ip = request.client.host if request.client else None
     user_agent = request.headers.get("user-agent")
 
-    tenant_id, portal_id, session_jwt = await handle_oauth_callback(
+    tenant_id, portal_id, session_jwt, portal_name = await handle_oauth_callback(
         code=payload.code,
         state=payload.state,
         db=db,
@@ -148,6 +150,8 @@ async def oauth_callback_post(
     return OAuthCallbackResponse(
         tenant_id=tenant_id,
         hubspot_portal_id=portal_id,
+        portal_name=portal_name,
+        hub_domain=portal_name,
         session_jwt=session_jwt,
         message="HubSpot integration successfully connected",
     )

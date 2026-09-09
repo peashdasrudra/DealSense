@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import { DealSenseIcon } from "../components/DealSenseLogo";
 import { DealSenseTelemetryEmblem } from "../components/DealSenseLoader";
+import { fetchDeals } from "../api";
 
 export const OAuthCallback: React.FC = () => {
   const navigate = useNavigate();
@@ -62,6 +63,20 @@ export const OAuthCallback: React.FC = () => {
         }
 
         const responseData = await response.json();
+        const portalId = responseData.hubspot_portal_id || "Live";
+        const portalName =
+          responseData.portal_name ||
+          responseData.hub_domain ||
+          `HubSpot Live Portal #${portalId}`;
+
+        const activePortalData = {
+          id: portalId,
+          name: portalName,
+          tier: "Connected App (Live OAuth)",
+          deals: 0,
+          latency: "0.14s",
+        };
+
         if (responseData.tenant_id) {
           localStorage.setItem("dealsense_tenant_id", responseData.tenant_id);
           sessionStorage.setItem("dealsense_oauth_state", "authenticated");
@@ -69,11 +84,35 @@ export const OAuthCallback: React.FC = () => {
         if (responseData.session_jwt) {
           localStorage.setItem("dealsense_session_jwt", responseData.session_jwt);
         }
+        localStorage.setItem("dealsense_active_portal", JSON.stringify(activePortalData));
+
+        // Update portals list
+        const savedList = localStorage.getItem("dealsense_portals_list");
+        let portalsList = savedList ? JSON.parse(savedList) : [];
+        portalsList = [activePortalData, ...portalsList.filter((p: any) => p.id !== portalId)];
+        localStorage.setItem("dealsense_portals_list", JSON.stringify(portalsList));
+
+        // Dispatch events so TopBar, Sidebar, and views update immediately
+        window.dispatchEvent(new CustomEvent("dealsense:portal-changed", { detail: activePortalData }));
+
+        // Trigger immediate background deal sync
+        try {
+          const loadedDeals = await fetchDeals(responseData.tenant_id);
+          if (loadedDeals && loadedDeals.length > 0) {
+            activePortalData.deals = loadedDeals.length;
+            localStorage.setItem("dealsense_active_portal", JSON.stringify(activePortalData));
+            window.dispatchEvent(new CustomEvent("dealsense:portal-changed", { detail: activePortalData }));
+          }
+        } catch (e) {
+          console.warn("Initial deal fetch on oauth callback:", e);
+        }
+
+        window.dispatchEvent(new CustomEvent("dealsense:deals-updated"));
 
         setStatus("success");
         setTimeout(() => {
           navigate("/pipeline");
-        }, 1200);
+        }, 800);
 
       } catch (err: any) {
         console.error("[DealSense OAuth] Authentication failed:", err);

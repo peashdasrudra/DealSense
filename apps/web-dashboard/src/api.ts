@@ -212,13 +212,36 @@ export const INITIAL_AUDIT_LOGS = [
 const getTenantId = (overrideId?: string) => {
   if (overrideId && overrideId !== DEFAULT_TENANT_ID) return overrideId;
   const stored = localStorage.getItem("dealsense_tenant_id");
-  return stored || DEFAULT_TENANT_ID;
+  if (stored) return stored;
+
+  const activePortalStr = localStorage.getItem("dealsense_active_portal");
+  if (activePortalStr) {
+    try {
+      const p = JSON.parse(activePortalStr);
+      if (p.id && p.id !== "DISCONNECTED") {
+        return `00000000-0000-0000-0000-${p.id.padStart(12, "0")}`;
+      }
+    } catch {}
+  }
+  return DEFAULT_TENANT_ID;
 };
 
 const getAuthHeaders = (tenantId?: string) => {
+  const currentTenant = getTenantId(tenantId);
   const headers: Record<string, string> = {
-    "X-Tenant-ID": getTenantId(tenantId),
+    "X-Tenant-ID": currentTenant,
   };
+
+  const activePortalStr = localStorage.getItem("dealsense_active_portal");
+  if (activePortalStr) {
+    try {
+      const p = JSON.parse(activePortalStr);
+      if (p.id && p.id !== "DISCONNECTED") {
+        headers["X-HubSpot-Portal-Id"] = p.id;
+      }
+    } catch {}
+  }
+
   const sessionJwt = localStorage.getItem("dealsense_session_jwt");
   const apiKey = localStorage.getItem("dealsense_api_key");
 
@@ -361,6 +384,20 @@ export async function fetchDeals(tenantId?: string): Promise<EnterpriseDeal[]> {
           return normalizeDeal(item, existingMap.get(hsId) || existingMap.get(String(item.id)));
         });
         saveLocalDeals(normalized);
+
+        // Update active portal deal count
+        try {
+          const activePortalStr = localStorage.getItem("dealsense_active_portal");
+          if (activePortalStr) {
+            const p = JSON.parse(activePortalStr);
+            if (p.deals !== normalized.length) {
+              p.deals = normalized.length;
+              localStorage.setItem("dealsense_active_portal", JSON.stringify(p));
+              window.dispatchEvent(new CustomEvent("dealsense:portal-changed", { detail: p }));
+            }
+          }
+        } catch {}
+
         return normalized;
       }
     }

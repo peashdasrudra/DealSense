@@ -12,7 +12,7 @@
  * - Brand wordmark at top, not a large logo block
  */
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { DealSenseIcon } from "./DealSenseLogo";
 
@@ -216,6 +216,29 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const [collapsedSections, setCollapsedSections] = useState<Set<string>>(
     new Set(NAV_SECTIONS.filter((s) => !s.defaultOpen).map((s) => s.title))
   );
+
+  const [activePortal, setActivePortal] = useState(() => {
+    try {
+      const saved = localStorage.getItem("dealsense_active_portal");
+      if (saved) return JSON.parse(saved);
+    } catch {}
+    return {
+      id: "48920193",
+      name: "DealSense Enterprise Fleet",
+      deals: 25,
+      tier: "Enterprise Portal",
+    };
+  });
+
+  useEffect(() => {
+    const handlePortalChanged = (e: any) => {
+      if (e.detail) {
+        setActivePortal(e.detail);
+      }
+    };
+    window.addEventListener("dealsense:portal-changed", handlePortalChanged);
+    return () => window.removeEventListener("dealsense:portal-changed", handlePortalChanged);
+  }, []);
 
   const isActive = (path: string) => {
     if (path === "/") return location.pathname === "/" || location.pathname === "/landing";
@@ -642,19 +665,61 @@ export const Sidebar: React.FC<SidebarProps> = ({
               </button>
             )}
             <div
-              title="HubSpot Sync: Operational (Live v3)"
+              title={`HubSpot Portal #${activePortal.id}: ${activePortal.name} (${activePortal.deals} Deals)`}
               style={{
-                width: 8,
-                height: 8,
-                borderRadius: "50%",
-                background: "var(--risk-healthy)",
-                boxShadow: "0 0 6px rgba(0, 163, 141, 0.4)",
+                width: 26,
+                height: 26,
+                borderRadius: 6,
+                background: "rgba(0, 189, 165, 0.1)",
+                border: "1px solid rgba(0, 189, 165, 0.3)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: "10px",
+                fontWeight: 800,
+                color: "#007a70",
                 cursor: "default",
               }}
-            />
+            >
+              HS
+            </div>
           </>
         ) : (
           <>
+            {/* Active Connected Portal Card */}
+            <div
+              style={{
+                background: "linear-gradient(180deg, #ffffff 0%, #f8fafc 100%)",
+                padding: "8px 10px",
+                borderRadius: 8,
+                border: "1px solid #cbd6e2",
+                boxShadow: "0 1px 2px rgba(45, 62, 80, 0.03)",
+              }}
+            >
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 3 }}>
+                <span style={{ fontSize: "9.5px", fontWeight: 800, color: "#007a8c", textTransform: "uppercase", letterSpacing: "0.04em" }}>
+                  Connected Portal
+                </span>
+                <span
+                  style={{
+                    width: 6,
+                    height: 6,
+                    borderRadius: "50%",
+                    background: activePortal.id === "DISCONNECTED" ? "#ef4444" : "#00bda5",
+                    boxShadow: activePortal.id === "DISCONNECTED" ? "none" : "0 0 6px #00bda5",
+                    display: "inline-block",
+                  }}
+                />
+              </div>
+              <div style={{ fontSize: "12px", fontWeight: 700, color: "#2d3e50", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                {activePortal.name}
+              </div>
+              <div style={{ fontSize: "10.5px", color: "#64748b", display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 2 }}>
+                <span>Portal #{activePortal.id}</span>
+                <span style={{ color: "#ff5c35", fontWeight: 700 }}>{activePortal.deals} Deals</span>
+              </div>
+            </div>
+
             {onToggleCollapse && (
               <button
                 onClick={onToggleCollapse}

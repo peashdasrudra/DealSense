@@ -157,7 +157,7 @@ async def handle_oauth_callback(
     redirect_uri: str | None = None,
     ip_address: str | None = None,
     user_agent: str | None = None,
-) -> tuple[UUID, str, str]:
+) -> tuple[UUID, str, str, str]:
     """Validate state, exchange authorization code for tokens, provision tenant, and issue session JWT.
 
     Args:
@@ -169,7 +169,7 @@ async def handle_oauth_callback(
         user_agent: Client User Agent
 
     Returns:
-        tuple[UUID, str, str]: (tenant_id, hubspot_portal_id, session_jwt)
+        tuple[UUID, str, str, str]: (tenant_id, hubspot_portal_id, session_jwt, portal_name)
 
     Raises:
         OAuthStateValidationError: If state is invalid or expired
@@ -196,7 +196,7 @@ async def handle_oauth_callback(
         try:
             cached_data = json.loads(cached_session)
             logger.info("oauth_code_deduplicated_cached_hit", tenant_id=cached_data["tenant_id"])
-            return UUID(cached_data["tenant_id"]), cached_data["portal_id"], cached_data["session_jwt"]
+            return UUID(cached_data["tenant_id"]), cached_data["portal_id"], cached_data["session_jwt"], cached_data.get("portal_name", f"HubSpot Portal #{cached_data['portal_id']}")
         except Exception:
             pass
 
@@ -208,7 +208,7 @@ async def handle_oauth_callback(
         cached_session = await cache_get(f"oauth:session:{code_hash}")
         if cached_session:
             cached_data = json.loads(cached_session)
-            return UUID(cached_data["tenant_id"]), cached_data["portal_id"], cached_data["session_jwt"]
+            return UUID(cached_data["tenant_id"]), cached_data["portal_id"], cached_data["session_jwt"], cached_data.get("portal_name", f"HubSpot Portal #{cached_data['portal_id']}")
 
         # 3. Exchange code for access & refresh tokens
         async with httpx.AsyncClient(timeout=15.0) as client:
@@ -347,6 +347,8 @@ async def handle_oauth_callback(
             }),
             ttl_seconds=expires_in,
         )
+        await cache_set(f"tenant:{tenant_id}:access_token", access_token, ttl_seconds=expires_in)
+        await cache_set(f"portal:{portal_id}:tenant_id", str(tenant_id), ttl_seconds=expires_in)
 
         # 7. Issue Session JWT
         session_jwt = create_tenant_session_jwt(tenant_id, portal_id, scopes)
@@ -356,6 +358,7 @@ async def handle_oauth_callback(
             "tenant_id": str(tenant_id),
             "portal_id": portal_id,
             "session_jwt": session_jwt,
+            "portal_name": account_name,
         })
         await cache_set(f"oauth:session:{code_hash}", session_data, ttl_seconds=60)
 
@@ -363,8 +366,9 @@ async def handle_oauth_callback(
             "oauth_installation_completed",
             tenant_id=str(tenant_id),
             portal_id=portal_id,
+            account_name=account_name,
         )
-        return tenant_id, portal_id, session_jwt
+        return tenant_id, portal_id, session_jwt, account_name
 
     finally:
         if lock:
