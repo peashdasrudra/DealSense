@@ -23,6 +23,7 @@ import { Settings } from "./pages/Settings";
 import { MutualActionPlan } from "./pages/MutualActionPlan";
 import { CompetitiveIntelligence } from "./pages/CompetitiveIntelligence";
 import { CaseStudy } from "./pages/CaseStudy";
+import { IntegrationProof } from "./pages/IntegrationProof";
 import { LandingPage } from "./pages/LandingPage";
 import { AgencyFleet } from "./pages/AgencyFleet";
 import { CheckoutPage } from "./pages/CheckoutPage";
@@ -85,6 +86,7 @@ const PAGE_TITLES: Record<string, { title: string; breadcrumb: string }> = {
   "/onboarding": { title: "Marketplace Setup Flow", breadcrumb: "Onboarding" },
   "/marketplace-listing": { title: "Marketplace Directory Preview", breadcrumb: "Marketplace" },
   "/nav-test": { title: "Navigation & CTA Test Suite", breadcrumb: "Dev / QA" },
+  "/integration-proof": { title: "Live Integration Proof", breadcrumb: "Integration Proof" },
 };
 
 import { getLocalDeals } from "./api";
@@ -393,6 +395,7 @@ export const App: React.FC = () => {
                 <Route path="/landing" element={<LandingPage />} />
                 <Route path="/welcome" element={<LandingPage />} />
                 <Route path="/portfolio" element={<CaseStudy />} />
+                <Route path="/integration-proof" element={<IntegrationProof />} />
                 <Route path="/audit" element={<AuditLog />} />
                 <Route path="/settings" element={<Settings />} />
                 <Route path="/checkout" element={<CheckoutPage />} />

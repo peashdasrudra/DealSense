@@ -42,7 +42,12 @@ TENANT_EXEMPT_PATHS = frozenset(
 
 def _is_exempt(path: str) -> bool:
     """Check if a path is exempt from tenant validation."""
-    return path in TENANT_EXEMPT_PATHS or path.startswith("/docs") or path.startswith("/redoc")
+    return (
+        path in TENANT_EXEMPT_PATHS
+        or path.startswith("/docs")
+        or path.startswith("/redoc")
+        or path.startswith("/api/v1/proof/")
+    )
 
 
 class TenantGuardMiddleware(BaseHTTPMiddleware):
