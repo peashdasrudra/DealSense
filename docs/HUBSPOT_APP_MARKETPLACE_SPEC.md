@@ -50,7 +50,7 @@ Both lifecycle events are now locked in with automated unit tests in `apps/api/s
 * `test_webhook_app_uninstall_disconnects_tenant`: Asserts `disconnect_tenant` is invoked with `actor="hubspot:999000:uninstall"`.
 * `test_webhook_contact_privacy_deletion_cleans_cache`: Asserts `cache_delete` scrubs the PII key upon receiving `contact.privacy.deletion`.
 
-**Result**: 58/58 automated tests passing across Python and Node.js.
+**Result**: 60/60 automated tests passing across Python and Node.js.
 
 ---
 
@@ -61,6 +61,7 @@ To guarantee 1st-round approval by the HubSpot App Review team, complete these o
 ### Step 1: Production HTTPS Deployment
 * The platform is deployed live on cloud infrastructure:
   * Web Dashboard: `https://dealsense.peash.tech`
+  * Integration Proof UI: `https://dealsense.peash.tech/integration-proof`
   * API Base URL: `https://dealsense-api-6o2h.onrender.com`
   * Health Probe: `https://dealsense-api-6o2h.onrender.com/api/v1/health`
   * Webhook Ingestion URL: `https://dealsense-api-6o2h.onrender.com/api/v1/webhooks/hubspot`

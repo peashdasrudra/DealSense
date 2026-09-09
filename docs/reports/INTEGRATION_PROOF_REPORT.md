@@ -80,14 +80,23 @@ Skipped:       0
 | `GET` | `/api/v1/health` | Liveness probe |
 | `GET` | `/api/v1/ready` | Readiness probe (DB + Redis) |
 | `GET` | `/api/v1/status` | API operational status |
+| `GET` | `/api/v1/proof/health-matrix` | Real-time health across all 6 core subsystems |
+| `GET` | `/api/v1/proof/oauth-status` | Real-time OAuth token health & portal metadata |
+| `GET` | `/api/v1/proof/test-results` | Introspection of 60/60 automated pytest test results |
+| `POST` | `/api/v1/proof/test-webhook` | Live sub-180ms HMAC-SHA256 signature verification |
+| `POST` | `/api/v1/proof/test-encryption` | Live Fernet AES-256 roundtrip encrypt/decrypt cycle |
 | `GET` | `/api/v1/oauth/authorize` | Generate HubSpot OAuth URL |
 | `GET` | `/api/v1/oauth/callback` | OAuth redirect handler |
 | `GET` | `/api/v1/oauth/install` | One-click install URL |
 | `GET` | `/api/v1/oauth/status` | Token health check |
 | `POST` | `/api/v1/oauth/refresh` | Force token refresh |
 | `POST` | `/api/v1/oauth/disconnect` | Revoke integration |
-| `GET` | `/api/v1/deals` | List deals with scoring |
+| `GET` | `/api/v1/deals` | List deals with scoring & live HubSpot v3 sync |
+| `POST` | `/api/v1/deals` | Create deal directly in HubSpot CRM v3 |
 | `GET` | `/api/v1/deals/{id}` | Deal detail + snapshot |
+| `PATCH`| `/api/v1/deals/{id}` | Update deal properties in HubSpot CRM v3 |
+| `DELETE`| `/api/v1/deals/{id}` | Archive/delete deal in HubSpot CRM v3 |
+| `POST` | `/api/v1/deals/sync` | Trigger bidirectional CRM synchronization |
 | `POST` | `/api/v1/deals/{id}/analyze` | Trigger 7-vector analysis |
 | `POST` | `/api/v1/webhooks/hubspot` | HMAC-verified webhook bus |
 | `GET` | `/api/v1/actions` | Action approval queue |
@@ -98,7 +107,7 @@ Skipped:       0
 ## 🏗️ Architecture Summary
 
 - **Monorepo:** 5 apps + 5 packages in a single repository
-- **Frontend:** React 18 + TypeScript Strict + Vite 5 (19 production pages)
+- **Frontend:** React 18 + TypeScript Strict + Vite 5 (20 production pages)
 - **Backend:** FastAPI + SQLAlchemy 2.0 + Pydantic v2 (Async-First)
 - **Database:** PostgreSQL 16 + pgvector (HNSW Vector Indexing)
 - **Cache:** Redis 7 (Streams, Distributed Locks, TTL Cache)
@@ -113,7 +122,7 @@ Skipped:       0
 1. **Deterministic Scoring (0% Hallucination):** 7-vector mathematical model computed from empirical CRM telemetry, not LLM guesses
 2. **Enterprise Security:** Multi-tenant isolation, Fernet encryption, RBAC, GDPR compliance, SOC2-ready audit logging
 3. **Production Scale:** Sub-180ms webhook latency, 85% HubSpot API reduction via Redis caching, self-healing failover
-4. **Full-Stack Solo Build:** 19 production pages, 60 automated tests, complete CI/CD pipeline — built by one engineer
+4. **Full-Stack Solo Build:** 20 production pages, 60 automated tests, complete CI/CD pipeline — built by one engineer
 
 ---
 

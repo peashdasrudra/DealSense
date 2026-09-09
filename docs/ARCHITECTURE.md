@@ -41,20 +41,23 @@ DealSense/
 │   │   ├── src/
 │   │   │   ├── components/         # Layouts, TopBar, Sidebar, MobileNav, ProGate, Drawers
 │   │   │   ├── data/               # Enterprise data models and telemetry mock seeds
-│   │   │   ├── pages/              # 19 Enterprise RevOps Workspaces (WarRoom, Hygiene, etc.)
+│   │   │   ├── pages/              # 20 Enterprise RevOps Workspaces (WarRoom, Hygiene, Proof, etc.)
 │   │   │   ├── styles/             # Global CSS design system tokens and responsive rules
-│   │   │   └── api.ts              # Strongly-typed API client with failover fallbacks
+│   │   │   └── api.ts              # Strongly-typed API client with failover & normalizeDeal()
 │   │   └── public/                 # Static assets, logos, and user avatars
 │   ├── hubspot-app/                # Official HubSpot UI Extension project
 │   │   └── src/app/cards/          # React CRM cards rendered natively on Deal Records
 │   └── api/                        # Asynchronous Python FastAPI microservice cluster
 │       ├── src/dealsense/
-│       │   ├── api/v1/             # Endpoints: auth, deals, webhooks, scoring, hygiene
+│       │   ├── api/v1/             # Endpoints: auth, deals, webhooks, scoring, hygiene, proof
 │       │   ├── core/               # Middleware, JWT verification, config, security
 │       │   ├── models/             # SQLAlchemy schemas and Pydantic validation models
 │       │   └── services/           # HubSpot client, scoring engine, Redis caching
-├── docs/                           # Architecture docs, marketplace specifications, guides
+│       └── src/tests/              # 60 automated tests across 8 test suites
+├── docs/                           # Architecture docs, marketplace specifications, guides, reports
 ├── infrastructure/                 # Docker Compose, Caddyfile, and deployment configs
+├── render.yaml                     # Infrastructure as Code blueprint for Render cloud deployment
+├── scripts/demo/                   # Sentinel keep-alive, HubSpot test seeder, live demo runner
 └── packages/                       # Shared prompts, scoring utilities, and eval datasets
 ```
 
@@ -71,7 +74,7 @@ DealSense/
 ### 3.2 Luxury Minimalist Canvas Design Principles
 - **Frosted Glassmorphism:** Translucent card containers (`backdrop-filter: blur(24px)`) paired with multi-stop ambient drop shadows and subtle inner specular light rims (`inset 0 1px 0 rgba(255, 255, 255, 1)`).
 - **Atmospheric Micro-Grid Matrix:** Radial-masked dot patterns (`background-size: 28px 28px`, `mask-image: radial-gradient(...)`) that eliminate stark void space while preserving high-end minimalism.
-- **Unified Header Ergonomics:** Standardized `.page-header-card` across all 19 workspaces with category tags, semantic titles, and responsive action button rows.
+- **Unified Header Ergonomics:** Standardized `.page-header-card` across all 20 workspaces with category tags, semantic titles, and responsive action button rows.
 - **Mobile-First Responsive Layouts:**
   - Dedicated mobile bottom navigation bar with live status beacons.
   - Synchronized alerts for Action Approval Queue and CRM Hygiene.
@@ -161,3 +164,85 @@ To prevent single points of failure in distributed cloud environments (e.g. Rend
    If the PostgreSQL database is cold or unreachable during installation, `handle_oauth_callback` generates a deterministic UUID (`uuid5(NAMESPACE_DNS, f"hubspot:{portal_id}")`), caches credentials in fast memory/Redis fallback, and completes session issuance so user logins succeed seamlessly.
 5. **Human-in-the-Loop Recovery UX:**
    Frontend error boundaries in `OAuthCallback.tsx` display human-readable diagnostics alongside a "Return to Login" button and a 1-click "Launch Demo Mode" escape hatch.
+
+---
+
+## 9. Real-Time HubSpot CRM v3 Bi-Directional Synchronization
+
+DealSense provides true bidirectional integration with HubSpot CRM v3 REST APIs (`https://api.hubapi.com/crm/v3/objects/deals`):
+
+```
+┌────────────────────────┐                   ┌────────────────────────┐
+│   HubSpot CRM v3       │                   │    DealSense API       │
+│                        │                   │                        │
+│ 1. Deal Created/Edited │── Webhooks / Polling ─► GET /deals         │
+│                        │                   │    ├── _get_active_token│
+│                        │                   │    └── 7-vector score  │
+│                        │                   │                        │
+│ 2. Deal Write-Back     │◄── Scoped PATCH ────│ PATCH /deals/{id}     │
+│    (Health & MEDDICC)  │                   │    └── HubspotClient    │
+└────────────────────────┘                   └───────────┬────────────┘
+                                                         │
+                                               normalizeDeal()
+                                                         │
+                                                         ▼
+                                             ┌────────────────────────┐
+                                             │ React 18 Canvas UI     │
+                                             │ (20 Workspaces Live)   │
+                                             └────────────────────────┘
+```
+
+### 9.1 Active OAuth Token Resolution
+In `apps/api/src/dealsense/api/v1/deals.py`, the private helper `_get_active_hubspot_token(tenant_id, db)`:
+1. Queries stored encrypted credentials for the current tenant.
+2. Checks token expiration against current epoch time with a 300-second safety window.
+3. If expired, utilizes the stored encrypted refresh token to request fresh access tokens from HubSpot OAuth endpoints, re-encrypting and updating records atomically.
+4. Initializes authenticated `HubSpotClient(access_token=...)` instances for outbound REST execution.
+
+### 9.2 Client-Side Data Normalization Engine (`normalizeDeal`)
+In `apps/web-dashboard/src/api.ts`, raw CRM v3 objects are transformed via `normalizeDeal()`:
+- Converts sparse HubSpot properties (`dealname`, `amount`, `dealstage`, `closedate`, `hs_object_id`) into complete `EnterpriseDeal` schemas.
+- Injects deterministic 7-vector scoring breakdowns (`stakeholderEngagement`, `pipelineVelocity`, `pushCountDecay`, `communicationCadence`, `meddiccCompleteness`, `crmDataCompleteness`, `competitiveThreat`).
+- Populates buying committee contact hierarchies and activity milestones so all 20 dashboard pages render complete telemetry immediately upon authenticating a new HubSpot portal.
+
+---
+
+## 10. Live Integration Proof Subsystem
+
+DealSense features an independent, self-contained verification subsystem exposed at `/api/v1/proof/*` and visualised in the `/integration-proof` workspace:
+
+| Endpoint | Method | Security Scope | Verification Performed |
+| :--- | :---: | :---: | :--- |
+| `/api/v1/proof/health-matrix` | `GET` | Public / Exempt | Asserts status across API, Database, Redis, OAuth, Webhooks, and Fernet Encryption |
+| `/api/v1/proof/oauth-status` | `GET` | Public / Exempt | Returns live OAuth configuration (Client ID, Redirect URI, Scopes, Token health) |
+| `/api/v1/proof/test-results` | `GET` | Public / Exempt | Introspects the 60/60 automated pytest test suite across all 8 modules |
+| `/api/v1/proof/test-webhook` | `POST` | Public / Exempt | Simulates real HubSpot v3 webhook payload, validates HMAC signature, and benchmarks sub-180ms latency |
+| `/api/v1/proof/test-encryption`| `POST` | Public / Exempt | Executes live Fernet AES-256 roundtrip encrypt/decrypt cycle, asserting plaintext equivalence |
+
+### Architectural Decoupling
+To ensure accessibility during technical recruiter and CTO live evaluations without authentication roadblocks:
+- Endpoints are explicitly registered in `apps/api/src/dealsense/api/v1/__init__.py`.
+- Path prefixes `/api/v1/proof/` are exempted from mandatory JWT authentication in `apps/api/src/dealsense/security/tenant_guard.py`.
+
+---
+
+## 11. Infrastructure as Code & Cold-Start Sentinel
+
+### 11.1 Render Blueprint (`render.yaml`)
+DealSense repository includes root-level Infrastructure as Code declaring the multi-worker web service:
+```yaml
+services:
+  - type: web
+    name: dealsense-api
+    runtime: python
+    buildCommand: pip install -e packages/scoring && pip install -e apps/api
+    startCommand: uvicorn dealsense.main:app --host 0.0.0.0 --port $PORT --workers 2
+    healthCheckPath: /api/v1/health
+```
+
+### 11.2 Production Heartbeat Sentinel (`scripts/demo/keep_alive.py`)
+To neutralize free-tier container sleep behavior on Render:
+- Lightweight asynchronous daemon configured with a 300-second polling interval.
+- Supports instant pre-warming via `--once` flag before interview calls, ensuring warm memory caches and sub-100ms API responses.
+- Implements cross-platform UTF-8 stream re-encoding, ensuring clean, non-crashing execution across Windows, Linux, and macOS runtimes.
+
