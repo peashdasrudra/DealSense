@@ -23,6 +23,7 @@ from dealsense.domain.exceptions import DealNotFoundError
 from dealsense.domain.models import Deal, DealSnapshot
 from dealsense.infrastructure.hubspot_client import HubSpotClient
 from dealsense.security.rbac import Permission, require_permission
+from dealsense.security.token_manager import get_access_token
 from dealsense.services.scoring_service import (
     compute_and_persist_deal_snapshot,
     get_latest_deal_snapshot,
@@ -46,6 +47,21 @@ STAGE_SCORES: dict[str, int] = {
 _DEMO_DEALS: list[DealDashboardSchema] = []
 
 
+async def _get_active_hubspot_token(
+    tenant_id: UUID, db: AsyncSession | None = None
+) -> str | None:
+    """Retrieve active HubSpot token from environment settings or token manager (OAuth)."""
+    settings = get_settings()
+    if settings.hubspot_access_token:
+        return settings.hubspot_access_token
+    if db is not None:
+        try:
+            return await get_access_token(tenant_id, db)
+        except Exception:
+            return None
+    return None
+
+
 @router.get("", response_model=list[DealDashboardSchema])
 async def list_deals_for_dashboard(
     tenant_id: UUID = require_permission(Permission.DEAL_READ),
@@ -53,7 +69,7 @@ async def list_deals_for_dashboard(
 ) -> list[DealDashboardSchema]:
     """Retrieve all deals with their latest snapshot for dashboard aggregation.
 
-    If connected to HubSpot with HUBSPOT_ACCESS_TOKEN, queries live CRM deals!
+    If connected to HubSpot via OAuth or HUBSPOT_ACCESS_TOKEN, queries live CRM deals!
     """
     settings = get_settings()
 
@@ -70,8 +86,9 @@ async def list_deals_for_dashboard(
             ])
         return _DEMO_DEALS
 
-    # 2. Try querying HubSpot live if token is configured
-    if settings.hubspot_access_token:
+    # 2. Try querying HubSpot live if OAuth token or access token is configured
+    hubspot_token = await _get_active_hubspot_token(tenant_id, db)
+    if hubspot_token:
         try:
             r = redis.from_url(settings.redis_connection_url, decode_responses=True)
             cache_key = f"deals:{tenant_id}:hubspot_cache"
@@ -168,8 +185,9 @@ async def create_deal(
     settings = get_settings()
     hubspot_id = str(uuid4().int)[:8]
 
-    # If HubSpot is connected, create deal in real HubSpot CRM!
-    if settings.hubspot_access_token:
+    # If HubSpot is connected (via OAuth or access token), create deal in real HubSpot CRM!
+    hubspot_token = await _get_active_hubspot_token(tenant_id, db)
+    if hubspot_token:
         try:
             client = HubSpotClient(tenant_id=tenant_id, db=db)
             hs_result = await client.create_deal(
@@ -273,7 +291,8 @@ async def update_deal(
         target.owner = body.owner
 
     target_hs_id = target.hubspot_id or (deal_id if deal_id.isdigit() else None)
-    if settings.hubspot_access_token and target_hs_id:
+    hubspot_token = await _get_active_hubspot_token(tenant_id, db)
+    if hubspot_token and target_hs_id:
         try:
             client = HubSpotClient(tenant_id=tenant_id, db=db)
             hs_update_props: dict[str, str] = {}
@@ -311,7 +330,8 @@ async def delete_deal(
             break
 
     target_hs_id = hubspot_id or (deal_id if deal_id.isdigit() else None)
-    if settings.hubspot_access_token and target_hs_id:
+    hubspot_token = await _get_active_hubspot_token(tenant_id, db)
+    if hubspot_token and target_hs_id:
         try:
             client = HubSpotClient(tenant_id=tenant_id, db=db)
             await client.delete_deal(target_hs_id)
@@ -341,10 +361,11 @@ async def sync_hubspot_deals(
 ) -> dict[str, Any]:
     """Manually trigger synchronization of all deals from HubSpot CRM."""
     deals = await list_deals_for_dashboard(tenant_id=tenant_id, db=db)
+    hubspot_token = await _get_active_hubspot_token(tenant_id, db)
     return {
         "status": "synced",
         "count": len(deals),
-        "source": "hubspot_crm" if get_settings().hubspot_access_token else "in_memory_catalog",
+        "source": "hubspot_crm" if hubspot_token else "in_memory_catalog",
         "deals": deals,
     }
 
