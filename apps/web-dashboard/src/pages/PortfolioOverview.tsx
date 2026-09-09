@@ -53,7 +53,26 @@ export const PortfolioOverview: React.FC = () => {
   const [bandFilter, setBandFilter] = useState("all");
   const [repFilter, setRepFilter] = useState("all");
 
-  const [activePortal] = useState({ id: "48920193", name: "Enterprise RevOps Fleet", deals: 25 });
+  const [activePortal, setActivePortal] = useState(() => {
+    try {
+      const saved = localStorage.getItem("dealsense_active_portal");
+      if (saved) return JSON.parse(saved);
+    } catch {}
+    return { id: "48920193", name: "Enterprise RevOps Fleet", deals: 25 };
+  });
+
+  useEffect(() => {
+    const handlePortalChanged = (e: any) => {
+      if (e.detail) {
+        setActivePortal(e.detail);
+        setSyncToast(`Connected to HubSpot Portal #${e.detail.id} (${e.detail.name})`);
+        setTimeout(() => setSyncToast(null), 3000);
+        loadDeals();
+      }
+    };
+    window.addEventListener("dealsense:portal-changed", handlePortalChanged);
+    return () => window.removeEventListener("dealsense:portal-changed", handlePortalChanged);
+  }, []);
 
   const loadDeals = () => {
     fetchDeals()

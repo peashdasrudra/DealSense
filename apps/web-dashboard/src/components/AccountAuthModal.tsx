@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface AccountAuthModalProps {
@@ -63,7 +64,7 @@ export const AccountAuthModal: React.FC<AccountAuthModalProps> = ({
 
   if (!isOpen) return null;
 
-  return (
+  return createPortal(
     <AnimatePresence>
       <div
         style={{
@@ -249,6 +250,7 @@ export const AccountAuthModal: React.FC<AccountAuthModalProps> = ({
           </div>
         </motion.div>
       </div>
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 };

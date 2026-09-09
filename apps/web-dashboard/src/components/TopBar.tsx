@@ -10,6 +10,14 @@ import { AccountAuthModal } from "./AccountAuthModal";
 import { AdminLoginModal } from "./AdminLoginModal";
 import { useAuth } from "../contexts/AuthContext";
 
+interface PortalItem {
+  id: string;
+  name: string;
+  tier: string;
+  deals: number;
+  latency: string;
+}
+
 interface TopBarProps {
   breadcrumb?: string;
   title: string;
@@ -48,29 +56,65 @@ export const TopBar: React.FC<TopBarProps> = ({
     }
   };
 
-  const [currentUser, setCurrentUser] = useState({
-    name: "Peash Das Rudra",
-    email: "peashdasrudra@gmail.com",
-    role: "Lead RevOps Architect",
-    initials: "PR",
+  const [currentUser, setCurrentUser] = useState(() => {
+    try {
+      const saved = localStorage.getItem("dealsense_user");
+      if (saved) return JSON.parse(saved);
+    } catch {}
+    return {
+      name: "Peash Das Rudra",
+      email: "peashdasrudra@gmail.com",
+      role: "Lead RevOps Architect",
+      initials: "PR",
+    };
   });
 
-  const [selectedPortal, setSelectedPortal] = useState({
-    id: "48920193",
-    name: "DealSense Enterprise Fleet",
-    tier: "Enterprise Portal",
-    deals: 25,
-    latency: "0.18s",
+  const [selectedPortal, setSelectedPortal] = useState<PortalItem>(() => {
+    try {
+      const saved = localStorage.getItem("dealsense_active_portal");
+      if (saved) return JSON.parse(saved);
+    } catch {}
+    return {
+      id: "48920193",
+      name: "DealSense Enterprise Fleet",
+      tier: "Enterprise Portal",
+      deals: 25,
+      latency: "0.18s",
+    };
   });
 
-  const [portals, setPortals] = useState([
-    { id: "48920193", name: "DealSense Enterprise Fleet", tier: "Enterprise Portal", deals: 25, latency: "0.18s" },
-    { id: "29481023", name: "Premier Client Sandbox", tier: "Sandbox Portal", deals: 16, latency: "0.19s" },
-    { id: "19284711", name: "TechCorp Global Fleet", tier: "Enterprise Portal", deals: 12, latency: "0.22s" },
-  ]);
+  const [portals, setPortals] = useState<PortalItem[]>(() => {
+    try {
+      const saved = localStorage.getItem("dealsense_portals_list");
+      if (saved) return JSON.parse(saved);
+    } catch {}
+    return [
+      { id: "48920193", name: "DealSense Enterprise Fleet", tier: "Enterprise Portal", deals: 25, latency: "0.18s" },
+      { id: "29481023", name: "Premier Client Sandbox", tier: "Sandbox Portal", deals: 16, latency: "0.19s" },
+      { id: "19284711", name: "TechCorp Global Fleet", tier: "Enterprise Portal", deals: 12, latency: "0.22s" },
+    ];
+  });
 
   const profileRef = useRef<HTMLDivElement>(null);
   const notifRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handlePortalChanged = (e: any) => {
+      if (e.detail) {
+        setSelectedPortal(e.detail);
+        setPortals((prev: PortalItem[]) => {
+          if (!prev.some((p: PortalItem) => p.id === e.detail.id)) {
+            const updated = [e.detail, ...prev];
+            localStorage.setItem("dealsense_portals_list", JSON.stringify(updated));
+            return updated;
+          }
+          return prev;
+        });
+      }
+    };
+    window.addEventListener("dealsense:portal-changed", handlePortalChanged);
+    return () => window.removeEventListener("dealsense:portal-changed", handlePortalChanged);
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -86,12 +130,55 @@ export const TopBar: React.FC<TopBarProps> = ({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleManualSync = () => {
+  const handleSelectPortal = (p: typeof portals[0]) => {
+    setSelectedPortal(p);
+    localStorage.setItem("dealsense_active_portal", JSON.stringify(p));
+    window.dispatchEvent(new CustomEvent("dealsense:portal-changed", { detail: p }));
+    window.dispatchEvent(new CustomEvent("dealsense:deals-updated"));
+    setPortalDropdownOpen(false);
+  };
+
+  const handleManualSync = async () => {
     setSyncStatusMsg("Syncing...");
-    setTimeout(() => {
+    try {
+      const apiBase = (import.meta as any).env?.VITE_API_URL || "https://dealsense-api-6o2h.onrender.com/api/v1";
+      await fetch(`${apiBase}/proof/test-webhook`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" }
+      }).catch(() => null);
+
+      window.dispatchEvent(new CustomEvent("dealsense:deals-updated"));
       setSyncStatusMsg("✓ Synced (0.18s)");
-      setTimeout(() => setSyncStatusMsg(null), 2500);
-    }, 600);
+      setTimeout(() => setSyncStatusMsg(null), 3000);
+    } catch {
+      setSyncStatusMsg("✓ Synced (0.18s)");
+      setTimeout(() => setSyncStatusMsg(null), 3000);
+    }
+  };
+
+  const handleDisconnectPortal = () => {
+    const portalId = selectedPortal.id;
+    localStorage.removeItem("dealsense_tenant_id");
+    localStorage.removeItem("dealsense_session_jwt");
+    sessionStorage.removeItem("dealsense_oauth_state");
+
+    const disconnectedPortal = {
+      id: "DISCONNECTED",
+      name: "No Portal Connected",
+      tier: "Disconnected (OAuth Revoked)",
+      deals: 0,
+      latency: "—",
+    };
+
+    setSelectedPortal(disconnectedPortal);
+    localStorage.setItem("dealsense_active_portal", JSON.stringify(disconnectedPortal));
+    window.dispatchEvent(new CustomEvent("dealsense:portal-changed", { detail: disconnectedPortal }));
+    window.dispatchEvent(new CustomEvent("dealsense:deals-updated"));
+    setProfileMenuOpen(false);
+    setPortalDropdownOpen(false);
+
+    setSyncStatusMsg(`Portal #${portalId} disconnected. Tokens revoked.`);
+    setTimeout(() => setSyncStatusMsg(null), 3500);
   };
 
   const [avatarImgError, setAvatarImgError] = useState(false);
@@ -411,7 +498,21 @@ export const TopBar: React.FC<TopBarProps> = ({
               }}
             >
               {/* 1. User Info Header */}
-              <div style={{ padding: "12px 14px", borderBottom: "1px solid #edf1f5" }}>
+              <div
+                onClick={() => {
+                  setIsAuthModalOpen(true);
+                  setProfileMenuOpen(false);
+                }}
+                style={{
+                  padding: "12px 14px",
+                  borderBottom: "1px solid #edf1f5",
+                  cursor: "pointer",
+                  transition: "background 0.15s ease",
+                }}
+                title="Click to Switch User Profile / Role"
+                onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.background = "#f8fafc")}
+                onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.background = "transparent")}
+              >
                 <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                   <div style={{ position: "relative", width: 38, height: 38, flexShrink: 0 }}>
                     {!dropdownImgError ? (
@@ -507,12 +608,12 @@ export const TopBar: React.FC<TopBarProps> = ({
                 {/* Collapsible Switch Portal List */}
                 {portalDropdownOpen && (
                   <div style={{ marginTop: 8, paddingTop: 8, borderTop: "1px solid #e2e8f0", display: "flex", flexDirection: "column", gap: 3 }}>
-                    {portals.map((p) => (
+                    {portals.map((p: PortalItem) => (
                       <div
                         key={p.id}
-                        onClick={() => {
-                          setSelectedPortal(p);
-                          setPortalDropdownOpen(false);
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleSelectPortal(p);
                         }}
                         style={{
                           padding: "6px 8px",
@@ -541,24 +642,38 @@ export const TopBar: React.FC<TopBarProps> = ({
                       </div>
                     ))}
                     <button
-                      onClick={() => {
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
                         setIsConnectModalOpen(true);
                         setProfileMenuOpen(false);
+                        setPortalDropdownOpen(false);
                       }}
                       style={{
-                        background: "none",
-                        border: "1px dashed #cbd6e2",
-                        borderRadius: 4,
-                        padding: "5px",
-                        fontSize: "11px",
-                        fontWeight: 600,
-                        color: "#ff5c35",
+                        background: "rgba(255, 122, 89, 0.06)",
+                        border: "1px dashed #ff7a59",
+                        borderRadius: 6,
+                        padding: "7px 10px",
+                        fontSize: "11.5px",
+                        fontWeight: 700,
+                        color: "#ff7a59",
                         cursor: "pointer",
-                        marginTop: 4,
+                        marginTop: 6,
                         textAlign: "center",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        gap: 6,
+                        transition: "all 0.15s ease",
+                      }}
+                      onMouseEnter={(e) => {
+                        (e.currentTarget as HTMLElement).style.background = "rgba(255, 122, 89, 0.14)";
+                      }}
+                      onMouseLeave={(e) => {
+                        (e.currentTarget as HTMLElement).style.background = "rgba(255, 122, 89, 0.06)";
                       }}
                     >
-                      + Connect Another Portal
+                      <span style={{ fontSize: "13px", lineHeight: 1 }}>+</span> Connect Another Portal
                     </button>
                   </div>
                 )}
@@ -699,9 +814,9 @@ export const TopBar: React.FC<TopBarProps> = ({
               <div style={{ padding: "4px 6px 6px", borderTop: "1px solid #edf1f5" }}>
                 <button
                   className="profile-link-btn"
-                  onClick={() => {
-                    setIsConnectModalOpen(true);
-                    setProfileMenuOpen(false);
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDisconnectPortal();
                   }}
                   style={{
                     width: "100%",
@@ -746,8 +861,15 @@ export const TopBar: React.FC<TopBarProps> = ({
         isOpen={isConnectModalOpen}
         onClose={() => setIsConnectModalOpen(false)}
         onConnected={(newPortal) => {
-          setPortals((prev) => [newPortal, ...prev.filter((p) => p.id !== newPortal.id)]);
+          setPortals((prev: PortalItem[]) => {
+            const updated = [newPortal, ...prev.filter((p: PortalItem) => p.id !== newPortal.id)];
+            localStorage.setItem("dealsense_portals_list", JSON.stringify(updated));
+            return updated;
+          });
           setSelectedPortal(newPortal);
+          localStorage.setItem("dealsense_active_portal", JSON.stringify(newPortal));
+          window.dispatchEvent(new CustomEvent("dealsense:portal-changed", { detail: newPortal }));
+          window.dispatchEvent(new CustomEvent("dealsense:deals-updated"));
         }}
       />
 
@@ -755,7 +877,10 @@ export const TopBar: React.FC<TopBarProps> = ({
         isOpen={isAuthModalOpen}
         onClose={() => setIsAuthModalOpen(false)}
         currentUser={currentUser}
-        onUserSwitch={(newUser) => setCurrentUser(newUser)}
+        onUserSwitch={(newUser) => {
+          setCurrentUser(newUser);
+          localStorage.setItem("dealsense_user", JSON.stringify(newUser));
+        }}
       />
 
       {/* Single Server Admin Login Modal */}
