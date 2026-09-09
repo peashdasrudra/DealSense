@@ -182,6 +182,11 @@ body {
   overflow-y: auto;
   overflow-x: hidden;
   overscroll-behavior: contain;
+  transition: width 0.22s cubic-bezier(0.2, 0, 0, 1);
+}
+
+.sidebar.collapsed {
+  width: 64px;
 }
 
 .main-content {
@@ -1162,12 +1167,13 @@ body {
   .telemetry-card-risk {
     order: 2 !important;
   }
-  .sidebar {
+  .sidebar,
+  .sidebar.collapsed {
     position: fixed;
     top: 0;
     bottom: 0;
     left: -300px;
-    width: 280px;
+    width: 280px !important;
     height: 100vh;
     height: 100dvh;
     transition: left 0.3s cubic-bezier(0.16, 1, 0.3, 1);

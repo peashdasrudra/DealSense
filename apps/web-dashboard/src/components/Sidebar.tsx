@@ -120,6 +120,12 @@ const ICONS: Record<string, React.ReactNode> = {
       <line x1="16" y1="17" x2="8" y2="17" />
     </svg>
   ),
+  proof: (
+    <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+      <path d="M9 12l2 2 4-4" />
+    </svg>
+  ),
   settings: (
     <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
       <circle cx="12" cy="12" r="3" />
@@ -183,6 +189,7 @@ const NAV_SECTIONS: NavSection[] = [
     title: "Architecture & Governance",
     defaultOpen: true,
     items: [
+      { id: "integration-proof", label: "Integration Test Matrix", iconKey: "proof", path: "/integration-proof", badge: "60/60" },
       { id: "case-study", label: "Architecture Case Study", iconKey: "casestudy", path: "/case-study" },
       { id: "audit", label: "Audit Log & Telemetry", iconKey: "audit", path: "/audit" },
     ],
@@ -194,9 +201,16 @@ const NAV_SECTIONS: NavSection[] = [
 interface SidebarProps {
   onClose?: () => void;
   onNavigateHome?: () => void;
+  isCollapsed?: boolean;
+  onToggleCollapse?: () => void;
 }
 
-export const Sidebar: React.FC<SidebarProps> = ({ onClose, onNavigateHome }) => {
+export const Sidebar: React.FC<SidebarProps> = ({
+  onClose,
+  onNavigateHome,
+  isCollapsed = false,
+  onToggleCollapse,
+}) => {
   const location = useLocation();
   const navigate = useNavigate();
   const [collapsedSections, setCollapsedSections] = useState<Set<string>>(
@@ -236,165 +250,277 @@ export const Sidebar: React.FC<SidebarProps> = ({ onClose, onNavigateHome }) => 
         height: "100%",
         background: "#ffffff",
         fontFamily: "var(--font-sans)",
+        width: isCollapsed ? 64 : 260,
+        transition: "width 0.22s cubic-bezier(0.2, 0, 0, 1)",
+        overflowX: "hidden",
       }}
     >
       {/* ── Brand Header ────────────────────────────────────────────── */}
       <div
         style={{
           display: "flex",
-          justifyContent: "space-between",
+          justifyContent: isCollapsed ? "center" : "space-between",
           alignItems: "center",
-          padding: "14px 16px",
+          padding: isCollapsed ? "14px 8px" : "14px 16px",
           borderBottom: "1px solid var(--hs-border-dark)",
           flexShrink: 0,
+          height: 56,
+          boxSizing: "border-box",
         }}
       >
-        <div
-          onClick={handleLogoClick}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 8,
-            cursor: "pointer",
-            padding: "2px 4px",
-            borderRadius: "var(--radius-sm)",
-            transition: "background 0.12s",
-          }}
-          title="DealSense Home"
-        >
-          <DealSenseIcon size={22} />
-          <span style={{ fontSize: "14.5px", fontWeight: 700, color: "var(--hs-primary)", letterSpacing: "-0.02em" }}>
-            Deal<span style={{ color: "#ff5c35" }}>Sense</span>
-          </span>
-        </div>
-
-        {/* Mobile close button — hidden on desktop via CSS */}
-        {onClose && (
-          <button
-            onClick={onClose}
-            className="sidebar-close-btn"
+        {isCollapsed ? (
+          <div
+            onClick={handleLogoClick}
             style={{
-              background: "none",
-              border: "1px solid var(--hs-border-dark)",
-              width: 28,
-              height: 28,
-              borderRadius: "var(--radius-sm)",
-              fontSize: "12px",
-              cursor: "pointer",
-              color: "var(--hs-text-muted)",
-              display: "none",
+              display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              flexShrink: 0,
+              cursor: "pointer",
+              borderRadius: "var(--radius-sm)",
+              transition: "transform 0.15s ease",
             }}
-            aria-label="Close Sidebar"
+            title="DealSense (Click to expand)"
           >
-            ✕
-          </button>
+            <DealSenseIcon size={26} />
+          </div>
+        ) : (
+          <>
+            <div
+              onClick={handleLogoClick}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 8,
+                cursor: "pointer",
+                padding: "2px 4px",
+                borderRadius: "var(--radius-sm)",
+                transition: "background 0.12s",
+              }}
+              title="DealSense Home"
+            >
+              <DealSenseIcon size={22} />
+              <span style={{ fontSize: "14.5px", fontWeight: 700, color: "var(--hs-primary)", letterSpacing: "-0.02em" }}>
+                Deal<span style={{ color: "#ff5c35" }}>Sense</span>
+              </span>
+            </div>
+
+            <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+              {/* Desktop collapse toggle button */}
+              {onToggleCollapse && (
+                <button
+                  onClick={onToggleCollapse}
+                  className="hide-on-mobile"
+                  style={{
+                    background: "none",
+                    border: "1px solid var(--hs-border-dark)",
+                    width: 28,
+                    height: 28,
+                    borderRadius: "var(--radius-sm)",
+                    cursor: "pointer",
+                    color: "var(--hs-text-muted)",
+                    display: "inline-flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    transition: "all 0.15s ease",
+                  }}
+                  title="Collapse sidebar (Ctrl+\)"
+                  aria-label="Collapse sidebar"
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = "#f5f8fa";
+                    e.currentTarget.style.color = "var(--hs-primary)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = "none";
+                    e.currentTarget.style.color = "var(--hs-text-muted)";
+                  }}
+                >
+                  <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="15 18 9 12 15 6" />
+                  </svg>
+                </button>
+              )}
+
+              {/* Mobile close button */}
+              {onClose && (
+                <button
+                  onClick={onClose}
+                  className="sidebar-close-btn"
+                  style={{
+                    background: "none",
+                    border: "1px solid var(--hs-border-dark)",
+                    width: 28,
+                    height: 28,
+                    borderRadius: "var(--radius-sm)",
+                    fontSize: "12px",
+                    cursor: "pointer",
+                    color: "var(--hs-text-muted)",
+                    display: "none",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    flexShrink: 0,
+                  }}
+                  aria-label="Close Sidebar"
+                >
+                  ✕
+                </button>
+              )}
+            </div>
+          </>
         )}
       </div>
 
       {/* ── Workspace Indicator ──────────────────────────────────────── */}
-      <div style={{ padding: "10px 16px", borderBottom: "1px solid var(--hs-border-dark)" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+      {isCollapsed ? (
+        <div
+          style={{
+            padding: "10px 0",
+            borderBottom: "1px solid var(--hs-border-dark)",
+            display: "flex",
+            justifyContent: "center",
+          }}
+          title="DealSense Enterprise • HubSpot Portal #48920193"
+        >
           <div
             style={{
-              width: 28,
-              height: 28,
+              width: 32,
+              height: 32,
               borderRadius: "var(--radius-sm)",
               background: "linear-gradient(135deg, var(--hs-primary), #0a3537)",
               color: "#fff",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              fontSize: "10px",
+              fontSize: "11px",
               fontWeight: 800,
-              flexShrink: 0,
+              position: "relative",
+              cursor: "default",
             }}
           >
             DS
+            <span
+              style={{
+                position: "absolute",
+                bottom: -2,
+                right: -2,
+                width: 8,
+                height: 8,
+                borderRadius: "50%",
+                background: "var(--risk-healthy)",
+                border: "1.5px solid #fff",
+              }}
+            />
           </div>
-          <div style={{ minWidth: 0 }}>
-            <div style={{ fontSize: "12px", fontWeight: 700, color: "var(--hs-text)", lineHeight: 1.2, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-              DealSense Enterprise
+        </div>
+      ) : (
+        <div style={{ padding: "10px 16px", borderBottom: "1px solid var(--hs-border-dark)" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <div
+              style={{
+                width: 28,
+                height: 28,
+                borderRadius: "var(--radius-sm)",
+                background: "linear-gradient(135deg, var(--hs-primary), #0a3537)",
+                color: "#fff",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: "10px",
+                fontWeight: 800,
+                flexShrink: 0,
+              }}
+            >
+              DS
             </div>
-            <div style={{ fontSize: "10.5px", color: "var(--hs-text-muted)", display: "flex", alignItems: "center", gap: 4 }}>
-              <span style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--risk-healthy)", display: "inline-block" }} />
-              HubSpot Portal #48920193
+            <div style={{ minWidth: 0 }}>
+              <div style={{ fontSize: "12px", fontWeight: 700, color: "var(--hs-text)", lineHeight: 1.2, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                DealSense Enterprise
+              </div>
+              <div style={{ fontSize: "10.5px", color: "var(--hs-text-muted)", display: "flex", alignItems: "center", gap: 4 }}>
+                <span style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--risk-healthy)", display: "inline-block" }} />
+                HubSpot Portal #48920193
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
 
       {/* ── Navigation ──────────────────────────────────────────────── */}
       <nav style={{ flex: 1, overflowY: "auto", overflowX: "hidden", padding: "8px 0" }}>
         {NAV_SECTIONS.map((section) => {
-          const isCollapsed = collapsedSections.has(section.title);
+          const isSectionCollapsed = collapsedSections.has(section.title);
 
           return (
-            <div key={section.title} style={{ marginBottom: 4 }}>
-              {/* Section Header */}
-              <button
-                onClick={() => toggleSection(section.title)}
-                style={{
-                  width: "100%",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  padding: "8px 16px 4px",
-                  background: "none",
-                  border: "none",
-                  outline: "none",
-                  boxShadow: "none",
-                  cursor: "pointer",
-                  color: "#516f90",
-                  fontFamily: "var(--font-sans)",
-                  WebkitTapHighlightColor: "transparent",
-                }}
-              >
-                <span
+            <div key={section.title} style={{ marginBottom: isCollapsed ? 6 : 4 }}>
+              {/* Section Header or Divider in Collapsed Mode */}
+              {isCollapsed ? (
+                <div style={{ height: 1, background: "var(--hs-border)", margin: "8px 12px" }} />
+              ) : (
+                <button
+                  onClick={() => toggleSection(section.title)}
                   style={{
-                    fontSize: "10px",
-                    fontWeight: 700,
-                    textTransform: "uppercase",
-                    letterSpacing: "0.07em",
+                    width: "100%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    padding: "8px 16px 4px",
+                    background: "none",
+                    border: "none",
+                    outline: "none",
+                    boxShadow: "none",
+                    cursor: "pointer",
                     color: "#516f90",
+                    fontFamily: "var(--font-sans)",
+                    WebkitTapHighlightColor: "transparent",
                   }}
                 >
-                  {section.title}
-                </span>
-                <svg
-                  width={10}
-                  height={10}
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="#516f90"
-                  strokeWidth={2.5}
-                  style={{
-                    transition: "transform 0.15s ease",
-                    transform: isCollapsed ? "rotate(-90deg)" : "rotate(0deg)",
-                    opacity: 0.6,
-                  }}
-                >
-                  <polyline points="6 9 12 15 18 9" />
-                </svg>
-              </button>
+                  <span
+                    style={{
+                      fontSize: "10px",
+                      fontWeight: 700,
+                      textTransform: "uppercase",
+                      letterSpacing: "0.07em",
+                      color: "#516f90",
+                    }}
+                  >
+                    {section.title}
+                  </span>
+                  <svg
+                    width={10}
+                    height={10}
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#516f90"
+                    strokeWidth={2.5}
+                    style={{
+                      transition: "transform 0.15s ease",
+                      transform: isSectionCollapsed ? "rotate(-90deg)" : "rotate(0deg)",
+                      opacity: 0.6,
+                    }}
+                  >
+                    <polyline points="6 9 12 15 18 9" />
+                  </svg>
+                </button>
+              )}
 
               {/* Section Items */}
-              {!isCollapsed && (
-                <div style={{ padding: "2px 8px 6px" }}>
+              {(!isSectionCollapsed || isCollapsed) && (
+                <div style={{ padding: isCollapsed ? "2px 0" : "2px 8px 6px" }}>
                   {section.items.map((item) => {
                     const active = isActive(item.path);
                     return (
                       <button
                         key={item.id}
                         onClick={() => handleNav(item.path)}
+                        title={`${item.label}${item.badge ? ` (${item.badge})` : ""}`}
                         style={{
-                          width: "100%",
+                          width: isCollapsed ? 44 : "100%",
+                          height: isCollapsed ? 40 : "auto",
+                          margin: isCollapsed ? "2px auto" : "0 0 1px 0",
                           display: "flex",
                           alignItems: "center",
-                          gap: 10,
-                          padding: "7px 10px",
+                          justifyContent: isCollapsed ? "center" : "flex-start",
+                          gap: isCollapsed ? 0 : 10,
+                          padding: isCollapsed ? "8px" : "7px 10px",
                           borderRadius: "var(--radius-sm)",
                           background: active ? "rgba(0, 164, 189, 0.08)" : "transparent",
                           border: "none",
@@ -427,35 +553,39 @@ export const Sidebar: React.FC<SidebarProps> = ({ onClose, onNavigateHome }) => 
                               top: "50%",
                               transform: "translateY(-50%)",
                               width: 3,
-                              height: 16,
+                              height: isCollapsed ? 20 : 16,
                               borderRadius: "0 2px 2px 0",
                               background: "#00a4bd",
                             }}
                           />
                         )}
 
-                        <span style={{ color: active ? "#00a4bd" : "#7c98b6", transition: "color 0.1s" }}>
+                        <span style={{ color: active ? "#00a4bd" : "#7c98b6", transition: "color 0.1s", display: "flex", alignItems: "center" }}>
                           {ICONS[item.iconKey] || null}
                         </span>
-                        <span style={{ flex: 1, lineHeight: 1.2 }}>{item.label}</span>
 
-                        {item.badge && (
-                          <span
-                            style={{
-                              fontSize: "9px",
-                              fontWeight: 700,
-                              padding: "1px 5px",
-                              borderRadius: "3px",
-                              background: "#edf1f5",
-                              color: "#516f90",
-                              border: "1px solid #cbd6e2",
-                              lineHeight: 1.3,
-                              letterSpacing: "0.04em",
-                              textTransform: "uppercase",
-                            }}
-                          >
-                            {item.badge}
-                          </span>
+                        {!isCollapsed && (
+                          <>
+                            <span style={{ flex: 1, lineHeight: 1.2 }}>{item.label}</span>
+                            {item.badge && (
+                              <span
+                                style={{
+                                  fontSize: "9px",
+                                  fontWeight: 700,
+                                  padding: "1px 5px",
+                                  borderRadius: "3px",
+                                  background: "#edf1f5",
+                                  color: "#516f90",
+                                  border: "1px solid #cbd6e2",
+                                  lineHeight: 1.3,
+                                  letterSpacing: "0.04em",
+                                  textTransform: "uppercase",
+                                }}
+                              >
+                                {item.badge}
+                              </span>
+                            )}
+                          </>
                         )}
                       </button>
                     );
@@ -470,31 +600,118 @@ export const Sidebar: React.FC<SidebarProps> = ({ onClose, onNavigateHome }) => 
       {/* ── Footer ──────────────────────────────────────────────────── */}
       <div
         style={{
-          padding: "12px 16px",
+          padding: isCollapsed ? "12px 8px" : "12px 16px",
           borderTop: "1px solid var(--hs-border-dark)",
           flexShrink: 0,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: isCollapsed ? "center" : "stretch",
+          gap: 8,
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <div style={{ fontSize: "11px", color: "var(--hs-text-muted)" }}>
-            <span style={{ fontWeight: 700, color: "var(--hs-text)" }}>HubSpot Sync</span> · Live v3
-          </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
-            <span
+        {isCollapsed ? (
+          <>
+            {onToggleCollapse && (
+              <button
+                onClick={onToggleCollapse}
+                title="Expand navigation (Ctrl+\)"
+                aria-label="Expand navigation"
+                style={{
+                  width: 36,
+                  height: 36,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  background: "#f5f8fa",
+                  border: "1px solid var(--hs-border-dark)",
+                  borderRadius: "var(--radius-sm)",
+                  color: "var(--hs-primary)",
+                  cursor: "pointer",
+                  transition: "all 0.15s ease",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = "#eaf0f6";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = "#f5f8fa";
+                }}
+              >
+                <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="9 18 15 12 9 6" />
+                </svg>
+              </button>
+            )}
+            <div
+              title="HubSpot Sync: Operational (Live v3)"
               style={{
-                width: 6,
-                height: 6,
+                width: 8,
+                height: 8,
                 borderRadius: "50%",
                 background: "var(--risk-healthy)",
-                display: "inline-block",
                 boxShadow: "0 0 6px rgba(0, 163, 141, 0.4)",
+                cursor: "default",
               }}
             />
-            <span style={{ fontSize: "10.5px", fontWeight: 700, color: "var(--risk-healthy)" }}>
-              Operational
-            </span>
-          </div>
-        </div>
+          </>
+        ) : (
+          <>
+            {onToggleCollapse && (
+              <button
+                onClick={onToggleCollapse}
+                className="hide-on-mobile"
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
+                  padding: "7px 10px",
+                  borderRadius: "var(--radius-sm)",
+                  background: "transparent",
+                  border: "1px solid var(--hs-border-dark)",
+                  color: "var(--hs-text-muted)",
+                  fontSize: "12px",
+                  fontWeight: 600,
+                  cursor: "pointer",
+                  transition: "all 0.15s ease",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = "#f5f8fa";
+                  e.currentTarget.style.color = "var(--hs-primary)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = "transparent";
+                  e.currentTarget.style.color = "var(--hs-text-muted)";
+                }}
+              >
+                <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="15 18 9 12 15 6" />
+                </svg>
+                <span>Collapse navigation</span>
+                <span style={{ marginLeft: "auto", fontSize: "10px", color: "var(--hs-text-disabled)" }}>Ctrl+\</span>
+              </button>
+            )}
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+              <div style={{ fontSize: "11px", color: "var(--hs-text-muted)" }}>
+                <span style={{ fontWeight: 700, color: "var(--hs-text)" }}>HubSpot Sync</span> · Live v3
+              </div>
+              <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
+                <span
+                  style={{
+                    width: 6,
+                    height: 6,
+                    borderRadius: "50%",
+                    background: "var(--risk-healthy)",
+                    display: "inline-block",
+                    boxShadow: "0 0 6px rgba(0, 163, 141, 0.4)",
+                  }}
+                />
+                <span style={{ fontSize: "10.5px", fontWeight: 700, color: "var(--risk-healthy)" }}>
+                  Operational
+                </span>
+              </div>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

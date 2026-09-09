@@ -95,10 +95,21 @@ export const App: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState<boolean>(() => {
+    return localStorage.getItem("dealsense_sidebar_collapsed") === "true";
+  });
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedDeal, setSelectedDeal] = useState<DealData | null>(null);
   const [allDeals, setAllDeals] = useState(getLocalDeals);
+
+  const toggleSidebarCollapse = () => {
+    setSidebarCollapsed((prev) => {
+      const next = !prev;
+      localStorage.setItem("dealsense_sidebar_collapsed", String(next));
+      return next;
+    });
+  };
 
   useEffect(() => {
     const handleDealsUpdated = (e: any) => {
@@ -117,6 +128,10 @@ export const App: React.FC = () => {
       if ((e.metaKey || e.ctrlKey) && e.key === "k") {
         e.preventDefault();
         setIsSearchOpen((prev) => !prev);
+      }
+      if ((e.metaKey || e.ctrlKey) && (e.key === "\\" || e.code === "Backslash")) {
+        e.preventDefault();
+        toggleSidebarCollapse();
       }
       if (e.key === "Escape") {
         setIsSearchOpen(false);
@@ -342,10 +357,12 @@ export const App: React.FC = () => {
       )}
 
       {/* Sidebar Container */}
-      <div className={`sidebar ${sidebarOpen ? "open" : ""}`}>
+      <div className={`sidebar ${sidebarOpen ? "open" : ""} ${sidebarCollapsed ? "collapsed" : ""}`}>
         <Sidebar 
           onClose={() => setSidebarOpen(false)}
           onNavigateHome={handleNavigateHome}
+          isCollapsed={sidebarCollapsed}
+          onToggleCollapse={toggleSidebarCollapse}
         />
       </div>
 
@@ -359,6 +376,8 @@ export const App: React.FC = () => {
           onOpenSidebar={() => setSidebarOpen(true)}
           onOpenSearch={() => setIsSearchOpen(true)}
           onNavigateHome={handleNavigateHome}
+          isSidebarCollapsed={sidebarCollapsed}
+          onToggleSidebarCollapse={toggleSidebarCollapse}
         />
 
         <div className="page-content">

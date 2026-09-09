@@ -16,6 +16,8 @@ interface TopBarProps {
   onOpenSidebar: () => void;
   onOpenSearch: () => void;
   onNavigateHome?: () => void;
+  isSidebarCollapsed?: boolean;
+  onToggleSidebarCollapse?: () => void;
 }
 
 export const TopBar: React.FC<TopBarProps> = ({
@@ -24,6 +26,8 @@ export const TopBar: React.FC<TopBarProps> = ({
   onOpenSidebar,
   onOpenSearch,
   onNavigateHome,
+  isSidebarCollapsed = false,
+  onToggleSidebarCollapse,
 }) => {
   const navigate = useNavigate();
   const [notificationOpen, setNotificationOpen] = useState(false);
@@ -123,6 +127,56 @@ export const TopBar: React.FC<TopBarProps> = ({
             <line x1="3" y1="18" x2="21" y2="18" />
           </svg>
         </button>
+
+        {/* Desktop Sidebar Toggle Button (HubSpot Canvas Style) */}
+        {onToggleSidebarCollapse && (
+          <button
+            type="button"
+            className="desktop-sidebar-toggle hide-on-mobile"
+            onClick={onToggleSidebarCollapse}
+            aria-label={isSidebarCollapsed ? "Expand sidebar navigation (Ctrl+\\)" : "Collapse sidebar navigation (Ctrl+\\)"}
+            title={isSidebarCollapsed ? "Expand sidebar (Ctrl+\\)" : "Collapse sidebar (Ctrl+\\)"}
+            style={{
+              width: 32,
+              height: 32,
+              borderRadius: 6,
+              background: isSidebarCollapsed ? "rgba(255, 122, 89, 0.09)" : "transparent",
+              border: `1px solid ${isSidebarCollapsed ? "rgba(255, 122, 89, 0.4)" : "rgba(203, 214, 226, 0.9)"}`,
+              color: isSidebarCollapsed ? "#ff7a59" : "#516f90",
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
+              cursor: "pointer",
+              transition: "all 0.15s ease",
+              padding: 0,
+              flexShrink: 0,
+            }}
+            onMouseEnter={(e) => {
+              if (!isSidebarCollapsed) {
+                e.currentTarget.style.background = "#f5f8fa";
+                e.currentTarget.style.borderColor = "#00a4bd";
+                e.currentTarget.style.color = "#2d3e50";
+              }
+            }}
+            onMouseLeave={(e) => {
+              if (!isSidebarCollapsed) {
+                e.currentTarget.style.background = "transparent";
+                e.currentTarget.style.borderColor = "rgba(203, 214, 226, 0.9)";
+                e.currentTarget.style.color = "#516f90";
+              }
+            }}
+          >
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+              <line x1="9" y1="3" x2="9" y2="21" />
+              {isSidebarCollapsed ? (
+                <polyline points="13 9 16 12 13 15" />
+              ) : (
+                <polyline points="15 9 12 12 15 15" />
+              )}
+            </svg>
+          </button>
+        )}
 
         {/* Clean Breadcrumb Navigation */}
         <div className="topbar-title-section" style={{ display: "flex", alignItems: "center", minWidth: 0, gap: 8 }}>
