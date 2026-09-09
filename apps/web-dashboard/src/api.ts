@@ -255,6 +255,97 @@ export function saveLocalDeals(deals: EnterpriseDeal[]): void {
   }
 }
 
+export function normalizeDeal(item: any, existing?: EnterpriseDeal): EnterpriseDeal {
+  const hsId = String(item.hubspot_id || item.hubspotId || existing?.hubspotId || item.id || Date.now());
+  const score = typeof item.score === "number" ? item.score : (existing?.score || 70);
+  const band = (item.band || (score >= 80 ? "Healthy" : score >= 60 ? "Moderate" : "Critical")) as EnterpriseDeal["band"];
+  const value = typeof item.value === "number" ? item.value : (typeof item.amount === "number" ? item.amount : (existing?.value || 50000));
+  const stage = (item.stage || existing?.stage || "appointmentscheduled") as EnterpriseDeal["stage"];
+  const name = String(item.name || existing?.name || "HubSpot Deal");
+  const client = String(item.client || existing?.client || "Enterprise Client Corp");
+  const owner = String(item.owner || existing?.owner || "Peash Rudra");
+
+  return {
+    id: String(item.id || existing?.id || `deal-${Date.now()}`),
+    hubspotId: hsId,
+    name,
+    client,
+    value,
+    stage,
+    score,
+    band,
+    owner,
+    pipeline: item.pipeline || existing?.pipeline || "Strategic Enterprise",
+    closeDate: item.close_date || item.closeDate || existing?.closeDate || new Date(Date.now() + 30 * 86400000).toISOString().split("T")[0],
+    priority: item.priority || existing?.priority || "High",
+    forecastCategory: existing?.forecastCategory || (stage === "contractsent" ? "Commit" : "Pipeline"),
+    dealType: existing?.dealType || "New Business",
+    daysInStage: existing?.daysInStage || 1,
+    lastTouch: existing?.lastTouch || "Just now",
+    slippageCount: existing?.slippageCount || 0,
+    isFollowed: existing?.isFollowed || false,
+    contacts: existing?.contacts?.length ? existing.contacts : [
+      {
+        id: `c-${hsId}-1`,
+        name: "Executive Sponsor",
+        email: `contact@${client.toLowerCase().replace(/[^a-z0-9]/g, "") || "company"}.com`,
+        phone: "+1 (555) 019-2834",
+        role: "Economic Buyer",
+        lastContacted: "Just added",
+        avatar: "ES",
+      },
+    ],
+    lineItems: existing?.lineItems?.length ? existing.lineItems : [
+      {
+        id: `li-${hsId}-1`,
+        name: `${name} License Subscription`,
+        sku: `DS-LIC-${hsId.slice(-4)}`,
+        quantity: 1,
+        unitPrice: value,
+        discount: 0,
+        total: value,
+      },
+    ],
+    activities: existing?.activities?.length ? existing.activities : [
+      {
+        id: `act-${hsId}-1`,
+        type: "stage_change",
+        title: "HubSpot CRM Synchronization",
+        description: `Active CRM deal in stage "${stage}" with health score ${score} (${band}).`,
+        author: owner,
+        timestamp: "Just now",
+      },
+    ],
+    vectorScores: existing?.vectorScores || {
+      stageMomentum: Math.min(98, score + 6),
+      economicBuyer: Math.min(95, score + 4),
+      meddiccDepth: Math.max(40, score - 8),
+      slippageDefense: Math.min(90, score + 2),
+      multiThreading: Math.max(35, score - 12),
+      discountHealth: Math.min(96, score + 8),
+      activityCadence: Math.min(92, score + 5),
+    },
+    meddicc: existing?.meddicc || {
+      metrics: "Quantified annual ROI and operational cost reduction.",
+      metricsStatus: "verified",
+      economicBuyer: "VP of Technology / CFO",
+      economicBuyerStatus: score >= 70 ? "verified" : "in_review",
+      decisionCriteria: "Technical SOC2, pricing ROI, and sub-200ms latency.",
+      decisionCriteriaStatus: "verified",
+      decisionProcess: "Procurement review followed by executive signature.",
+      decisionProcessStatus: "in_review",
+      identifyPain: "Inefficient manual CRM workflows and forecasting inaccuracy.",
+      identifyPainStatus: "verified",
+      champion: "Director of Enterprise Infrastructure",
+      championStatus: "verified",
+      competition: "Legacy spreadsheets and incumbent CRM tools.",
+      competitionStatus: "verified",
+    },
+    risks: existing?.risks || (score < 60 ? [{ id: `r-${hsId}-1`, text: "Single-threaded deal; missing direct economic buyer verification.", severity: "high" }] : []),
+    recommendation: existing?.recommendation || "Maintain weekly executive alignment cadence to protect deal velocity.",
+  };
+}
+
 export async function fetchDeals(tenantId?: string): Promise<EnterpriseDeal[]> {
   try {
     const response = await fetch(`${API_BASE}/deals`, {
@@ -263,8 +354,14 @@ export async function fetchDeals(tenantId?: string): Promise<EnterpriseDeal[]> {
     if (response.ok) {
       const data = await response.json();
       if (Array.isArray(data) && data.length > 0) {
-        saveLocalDeals(data);
-        return data;
+        const local = getLocalDeals();
+        const existingMap = new Map(local.map((d) => [d.hubspotId || d.id, d]));
+        const normalized = data.map((item: any) => {
+          const hsId = item.hubspot_id || item.hubspotId || String(item.id);
+          return normalizeDeal(item, existingMap.get(hsId) || existingMap.get(String(item.id)));
+        });
+        saveLocalDeals(normalized);
+        return normalized;
       }
     }
   } catch {
@@ -287,86 +384,45 @@ export async function createDeal(
   tenantId: string = DEFAULT_TENANT_ID
 ): Promise<EnterpriseDeal> {
   const currentDeals = getLocalDeals();
-  const hubspotId = Math.floor(100000 + Math.random() * 900000).toString();
-  const newDeal: EnterpriseDeal = {
-    id: `deal-${Date.now()}`,
-    hubspotId,
+  const tempId = `deal-${Date.now()}`;
+  let hubspotId = Math.floor(100000 + Math.random() * 900000).toString();
+
+  // Try backend to create deal in real HubSpot CRM!
+  try {
+    const res = await fetch(`${API_BASE}/deals`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", ...getAuthHeaders(tenantId) },
+      body: JSON.stringify({
+        name: dealData.name,
+        amount: dealData.amount,
+        stage: dealData.stage,
+        client: dealData.client || "Enterprise Client",
+        owner: dealData.owner || "Peash Rudra",
+        close_date: dealData.closeDate,
+      }),
+    });
+    if (res.ok) {
+      const created = await res.json();
+      if (created.hubspot_id) {
+        hubspotId = String(created.hubspot_id);
+      }
+    }
+  } catch (e) {
+    console.warn("Backend deal creation error:", e);
+  }
+
+  const newDeal = normalizeDeal({
+    id: tempId,
+    hubspot_id: hubspotId,
     name: dealData.name,
-    client: dealData.client || "Enterprise Client Corp",
+    client: dealData.client,
     value: dealData.amount,
-    stage: dealData.stage as any,
-    owner: dealData.owner || "Peash Rudra",
-    pipeline: dealData.pipeline || "Strategic Enterprise",
-    closeDate: dealData.closeDate || new Date(Date.now() + 30 * 86400000).toISOString().split("T")[0],
-    priority: dealData.priority || "High",
-    forecastCategory: dealData.stage === "contractsent" ? "Commit" : "Pipeline",
-    dealType: "New Business",
-    score: dealData.stage === "contractsent" ? 84 : 70,
-    band: dealData.stage === "contractsent" ? "Healthy" : "Moderate",
-    daysInStage: 1,
-    lastTouch: "Just now",
-    slippageCount: 0,
-    isFollowed: false,
-    contacts: [
-      {
-        id: `c-${Date.now()}`,
-        name: "Executive Sponsor",
-        email: `sponsor@${(dealData.client || "client").toLowerCase().replace(/[^a-z]/g, "")}.com`,
-        phone: "+1 (555) 019-2834",
-        role: "Economic Buyer",
-        lastContacted: "Just added",
-        avatar: "ES",
-      },
-    ],
-    lineItems: [
-      {
-        id: `li-${Date.now()}`,
-        name: `${dealData.name} License Subscription`,
-        sku: `DS-LIC-${Date.now().toString().slice(-4)}`,
-        quantity: 1,
-        unitPrice: dealData.amount,
-        discount: 0,
-        total: dealData.amount,
-      },
-    ],
-    activities: [
-      {
-        id: `act-${Date.now()}`,
-        type: "stage_change",
-        title: "Deal Created in HubSpot CRM",
-        description: `Created deal "${dealData.name}" valued at $${dealData.amount.toLocaleString()} USD in stage "${dealData.stage}".`,
-        author: dealData.owner || "Peash Rudra",
-        timestamp: "Just now",
-      },
-    ],
-    vectorScores: {
-      stageMomentum: 88,
-      economicBuyer: 85,
-      meddiccDepth: 80,
-      slippageDefense: 90,
-      multiThreading: 78,
-      discountHealth: 92,
-      activityCadence: 85,
-    },
-    meddicc: {
-      metrics: "Quantified $1.2M annual operational cost reduction and SLA improvement.",
-      metricsStatus: "verified",
-      economicBuyer: "VP of Technology / CFO",
-      economicBuyerStatus: "verified",
-      decisionCriteria: "Technical SOC2, pricing ROI, and sub-200ms latency.",
-      decisionCriteriaStatus: "verified",
-      decisionProcess: "Procurement review followed by CFO dual signature.",
-      decisionProcessStatus: "in_review",
-      identifyPain: "Manual RevOps processes causing deal slippage.",
-      identifyPainStatus: "verified",
-      champion: "Director of Enterprise Infrastructure",
-      championStatus: "verified",
-      competition: "Internal tooling and manual spreadsheets.",
-      competitionStatus: "verified",
-    },
-    risks: [],
-    recommendation: "Ensure legal MSA review is scheduled this week to preserve close date.",
-  };
+    stage: dealData.stage,
+    owner: dealData.owner,
+    close_date: dealData.closeDate,
+    pipeline: dealData.pipeline,
+    priority: dealData.priority,
+  });
 
   const updatedDeals = [newDeal, ...currentDeals];
   saveLocalDeals(updatedDeals);
@@ -381,15 +437,6 @@ export async function createDeal(
     status: "Success",
     details: `Created new deal worth $${dealData.amount.toLocaleString()} in stage "${dealData.stage}".`,
   });
-
-  // Try backend
-  try {
-    await fetch(`${API_BASE}/deals`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json", ...getAuthHeaders(tenantId) },
-      body: JSON.stringify(dealData),
-    });
-  } catch {}
 
   return newDeal;
 }
@@ -427,14 +474,23 @@ export async function updateDeal(
     });
   }
 
-  // Try backend
+  // Try backend to update real HubSpot deal
   try {
     await fetch(`${API_BASE}/deals/${dealId}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json", ...getAuthHeaders(tenantId) },
-      body: JSON.stringify(dealData),
+      body: JSON.stringify({
+        name: dealData.name,
+        amount: dealData.value,
+        stage: dealData.stage,
+        client: dealData.client,
+        owner: dealData.owner,
+        close_date: dealData.closeDate,
+      }),
     });
-  } catch {}
+  } catch (e) {
+    console.warn("Backend deal update error:", e);
+  }
 
   return updatedDeal || currentDeals[0];
 }
@@ -584,7 +640,17 @@ export async function syncHubSpotDeals(tenantId: string = DEFAULT_TENANT_ID): Pr
       headers: getAuthHeaders(tenantId),
     });
     if (response.ok) {
-      return await response.json();
+      const result = await response.json();
+      if (Array.isArray(result.deals) && result.deals.length > 0) {
+        const local = getLocalDeals();
+        const existingMap = new Map(local.map((d) => [d.hubspotId || d.id, d]));
+        const normalized = result.deals.map((item: any) => {
+          const hsId = item.hubspot_id || item.hubspotId || String(item.id);
+          return normalizeDeal(item, existingMap.get(hsId) || existingMap.get(String(item.id)));
+        });
+        saveLocalDeals(normalized);
+      }
+      return result;
     }
   } catch {}
 
