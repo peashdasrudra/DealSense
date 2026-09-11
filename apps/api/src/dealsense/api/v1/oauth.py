@@ -10,6 +10,7 @@ Handles HubSpot OAuth 2.0 flow:
 - POST /api/v1/oauth/disconnect: Disconnects integration and revokes active status
 """
 
+import contextlib
 from typing import Any
 from uuid import UUID
 
@@ -17,7 +18,7 @@ from fastapi import APIRouter, Depends, Query, Request, Response
 from fastapi.responses import RedirectResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from dealsense.api.deps import get_db, get_db_optional
+from dealsense.api.deps import get_db_optional
 from dealsense.api.schemas.oauth import (
     OAuthAuthorizeResponse,
     OAuthCallbackRequest,
@@ -195,10 +196,8 @@ async def force_refresh_token(
 ) -> dict[str, str]:
     """Manually force or verify access token retrieval / refresh."""
     if db is not None:
-        try:
+        with contextlib.suppress(Exception):
             await get_access_token(tenant_id=tenant_id, db=db)
-        except Exception:
-            pass
     return {"status": "refreshed", "message": "Token is valid and active"}
 
 
@@ -213,7 +212,7 @@ async def disconnect(
     user_agent = request.headers.get("user-agent")
 
     if db is not None:
-        try:
+        with contextlib.suppress(Exception):
             await disconnect_tenant(
                 tenant_id=tenant_id,
                 db=db,
@@ -221,8 +220,6 @@ async def disconnect(
                 ip_address=client_ip,
                 user_agent=user_agent,
             )
-        except Exception:
-            pass
     return OAuthDisconnectResponse(
         tenant_id=tenant_id,
         message="HubSpot integration disconnected",

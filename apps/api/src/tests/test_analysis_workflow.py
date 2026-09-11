@@ -140,7 +140,7 @@ class TestDealAnalysisWorkflow:
             patch(
                 "dealsense.security.rbac.extract_role_from_jwt",
                 return_value=UserRole.AGENCY_OWNER,
-            ) as mock_role,
+            ),
             patch(
                 "dealsense_worker.tasks.analyze.run_deal_analysis", new_callable=AsyncMock
             ) as mock_run_analysis,

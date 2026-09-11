@@ -11,7 +11,7 @@ import json
 import secrets
 import time
 import urllib.parse
-from uuid import NAMESPACE_DNS, UUID, uuid4, uuid5
+from uuid import NAMESPACE_DNS, UUID, uuid5
 
 import httpx
 import jwt
@@ -23,7 +23,13 @@ from dealsense.config import get_settings
 from dealsense.domain.enums import TenantStatus
 from dealsense.domain.exceptions import OAuthError, OAuthStateValidationError
 from dealsense.domain.models import Tenant
-from dealsense.infrastructure.redis_client import acquire_lock, cache_delete, cache_get, cache_set, release_lock
+from dealsense.infrastructure.redis_client import (
+    acquire_lock,
+    cache_delete,
+    cache_get,
+    cache_set,
+    release_lock,
+)
 from dealsense.security.token_manager import get_connection_status, invalidate_tokens, store_tokens
 from dealsense.services.audit_service import record_audit_event
 

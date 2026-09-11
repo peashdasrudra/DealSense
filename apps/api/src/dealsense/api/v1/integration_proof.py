@@ -20,7 +20,7 @@ import time
 from typing import Any
 
 import structlog
-from fastapi import APIRouter, Request
+from fastapi import APIRouter
 from pydantic import BaseModel
 
 from dealsense.config import get_settings
@@ -211,7 +211,7 @@ async def health_matrix() -> HealthMatrixResponse:
 
     # 6. Encryption
     try:
-        from dealsense.infrastructure.encryption import encrypt_value, decrypt_value
+        from dealsense.infrastructure.encryption import decrypt_value, encrypt_value
         enc_start = time.monotonic()
         encrypted = encrypt_value("health-check-probe")
         decrypted = decrypt_value(encrypted)
@@ -303,7 +303,7 @@ async def test_webhook_signature(body: WebhookTestRequest) -> WebhookTestRespons
 @router.post("/test-encryption", response_model=EncryptionTestResponse)
 async def test_encryption_roundtrip() -> EncryptionTestResponse:
     """Live demonstration of Fernet AES-256 encryption/decryption roundtrip."""
-    from dealsense.infrastructure.encryption import encrypt_value, decrypt_value
+    from dealsense.infrastructure.encryption import decrypt_value, encrypt_value
 
     sample = "pat-na1-demo-access-token-abc123xyz"
 

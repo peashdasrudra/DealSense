@@ -8,8 +8,8 @@ from collections.abc import Callable
 from enum import StrEnum
 from uuid import UUID
 
-import structlog
 import jwt
+import structlog
 from fastapi import Depends, HTTPException, Request
 
 from dealsense.config import get_settings
@@ -248,12 +248,12 @@ def require_any_permission(*permissions: Permission) -> Callable[..., UUID]:
             )
 
         role = extract_role_from_jwt(request)
-        
+
         has_any = any(has_permission(role, perm) for perm in permissions)
         if not has_any:
             logger.warning("any_permission_denied", role=role, tenant_id=str(tenant_id))
             raise HTTPException(status_code=403, detail="Insufficient permissions")
-            
+
         return tenant_id
 
     return Depends(_check)

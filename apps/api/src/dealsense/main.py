@@ -92,10 +92,11 @@ def create_app() -> FastAPI:
     )
 
     # ---- Middlewares ----
+    from fastapi import Response
+    from starlette.middleware.base import BaseHTTPMiddleware
+
     from dealsense.api.middleware import RequestContextMiddleware
     from dealsense.security.tenant_guard import TenantGuardMiddleware
-    from starlette.middleware.base import BaseHTTPMiddleware
-    from fastapi import Response
 
     class SecurityHeadersMiddleware(BaseHTTPMiddleware):
         async def dispatch(self, request: Request, call_next):

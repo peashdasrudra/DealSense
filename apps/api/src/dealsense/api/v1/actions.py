@@ -19,7 +19,7 @@ from pydantic import BaseModel, Field
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from dealsense.api.deps import get_db, get_db_optional
+from dealsense.api.deps import get_db_optional
 from dealsense.domain.models import ActionExecution, ActionProposal, AuditEvent
 from dealsense.security.rbac import Permission, require_permission
 

@@ -1,5 +1,5 @@
-from contextlib import suppress
 import json
+from contextlib import suppress
 from typing import Any
 from uuid import UUID, uuid4
 
@@ -9,7 +9,7 @@ from pydantic import BaseModel
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from dealsense.api.deps import get_db, get_db_optional
+from dealsense.api.deps import get_db_optional
 from dealsense.api.schemas.deals import (
     DealCreateRequest,
     DealDashboardSchema,
@@ -19,7 +19,6 @@ from dealsense.api.schemas.deals import (
     DealUpdateRequest,
 )
 from dealsense.config import get_settings
-from dealsense.domain.exceptions import DealNotFoundError
 from dealsense.domain.models import Deal, DealSnapshot
 from dealsense.infrastructure.hubspot_client import HubSpotClient
 from dealsense.security.rbac import Permission, require_permission
@@ -160,7 +159,7 @@ async def list_deals_for_dashboard(
 
     If connected to HubSpot via OAuth or HUBSPOT_ACCESS_TOKEN, queries live CRM deals!
     """
-    settings = get_settings()
+    get_settings()
 
     # 1. Check if this is the Demo Tenant Mock Mode
     if str(tenant_id) == "00000000-0000-0000-0000-000000000001":
@@ -242,7 +241,7 @@ async def list_deals_for_dashboard(
                             hubspot_id=str(hd["id"]),
                         )
                     )
-                
+
                 # Cache the successful result for 30 seconds
                 await r.setex(cache_key, 30, json.dumps([d.model_dump(mode="json") for d in live_deals]))
                 return live_deals
@@ -295,7 +294,7 @@ async def create_deal(
     db: AsyncSession | None = Depends(get_db_optional),
 ) -> DealDashboardSchema:
     """Create a new deal in HubSpot CRM and local DealSense database."""
-    settings = get_settings()
+    get_settings()
     hubspot_id = str(uuid4().int)[:8]
 
     # If HubSpot is connected (via OAuth or access token), create deal in real HubSpot CRM!
@@ -371,7 +370,7 @@ async def update_deal(
     db: AsyncSession | None = Depends(get_db_optional),
 ) -> DealDashboardSchema:
     """Update a deal in HubSpot CRM and local DealSense database."""
-    settings = get_settings()
+    get_settings()
 
     # Find deal in memory or database
     target: DealDashboardSchema | None = None
@@ -449,7 +448,7 @@ async def delete_deal(
     db: AsyncSession | None = Depends(get_db_optional),
 ) -> dict[str, str]:
     """Delete/archive a deal from HubSpot CRM and local DealSense database."""
-    settings = get_settings()
+    get_settings()
 
     # Find and remove from memory store
     hubspot_id: str | None = None
@@ -494,7 +493,7 @@ async def delete_deal(
 
 
 @router.post("/sync-hubspot")
-async def sync_hubspot_deals(
+async def sync_hubspot_deals_legacy(
     tenant_id: UUID = require_permission(Permission.DEAL_READ),
     db: AsyncSession | None = Depends(get_db_optional),
 ) -> dict[str, Any]:
@@ -543,7 +542,7 @@ async def get_deal_details(
 
 
 @router.get("/{deal_id}/snapshot", response_model=DealSnapshotSchema)
-async def get_deal_snapshot(
+async def get_deal_snapshot_ml(
     deal_id: str,
     tenant_id: UUID = require_permission(Permission.SNAPSHOT_READ),
     db: AsyncSession | None = Depends(get_db_optional),
@@ -569,14 +568,12 @@ async def get_deal_snapshot(
     if deal and db is not None:
         snapshot = await get_latest_deal_snapshot(tenant_id=tenant_id, deal_id=deal.id, db=db)
         if not snapshot:
-            try:
+            with suppress(Exception):
                 snapshot = await compute_and_persist_deal_snapshot(
                     tenant_id=tenant_id,
                     deal_id=deal.id,
                     db=db,
                 )
-            except Exception:
-                pass
         if snapshot:
             return DealSnapshotSchema.model_validate(snapshot)
 
@@ -723,7 +720,7 @@ async def sync_hubspot_deals(
         r = get_redis()
         cache_key = f"deals:{tenant_id}:hubspot_cache"
         await r.delete(cache_key)
-        
+
         deals = await list_deals_for_dashboard(tenant_id=tenant_id, db=db)
         return {
             "status": "success",
@@ -747,14 +744,14 @@ async def get_deal_snapshot(
         hubspot_id = str(deal_id)
         if deal and deal.hubspot_id:
             hubspot_id = deal.hubspot_id
-            
+
         hubspot_token = await _get_active_hubspot_token(tenant_id, db)
         if hubspot_token and db:
             from dealsense.infrastructure.hubspot_client import HubSpotClient
             client = HubSpotClient(tenant_id=tenant_id, db=db)
             hs_deal = await client.get_deal(hubspot_id)
             return hs_deal
-            
+
         raise HTTPException(status_code=404, detail="No active HubSpot connection")
     except HTTPException:
         raise
