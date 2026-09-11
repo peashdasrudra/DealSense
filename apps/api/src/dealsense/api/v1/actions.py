@@ -20,7 +20,8 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from dealsense.api.deps import get_db_optional
-from dealsense.domain.models import ActionExecution, ActionProposal, AuditEvent, Deal
+from dealsense.api.v1.deals import list_deals_for_dashboard
+from dealsense.domain.models import ActionExecution, ActionProposal, AuditEvent
 from dealsense.security.rbac import Permission, require_permission
 
 logger = structlog.get_logger(__name__)
@@ -167,13 +168,11 @@ async def list_pending_actions(
                 ]
 
             # If no proposals exist, dynamically generate them from live deals
-            deals_stmt = select(Deal).where(Deal.tenant_id == tenant_id).limit(4)
-            deals_result = await db.execute(deals_stmt)
-            deals = deals_result.scalars().all()
+            deals = await list_deals_for_dashboard(tenant_id, db)
             if deals:
                 dynamic_proposals = []
-                for i, deal in enumerate(deals):
-                    client_name = deal.properties.get("company", deal.name.split("-")[0].strip())
+                for i, deal in enumerate(deals[:4]):
+                    client_name = deal.client or "Unknown Client"
                     if i % 2 == 0:
                         dynamic_proposals.append(
                             ActionProposalResponse(
@@ -186,7 +185,7 @@ async def list_pending_actions(
                                 title="Schedule CFO Alignment Sync",
                                 description=f"Economic buyer silent for {14 + i} days on '{deal.name}'. Create high-priority outreach task.",
                                 rationale="Multi-threading risk exceeds threshold.",
-                                impact_estimate=f"Protects ${deal.amount or 450000:,.0f} ARR from slippage",
+                                impact_estimate=f"Protects ${deal.value or 450000:,.0f} ARR from slippage",
                                 status="pending",
                                 created_at=datetime.now(UTC).isoformat(),
                             )
