@@ -5,6 +5,7 @@ from uuid import UUID, uuid4
 
 import structlog
 from fastapi import APIRouter, Depends, HTTPException
+from pydantic import BaseModel
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -731,7 +732,7 @@ async def sync_hubspot_deals(
         }
     except Exception as e:
         logger.error("sync_hubspot_error", error=str(e))
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @router.get("/{deal_id}/snapshot", response_model=dict)
@@ -759,7 +760,7 @@ async def get_deal_snapshot(
         raise
     except Exception as e:
         logger.error("get_deal_snapshot_error", error=str(e))
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 class NotePayload(BaseModel):
@@ -800,7 +801,7 @@ async def create_deal_note(
         return {"status": "skipped", "message": "No active HubSpot connection"}
     except Exception as e:
         logger.error("create_note_error", error=str(e))
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 @router.post("/{deal_id}/emails", response_model=dict)
 async def create_deal_email(
@@ -819,7 +820,7 @@ async def create_deal_email(
         return {"status": "skipped", "message": "No active HubSpot connection"}
     except Exception as e:
         logger.error("create_email_error", error=str(e))
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 @router.post("/{deal_id}/tasks", response_model=dict)
 async def create_deal_task(
@@ -838,7 +839,7 @@ async def create_deal_task(
         return {"status": "skipped", "message": "No active HubSpot connection"}
     except Exception as e:
         logger.error("create_task_error", error=str(e))
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 @router.post("/{deal_id}/meetings", response_model=dict)
 async def create_deal_meeting(
@@ -857,4 +858,4 @@ async def create_deal_meeting(
         return {"status": "skipped", "message": "No active HubSpot connection"}
     except Exception as e:
         logger.error("create_meeting_error", error=str(e))
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
