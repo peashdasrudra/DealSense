@@ -69,6 +69,7 @@ class TenantGuardMiddleware(BaseHTTPMiddleware):
         auth_header = request.headers.get("Authorization")
 
         from dealsense.config import get_settings
+
         settings = get_settings()
 
         # Check for single-server admin authentication or Session JWT
@@ -87,6 +88,7 @@ class TenantGuardMiddleware(BaseHTTPMiddleware):
             else:
                 try:
                     import jwt
+
                     payload = jwt.decode(jwt_token, settings.secret_key, algorithms=["HS256"])
                     jwt_tenant_id = payload.get("tenant_id")
                 except Exception:
@@ -104,7 +106,9 @@ class TenantGuardMiddleware(BaseHTTPMiddleware):
             if is_admin:
                 # Admin logged in but no tenant specified, use explicit admin target or default
                 admin_target = request.headers.get("X-Admin-Tenant-ID")
-                tenant_id_header = admin_target if admin_target else "00000000-0000-0000-0000-000000000002"
+                tenant_id_header = (
+                    admin_target if admin_target else "00000000-0000-0000-0000-000000000002"
+                )
             else:
                 # Unauthenticated users are routed to the Demo Mode mock tenant
                 tenant_id_header = "00000000-0000-0000-0000-000000000001"
@@ -204,6 +208,7 @@ class TenantGuardMiddleware(BaseHTTPMiddleware):
         # 1. Check Redis cache
         try:
             from dealsense.infrastructure.redis_client import cache_get
+
             cached_tid = await cache_get(f"portal:{portal_id}:tenant_id")
             if cached_tid:
                 return cached_tid
@@ -226,4 +231,5 @@ class TenantGuardMiddleware(BaseHTTPMiddleware):
 
         # 3. Deterministic UUID5 fallback matching oauth_service.py
         from uuid import NAMESPACE_DNS, uuid5
+
         return str(uuid5(NAMESPACE_DNS, f"hubspot:{portal_id}"))

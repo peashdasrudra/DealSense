@@ -179,9 +179,7 @@ class HubSpotClient:
             json_data={"properties": properties},
         )
 
-    async def batch_update_deals(
-        self, deal_updates: list[dict[str, Any]]
-    ) -> list[dict[str, Any]]:
+    async def batch_update_deals(self, deal_updates: list[dict[str, Any]]) -> list[dict[str, Any]]:
         """Batch update properties across multiple HubSpot deals.
 
         HubSpot limits batch requests to 100 objects per call.

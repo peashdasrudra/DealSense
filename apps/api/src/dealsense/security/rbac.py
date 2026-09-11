@@ -28,6 +28,7 @@ class Permission(StrEnum):
 
     # ---- Deal Intelligence ----
     DEAL_READ = "deal:read"
+    DEAL_UPDATE = "deal:update"
     DEAL_ANALYZE = "deal:analyze"
     SNAPSHOT_READ = "snapshot:read"
 
@@ -69,6 +70,7 @@ ROLE_PERMISSIONS: dict[UserRole, frozenset[Permission]] = {
             Permission.TENANT_READ,
             Permission.TENANT_UPDATE,
             Permission.DEAL_READ,
+            Permission.DEAL_UPDATE,
             Permission.DEAL_ANALYZE,
             Permission.SNAPSHOT_READ,
             Permission.ACTION_READ,
@@ -89,6 +91,7 @@ ROLE_PERMISSIONS: dict[UserRole, frozenset[Permission]] = {
         {
             Permission.TENANT_READ,
             Permission.DEAL_READ,
+            Permission.DEAL_UPDATE,
             Permission.DEAL_ANALYZE,
             Permission.SNAPSHOT_READ,
             Permission.ACTION_READ,
@@ -108,6 +111,7 @@ ROLE_PERMISSIONS: dict[UserRole, frozenset[Permission]] = {
     UserRole.SALES_MANAGER: frozenset(
         {
             Permission.DEAL_READ,
+            Permission.DEAL_UPDATE,
             Permission.DEAL_ANALYZE,
             Permission.SNAPSHOT_READ,
             Permission.ACTION_READ,
@@ -120,6 +124,7 @@ ROLE_PERMISSIONS: dict[UserRole, frozenset[Permission]] = {
     UserRole.SALES_REP: frozenset(
         {
             Permission.DEAL_READ,
+            Permission.DEAL_UPDATE,
             Permission.DEAL_ANALYZE,
             Permission.SNAPSHOT_READ,
             Permission.ACTION_READ,

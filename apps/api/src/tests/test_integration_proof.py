@@ -92,12 +92,12 @@ class TestIntegrationProofEndpoints:
         assert response.status_code == 200
         data = response.json()
         assert data["total_roles"] == 6
-        assert data["total_permissions"] == 22
+        assert data["total_permissions"] == 23
         assert len(data["roles"]) == 6
 
         # Verify agency owner has all permissions
         owner_role = next(r for r in data["roles"] if r["role"] == "agency_owner")
-        assert owner_role["permission_count"] == 22
+        assert owner_role["permission_count"] == 23
 
     @pytest.mark.asyncio
     async def test_architecture_metadata(self) -> None:

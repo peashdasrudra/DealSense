@@ -119,9 +119,7 @@ def _generate_ondemand_snapshot(
     )
 
 
-async def _get_active_hubspot_token(
-    tenant_id: UUID, db: AsyncSession | None = None
-) -> str | None:
+async def _get_active_hubspot_token(tenant_id: UUID, db: AsyncSession | None = None) -> str | None:
     """Retrieve active HubSpot token from environment settings, database, or Redis fallback."""
     settings = get_settings()
     if settings.hubspot_access_token:
@@ -137,6 +135,7 @@ async def _get_active_hubspot_token(
     # Fallback to Redis cache where OAuth tokens are stored
     try:
         from dealsense.infrastructure.redis_client import cache_get
+
         cached_access = await cache_get(f"tenant:{tenant_id}:access_token")
         if cached_access:
             return cached_access
@@ -164,14 +163,76 @@ async def list_deals_for_dashboard(
     # 1. Check if this is the Demo Tenant Mock Mode
     if str(tenant_id) == "00000000-0000-0000-0000-000000000001":
         if not _DEMO_DEALS:
-            _DEMO_DEALS.extend([
-                DealDashboardSchema(id=uuid4(), name="Orion Cloud Migration", client="TechCorp Inc.", score=23, band="Critical", value=150000, stage="Proposal Sent", owner="Sarah Miller", hubspot_id="deal-101"),
-                DealDashboardSchema(id=uuid4(), name="Quantum Security Suite", client="FinanceGo Ltd.", score=31, band="Critical", value=280000, stage="Negotiation", owner="James Reynolds", hubspot_id="deal-102"),
-                DealDashboardSchema(id=uuid4(), name="Horizon Data Platform", client="RetailMax", score=35, band="Critical", value=95000, stage="Qualification", owner="Lisa Chen", hubspot_id="deal-103"),
-                DealDashboardSchema(id=uuid4(), name="Apex CRM Integration", client="LogiPro Solutions", score=62, band="Moderate", value=120000, stage="Proposal Sent", owner="Mike Torres", hubspot_id="deal-104"),
-                DealDashboardSchema(id=uuid4(), name="Crown Global Enterprise", client="LogiPro Solutions", score=92, band="Healthy", value=400000, stage="Contract", owner="Mike Torres", hubspot_id="deal-105"),
-                DealDashboardSchema(id=uuid4(), name="Nebula Analytics Engine", client="HealthFirst Corp.", score=44, band="Moderate", value=210000, stage="Discovery", owner="Sarah Miller", hubspot_id="deal-106"),
-            ])
+            _DEMO_DEALS.extend(
+                [
+                    DealDashboardSchema(
+                        id=uuid4(),
+                        name="Orion Cloud Migration",
+                        client="TechCorp Inc.",
+                        score=23,
+                        band="Critical",
+                        value=150000,
+                        stage="Proposal Sent",
+                        owner="Sarah Miller",
+                        hubspot_id="deal-101",
+                    ),
+                    DealDashboardSchema(
+                        id=uuid4(),
+                        name="Quantum Security Suite",
+                        client="FinanceGo Ltd.",
+                        score=31,
+                        band="Critical",
+                        value=280000,
+                        stage="Negotiation",
+                        owner="James Reynolds",
+                        hubspot_id="deal-102",
+                    ),
+                    DealDashboardSchema(
+                        id=uuid4(),
+                        name="Horizon Data Platform",
+                        client="RetailMax",
+                        score=35,
+                        band="Critical",
+                        value=95000,
+                        stage="Qualification",
+                        owner="Lisa Chen",
+                        hubspot_id="deal-103",
+                    ),
+                    DealDashboardSchema(
+                        id=uuid4(),
+                        name="Apex CRM Integration",
+                        client="LogiPro Solutions",
+                        score=62,
+                        band="Moderate",
+                        value=120000,
+                        stage="Proposal Sent",
+                        owner="Mike Torres",
+                        hubspot_id="deal-104",
+                    ),
+                    DealDashboardSchema(
+                        id=uuid4(),
+                        name="Crown Global Enterprise",
+                        client="LogiPro Solutions",
+                        score=92,
+                        band="Healthy",
+                        value=400000,
+                        stage="Contract",
+                        owner="Mike Torres",
+                        hubspot_id="deal-105",
+                    ),
+                    DealDashboardSchema(
+                        id=uuid4(),
+                        name="Nebula Analytics Engine",
+                        client="HealthFirst Corp.",
+                        score=44,
+                        band="Moderate",
+                        value=210000,
+                        stage="Discovery",
+                        owner="Sarah Miller",
+                        hubspot_id="deal-106",
+                    ),
+                ]
+            )
         return _DEMO_DEALS
 
     # 2. Try querying HubSpot live if OAuth token or access token is configured
@@ -179,6 +240,7 @@ async def list_deals_for_dashboard(
     if hubspot_token:
         try:
             from dealsense.infrastructure.redis_client import get_redis
+
             r = get_redis()
             cache_key = f"deals:{tenant_id}:hubspot_cache"
             cached_data = await r.get(cache_key)
@@ -193,12 +255,36 @@ async def list_deals_for_dashboard(
             if not hs_deals:
                 logger.info("hubspot_portal_empty_seeding_starter_deals", tenant_id=str(tenant_id))
                 default_deals = [
-                    {"dealname": "Orion Cloud Infrastructure Modernization", "amount": "450000", "dealstage": "presentationscheduled"},
-                    {"dealname": "Quantum Security Suite Deployment", "amount": "280000", "dealstage": "decisionmakerboughtin"},
-                    {"dealname": "Horizon Enterprise Data Platform", "amount": "195000", "dealstage": "contractsent"},
-                    {"dealname": "Apex RevOps Automated Telemetry", "amount": "120000", "dealstage": "qualifiedtobuy"},
-                    {"dealname": "Crown Global Logistics Platform", "amount": "520000", "dealstage": "decisionmakerboughtin"},
-                    {"dealname": "Nebula AI Intelligence Engine", "amount": "340000", "dealstage": "appointmentscheduled"},
+                    {
+                        "dealname": "Orion Cloud Infrastructure Modernization",
+                        "amount": "450000",
+                        "dealstage": "presentationscheduled",
+                    },
+                    {
+                        "dealname": "Quantum Security Suite Deployment",
+                        "amount": "280000",
+                        "dealstage": "decisionmakerboughtin",
+                    },
+                    {
+                        "dealname": "Horizon Enterprise Data Platform",
+                        "amount": "195000",
+                        "dealstage": "contractsent",
+                    },
+                    {
+                        "dealname": "Apex RevOps Automated Telemetry",
+                        "amount": "120000",
+                        "dealstage": "qualifiedtobuy",
+                    },
+                    {
+                        "dealname": "Crown Global Logistics Platform",
+                        "amount": "520000",
+                        "dealstage": "decisionmakerboughtin",
+                    },
+                    {
+                        "dealname": "Nebula AI Intelligence Engine",
+                        "amount": "340000",
+                        "dealstage": "appointmentscheduled",
+                    },
                 ]
                 for d in default_deals:
                     try:
@@ -243,7 +329,9 @@ async def list_deals_for_dashboard(
                     )
 
                 # Cache the successful result for 30 seconds
-                await r.setex(cache_key, 30, json.dumps([d.model_dump(mode="json") for d in live_deals]))
+                await r.setex(
+                    cache_key, 30, json.dumps([d.model_dump(mode="json") for d in live_deals])
+                )
                 return live_deals
         except Exception as e:
             logger.warning("hubspot_direct_query_failed_falling_back", error=str(e))
@@ -253,7 +341,9 @@ async def list_deals_for_dashboard(
         try:
             stmt = (
                 select(Deal, DealSnapshot)
-                .outerjoin(DealSnapshot, (DealSnapshot.deal_id == Deal.id) & (DealSnapshot.is_current))
+                .outerjoin(
+                    DealSnapshot, (DealSnapshot.deal_id == Deal.id) & (DealSnapshot.is_current)
+                )
                 .where(Deal.tenant_id == tenant_id)
                 .order_by(Deal.updated_at.desc())
             )
@@ -336,6 +426,7 @@ async def create_deal(
     # Invalidate Redis cache so list endpoint reflects new deal immediately
     try:
         from dealsense.infrastructure.redis_client import get_redis
+
         r = get_redis()
         await r.delete(f"deals:{tenant_id}:hubspot_cache")
     except Exception:
@@ -402,9 +493,7 @@ async def update_deal(
         target.stage = body.stage
         target.score = STAGE_SCORES.get(body.stage.lower(), target.score)
         target.band = (
-            "Healthy"
-            if target.score >= 80
-            else ("Moderate" if target.score >= 60 else "Critical")
+            "Healthy" if target.score >= 80 else ("Moderate" if target.score >= 60 else "Critical")
         )
     if body.client is not None:
         target.client = body.client
@@ -431,6 +520,7 @@ async def update_deal(
             # Invalidate Redis cache so subsequent reads immediately reflect live mutation
             try:
                 from dealsense.infrastructure.redis_client import get_redis
+
                 r = get_redis()
                 await r.delete(f"deals:{tenant_id}:hubspot_cache")
             except Exception:
@@ -471,6 +561,7 @@ async def delete_deal(
     # Invalidate Redis cache so list endpoint reflects deletion immediately
     try:
         from dealsense.infrastructure.redis_client import get_redis
+
         r = get_redis()
         await r.delete(f"deals:{tenant_id}:hubspot_cache")
     except Exception:
@@ -521,6 +612,7 @@ async def get_deal_details(
         for d in _DEMO_DEALS:
             if str(d.id) == str(deal_id) or (d.hubspot_id and d.hubspot_id == str(deal_id)):
                 from datetime import UTC, datetime
+
                 return DealDetailSchema(
                     id=d.id,
                     tenant_id=tenant_id,
@@ -557,7 +649,9 @@ async def get_deal_snapshot_ml(
 
     if target_uuid is not None and db is not None:
         try:
-            snapshot = await get_latest_deal_snapshot(tenant_id=tenant_id, deal_id=target_uuid, db=db)
+            snapshot = await get_latest_deal_snapshot(
+                tenant_id=tenant_id, deal_id=target_uuid, db=db
+            )
             if snapshot:
                 return DealSnapshotSchema.model_validate(snapshot)
         except Exception:
@@ -649,8 +743,11 @@ async def trigger_deal_analysis(
     if target_uuid is not None and db is not None:
         try:
             from dealsense_worker.tasks.analyze import run_deal_analysis
+
             await run_deal_analysis(tenant_id=tenant_id, deal_id=target_uuid, db=db)
-            snapshot = await get_latest_deal_snapshot(tenant_id=tenant_id, deal_id=target_uuid, db=db)
+            snapshot = await get_latest_deal_snapshot(
+                tenant_id=tenant_id, deal_id=target_uuid, db=db
+            )
             if snapshot:
                 return DealSnapshotSchema.model_validate(snapshot)
         except Exception:
@@ -660,6 +757,7 @@ async def trigger_deal_analysis(
     if deal and db is not None:
         try:
             from dealsense_worker.tasks.analyze import run_deal_analysis
+
             await run_deal_analysis(tenant_id=tenant_id, deal_id=deal.id, db=db)
             snapshot = await get_latest_deal_snapshot(tenant_id=tenant_id, deal_id=deal.id, db=db)
             if snapshot:
@@ -683,7 +781,9 @@ async def get_deal_signals(
 
     if target_uuid is not None and db is not None:
         try:
-            snapshot = await get_latest_deal_snapshot(tenant_id=tenant_id, deal_id=target_uuid, db=db)
+            snapshot = await get_latest_deal_snapshot(
+                tenant_id=tenant_id, deal_id=target_uuid, db=db
+            )
             if snapshot:
                 return [DealSignalSchema.model_validate(s) for s in snapshot.signals]
         except Exception:
@@ -696,13 +796,17 @@ async def get_deal_signals(
             return [DealSignalSchema.model_validate(s) for s in snapshot.signals]
 
     from datetime import UTC, datetime
+
     return [
         DealSignalSchema(
             id=uuid4(),
             signal_type="stage_aging",
             severity="low",
             impact_score=0.0,
-            details={"title": "Stage Duration Normal", "description": "Within historical stage duration benchmarks."},
+            details={
+                "title": "Stage Duration Normal",
+                "description": "Within historical stage duration benchmarks.",
+            },
             evidence_ids=[],
             created_at=datetime.now(UTC),
         )
@@ -717,6 +821,7 @@ async def sync_hubspot_deals(
     """Sync deals from HubSpot and invalidate cache."""
     try:
         from dealsense.infrastructure.redis_client import get_redis
+
         r = get_redis()
         cache_key = f"deals:{tenant_id}:hubspot_cache"
         await r.delete(cache_key)
@@ -725,7 +830,7 @@ async def sync_hubspot_deals(
         return {
             "status": "success",
             "syncedCount": len(deals),
-            "deals": [d.model_dump(mode="json") for d in deals]
+            "deals": [d.model_dump(mode="json") for d in deals],
         }
     except Exception as e:
         logger.error("sync_hubspot_error", error=str(e))
@@ -748,6 +853,7 @@ async def get_deal_snapshot(
         hubspot_token = await _get_active_hubspot_token(tenant_id, db)
         if hubspot_token and db:
             from dealsense.infrastructure.hubspot_client import HubSpotClient
+
             client = HubSpotClient(tenant_id=tenant_id, db=db)
             hs_deal = await client.get_deal(hubspot_id)
             return hs_deal
@@ -764,11 +870,13 @@ class NotePayload(BaseModel):
     content: str
     owner_id: str | None = None
 
+
 class EmailPayload(BaseModel):
     subject: str
     body: str
     to_email: str
     owner_id: str | None = None
+
 
 class TaskPayload(BaseModel):
     subject: str
@@ -776,10 +884,12 @@ class TaskPayload(BaseModel):
     due_timestamp_ms: int
     owner_id: str | None = None
 
+
 class MeetingPayload(BaseModel):
     title: str
     body: str
     owner_id: str | None = None
+
 
 @router.post("/{deal_id}/notes", response_model=dict)
 async def create_deal_note(
@@ -792,6 +902,7 @@ async def create_deal_note(
         hubspot_token = await _get_active_hubspot_token(tenant_id, db)
         if hubspot_token and db:
             from dealsense.infrastructure.hubspot_client import HubSpotClient
+
             client = HubSpotClient(tenant_id=tenant_id, db=db)
             res = await client.create_note(payload.content, deal_id, payload.owner_id)
             return {"status": "success", "result": res}
@@ -799,6 +910,7 @@ async def create_deal_note(
     except Exception as e:
         logger.error("create_note_error", error=str(e))
         raise HTTPException(status_code=500, detail=str(e)) from e
+
 
 @router.post("/{deal_id}/emails", response_model=dict)
 async def create_deal_email(
@@ -811,13 +923,17 @@ async def create_deal_email(
         hubspot_token = await _get_active_hubspot_token(tenant_id, db)
         if hubspot_token and db:
             from dealsense.infrastructure.hubspot_client import HubSpotClient
+
             client = HubSpotClient(tenant_id=tenant_id, db=db)
-            res = await client.create_email(payload.subject, payload.body, payload.to_email, deal_id, payload.owner_id)
+            res = await client.create_email(
+                payload.subject, payload.body, payload.to_email, deal_id, payload.owner_id
+            )
             return {"status": "success", "result": res}
         return {"status": "skipped", "message": "No active HubSpot connection"}
     except Exception as e:
         logger.error("create_email_error", error=str(e))
         raise HTTPException(status_code=500, detail=str(e)) from e
+
 
 @router.post("/{deal_id}/tasks", response_model=dict)
 async def create_deal_task(
@@ -830,13 +946,17 @@ async def create_deal_task(
         hubspot_token = await _get_active_hubspot_token(tenant_id, db)
         if hubspot_token and db:
             from dealsense.infrastructure.hubspot_client import HubSpotClient
+
             client = HubSpotClient(tenant_id=tenant_id, db=db)
-            res = await client.create_task(payload.subject, payload.body, payload.due_timestamp_ms, payload.owner_id, deal_id)
+            res = await client.create_task(
+                payload.subject, payload.body, payload.due_timestamp_ms, payload.owner_id, deal_id
+            )
             return {"status": "success", "result": res}
         return {"status": "skipped", "message": "No active HubSpot connection"}
     except Exception as e:
         logger.error("create_task_error", error=str(e))
         raise HTTPException(status_code=500, detail=str(e)) from e
+
 
 @router.post("/{deal_id}/meetings", response_model=dict)
 async def create_deal_meeting(
@@ -849,8 +969,11 @@ async def create_deal_meeting(
         hubspot_token = await _get_active_hubspot_token(tenant_id, db)
         if hubspot_token and db:
             from dealsense.infrastructure.hubspot_client import HubSpotClient
+
             client = HubSpotClient(tenant_id=tenant_id, db=db)
-            res = await client.create_meeting(payload.title, payload.body, deal_id, payload.owner_id)
+            res = await client.create_meeting(
+                payload.title, payload.body, deal_id, payload.owner_id
+            )
             return {"status": "success", "result": res}
         return {"status": "skipped", "message": "No active HubSpot connection"}
     except Exception as e:

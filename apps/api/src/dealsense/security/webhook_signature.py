@@ -74,22 +74,33 @@ def verify_webhook_signature(
 
         # Candidate 1: Official HubSpot v3 standard (Method + URL + Body + Timestamp -> Base64)
         if request_url:
-            source_v3 = http_method.upper().encode("utf-8") + request_url.encode("utf-8") + request_body + ts_bytes
-            digest_v3 = base64.b64encode(hmac.new(secret_bytes, source_v3, hashlib.sha256).digest()).decode("utf-8")
+            source_v3 = (
+                http_method.upper().encode("utf-8")
+                + request_url.encode("utf-8")
+                + request_body
+                + ts_bytes
+            )
+            digest_v3 = base64.b64encode(
+                hmac.new(secret_bytes, source_v3, hashlib.sha256).digest()
+            ).decode("utf-8")
             if hmac.compare_digest(digest_v3, signature_header):
                 matched = True
 
         # Candidate 2: HubSpot v3 variant without URL (Method + Body + Timestamp -> Base64)
         if not matched:
             source_v3_nourl = http_method.upper().encode("utf-8") + request_body + ts_bytes
-            digest_v3_nourl = base64.b64encode(hmac.new(secret_bytes, source_v3_nourl, hashlib.sha256).digest()).decode("utf-8")
+            digest_v3_nourl = base64.b64encode(
+                hmac.new(secret_bytes, source_v3_nourl, hashlib.sha256).digest()
+            ).decode("utf-8")
             if hmac.compare_digest(digest_v3_nourl, signature_header):
                 matched = True
 
         # Candidate 3: Base64 HMAC over body + timestamp
         if not matched:
             source_b64 = request_body + ts_bytes
-            digest_b64 = base64.b64encode(hmac.new(secret_bytes, source_b64, hashlib.sha256).digest()).decode("utf-8")
+            digest_b64 = base64.b64encode(
+                hmac.new(secret_bytes, source_b64, hashlib.sha256).digest()
+            ).decode("utf-8")
             if hmac.compare_digest(digest_b64, signature_header):
                 matched = True
 

@@ -280,6 +280,7 @@ async def execute_write_back(
                 try:
                     from dealsense.api.v1.deals import _get_active_hubspot_token
                     from dealsense.infrastructure.hubspot_client import HubSpotClient
+
                     hubspot_token = await _get_active_hubspot_token(tenant_id, db)
                     if hubspot_token and proposal.deal_id:
                         client = HubSpotClient(tenant_id=tenant_id, db=db)

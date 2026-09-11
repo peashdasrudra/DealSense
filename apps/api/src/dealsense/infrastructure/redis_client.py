@@ -48,7 +48,6 @@ async def close_redis() -> None:
         _redis_pool = None
 
 
-
 _memory_cache: dict[str, tuple[str, float]] = {}
 
 
@@ -100,9 +99,7 @@ async def cache_delete(key: str) -> None:
         _memory_cache.pop(key, None)
 
 
-async def acquire_lock(
-    lock_name: str, timeout: int = 30, blocking_timeout: int = 10
-) -> object:
+async def acquire_lock(lock_name: str, timeout: int = 30, blocking_timeout: int = 10) -> object:
     """Acquire a distributed lock. Returns the lock if acquired, or in-memory fallback."""
     try:
         client = get_redis()

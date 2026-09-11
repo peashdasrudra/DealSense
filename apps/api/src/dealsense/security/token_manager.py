@@ -79,7 +79,11 @@ async def get_access_token(
     if connection.token_expires_at.replace(tzinfo=UTC) > (now + safety_buffer):
         # Token is still valid — decrypt and cache
         access_token = decrypt_value(connection.encrypted_access_token)
-        remaining_seconds = int((connection.token_expires_at.replace(tzinfo=UTC) - (now + safety_buffer)).total_seconds())
+        remaining_seconds = int(
+            (
+                connection.token_expires_at.replace(tzinfo=UTC) - (now + safety_buffer)
+            ).total_seconds()
+        )
         cache_ttl = min(ACCESS_TOKEN_CACHE_TTL, max(remaining_seconds, 60))
         await cache_set(
             _cache_key(tenant_id),

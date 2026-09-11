@@ -80,7 +80,9 @@ async def oauth_callback_get(
     request_host = str(request.url)
     referer = request.headers.get("referer", "")
     is_local = "localhost" in request_host or "127.0.0.1" in request_host or "localhost" in referer
-    effective_redirect_uri = "http://localhost:3000/oauth/callback" if is_local else settings.hubspot_redirect_uri
+    effective_redirect_uri = (
+        "http://localhost:3000/oauth/callback" if is_local else settings.hubspot_redirect_uri
+    )
 
     tenant_id, portal_id, session_jwt, portal_name = await handle_oauth_callback(
         code=code,
