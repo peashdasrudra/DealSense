@@ -709,3 +709,54 @@ async def get_deal_signals(
             created_at=datetime.now(UTC),
         )
     ]
+
+
+@router.post("/sync-hubspot", response_model=dict)
+async def sync_hubspot_deals(
+    tenant_id: UUID = require_permission(Permission.DEAL_READ),
+    db: AsyncSession | None = Depends(get_db_optional),
+):
+    """Sync deals from HubSpot and invalidate cache."""
+    try:
+        from dealsense.infrastructure.redis_client import get_redis
+        r = get_redis()
+        cache_key = f"deals:{tenant_id}:hubspot_cache"
+        await r.delete(cache_key)
+        
+        deals = await list_deals_for_dashboard(tenant_id=tenant_id, db=db)
+        return {
+            "status": "success",
+            "syncedCount": len(deals),
+            "deals": [d.model_dump(mode="json") for d in deals]
+        }
+    except Exception as e:
+        logger.error("sync_hubspot_error", error=str(e))
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/{deal_id}/snapshot", response_model=dict)
+async def get_deal_snapshot(
+    deal_id: UUID,
+    tenant_id: UUID = require_permission(Permission.DEAL_READ),
+    db: AsyncSession | None = Depends(get_db_optional),
+):
+    """Get detailed snapshot for a specific deal from HubSpot."""
+    try:
+        deal = await _resolve_deal_record(str(deal_id), tenant_id, db)
+        hubspot_id = str(deal_id)
+        if deal and deal.hubspot_id:
+            hubspot_id = deal.hubspot_id
+            
+        hubspot_token = await _get_active_hubspot_token(tenant_id, db)
+        if hubspot_token and db:
+            from dealsense.infrastructure.hubspot_client import HubSpotClient
+            client = HubSpotClient(tenant_id=tenant_id, db=db)
+            hs_deal = await client.get_deal(hubspot_id)
+            return hs_deal
+            
+        raise HTTPException(status_code=404, detail="No active HubSpot connection")
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error("get_deal_snapshot_error", error=str(e))
+        raise HTTPException(status_code=500, detail=str(e))

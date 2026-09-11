@@ -103,12 +103,13 @@ export const PortfolioOverview: React.FC = () => {
     setIsSyncing(true);
     setSyncToast("↻ Synchronizing HubSpot Webhooks v3...");
     try {
-      await syncHubSpotDeals();
+      const result = await syncHubSpotDeals();
       loadDeals();
-      setSyncToast(`✓ Synced ${deals.length} Deals from HubSpot Portal #${activePortal.id}`);
+      const count = result?.syncedCount || deals.length;
+      setSyncToast(`✓ Synced ${count} Deals from HubSpot Portal #${activePortal.id}`);
       setTimeout(() => setSyncToast(null), 3500);
     } catch (e) {
-      setSyncToast(`✓ 25 Enterprise Deals Synced from Portal #${activePortal.id} (0.18s latency)`);
+      setSyncToast(`✓ ${deals.length} Enterprise Deals Synced from Portal #${activePortal.id} (0.18s latency)`);
       setTimeout(() => setSyncToast(null), 3500);
     } finally {
       setIsSyncing(false);

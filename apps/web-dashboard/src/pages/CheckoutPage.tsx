@@ -198,12 +198,12 @@ export const CheckoutPage: React.FC = () => {
   // Corporate Procurement Form State
   const [formData, setFormData] = useState({
     fullName: "Sarah Miller",
-    workEmail: "sarah.miller@enterprise-revops.com",
-    companyName: "Apex Global Growth Ltd",
-    hubspotPortalId: "#8941029",
+    workEmail: "sarah.m@enterprise.com",
+    companyName: "Enterprise Inc.",
+    hubspotPortalId: "48920193",
   });
-
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [checkoutToast, setCheckoutToast] = useState<string | null>(null);
 
   const handleSelectTier = (tier: TierKey) => {
     setSelectedTierKey(tier);
@@ -242,8 +242,11 @@ export const CheckoutPage: React.FC = () => {
     }
 
     setTimeout(() => {
-      setIsSubmitting(false);
-      alert("Connecting to Lemon Squeezy payment terminal...");
+      setCheckoutToast("Establishing secure encrypted tunnel to Lemon Squeezy...");
+      setTimeout(() => {
+        setIsSubmitting(false);
+        setCheckoutToast(null);
+      }, 3000);
     }, 800);
   };
 
@@ -896,6 +899,62 @@ export const CheckoutPage: React.FC = () => {
               </div>
             </motion.div>
           </div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {checkoutToast && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            style={{
+              position: "fixed",
+              inset: 0,
+              background: "rgba(18, 69, 72, 0.8)",
+              backdropFilter: "blur(6px)",
+              zIndex: 9999,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.9, opacity: 0, y: 20 }}
+              style={{
+                background: "#ffffff",
+                padding: "32px 40px",
+                borderRadius: "24px",
+                boxShadow: "0 24px 48px rgba(0,0,0,0.2)",
+                textAlign: "center",
+                maxWidth: 420,
+              }}
+            >
+              <div style={{ marginBottom: 20 }}>
+                <div style={{ display: "inline-block", padding: 16, background: "rgba(0,189,165,0.1)", borderRadius: "50%", color: "#00bda5" }}>
+                  <svg width={32} height={32} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                  </svg>
+                </div>
+              </div>
+              <h3 style={{ fontSize: "18px", fontWeight: 800, color: "#092124", marginBottom: 12 }}>
+                Securing Handshake
+              </h3>
+              <p style={{ fontSize: "14px", color: "#516f90", fontWeight: 500, lineHeight: 1.5 }}>
+                {checkoutToast}
+              </p>
+              <div style={{ marginTop: 24, height: 4, background: "#f1f5f9", borderRadius: 4, overflow: "hidden" }}>
+                <motion.div
+                  initial={{ x: "-100%" }}
+                  animate={{ x: "100%" }}
+                  transition={{ repeat: Infinity, duration: 1.2, ease: "linear" }}
+                  style={{ width: "50%", height: "100%", background: "linear-gradient(90deg, transparent, #00bda5, transparent)" }}
+                />
+              </div>
+            </motion.div>
+          </motion.div>
         )}
       </AnimatePresence>
     </div>
