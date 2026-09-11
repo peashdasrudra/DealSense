@@ -184,7 +184,9 @@ class TestWebhookIngestion:
             }
         ]
 
-        with patch("dealsense.services.oauth_service.disconnect_tenant", new_callable=AsyncMock) as mock_disc:
+        with patch(
+            "dealsense.services.oauth_service.disconnect_tenant", new_callable=AsyncMock
+        ) as mock_disc:
             result = await process_incoming_webhooks(
                 raw_body=b"",
                 signature_header=None,
@@ -223,7 +225,9 @@ class TestWebhookIngestion:
             }
         ]
 
-        with patch("dealsense.infrastructure.redis_client.cache_delete", new_callable=AsyncMock) as mock_del:
+        with patch(
+            "dealsense.infrastructure.redis_client.cache_delete", new_callable=AsyncMock
+        ) as mock_del:
             result = await process_incoming_webhooks(
                 raw_body=b"",
                 signature_header=None,
@@ -285,7 +289,9 @@ class TestWebhookIngestion:
         app.dependency_overrides[get_db] = _override_get_db
 
         with (
-            patch("dealsense.services.webhook_service.cache_get", new_callable=AsyncMock) as mock_cache_get,
+            patch(
+                "dealsense.services.webhook_service.cache_get", new_callable=AsyncMock
+            ) as mock_cache_get,
             patch("dealsense.services.webhook_service.cache_set", new_callable=AsyncMock),
             patch("dealsense.services.webhook_service.publish_event", new_callable=AsyncMock),
         ):
@@ -317,7 +323,12 @@ class TestWebhookIngestion:
         timestamp_ms = str(int(time.time() * 1000))
 
         # Sign original raw_body
-        source = b"POST" + b"http://test/api/v1/webhooks/hubspot" + raw_body + timestamp_ms.encode("utf-8")
+        source = (
+            b"POST"
+            + b"http://test/api/v1/webhooks/hubspot"
+            + raw_body
+            + timestamp_ms.encode("utf-8")
+        )
         signature_v3 = base64.b64encode(
             hmac.new(secret.encode("utf-8"), source, hashlib.sha256).digest()
         ).decode("utf-8")
@@ -355,7 +366,12 @@ class TestWebhookIngestion:
         # 400 seconds in the past (> 300s limit)
         expired_timestamp = str(int((time.time() - 400) * 1000))
 
-        source = b"POST" + b"http://test/api/v1/webhooks/hubspot" + raw_body + expired_timestamp.encode("utf-8")
+        source = (
+            b"POST"
+            + b"http://test/api/v1/webhooks/hubspot"
+            + raw_body
+            + expired_timestamp.encode("utf-8")
+        )
         signature_v3 = base64.b64encode(
             hmac.new(secret.encode("utf-8"), source, hashlib.sha256).digest()
         ).decode("utf-8")

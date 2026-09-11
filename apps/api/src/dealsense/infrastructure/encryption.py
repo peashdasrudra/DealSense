@@ -33,7 +33,9 @@ def _get_fernet() -> Fernet:
                 pass
 
         # Deterministic 32-byte urlsafe base64 key derived from SECRET_KEY
-        seed = (settings.secret_key or "dealsense-encryption-seed-production-key-32b").encode("utf-8")
+        seed = (settings.secret_key or "dealsense-encryption-seed-production-key-32b").encode(
+            "utf-8"
+        )
         derived_key = base64.urlsafe_b64encode(hashlib.sha256(seed).digest())
         _fernet = Fernet(derived_key)
     return _fernet

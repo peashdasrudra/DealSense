@@ -36,7 +36,9 @@ class Settings(BaseSettings):
     api_host: str = "0.0.0.0"  # noqa: S104
     api_port: int = 8000
     api_reload: bool = False
-    cors_origins: str = "http://localhost:3000,http://localhost:3001,http://localhost:5173,http://localhost:8000"
+    cors_origins: str = (
+        "http://localhost:3000,http://localhost:3001,http://localhost:5173,http://localhost:8000"
+    )
 
     # ---- PostgreSQL ----
     postgres_host: str = "localhost"
@@ -99,7 +101,9 @@ class Settings(BaseSettings):
             elif url.startswith("postgresql://") and not url.startswith("postgresql+asyncpg://"):
                 url = url.replace("postgresql://", "postgresql+asyncpg://", 1)
             if "?sslmode=" in url:
-                url = url.replace("?sslmode=require", "?ssl=require").replace("&sslmode=require", "&ssl=require")
+                url = url.replace("?sslmode=require", "?ssl=require").replace(
+                    "&sslmode=require", "&ssl=require"
+                )
             return url
         return (
             f"postgresql+asyncpg://{self.postgres_user}:{self.postgres_password}"

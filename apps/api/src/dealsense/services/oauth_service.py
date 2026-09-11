@@ -50,7 +50,9 @@ def _generate_signed_state(redirect_uri: str) -> str:
         "env": settings.app_env,
     }
     payload_bytes = json.dumps(payload, sort_keys=True).encode("utf-8")
-    signature = hmac.new(settings.secret_key.encode("utf-8"), payload_bytes, hashlib.sha256).hexdigest()
+    signature = hmac.new(
+        settings.secret_key.encode("utf-8"), payload_bytes, hashlib.sha256
+    ).hexdigest()
     return f"{payload['nonce']}.{payload['ts']}.{signature}"
 
 
@@ -87,7 +89,9 @@ def _validate_signed_state(state: str | None, allow_direct_install: bool = True)
             "env": settings.app_env,
         }
         payload_bytes = json.dumps(payload, sort_keys=True).encode("utf-8")
-        expected_sig = hmac.new(settings.secret_key.encode("utf-8"), payload_bytes, hashlib.sha256).hexdigest()
+        expected_sig = hmac.new(
+            settings.secret_key.encode("utf-8"), payload_bytes, hashlib.sha256
+        ).hexdigest()
 
         return hmac.compare_digest(expected_sig, signature)
 
@@ -131,9 +135,7 @@ async def generate_authorize_url(redirect_uri: str | None = None) -> tuple[str, 
 
     # Sanitize scopes: strip deprecated 'oauth', remove whitespace, ensure clean space separation
     scopes_list = [
-        s.strip()
-        for s in settings.hubspot_scopes.split(",")
-        if s.strip() and s.strip() != "oauth"
+        s.strip() for s in settings.hubspot_scopes.split(",") if s.strip() and s.strip() != "oauth"
     ]
     scope_param = " ".join(scopes_list)
 
@@ -187,7 +189,9 @@ async def handle_oauth_callback(
         state_key = f"{OAUTH_STATE_PREFIX}{state}" if state else ""
         stored_state = await cache_get(state_key) if state_key else None
         if not stored_state:
-            logger.warning("oauth_state_invalid_or_expired", state=state[:8] + "..." if state else "")
+            logger.warning(
+                "oauth_state_invalid_or_expired", state=state[:8] + "..." if state else ""
+            )
             raise OAuthStateValidationError()
         # Consume state (single-use)
         await cache_delete(state_key)
@@ -202,7 +206,12 @@ async def handle_oauth_callback(
         try:
             cached_data = json.loads(cached_session)
             logger.info("oauth_code_deduplicated_cached_hit", tenant_id=cached_data["tenant_id"])
-            return UUID(cached_data["tenant_id"]), cached_data["portal_id"], cached_data["session_jwt"], cached_data.get("portal_name", f"HubSpot Portal #{cached_data['portal_id']}")
+            return (
+                UUID(cached_data["tenant_id"]),
+                cached_data["portal_id"],
+                cached_data["session_jwt"],
+                cached_data.get("portal_name", f"HubSpot Portal #{cached_data['portal_id']}"),
+            )
         except Exception:
             pass
 
@@ -214,7 +223,12 @@ async def handle_oauth_callback(
         cached_session = await cache_get(f"oauth:session:{code_hash}")
         if cached_session:
             cached_data = json.loads(cached_session)
-            return UUID(cached_data["tenant_id"]), cached_data["portal_id"], cached_data["session_jwt"], cached_data.get("portal_name", f"HubSpot Portal #{cached_data['portal_id']}")
+            return (
+                UUID(cached_data["tenant_id"]),
+                cached_data["portal_id"],
+                cached_data["session_jwt"],
+                cached_data.get("portal_name", f"HubSpot Portal #{cached_data['portal_id']}"),
+            )
 
         # 3. Exchange code for access & refresh tokens
         async with httpx.AsyncClient(timeout=15.0) as client:
@@ -343,14 +357,16 @@ async def handle_oauth_callback(
         # Cache tokens in fast fallback storage
         await cache_set(
             f"tenant:tokens:{tenant_id}",
-            json.dumps({
-                "access_token": access_token,
-                "refresh_token": refresh_token,
-                "expires_in": expires_in,
-                "scopes": scopes,
-                "portal_id": portal_id,
-                "account_name": account_name,
-            }),
+            json.dumps(
+                {
+                    "access_token": access_token,
+                    "refresh_token": refresh_token,
+                    "expires_in": expires_in,
+                    "scopes": scopes,
+                    "portal_id": portal_id,
+                    "account_name": account_name,
+                }
+            ),
             ttl_seconds=expires_in,
         )
         await cache_set(f"tenant:{tenant_id}:access_token", access_token, ttl_seconds=expires_in)
@@ -360,12 +376,14 @@ async def handle_oauth_callback(
         session_jwt = create_tenant_session_jwt(tenant_id, portal_id, scopes)
 
         # Cache session data for 60 seconds to deduplicate duplicate mounts
-        session_data = json.dumps({
-            "tenant_id": str(tenant_id),
-            "portal_id": portal_id,
-            "session_jwt": session_jwt,
-            "portal_name": account_name,
-        })
+        session_data = json.dumps(
+            {
+                "tenant_id": str(tenant_id),
+                "portal_id": portal_id,
+                "session_jwt": session_jwt,
+                "portal_name": account_name,
+            }
+        )
         await cache_set(f"oauth:session:{code_hash}", session_data, ttl_seconds=60)
 
         logger.info(
@@ -434,9 +452,7 @@ def generate_install_url() -> dict[str, str]:
     """
     settings = get_settings()
     scopes_list = [
-        s.strip()
-        for s in settings.hubspot_scopes.split(",")
-        if s.strip() and s.strip() != "oauth"
+        s.strip() for s in settings.hubspot_scopes.split(",") if s.strip() and s.strip() != "oauth"
     ]
     state = _generate_signed_state(settings.hubspot_redirect_uri)
 

@@ -18,7 +18,9 @@ def mock_db() -> AsyncMock:
 @pytest.fixture
 def hubspot_client(mock_db: AsyncMock) -> HubSpotClient:
     tenant_id = uuid4()
-    with patch("dealsense.infrastructure.hubspot_client.get_access_token", new_callable=AsyncMock) as mock_token:
+    with patch(
+        "dealsense.infrastructure.hubspot_client.get_access_token", new_callable=AsyncMock
+    ) as mock_token:
         mock_token.return_value = "mock-access-token"
         client = HubSpotClient(tenant_id=tenant_id, db=mock_db)
         return client
@@ -80,11 +82,15 @@ class TestHubSpotBatchUpdates:
             assert mock_req.call_count == 3
 
     @pytest.mark.asyncio
-    async def test_rate_limiting_429_exponential_backoff(self, hubspot_client: HubSpotClient) -> None:
+    async def test_rate_limiting_429_exponential_backoff(
+        self, hubspot_client: HubSpotClient
+    ) -> None:
         """Verify 429 response triggers backoff sleep and subsequent retry."""
         tenant_id = uuid4()
         with (
-            patch("dealsense.infrastructure.hubspot_client.get_access_token", new_callable=AsyncMock) as mock_token,
+            patch(
+                "dealsense.infrastructure.hubspot_client.get_access_token", new_callable=AsyncMock
+            ) as mock_token,
             patch("asyncio.sleep", new_callable=AsyncMock) as mock_sleep,
             patch("httpx.AsyncClient.request", new_callable=AsyncMock) as mock_http_req,
         ):
@@ -94,13 +100,17 @@ class TestHubSpotBatchUpdates:
             resp_429 = httpx.Response(
                 status_code=429,
                 headers={"Retry-After": "1.5"},
-                request=httpx.Request("POST", "https://api.hubapi.com/crm/v3/objects/deals/batch/update"),
+                request=httpx.Request(
+                    "POST", "https://api.hubapi.com/crm/v3/objects/deals/batch/update"
+                ),
             )
             # 2nd call: 200 OK
             resp_200 = httpx.Response(
                 status_code=200,
                 json={"results": [{"id": "deal-1"}]},
-                request=httpx.Request("POST", "https://api.hubapi.com/crm/v3/objects/deals/batch/update"),
+                request=httpx.Request(
+                    "POST", "https://api.hubapi.com/crm/v3/objects/deals/batch/update"
+                ),
             )
             mock_http_req.side_effect = [resp_429, resp_200]
 

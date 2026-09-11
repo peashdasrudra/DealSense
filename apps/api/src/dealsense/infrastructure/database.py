@@ -28,7 +28,10 @@ def get_engine() -> AsyncEngine:
         db_url = settings.async_database_url
         connect_args: dict[str, object] = {}
 
-        if any(host in db_url for host in ("neon.tech", "render.com", "supabase.co")) or "ssl=require" in db_url:
+        if (
+            any(host in db_url for host in ("neon.tech", "render.com", "supabase.co"))
+            or "ssl=require" in db_url
+        ):
             connect_args["ssl"] = "require"
             # Strip query parameter from URL so asyncpg doesn't reject it
             if "?" in db_url:
