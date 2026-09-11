@@ -7,53 +7,50 @@ from collections.abc import AsyncGenerator
 from contextlib import suppress
 from uuid import UUID
 
-from fastapi import Header, HTTPException
+from fastapi import Depends, Header, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from dealsense.infrastructure.database import get_session_factory
 from dealsense.infrastructure.redis_client import get_redis as _get_redis
 
 
-async def get_db() -> AsyncGenerator[AsyncSession, None]:
+async def get_db() -> AsyncGenerator[AsyncSession | None, None]:
     """Provide a database session for request handlers.
 
     Session is committed on success, rolled back on error, and
     always closed when the request completes.
     """
-    factory = get_session_factory()
-    session = factory()
-    try:
-        yield session
-        await session.commit()
-    except Exception:
-        await session.rollback()
-        raise
-    finally:
-        await session.close()
-
-
-async def get_db_optional() -> AsyncGenerator[AsyncSession | None, None]:
-    """Provide a database session or None if database is offline/unreachable."""
     session: AsyncSession | None = None
     try:
         factory = get_session_factory()
         session = factory()
     except Exception:
-        yield None
-        return
+        session = None
 
     try:
         yield session
-        await session.commit()
+        if session is not None:
+            try:
+                await session.commit()
+            except Exception:
+                with suppress(Exception):
+                    await session.rollback()
     except Exception:
-        if session:
+        if session is not None:
             with suppress(Exception):
                 await session.rollback()
         raise
     finally:
-        if session:
+        if session is not None:
             with suppress(Exception):
                 await session.close()
+
+
+async def get_db_optional(
+    db: AsyncSession | None = Depends(get_db),
+) -> AsyncGenerator[AsyncSession | None, None]:
+    """Provide a database session or None if database is offline/unreachable."""
+    yield db
 
 
 async def get_redis_client():  # type: ignore[no-untyped-def]

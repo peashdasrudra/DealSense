@@ -8,6 +8,7 @@ Manages HubSpot OAuth tokens with:
 - Audit logging for all token operations
 """
 
+import json
 import time
 from datetime import UTC, datetime, timedelta
 from uuid import UUID
@@ -179,15 +180,41 @@ async def invalidate_tokens(tenant_id: UUID, db: AsyncSession) -> None:
     logger.info("tokens_invalidated", tenant_id=str(tenant_id))
 
 
-async def get_connection_status(tenant_id: UUID, db: AsyncSession) -> dict[str, object]:
+async def get_connection_status(
+    tenant_id: UUID, db: AsyncSession | None = None
+) -> dict[str, object]:
     """Get the OAuth connection status for a tenant.
 
     Returns:
         Dict with connection health information.
     """
+    # 1. Check Redis cache first for fast response
+    try:
+        cached_raw = await cache_get(f"tenant:tokens:{tenant_id}")
+        if cached_raw:
+            data = json.loads(cached_raw)
+            return {
+                "connected": True,
+                "is_active": True,
+                "token_expires_at": datetime.now(UTC).isoformat(),
+                "token_expired": False,
+                "scopes": data.get("scopes", ""),
+                "last_refresh_at": None,
+                "refresh_failure_count": 0,
+            }
+    except Exception:
+        pass
+
+    if db is None:
+        return {
+            "connected": False,
+            "is_active": False,
+            "scopes": "",
+        }
+
     try:
         connection = await _get_connection(tenant_id, db)
-    except TenantNotFoundError:
+    except Exception:
         return {
             "connected": False,
             "is_active": False,

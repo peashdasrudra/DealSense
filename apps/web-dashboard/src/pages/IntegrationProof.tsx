@@ -213,7 +213,9 @@ export const IntegrationProof: React.FC = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ payload: '{"eventId": 12345, "subscriptionType": "deal.creation"}' }),
       });
-      if (res.ok) setWebhookResult(await res.json());
+      if (res.ok) {
+        setWebhookResult(await res.json());
+      }
     } catch {}
   }, []);
 
@@ -223,7 +225,9 @@ export const IntegrationProof: React.FC = () => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
       });
-      if (res.ok) setEncryptionResult(await res.json());
+      if (res.ok) {
+        setEncryptionResult(await res.json());
+      }
     } catch {}
   }, []);
 

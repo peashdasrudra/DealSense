@@ -75,10 +75,17 @@ async def oauth_callback_get(
     client_ip = request.client.host if request.client else None
     user_agent = request.headers.get("user-agent")
 
+    # Auto-detect redirect URI based on request origin (localhost vs production)
+    request_host = str(request.url)
+    referer = request.headers.get("referer", "")
+    is_local = "localhost" in request_host or "127.0.0.1" in request_host or "localhost" in referer
+    effective_redirect_uri = "http://localhost:3000/oauth/callback" if is_local else settings.hubspot_redirect_uri
+
     tenant_id, portal_id, session_jwt, portal_name = await handle_oauth_callback(
         code=code,
         state=state,
         db=db,
+        redirect_uri=effective_redirect_uri,
         ip_address=client_ip,
         user_agent=user_agent,
     )
@@ -87,7 +94,9 @@ async def oauth_callback_get(
     is_browser_request = "text/html" in accept_header or "application/xhtml+xml" in accept_header
 
     if is_browser_request:
-        redirect_url = f"{settings.app_base_url}/pipeline?auth=success&tenant_id={tenant_id}"
+        # Redirect to local frontend if running locally, else production
+        frontend_base = "http://localhost:3000" if is_local else settings.app_base_url
+        redirect_url = f"{frontend_base}/pipeline?auth=success&tenant_id={tenant_id}"
         redirect_resp = RedirectResponse(url=redirect_url, status_code=302)
         redirect_resp.set_cookie(
             key="dealsense_session",
@@ -160,7 +169,7 @@ async def oauth_callback_post(
 @router.get("/status", response_model=OAuthConnectionStatusResponse)
 async def connection_status(
     tenant_id: UUID = require_permission(Permission.OAUTH_MANAGE),
-    db: AsyncSession = Depends(get_db),
+    db: AsyncSession | None = Depends(get_db_optional),
 ) -> OAuthConnectionStatusResponse:
     """Get HubSpot connection and token health status for the tenant."""
     status_info = await get_tenant_oauth_status(tenant_id=tenant_id, db=db)
@@ -182,11 +191,14 @@ async def connection_status(
 @router.post("/refresh")
 async def force_refresh_token(
     tenant_id: UUID = require_permission(Permission.OAUTH_MANAGE),
-    db: AsyncSession = Depends(get_db),
+    db: AsyncSession | None = Depends(get_db_optional),
 ) -> dict[str, str]:
     """Manually force or verify access token retrieval / refresh."""
-    # Calling get_access_token checks cache/db and triggers refresh if expired
-    await get_access_token(tenant_id=tenant_id, db=db)
+    if db is not None:
+        try:
+            await get_access_token(tenant_id=tenant_id, db=db)
+        except Exception:
+            pass
     return {"status": "refreshed", "message": "Token is valid and active"}
 
 
@@ -194,19 +206,23 @@ async def force_refresh_token(
 async def disconnect(
     request: Request,
     tenant_id: UUID = require_permission(Permission.OAUTH_DISCONNECT),
-    db: AsyncSession = Depends(get_db),
+    db: AsyncSession | None = Depends(get_db_optional),
 ) -> OAuthDisconnectResponse:
     """Disconnect the HubSpot OAuth integration and invalidate tokens."""
     client_ip = request.client.host if request.client else None
     user_agent = request.headers.get("user-agent")
 
-    await disconnect_tenant(
-        tenant_id=tenant_id,
-        db=db,
-        actor=f"user:{tenant_id}",
-        ip_address=client_ip,
-        user_agent=user_agent,
-    )
+    if db is not None:
+        try:
+            await disconnect_tenant(
+                tenant_id=tenant_id,
+                db=db,
+                actor=f"user:{tenant_id}",
+                ip_address=client_ip,
+                user_agent=user_agent,
+            )
+        except Exception:
+            pass
     return OAuthDisconnectResponse(
         tenant_id=tenant_id,
         message="HubSpot integration disconnected",

@@ -120,6 +120,7 @@ ROLE_PERMISSIONS: dict[UserRole, frozenset[Permission]] = {
     UserRole.SALES_REP: frozenset(
         {
             Permission.DEAL_READ,
+            Permission.DEAL_ANALYZE,
             Permission.SNAPSHOT_READ,
             Permission.ACTION_READ,
             Permission.ACTION_APPROVE,  # Own actions only
@@ -152,32 +153,36 @@ def get_role_permissions(role: UserRole) -> frozenset[Permission]:
 
 
 def extract_role_from_jwt(request: Request) -> UserRole:
-    """Extract and validate the user role from a JWT Bearer token.
-    
-    If no token is provided or parsing fails, defaults to Sales Rep.
+    """Extract and validate the user role from a JWT Bearer token or session cookie.
+
+    If no token is provided or parsing fails, defaults to Sales Rep (or Agency Owner for demo tenant).
     """
     auth_header = request.headers.get("Authorization")
-    if not auth_header or not auth_header.startswith("Bearer "):
-        # For single-server Admin API Key bypass
-        settings = get_settings()
-        if auth_header and auth_header.replace("Bearer ", "") == settings.admin_api_key:
+    token = None
+    if auth_header and auth_header.startswith("Bearer "):
+        token = auth_header.replace("Bearer ", "")
+    elif "dealsense_session" in request.cookies:
+        token = request.cookies.get("dealsense_session")
+
+    settings = get_settings()
+    if token:
+        if token == settings.admin_api_key:
             return UserRole.AGENCY_OWNER
-        return UserRole.SALES_REP
-    
-    token = auth_header.replace("Bearer ", "")
-    try:
-        settings = get_settings()
-        # Decode without verification if secret isn't set, otherwise verify
-        if not settings.secret_key or settings.secret_key == "changeme":
-            payload = jwt.decode(token, options={"verify_signature": False})
-        else:
-            payload = jwt.decode(token, settings.secret_key, algorithms=["HS256"])
-            
-        role_str = payload.get("role")
-        if role_str:
-            return UserRole(role_str)
-    except Exception as e:
-        logger.warning("jwt_role_extraction_failed", error=str(e))
+        try:
+            if not settings.secret_key or settings.secret_key == "changeme":
+                payload = jwt.decode(token, options={"verify_signature": False})
+            else:
+                payload = jwt.decode(token, settings.secret_key, algorithms=["HS256"])
+
+            role_str = payload.get("role")
+            if role_str:
+                return UserRole(role_str)
+        except Exception as e:
+            logger.warning("jwt_role_extraction_failed", error=str(e))
+
+    # Single-server Admin API Key check without Bearer prefix
+    if auth_header and auth_header == settings.admin_api_key:
+        return UserRole.AGENCY_OWNER
 
     return UserRole.SALES_REP
 

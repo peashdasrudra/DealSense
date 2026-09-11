@@ -16,7 +16,7 @@ export const AuthPage: React.FC = () => {
         ? "http://localhost:3000/oauth/callback"
         : "https://dealsense.peash.tech/oauth/callback";
 
-    const clientId = "b70e4bd1-26ac-4470-b6e6-c06d8b4c7920";
+    const clientId = (import.meta as any).env?.VITE_HUBSPOT_CLIENT_ID || "b70e4bd1-26ac-4470-b6e6-c06d8b4c7920";
     const scopes =
       "crm.objects.deals.read crm.objects.deals.write crm.objects.contacts.read crm.objects.companies.read crm.schemas.deals.read crm.objects.notes.read crm.objects.notes.write crm.objects.owners.read timeline";
 

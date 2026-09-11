@@ -54,6 +54,7 @@ class DealDetailSchema(BaseModel):
     currency: str = "USD"
     close_date: datetime | None = None
     owner_id: str | None = None
+    owner_name: str | None = None
     is_closed: bool = False
     is_won: bool = False
     created_at: datetime

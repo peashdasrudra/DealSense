@@ -411,7 +411,7 @@ async def disconnect_tenant(
 
 async def get_tenant_oauth_status(
     tenant_id: UUID,
-    db: AsyncSession,
+    db: AsyncSession | None = None,
 ) -> dict[str, object]:
     """Retrieve the OAuth connection status for a given tenant."""
     return await get_connection_status(tenant_id, db)
