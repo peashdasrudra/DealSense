@@ -376,7 +376,7 @@ export async function fetchDeals(tenantId?: string): Promise<EnterpriseDeal[]> {
     });
     if (response.ok) {
       const data = await response.json();
-      if (Array.isArray(data) && data.length > 0) {
+      if (Array.isArray(data)) {
         const local = getLocalDeals();
         const existingMap = new Map(local.map((d) => [d.hubspotId || d.id, d]));
         const normalized = data.map((item: any) => {

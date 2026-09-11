@@ -21,6 +21,10 @@ import {
   updateDeal,
   deleteDeal,
   syncHubSpotDeals,
+  createHubSpotNote,
+  createHubSpotEmail,
+  createHubSpotTask,
+  createHubSpotMeeting,
 } from "../api";
 import { ENTERPRISE_DEALS } from "../data/enterpriseData";
 
@@ -310,20 +314,26 @@ export const DealExplorer: React.FC = () => {
 
 
   // Save Quick Note
-  const handleSaveNote = () => {
+  // Save Quick Note
+  const handleSaveNote = async () => {
     if (!noteContent.trim()) return;
-    const newAct: ActivityEvent = {
-      id: `act-${Date.now()}`,
-      type: "note",
-      title: "Note added by " + activeDeal.owner,
-      description: noteContent,
-      author: activeDeal.owner,
-      timestamp: "Just now",
-    };
-    setActiveDeal((prev) => ({ ...prev, activities: [newAct, ...(prev.activities || [])] }));
-    setNoteContent("");
-    setModalType(null);
-    showToast("📝 Note saved and appended to HubSpot Deal timeline!");
+    try {
+      await createHubSpotNote(activeDeal.hubspotId, noteContent);
+      const newAct: ActivityEvent = {
+        id: `act-${Date.now()}`,
+        type: "note",
+        title: "Note added by " + activeDeal.owner,
+        description: noteContent,
+        author: activeDeal.owner,
+        timestamp: "Just now",
+      };
+      setActiveDeal((prev) => ({ ...prev, activities: [newAct, ...(prev.activities || [])] }));
+      setNoteContent("");
+      setModalType(null);
+      showToast("📝 Note saved and appended to HubSpot Deal timeline!");
+    } catch (e) {
+      showToast("❌ Failed to save note to HubSpot.");
+    }
   };
 
   // Log Call
@@ -343,21 +353,26 @@ export const DealExplorer: React.FC = () => {
   };
 
   // Send / Log Email
-  const handleSaveEmail = () => {
+  const handleSaveEmail = async () => {
     if (!emailSubject.trim()) return;
-    const newAct: ActivityEvent = {
-      id: `act-${Date.now()}`,
-      type: "email",
-      title: `Email sent to ${emailRecipient || activeDeal.client}: ${emailSubject}`,
-      description: emailBody || "Standard executive outreach email.",
-      author: activeDeal.owner,
-      timestamp: "Just now",
-    };
-    setActiveDeal((prev) => ({ ...prev, activities: [newAct, ...(prev.activities || [])] }));
-    setEmailSubject("");
-    setEmailBody("");
-    setModalType(null);
-    showToast("📧 Sales email logged and synced to contact timeline!");
+    try {
+      await createHubSpotEmail(activeDeal.hubspotId, emailSubject, emailBody || "Standard executive outreach email.", emailRecipient || activeDeal.client);
+      const newAct: ActivityEvent = {
+        id: `act-${Date.now()}`,
+        type: "email",
+        title: `Email sent to ${emailRecipient || activeDeal.client}: ${emailSubject}`,
+        description: emailBody || "Standard executive outreach email.",
+        author: activeDeal.owner,
+        timestamp: "Just now",
+      };
+      setActiveDeal((prev) => ({ ...prev, activities: [newAct, ...(prev.activities || [])] }));
+      setEmailSubject("");
+      setEmailBody("");
+      setModalType(null);
+      showToast("📧 Sales email logged and synced to contact timeline!");
+    } catch (e) {
+      showToast("❌ Failed to send email via HubSpot.");
+    }
   };
 
   // AI Draft Email Generator
@@ -372,38 +387,50 @@ export const DealExplorer: React.FC = () => {
   };
 
   // Save Task
-  const handleSaveTask = () => {
+  const handleSaveTask = async () => {
     if (!taskTitle.trim()) return;
-    const newAct: ActivityEvent = {
-      id: `act-${Date.now()}`,
-      type: "task",
-      title: `Task: ${taskTitle} [Priority: ${taskPriority}]`,
-      description: `Due date: ${taskDueDate}. Assigned to ${activeDeal.owner}.`,
-      author: activeDeal.owner,
-      timestamp: "Just now",
-    };
-    setActiveDeal((prev) => ({ ...prev, activities: [newAct, ...(prev.activities || [])] }));
-    setTaskTitle("");
-    setModalType(null);
-    showToast(`📋 Follow-up task created in HubSpot CRM for ${activeDeal.owner}!`);
+    try {
+      // Approximate due date timestamp based on string like "Tomorrow", etc. For real app, use a date picker
+      const dueMs = Date.now() + 86400000; 
+      await createHubSpotTask(activeDeal.hubspotId, taskTitle, `Due date: ${taskDueDate}. Assigned to ${activeDeal.owner}.`, dueMs);
+      const newAct: ActivityEvent = {
+        id: `act-${Date.now()}`,
+        type: "task",
+        title: `Task: ${taskTitle} [Priority: ${taskPriority}]`,
+        description: `Due date: ${taskDueDate}. Assigned to ${activeDeal.owner}.`,
+        author: activeDeal.owner,
+        timestamp: "Just now",
+      };
+      setActiveDeal((prev) => ({ ...prev, activities: [newAct, ...(prev.activities || [])] }));
+      setTaskTitle("");
+      setModalType(null);
+      showToast(`📋 Follow-up task created in HubSpot CRM for ${activeDeal.owner}!`);
+    } catch (e) {
+      showToast("❌ Failed to create task in HubSpot.");
+    }
   };
 
   // Log Meeting
-  const handleSaveMeeting = () => {
+  const handleSaveMeeting = async () => {
     if (!meetingTitle.trim()) return;
-    const newAct: ActivityEvent = {
-      id: `act-${Date.now()}`,
-      type: "meeting",
-      title: `Meeting: ${meetingTitle} (${meetingOutcome})`,
-      description: meetingNotes || "Executive alignment meeting.",
-      author: activeDeal.owner,
-      timestamp: "Just now",
-    };
-    setActiveDeal((prev) => ({ ...prev, activities: [newAct, ...(prev.activities || [])] }));
-    setMeetingTitle("");
-    setMeetingNotes("");
-    setModalType(null);
-    showToast("📅 Meeting logged to HubSpot CRM record!");
+    try {
+      await createHubSpotMeeting(activeDeal.hubspotId, meetingTitle, meetingNotes || "Executive alignment meeting.");
+      const newAct: ActivityEvent = {
+        id: `act-${Date.now()}`,
+        type: "meeting",
+        title: `Meeting: ${meetingTitle} (${meetingOutcome})`,
+        description: meetingNotes || "Executive alignment meeting.",
+        author: activeDeal.owner,
+        timestamp: "Just now",
+      };
+      setActiveDeal((prev) => ({ ...prev, activities: [newAct, ...(prev.activities || [])] }));
+      setMeetingTitle("");
+      setMeetingNotes("");
+      setModalType(null);
+      showToast("📅 Meeting logged to HubSpot CRM record!");
+    } catch (e) {
+      showToast("❌ Failed to log meeting in HubSpot.");
+    }
   };
 
   // Add Contact Association

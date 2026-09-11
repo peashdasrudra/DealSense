@@ -338,3 +338,62 @@ class HubSpotClient:
             "/crm/v3/objects/notes",
             json_data={"properties": properties, "associations": associations},
         )
+
+    async def create_email(
+        self,
+        subject: str,
+        body: str,
+        to_email: str,
+        associated_deal_id: str,
+        owner_id: str | None = None,
+    ) -> dict[str, Any]:
+        """Create a HubSpot email engagement associated with a deal."""
+        properties: dict[str, Any] = {
+            "hs_email_subject": subject,
+            "hs_email_text": body,
+            "hs_email_to_email": to_email,
+            "hs_email_direction": "EMAIL",
+            "hs_email_status": "SENT",
+        }
+        if owner_id:
+            properties["hubspot_owner_id"] = owner_id
+
+        associations = [
+            {
+                "to": {"id": associated_deal_id},
+                "types": [{"associationCategory": "HUBSPOT_DEFINED", "associationTypeId": 218}],
+            }
+        ]
+        return await self._request(
+            "POST",
+            "/crm/v3/objects/emails",
+            json_data={"properties": properties, "associations": associations},
+        )
+
+    async def create_meeting(
+        self,
+        title: str,
+        body: str,
+        associated_deal_id: str,
+        owner_id: str | None = None,
+    ) -> dict[str, Any]:
+        """Create a HubSpot meeting engagement associated with a deal."""
+        properties: dict[str, Any] = {
+            "hs_meeting_title": title,
+            "hs_meeting_body": body,
+            "hs_meeting_outcome": "SCHEDULED",
+        }
+        if owner_id:
+            properties["hubspot_owner_id"] = owner_id
+
+        associations = [
+            {
+                "to": {"id": associated_deal_id},
+                "types": [{"associationCategory": "HUBSPOT_DEFINED", "associationTypeId": 220}],
+            }
+        ]
+        return await self._request(
+            "POST",
+            "/crm/v3/objects/meetings",
+            json_data={"properties": properties, "associations": associations},
+        )

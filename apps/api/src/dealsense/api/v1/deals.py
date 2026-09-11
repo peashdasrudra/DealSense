@@ -760,3 +760,101 @@ async def get_deal_snapshot(
     except Exception as e:
         logger.error("get_deal_snapshot_error", error=str(e))
         raise HTTPException(status_code=500, detail=str(e))
+
+
+class NotePayload(BaseModel):
+    content: str
+    owner_id: str | None = None
+
+class EmailPayload(BaseModel):
+    subject: str
+    body: str
+    to_email: str
+    owner_id: str | None = None
+
+class TaskPayload(BaseModel):
+    subject: str
+    body: str
+    due_timestamp_ms: int
+    owner_id: str | None = None
+
+class MeetingPayload(BaseModel):
+    title: str
+    body: str
+    owner_id: str | None = None
+
+@router.post("/{deal_id}/notes", response_model=dict)
+async def create_deal_note(
+    deal_id: str,
+    payload: NotePayload,
+    tenant_id: UUID = require_permission(Permission.DEAL_UPDATE),
+    db: AsyncSession | None = Depends(get_db_optional),
+):
+    try:
+        hubspot_token = await _get_active_hubspot_token(tenant_id, db)
+        if hubspot_token and db:
+            from dealsense.infrastructure.hubspot_client import HubSpotClient
+            client = HubSpotClient(tenant_id=tenant_id, db=db)
+            res = await client.create_note(payload.content, deal_id, payload.owner_id)
+            return {"status": "success", "result": res}
+        return {"status": "skipped", "message": "No active HubSpot connection"}
+    except Exception as e:
+        logger.error("create_note_error", error=str(e))
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.post("/{deal_id}/emails", response_model=dict)
+async def create_deal_email(
+    deal_id: str,
+    payload: EmailPayload,
+    tenant_id: UUID = require_permission(Permission.DEAL_UPDATE),
+    db: AsyncSession | None = Depends(get_db_optional),
+):
+    try:
+        hubspot_token = await _get_active_hubspot_token(tenant_id, db)
+        if hubspot_token and db:
+            from dealsense.infrastructure.hubspot_client import HubSpotClient
+            client = HubSpotClient(tenant_id=tenant_id, db=db)
+            res = await client.create_email(payload.subject, payload.body, payload.to_email, deal_id, payload.owner_id)
+            return {"status": "success", "result": res}
+        return {"status": "skipped", "message": "No active HubSpot connection"}
+    except Exception as e:
+        logger.error("create_email_error", error=str(e))
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.post("/{deal_id}/tasks", response_model=dict)
+async def create_deal_task(
+    deal_id: str,
+    payload: TaskPayload,
+    tenant_id: UUID = require_permission(Permission.DEAL_UPDATE),
+    db: AsyncSession | None = Depends(get_db_optional),
+):
+    try:
+        hubspot_token = await _get_active_hubspot_token(tenant_id, db)
+        if hubspot_token and db:
+            from dealsense.infrastructure.hubspot_client import HubSpotClient
+            client = HubSpotClient(tenant_id=tenant_id, db=db)
+            res = await client.create_task(payload.subject, payload.body, payload.due_timestamp_ms, payload.owner_id, deal_id)
+            return {"status": "success", "result": res}
+        return {"status": "skipped", "message": "No active HubSpot connection"}
+    except Exception as e:
+        logger.error("create_task_error", error=str(e))
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.post("/{deal_id}/meetings", response_model=dict)
+async def create_deal_meeting(
+    deal_id: str,
+    payload: MeetingPayload,
+    tenant_id: UUID = require_permission(Permission.DEAL_UPDATE),
+    db: AsyncSession | None = Depends(get_db_optional),
+):
+    try:
+        hubspot_token = await _get_active_hubspot_token(tenant_id, db)
+        if hubspot_token and db:
+            from dealsense.infrastructure.hubspot_client import HubSpotClient
+            client = HubSpotClient(tenant_id=tenant_id, db=db)
+            res = await client.create_meeting(payload.title, payload.body, deal_id, payload.owner_id)
+            return {"status": "success", "result": res}
+        return {"status": "skipped", "message": "No active HubSpot connection"}
+    except Exception as e:
+        logger.error("create_meeting_error", error=str(e))
+        raise HTTPException(status_code=500, detail=str(e))

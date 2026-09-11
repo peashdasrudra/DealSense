@@ -76,7 +76,7 @@ export const HubSpotNativePipeline: React.FC = () => {
   const loadDeals = () => {
     fetchDeals()
       .then((data) => {
-        if (data && data.length > 0) {
+        if (data && Array.isArray(data)) {
           setDeals(data);
         }
       })
