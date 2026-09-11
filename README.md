@@ -7,12 +7,15 @@
     <a href="https://dealsense.peash.tech"><img src="https://img.shields.io/badge/Production%20Web-dealsense.peash.tech-ff5c35?style=for-the-badge&logo=vercel&logoColor=white" alt="Production Web" /></a>
     <a href="https://dealsense.peash.tech/integration-proof"><img src="https://img.shields.io/badge/Integration%20Proof-Live%20Dashboard-10b981?style=for-the-badge&logo=shield&logoColor=white" alt="Integration Proof" /></a>
     <a href="https://dealsense-api-6o2h.onrender.com/api/v1/health"><img src="https://img.shields.io/badge/API%20Health-Online%20(200%20OK)-00bda5?style=for-the-badge&logo=fastapi&logoColor=white" alt="API Health" /></a>
+    <a href="./docs/DealSense_Project_Report.md"><img src="https://img.shields.io/badge/Architecture-Whitepaper-5865F2?style=for-the-badge&logo=googledocs&logoColor=white" alt="Project Report" /></a>
     <img src="https://img.shields.io/badge/Pytest%20Suite-60%2F60%20Passing%20(100%25)-brightgreen?style=for-the-badge&logo=pytest&logoColor=white" alt="Pytest 60/60" />
     <img src="https://img.shields.io/badge/HubSpot-App%20Partner%20Ready-ff7a59?style=for-the-badge&logo=hubspot&logoColor=white" alt="HubSpot Ready" />
     <img src="https://img.shields.io/badge/TypeScript-React%2018-3178c6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" />
     <img src="https://img.shields.io/badge/FastAPI-Python%203.11-009688?style=for-the-badge&logo=fastapi&logoColor=white" alt="FastAPI" />
   </p>
 </div>
+
+> **📖 Read the Full Technical Whitepaper:** Dive deep into the engineering architecture, 7-Vector model, AI logic, and business use-cases in the [Comprehensive Project Report & Architecture Dossier](./docs/DealSense_Project_Report.md).
 
 ---
 
