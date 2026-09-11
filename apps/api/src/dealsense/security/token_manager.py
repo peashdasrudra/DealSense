@@ -68,10 +68,29 @@ async def get_access_token(
         logger.debug("token_cache_hit", tenant_id=str(tenant_id))
         return cached
 
+    # Check fallback cached raw token
+    try:
+        raw_token_data = await cache_get(f"tenant:tokens:{tenant_id}")
+        if raw_token_data:
+            data = json.loads(raw_token_data)
+            if data.get("access_token"):
+                return data["access_token"]
+    except Exception:
+        pass
+
     logger.debug("token_cache_miss", tenant_id=str(tenant_id))
 
     # 2. Load connection from database
-    connection = await _get_connection(tenant_id, db)
+    try:
+        connection = await _get_connection(tenant_id, db)
+    except Exception as conn_err:
+        # Fallback check before raising
+        raw_token_data = await cache_get(f"tenant:tokens:{tenant_id}")
+        if raw_token_data:
+            data = json.loads(raw_token_data)
+            if data.get("access_token"):
+                return data["access_token"]
+        raise conn_err
 
     # 3. Check if token is still valid (enforcing 5-minute safety margin)
     now = datetime.now(UTC)

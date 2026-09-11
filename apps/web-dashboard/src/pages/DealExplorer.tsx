@@ -209,26 +209,62 @@ export const DealExplorer: React.FC = () => {
     }, 3800);
   }, []);
 
-  // Fetch real deals from backend on mount
-  useEffect(() => {
+  // Fetch real deals from backend on mount and sync with local store
+  const loadDeals = useCallback(() => {
     fetchDeals()
       .then((data) => {
         if (Array.isArray(data) && data.length > 0) {
-          // Connected live deals
+          const loaded = data as unknown as DealDetail[];
+          setDeals(loaded);
+          setActiveDeal((prev) => {
+            const found = loaded.find((d) => d.id === prev?.id || d.hubspotId === prev?.hubspotId);
+            return found || loaded[0];
+          });
         }
       })
-      .catch(() => {
-        // Fallback to sample data
+      .catch((err) => {
+        console.warn("DealExplorer: using local/fallback deals:", err);
       });
   }, []);
+
+  useEffect(() => {
+    loadDeals();
+
+    const handleDealsUpdated = (e: any) => {
+      if (e.detail && Array.isArray(e.detail) && e.detail.length > 0) {
+        const updatedList = e.detail as unknown as DealDetail[];
+        setDeals(updatedList);
+        setActiveDeal((prev) => {
+          const found = updatedList.find((d) => d.id === prev?.id || d.hubspotId === prev?.hubspotId);
+          return found || updatedList[0];
+        });
+      } else {
+        loadDeals();
+      }
+    };
+
+    const handlePortalChanged = () => {
+      loadDeals();
+    };
+
+    window.addEventListener("dealsense:deals-updated", handleDealsUpdated);
+    window.addEventListener("dealsense:portal-changed", handlePortalChanged);
+    return () => {
+      window.removeEventListener("dealsense:deals-updated", handleDealsUpdated);
+      window.removeEventListener("dealsense:portal-changed", handlePortalChanged);
+    };
+  }, [loadDeals]);
 
   // Sync with HubSpot API
   const handleSyncHubSpot = async () => {
     setIsSyncing(true);
     try {
-      await syncHubSpotDeals();
-      showToast(`⚡ Successfully synchronized ${deals.length} deals with HubSpot CRM v3!`);
+      const res = await syncHubSpotDeals();
+      loadDeals();
+      const count = res?.syncedCount || deals.length;
+      showToast(`⚡ Successfully synchronized ${count} deals with HubSpot CRM v3!`);
     } catch {
+      loadDeals();
       showToast("✅ Real-time HubSpot CRM Telemetry Synced with Live DealSense Engine!");
     } finally {
       setIsSyncing(false);
@@ -598,37 +634,32 @@ export const DealExplorer: React.FC = () => {
     });
   }, [deals, search, selectedFilter]);
 
-  // Aggregate Metrics
-  const totalPipeline = useMemo(() => deals.reduce((acc, d) => acc + d.value, 0), [deals]);
-  const atRiskPipeline = useMemo(() => deals.filter((d) => d.score < 65).reduce((acc, d) => acc + d.value, 0), [deals]);
-  const avgHealthScore = useMemo(() => Math.round(deals.reduce((acc, d) => acc + d.score, 0) / (deals.length || 1)), [deals]);
-
   return (
-    <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 20 }}>
+    <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 16 }}>
       {/* ── Floating Enterprise Toast Notification ───────────────────────── */}
       <AnimatePresence>
         {toastMessage && (
           <motion.div
-            initial={{ opacity: 0, y: -20, scale: 0.95 }}
+            initial={{ opacity: 0, y: -16, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -20, scale: 0.95 }}
-            transition={{ duration: 0.2 }}
+            exit={{ opacity: 0, y: -16, scale: 0.98 }}
+            transition={{ duration: 0.18 }}
             style={{
               position: "fixed",
-              top: 24,
-              right: 28,
+              top: 20,
+              right: 24,
               zIndex: 99999,
-              background: "#1e293b",
+              background: "#2d3e50",
               color: "#ffffff",
-              padding: "12px 20px",
+              padding: "10px 18px",
               borderRadius: "6px",
-              boxShadow: "0 12px 32px rgba(0,0,0,0.28)",
-              border: "1px solid #00a4bd",
+              boxShadow: "0 8px 24px rgba(45, 62, 80, 0.22)",
+              border: "1px solid rgba(255, 255, 255, 0.12)",
               fontWeight: 600,
-              fontSize: "13px",
+              fontSize: "12.5px",
               display: "flex",
               alignItems: "center",
-              gap: 10,
+              gap: 8,
             }}
           >
             <span>{toastMessage}</span>
@@ -636,205 +667,91 @@ export const DealExplorer: React.FC = () => {
         )}
       </AnimatePresence>
 
-      {/* ── 1. Standardized Enterprise Header Card ────────────────────────────── */}
-      <div className="page-header-card">
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 16 }}>
-          <div>
-            <div className="page-header-badge-row">
-              <span className="page-header-badge">
-                ● REVOPS CRM WORKSPACE
-              </span>
-            </div>
-            <h2 className="page-header-title">
-              Enterprise Deal Inspector &amp; Record Dossiers
-            </h2>
-            <p className="page-header-desc">
-              Native HubSpot CRM deal workspace with 7-vector deterministic risk telemetry, automated MEDDICC qualification depth, and 1-click write-back remediation.
-            </p>
-          </div>
-          <div className="page-header-actions">
-            <button
-              onClick={handleExportBriefing}
-              style={{
-                background: "#ffffff",
-                color: "var(--hs-primary)",
-                border: "1px solid #cbd6e2",
-              }}
-            >
-              <span>📑 Export Deal Brief</span>
-            </button>
-            <button
-              onClick={handleWriteBackToHubSpot}
-              style={{
-                background: "#ff5c35",
-                color: "#ffffff",
-                border: "none",
-                boxShadow: "0 2px 8px rgba(255, 92, 53, 0.3)",
-                alignItems: "center",
-                gap: 6,
-                transition: "all 0.15s ease",
-              }}
-            >
-              <span>⚡ 1-Click Write-Back</span>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* ── 2. Standardized KPI Command Strip ─────────────────────────────────── */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16 }}>
-        <div className="kpi-card" style={{ borderTopColor: "var(--hs-primary)" }}>
-          <div className="kpi-label">Evaluated Pipeline</div>
-          <div className="kpi-value">${totalPipeline.toLocaleString()}</div>
-          <div style={{ fontSize: "11px", color: "#007a8c", fontWeight: 600, marginTop: 4, display: "flex", alignItems: "center", gap: 4 }}>
-            <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#007a8c", display: "inline-block" }} />
-            {deals.length} active enterprise deals
-          </div>
-        </div>
-
-        <div className="kpi-card" style={{ borderTopColor: "var(--danger)" }}>
-          <div className="kpi-label">Slippage Risk Detected</div>
-          <div className="kpi-value" style={{ color: "var(--danger)" }}>
-            ${atRiskPipeline.toLocaleString()}
-          </div>
-          <div style={{ fontSize: "11px", color: "var(--danger)", fontWeight: 600, marginTop: 4 }}>
-            ⚠ {deals.filter((d) => d.score < 65).length} deals below score 65
-          </div>
-        </div>
-
-        <div className="kpi-card" style={{ borderTopColor: "var(--risk-healthy)" }}>
-          <div className="kpi-label">Average Health Score</div>
-          <div className="kpi-value" style={{ color: avgHealthScore >= 70 ? "var(--risk-healthy)" : "var(--danger)" }}>
-            {avgHealthScore} <span style={{ fontSize: "13px", color: "var(--hs-text-muted)", fontWeight: 500 }}>/ 100</span>
-          </div>
-          <div style={{ fontSize: "11px", color: "var(--risk-healthy)", fontWeight: 600, marginTop: 4 }}>
-            ▲ 7-vector deterministic model
-          </div>
-        </div>
-
-        <div className="kpi-card" style={{ borderTopColor: "#00a4bd" }}>
-          <div className="kpi-label">HubSpot Bi-Directional Status</div>
-          <div className="kpi-value" style={{ color: "#007a8c", fontSize: "17px", display: "flex", alignItems: "center", gap: 6 }}>
-            <span style={{ width: 8, height: 8, borderRadius: "50%", background: "#00a38d", display: "inline-block", boxShadow: "0 0 8px rgba(0, 163, 141, 0.6)" }} />
-            Portal #48921820 Active
-          </div>
-          <div style={{ fontSize: "11px", color: "var(--hs-text-muted)", marginTop: 4 }}>
-            Latency: 0.18s · Live Webhooks Active
-          </div>
-        </div>
-      </div>
-
-      {/* ── 3. Record Context & Action Toolbar ─────────────────────────────── */}
+      {/* ── 1. Minimal Native HubSpot Breadcrumb Header ───────────────────── */}
       <div
-        className="card"
         style={{
-          background: "#ffffff",
-          padding: "12px 18px",
-          border: "1px solid #dfe3eb",
-          borderRadius: "var(--radius-md)",
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
           flexWrap: "wrap",
           gap: 12,
-          margin: 0,
+          padding: "4px 0",
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: "12.5px" }}>
-          <button
-            onClick={() => {
-              const idx = deals.findIndex((d) => d.id === activeDeal.id);
-              const nextIdx = (idx + 1) % deals.length;
-              setActiveDeal(deals[nextIdx]);
-              showToast(`Switched to Deal: ${deals[nextIdx].name}`);
-            }}
-            style={{
-              background: "rgba(0, 122, 140, 0.08)",
-              border: "1px solid rgba(0, 122, 140, 0.2)",
-              color: "#007a8c",
-              fontWeight: 700,
-              cursor: "pointer",
-              padding: "4px 8px",
-              borderRadius: "4px",
-              display: "flex",
-              alignItems: "center",
-              gap: 4,
-              fontSize: "11.5px",
-            }}
-          >
-            <span>← Deals</span>
-          </button>
+        <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: "13px" }}>
+          <span style={{ color: "var(--hs-text-muted)", cursor: "pointer", fontWeight: 500 }}>Deals</span>
           <span style={{ color: "#cbd6e2" }}>/</span>
           <span style={{ color: "var(--hs-text-muted)", fontWeight: 500 }}>{activeDeal.pipeline}</span>
           <span style={{ color: "#cbd6e2" }}>/</span>
-          <span style={{ color: "var(--hs-heading)", fontWeight: 700 }}>
-            {activeDeal.name} <span style={{ color: "var(--hs-text-muted)", fontWeight: 500 }}>(HubSpot #{activeDeal.hubspotId})</span>
+          <span style={{ color: "var(--hs-heading)", fontWeight: 700 }}>{activeDeal.name}</span>
+          <span
+            style={{
+              fontSize: "11px",
+              padding: "2px 7px",
+              borderRadius: "10px",
+              background: "#eaf0f6",
+              color: "var(--hs-text-muted)",
+              fontWeight: 600,
+            }}
+          >
+            #{activeDeal.hubspotId}
           </span>
         </div>
 
-        {/* Global Toolbar Actions */}
-        <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
-          {/* Follow Toggle */}
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
           <button
             onClick={handleToggleFollow}
             style={{
-              padding: "6px 12px",
-              background: activeDeal.isFollowed ? "rgba(255, 92, 53, 0.1)" : "#ffffff",
-              border: activeDeal.isFollowed ? "1px solid #ff5c35" : "1px solid #cbd6e2",
-              borderRadius: "var(--radius-sm)",
+              padding: "5px 12px",
+              background: activeDeal.isFollowed ? "rgba(255, 92, 53, 0.08)" : "#ffffff",
+              border: activeDeal.isFollowed ? "1px solid #ff7a59" : "1px solid #cbd6e2",
+              borderRadius: "4px",
               fontSize: "12px",
               fontWeight: 600,
               color: activeDeal.isFollowed ? "#ff5c35" : "var(--hs-text)",
               cursor: "pointer",
-              display: "flex",
-              alignItems: "center",
-              gap: 5,
+              transition: "all 0.15s ease",
             }}
           >
-            <span>{activeDeal.isFollowed ? "★ Following" : "☆ Follow"}</span>
+            {activeDeal.isFollowed ? "★ Following" : "☆ Follow"}
           </button>
 
-          {/* Sync HubSpot Button */}
           <button
             onClick={handleSyncHubSpot}
             disabled={isSyncing}
             style={{
-              padding: "6px 12px",
+              padding: "5px 12px",
               background: "#ffffff",
               border: "1px solid #cbd6e2",
-              borderRadius: "var(--radius-sm)",
+              borderRadius: "4px",
               fontSize: "12px",
               fontWeight: 600,
               color: "var(--hs-text)",
               cursor: "pointer",
-              display: "flex",
+              display: "inline-flex",
               alignItems: "center",
-              gap: 6,
+              gap: 5,
             }}
           >
-            <span style={{ transform: isSyncing ? "rotate(180deg)" : "none", transition: "transform 0.5s" }}>↻</span>
-            <span>{isSyncing ? "Syncing..." : "Sync CRM"}</span>
+            <span style={{ display: "inline-block", transform: isSyncing ? "rotate(180deg)" : "none", transition: "transform 0.5s" }}>↻</span>
+            {isSyncing ? "Syncing..." : "Sync CRM"}
           </button>
 
-          {/* Actions Dropdown Button */}
           <div style={{ position: "relative" }}>
             <button
               onClick={() => setIsActionsMenuOpen(!isActionsMenuOpen)}
               style={{
-                padding: "6px 12px",
+                padding: "5px 12px",
                 background: "#ffffff",
                 border: "1px solid #cbd6e2",
-                borderRadius: "var(--radius-sm)",
+                borderRadius: "4px",
                 fontSize: "12px",
                 fontWeight: 600,
                 color: "var(--hs-text)",
                 cursor: "pointer",
-                display: "flex",
-                alignItems: "center",
-                gap: 4,
               }}
             >
-              <span>Actions ▾</span>
+              Actions ▾
             </button>
 
             {isActionsMenuOpen && (
@@ -846,10 +763,10 @@ export const DealExplorer: React.FC = () => {
                   marginTop: 4,
                   background: "#ffffff",
                   border: "1px solid #cbd6e2",
-                  borderRadius: "var(--radius-sm)",
-                  boxShadow: "0 8px 24px rgba(45, 62, 80, 0.15)",
+                  borderRadius: "4px",
+                  boxShadow: "0 6px 18px rgba(45, 62, 80, 0.12)",
                   zIndex: 9999,
-                  minWidth: 210,
+                  minWidth: 200,
                   padding: "4px 0",
                 }}
               >
@@ -858,71 +775,52 @@ export const DealExplorer: React.FC = () => {
                     setModalType("properties");
                     setIsActionsMenuOpen(false);
                   }}
-                  style={{ width: "100%", textAlign: "left", padding: "8px 14px", background: "none", border: "none", fontSize: "12px", color: "var(--hs-text)", cursor: "pointer" }}
+                  style={{ width: "100%", textAlign: "left", padding: "7px 14px", background: "none", border: "none", fontSize: "12px", color: "var(--hs-text)", cursor: "pointer" }}
                   onMouseEnter={(e) => (e.currentTarget.style.background = "var(--hs-surface-hover)")}
                   onMouseLeave={(e) => (e.currentTarget.style.background = "none")}
                 >
-                  📑 View All 42 CRM Properties
+                  View all properties
                 </button>
                 <button
                   onClick={() => {
                     setModalType("history");
                     setIsActionsMenuOpen(false);
                   }}
-                  style={{ width: "100%", textAlign: "left", padding: "8px 14px", background: "none", border: "none", fontSize: "12px", color: "var(--hs-text)", cursor: "pointer" }}
+                  style={{ width: "100%", textAlign: "left", padding: "7px 14px", background: "none", border: "none", fontSize: "12px", color: "var(--hs-text)", cursor: "pointer" }}
                   onMouseEnter={(e) => (e.currentTarget.style.background = "var(--hs-surface-hover)")}
                   onMouseLeave={(e) => (e.currentTarget.style.background = "none")}
                 >
-                  🕒 Property Audit History
+                  Property history
                 </button>
                 <button
                   onClick={handleCloneDeal}
-                  style={{ width: "100%", textAlign: "left", padding: "8px 14px", background: "none", border: "none", fontSize: "12px", color: "var(--hs-text)", cursor: "pointer" }}
+                  style={{ width: "100%", textAlign: "left", padding: "7px 14px", background: "none", border: "none", fontSize: "12px", color: "var(--hs-text)", cursor: "pointer" }}
                   onMouseEnter={(e) => (e.currentTarget.style.background = "var(--hs-surface-hover)")}
                   onMouseLeave={(e) => (e.currentTarget.style.background = "none")}
                 >
-                  📋 Clone Deal Record
+                  Clone deal record
                 </button>
                 <button
                   onClick={handleExportBriefing}
-                  style={{ width: "100%", textAlign: "left", padding: "8px 14px", background: "none", border: "none", fontSize: "12px", color: "var(--hs-text)", cursor: "pointer" }}
+                  style={{ width: "100%", textAlign: "left", padding: "7px 14px", background: "none", border: "none", fontSize: "12px", color: "var(--hs-text)", cursor: "pointer" }}
                   onMouseEnter={(e) => (e.currentTarget.style.background = "var(--hs-surface-hover)")}
                   onMouseLeave={(e) => (e.currentTarget.style.background = "none")}
                 >
-                  📥 Export Deal Briefing (JSON)
+                  Export briefing (JSON)
                 </button>
                 <div style={{ height: 1, background: "var(--hs-border)", margin: "4px 0" }} />
                 <button
                   onClick={handleDeleteDeal}
-                  style={{ width: "100%", textAlign: "left", padding: "8px 14px", background: "none", border: "none", fontSize: "12px", color: "var(--danger)", fontWeight: 600, cursor: "pointer" }}
+                  style={{ width: "100%", textAlign: "left", padding: "7px 14px", background: "none", border: "none", fontSize: "12px", color: "var(--danger)", fontWeight: 600, cursor: "pointer" }}
                   onMouseEnter={(e) => (e.currentTarget.style.background = "var(--risk-critical-bg)")}
                   onMouseLeave={(e) => (e.currentTarget.style.background = "none")}
                 >
-                  🗑️ Archive Deal
+                  Archive deal
                 </button>
               </div>
             )}
           </div>
 
-          {/* Primary Action: Run Audit */}
-          <button
-            onClick={handleRunAudit}
-            style={{
-              padding: "6px 14px",
-              background: "#007a8c",
-              color: "#ffffff",
-              border: "none",
-              borderRadius: "var(--radius-sm)",
-              fontSize: "12px",
-              fontWeight: 700,
-              cursor: "pointer",
-              boxShadow: "0 2px 6px rgba(0, 122, 140, 0.25)",
-            }}
-          >
-            ⚡ Run Audit
-          </button>
-
-          {/* 1-Click Write Back */}
           <button
             onClick={handleWriteBackToHubSpot}
             style={{
@@ -930,94 +828,58 @@ export const DealExplorer: React.FC = () => {
               background: "#ff5c35",
               color: "#ffffff",
               border: "none",
-              borderRadius: "var(--radius-sm)",
+              borderRadius: "4px",
               fontSize: "12px",
               fontWeight: 700,
               cursor: "pointer",
-              boxShadow: "0 2px 6px rgba(255, 92, 53, 0.3)",
+              boxShadow: "0 1px 3px rgba(255, 92, 53, 0.25)",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 5,
             }}
           >
-            1-Click Write-Back
+            <span>⚡ Write-Back CRM</span>
           </button>
         </div>
       </div>
 
-      {/* ── 4. HubSpot Deal Record Hero Card (Ultra-Elevated) ────────────────── */}
+      {/* ── 2. Compact Minimal Enterprise Record Header ─────────────────── */}
       <div
-        className="card"
         style={{
           background: "#ffffff",
-          padding: "22px 26px",
-          border: "1px solid #dfe3eb",
-          borderTop: "3px solid #ff5c35",
-          borderRadius: "var(--radius-md)",
-          boxShadow: "var(--shadow-sm)",
-          margin: 0,
+          border: "1px solid #cbd6e2",
+          borderRadius: "4px",
+          padding: "16px 20px",
+          boxShadow: "0 1px 2px rgba(0,0,0,0.03)",
         }}
       >
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 16 }}>
           <div>
-            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8, flexWrap: "wrap" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
               <span
                 style={{
-                  background: "rgba(0, 189, 165, 0.08)",
-                  color: "#007a70",
-                  padding: "3px 10px",
-                  borderRadius: "12px",
-                  fontSize: "11px",
-                  fontWeight: 700,
-                  border: "1px solid rgba(0, 189, 165, 0.25)",
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 6,
+                  width: 8,
+                  height: 8,
+                  borderRadius: "50%",
+                  background: "#00a38d",
+                  display: "inline-block",
+                  boxShadow: "0 0 0 2px rgba(0, 163, 141, 0.2)",
                 }}
-              >
-                <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#00bda5", boxShadow: "0 0 6px rgba(0, 189, 165, 0.6)" }} />
-                Connected HubSpot Portal #48921820
+              />
+              <span style={{ fontSize: "12px", color: "var(--hs-text-muted)", fontWeight: 600 }}>
+                {activeDeal.client}
               </span>
-              <span style={{ fontSize: "12.5px", color: "var(--hs-heading)", fontWeight: 600 }}>{activeDeal.client}</span>
               <span style={{ color: "#cbd6e2" }}>•</span>
               <span style={{ fontSize: "12px", color: "var(--hs-text-muted)" }}>
-                Owner: <strong style={{ color: "var(--hs-heading)" }}>{activeDeal.owner}</strong>
+                Owner: <strong style={{ color: "var(--hs-heading)", fontWeight: 600 }}>{activeDeal.owner}</strong>
               </span>
-            </div>
-
-            <h1 style={{ fontSize: "24px", fontWeight: 800, color: "var(--hs-heading)", margin: "0 0 10px 0", letterSpacing: "-0.015em" }}>
-              {activeDeal.name}
-            </h1>
-
-            <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
-              <div style={{ display: "flex", alignItems: "baseline", gap: 4 }}>
-                <span style={{ fontSize: "24px", fontWeight: 900, color: "#ff5c35", letterSpacing: "-0.02em" }}>
-                  ${activeDeal.value.toLocaleString()}
-                </span>
-                <span style={{ fontSize: "11.5px", color: "var(--hs-text-muted)", fontWeight: 700, background: "#f1f4f8", padding: "1px 6px", borderRadius: "3px" }}>USD</span>
-              </div>
-              <span style={{ color: "#cbd6e2" }}>|</span>
-              <div style={{ fontSize: "12.5px", color: "var(--hs-text)" }}>
-                Target Close: <strong style={{ color: "var(--hs-heading)" }}>{activeDeal.closeDate}</strong>
-              </div>
-              <span style={{ color: "#cbd6e2" }}>|</span>
-              <div
-                style={{
-                  fontSize: "12px",
-                  fontWeight: 600,
-                  padding: "2px 8px",
-                  borderRadius: "4px",
-                  background: activeDeal.daysInStage > 10 ? "var(--risk-critical-bg)" : "var(--risk-healthy-bg)",
-                  color: activeDeal.daysInStage > 10 ? "var(--danger)" : "var(--risk-healthy)",
-                  border: `1px solid ${activeDeal.daysInStage > 10 ? "var(--risk-critical-border)" : "var(--risk-healthy-border)"}`,
-                }}
-              >
-                ⏱ {activeDeal.daysInStage} days in current stage
-              </div>
-              <span style={{ color: "#cbd6e2" }}>|</span>
+              <span style={{ color: "#cbd6e2" }}>•</span>
               <a
                 href={`https://app.hubspot.com/contacts/48921820/record/0-3/${activeDeal.hubspotId}`}
                 target="_blank"
                 rel="noreferrer"
                 style={{
-                  fontSize: "12px",
+                  fontSize: "11.5px",
                   color: "#007a8c",
                   fontWeight: 600,
                   textDecoration: "none",
@@ -1026,50 +888,91 @@ export const DealExplorer: React.FC = () => {
                   gap: 3,
                 }}
               >
-                Open in HubSpot Portal ↗
+                Open in HubSpot ↗
               </a>
+            </div>
+
+            <h1
+              style={{
+                fontSize: "21px",
+                fontWeight: 800,
+                color: "var(--hs-heading)",
+                margin: "0 0 8px 0",
+                letterSpacing: "-0.01em",
+              }}
+            >
+              {activeDeal.name}
+            </h1>
+
+            <div style={{ display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap", fontSize: "12.5px" }}>
+              <div style={{ display: "flex", alignItems: "baseline", gap: 4 }}>
+                <span style={{ fontSize: "20px", fontWeight: 800, color: "var(--hs-heading)" }}>
+                  ${activeDeal.value.toLocaleString()}
+                </span>
+                <span style={{ fontSize: "11px", color: "var(--hs-text-muted)", fontWeight: 600 }}>USD</span>
+              </div>
+              <span style={{ color: "#dfe3eb" }}>|</span>
+              <div>
+                <span style={{ color: "var(--hs-text-muted)" }}>Close Date: </span>
+                <strong style={{ color: "var(--hs-heading)" }}>{activeDeal.closeDate}</strong>
+              </div>
+              <span style={{ color: "#dfe3eb" }}>|</span>
+              <div>
+                <span style={{ color: "var(--hs-text-muted)" }}>Days in Stage: </span>
+                <strong style={{ color: activeDeal.daysInStage > 10 ? "var(--danger)" : "var(--hs-heading)" }}>
+                  {activeDeal.daysInStage} days
+                </strong>
+              </div>
+              <span style={{ color: "#dfe3eb" }}>|</span>
+              <div>
+                <span style={{ color: "var(--hs-text-muted)" }}>Priority: </span>
+                <span
+                  style={{
+                    padding: "2px 7px",
+                    borderRadius: "3px",
+                    fontSize: "11px",
+                    fontWeight: 700,
+                    background: activeDeal.priority === "High" ? "var(--risk-critical-bg)" : "var(--risk-healthy-bg)",
+                    color: activeDeal.priority === "High" ? "var(--danger)" : "var(--risk-healthy)",
+                  }}
+                >
+                  {activeDeal.priority}
+                </span>
+              </div>
             </div>
           </div>
 
-          {/* Deal Health Score Callout Container */}
+          {/* Minimal Health Telemetry Card */}
           <div
             style={{
               display: "flex",
               alignItems: "center",
-              gap: 16,
+              gap: 14,
+              padding: "10px 16px",
               background: "#f8fafc",
-              padding: "14px 20px",
-              borderRadius: "var(--radius-md)",
-              border: "1px solid #dfe3eb",
-              boxShadow: "var(--shadow-xs)",
+              borderRadius: "4px",
+              border: "1px solid #e2e8f0",
             }}
           >
             <div>
-              <div style={{ fontSize: "10.5px", fontWeight: 700, color: "var(--hs-text-muted)", textTransform: "uppercase", letterSpacing: "0.05em" }}>
-                7-Vector Health Score
+              <div style={{ fontSize: "10px", fontWeight: 700, color: "var(--hs-text-muted)", textTransform: "uppercase", letterSpacing: "0.04em" }}>
+                7-Vector Score
               </div>
-              <div style={{ display: "flex", alignItems: "baseline", gap: 6, marginTop: 2 }}>
+              <div style={{ display: "flex", alignItems: "baseline", gap: 4, marginTop: 1 }}>
                 <span
                   style={{
-                    fontSize: "30px",
-                    fontWeight: 900,
+                    fontSize: "24px",
+                    fontWeight: 800,
                     color: activeDeal.score >= 80 ? "var(--risk-healthy)" : activeDeal.score < 50 ? "var(--danger)" : "#b76e00",
                     lineHeight: 1,
                   }}
                 >
                   {activeDeal.score}
                 </span>
-                <span style={{ fontSize: "13px", color: "var(--hs-text-muted)", fontWeight: 600 }}>/ 100</span>
+                <span style={{ fontSize: "11px", color: "var(--hs-text-muted)" }}>/ 100</span>
               </div>
-              <div style={{ fontSize: "11px", color: "var(--hs-text-muted)", marginTop: 4 }}>
-                Risk Band:{" "}
-                <strong
-                  style={{
-                    color: activeDeal.score >= 80 ? "var(--risk-healthy)" : activeDeal.score < 50 ? "var(--danger)" : "#b76e00",
-                  }}
-                >
-                  {activeDeal.band}
-                </strong>
+              <div style={{ fontSize: "10.5px", color: "var(--hs-text-muted)", marginTop: 2 }}>
+                Band: <strong style={{ color: activeDeal.score >= 80 ? "var(--risk-healthy)" : activeDeal.score < 50 ? "var(--danger)" : "#b76e00" }}>{activeDeal.band}</strong>
               </div>
             </div>
 
@@ -1083,31 +986,29 @@ export const DealExplorer: React.FC = () => {
                 setModalType("edit");
               }}
               style={{
-                padding: "8px 14px",
+                padding: "6px 12px",
                 background: "#ffffff",
                 border: "1px solid #cbd6e2",
-                borderRadius: "var(--radius-sm)",
-                fontSize: "12px",
+                borderRadius: "3px",
+                fontSize: "11.5px",
                 fontWeight: 600,
-                color: "var(--hs-heading)",
+                color: "var(--hs-text)",
                 cursor: "pointer",
-                boxShadow: "var(--shadow-xs)",
-                transition: "all 0.15s ease",
               }}
             >
-              ✏️ Edit
+              Edit
             </button>
           </div>
         </div>
 
-        {/* ── HubSpot Pipeline Stage Interactive Stepper ─────────── */}
-        <div style={{ marginTop: 20, paddingTop: 16, borderTop: "1px solid #eaf0f6" }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
-            <div style={{ fontSize: "11px", fontWeight: 700, color: "var(--hs-text-muted)", textTransform: "uppercase", letterSpacing: "0.05em" }}>
-              Interactive Sales Hub Stage Progression (Click to Move Stage)
-            </div>
-            <span style={{ fontSize: "11.5px", color: "#007a8c", fontWeight: 600 }}>
-              Current: <strong>{STAGE_LABELS[activeDeal.stage] || activeDeal.stage}</strong>
+        {/* ── Native HubSpot Chevron Stepper ────────────────────────────── */}
+        <div style={{ marginTop: 16, paddingTop: 14, borderTop: "1px solid #f1f4f8" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+            <span style={{ fontSize: "11px", fontWeight: 700, color: "var(--hs-text-muted)", textTransform: "uppercase", letterSpacing: "0.04em" }}>
+              Stage Progression
+            </span>
+            <span style={{ fontSize: "11.5px", color: "var(--hs-text-muted)" }}>
+              Current: <strong style={{ color: "#007a8c" }}>{STAGE_LABELS[activeDeal.stage] || activeDeal.stage}</strong>
             </span>
           </div>
 
@@ -1115,8 +1016,7 @@ export const DealExplorer: React.FC = () => {
             style={{
               display: "grid",
               gridTemplateColumns: `repeat(${HUBSPOT_STAGES.length}, 1fr)`,
-              gap: 6,
-              overflowX: "auto",
+              gap: 4,
             }}
           >
             {HUBSPOT_STAGES.map((stg, idx) => {
@@ -1124,166 +1024,80 @@ export const DealExplorer: React.FC = () => {
               const isCurrent = activeDeal.stage === stg.id;
               const isCompleted = idx < currentStageIndex;
 
-              let bg = "#f8fafc";
-              let color = "var(--hs-text-muted)";
-              let border = "1px solid #dfe3eb";
-              let weight = 600;
-
-              if (isCurrent) {
-                bg = "#ff5c35";
-                color = "#ffffff";
-                border = "1px solid #e04a25";
-                weight = 800;
-              } else if (isCompleted) {
-                bg = "rgba(0, 189, 165, 0.09)";
-                color = "#007a70";
-                border = "1px solid rgba(0, 189, 165, 0.35)";
-                weight = 700;
-              }
-
               return (
                 <button
                   key={stg.id}
                   onClick={() => handleMoveStage(stg.id)}
                   style={{
-                    background: bg,
-                    color: color,
-                    border: border,
-                    padding: "9px 8px",
-                    borderRadius: "4px",
+                    background: isCurrent ? "#007a8c" : isCompleted ? "rgba(0, 163, 141, 0.08)" : "#f8fafc",
+                    color: isCurrent ? "#ffffff" : isCompleted ? "#007a70" : "var(--hs-text-muted)",
+                    border: isCurrent ? "1px solid #00606e" : isCompleted ? "1px solid rgba(0, 163, 141, 0.3)" : "1px solid #e2e8f0",
+                    padding: "7px 6px",
+                    borderRadius: "3px",
                     fontSize: "11px",
-                    fontWeight: weight,
+                    fontWeight: isCurrent ? 700 : 500,
                     cursor: "pointer",
                     textAlign: "center",
                     whiteSpace: "nowrap",
                     overflow: "hidden",
                     textOverflow: "ellipsis",
                     transition: "all 0.15s ease",
-                    boxShadow: isCurrent ? "0 2px 8px rgba(255, 92, 53, 0.35)" : "none",
                   }}
                   title={`Move to ${stg.label} (${stg.probability}% win probability)`}
                 >
-                  {isCompleted ? "✓ " : isCurrent ? "▶ " : ""}{stg.label}
+                  {isCompleted ? "✓ " : ""}{stg.label}
                 </button>
               );
             })}
           </div>
         </div>
 
-        {/* ── 5 Quick Action Activity Buttons ─────────────────────────── */}
-        <div style={{ display: "flex", gap: 10, marginTop: 18, flexWrap: "wrap", alignItems: "center" }}>
-          <button
-            onClick={() => setModalType("note")}
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 6,
-              padding: "7px 14px",
-              background: "#ffffff",
-              border: "1px solid #cbd6e2",
-              borderRadius: "20px",
-              fontSize: "12px",
-              fontWeight: 600,
-              color: "var(--hs-text)",
-              cursor: "pointer",
-              boxShadow: "var(--shadow-xs)",
-              transition: "all 0.15s ease",
-            }}
-          >
-            <span>📝</span>
-            <span>+ Note</span>
-          </button>
-
-          <button
-            onClick={() => {
-              handleGenerateAiEmail();
-              setModalType("email");
-            }}
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 6,
-              padding: "7px 14px",
-              background: "#ffffff",
-              border: "1px solid #cbd6e2",
-              borderRadius: "20px",
-              fontSize: "12px",
-              fontWeight: 600,
-              color: "var(--hs-text)",
-              cursor: "pointer",
-              boxShadow: "var(--shadow-xs)",
-              transition: "all 0.15s ease",
-            }}
-          >
-            <span>✉️</span>
-            <span>+ Email (AI Draft)</span>
-          </button>
-
-          <button
-            onClick={() => setModalType("call")}
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 6,
-              padding: "7px 14px",
-              background: "#ffffff",
-              border: "1px solid #cbd6e2",
-              borderRadius: "20px",
-              fontSize: "12px",
-              fontWeight: 600,
-              color: "var(--hs-text)",
-              cursor: "pointer",
-              boxShadow: "var(--shadow-xs)",
-              transition: "all 0.15s ease",
-            }}
-          >
-            <span>📞</span>
-            <span>+ Log Call</span>
-          </button>
-
-          <button
-            onClick={() => setModalType("task")}
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 6,
-              padding: "7px 14px",
-              background: "#ffffff",
-              border: "1px solid #cbd6e2",
-              borderRadius: "20px",
-              fontSize: "12px",
-              fontWeight: 600,
-              color: "var(--hs-text)",
-              cursor: "pointer",
-              boxShadow: "var(--shadow-xs)",
-              transition: "all 0.15s ease",
-            }}
-          >
-            <span>📋</span>
-            <span>+ Task</span>
-          </button>
-
-          <button
-            onClick={() => setModalType("meeting")}
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 6,
-              padding: "7px 14px",
-              background: "#ffffff",
-              border: "1px solid #cbd6e2",
-              borderRadius: "20px",
-              fontSize: "12px",
-              fontWeight: 600,
-              color: "var(--hs-text)",
-              cursor: "pointer",
-              boxShadow: "var(--shadow-xs)",
-              transition: "all 0.15s ease",
-            }}
-          >
-            <span>📅</span>
-            <span>+ Meeting</span>
-          </button>
+        {/* ── Native Quick Activity Action Buttons ──────────────────────── */}
+        <div style={{ display: "flex", gap: 8, marginTop: 14, flexWrap: "wrap", alignItems: "center" }}>
+          {[
+            { label: "Note", icon: "📝", action: () => setModalType("note") },
+            {
+              label: "Email",
+              icon: "✉️",
+              action: () => {
+                handleGenerateAiEmail();
+                setModalType("email");
+              },
+            },
+            { label: "Call", icon: "📞", action: () => setModalType("call") },
+            { label: "Task", icon: "📋", action: () => setModalType("task") },
+            { label: "Meeting", icon: "📅", action: () => setModalType("meeting") },
+          ].map((act) => (
+            <button
+              key={act.label}
+              onClick={act.action}
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 5,
+                padding: "5px 12px",
+                background: "#ffffff",
+                border: "1px solid #cbd6e2",
+                borderRadius: "3px",
+                fontSize: "11.5px",
+                fontWeight: 600,
+                color: "var(--hs-text)",
+                cursor: "pointer",
+                transition: "all 0.15s ease",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = "#f1f4f8";
+                e.currentTarget.style.borderColor = "#007a8c";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "#ffffff";
+                e.currentTarget.style.borderColor = "#cbd6e2";
+              }}
+            >
+              <span style={{ fontSize: "12px" }}>{act.icon}</span>
+              <span>{act.label}</span>
+            </button>
+          ))}
 
           <button
             onClick={() => {
@@ -1295,79 +1109,72 @@ export const DealExplorer: React.FC = () => {
             }}
             style={{
               marginLeft: "auto",
-              padding: "7px 16px",
+              padding: "5px 12px",
               background: "#ffffff",
-              border: "1.5px solid #ff5c35",
-              borderRadius: "20px",
-              fontSize: "12px",
+              border: "1px solid #ff7a59",
+              borderRadius: "3px",
+              fontSize: "11.5px",
               fontWeight: 700,
               color: "#ff5c35",
               cursor: "pointer",
-              boxShadow: "0 2px 6px rgba(255, 92, 53, 0.15)",
-              transition: "all 0.15s ease",
             }}
           >
-            + Create New Deal
+            + Create Deal
           </button>
         </div>
       </div>
 
-      {/* ── 5. Responsive Enterprise Master-Detail Architecture ────────────────── */}
+      {/* ── 3. Clean 3-Column Native HubSpot CRM Record Architecture ─────── */}
       <div className="responsive-master-detail">
         {/* ── Left Column: "About This Deal" Properties ──────────────────── */}
-        <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-          {/* Quick Deal Switcher Box */}
-          <div style={{ background: "#ffffff", border: "1px solid #dfe3eb", borderRadius: "var(--radius-md)", padding: "14px", boxShadow: "var(--shadow-xs)" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
-              <div style={{ fontSize: "11px", fontWeight: 700, color: "var(--hs-text-muted)", textTransform: "uppercase", letterSpacing: "0.04em" }}>
-                Pipeline Deals ({filteredDeals.length})
-              </div>
-              <span style={{ fontSize: "10.5px", color: "#007a8c", fontWeight: 700, background: "rgba(0, 122, 140, 0.08)", padding: "1px 6px", borderRadius: "3px" }}>
-                HubSpot v3
+        <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+          {/* Deal Switcher Panel */}
+          <div style={{ background: "#ffffff", border: "1px solid #cbd6e2", borderRadius: "4px", padding: "14px" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+              <span style={{ fontSize: "11px", fontWeight: 700, color: "var(--hs-text-muted)", textTransform: "uppercase", letterSpacing: "0.04em" }}>
+                Deals ({filteredDeals.length})
               </span>
+              <span style={{ fontSize: "10.5px", color: "#007a8c", fontWeight: 600 }}>HubSpot CRM</span>
             </div>
 
-            {/* Search Input */}
             <input
               type="text"
-              placeholder="Search by deal or client..."
+              placeholder="Search deals..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               style={{
                 width: "100%",
-                padding: "7px 10px",
+                padding: "6px 10px",
                 border: "1px solid #cbd6e2",
-                borderRadius: "4px",
-                fontSize: "12px",
-                marginBottom: 10,
+                borderRadius: "3px",
+                fontSize: "11.5px",
+                marginBottom: 8,
                 outline: "none",
                 boxSizing: "border-box",
                 background: "#f8fafc",
               }}
             />
 
-            {/* Filter Pills */}
-            <div style={{ display: "flex", gap: 4, flexWrap: "wrap", marginBottom: 10 }}>
+            {/* Quick Filter Pills */}
+            <div style={{ display: "flex", gap: 4, flexWrap: "wrap", marginBottom: 8 }}>
               {[
                 { id: "all", label: "All" },
                 { id: "critical", label: "Critical" },
                 { id: "stalled", label: "Stalled" },
-                { id: "missing_eb", label: "No EB" },
                 { id: "commit", label: "Commit" },
               ].map((flt) => (
                 <button
                   key={flt.id}
                   onClick={() => setSelectedFilter(flt.id)}
                   style={{
-                    padding: "3px 8px",
+                    padding: "2px 7px",
                     borderRadius: "3px",
-                    fontSize: "10.5px",
+                    fontSize: "10px",
                     fontWeight: selectedFilter === flt.id ? 700 : 500,
-                    background: selectedFilter === flt.id ? "#007a8c" : "#f1f4f8",
+                    background: selectedFilter === flt.id ? "#2d3e50" : "#f1f4f8",
                     color: selectedFilter === flt.id ? "#ffffff" : "var(--hs-text)",
-                    border: "1px solid #dfe3eb",
+                    border: "none",
                     cursor: "pointer",
-                    transition: "all 0.15s ease",
                   }}
                 >
                   {flt.label}
@@ -1375,39 +1182,40 @@ export const DealExplorer: React.FC = () => {
               ))}
             </div>
 
-            {/* Deals List */}
-            <div style={{ display: "flex", flexDirection: "column", gap: 6, maxHeight: 220, overflowY: "auto" }}>
+            {/* Deals Mini List */}
+            <div style={{ display: "flex", flexDirection: "column", gap: 4, maxHeight: 210, overflowY: "auto" }}>
               {filteredDeals.map((d) => (
                 <div
                   key={d.id}
                   onClick={() => setActiveDeal(d)}
                   style={{
-                    padding: "8px 10px",
-                    borderRadius: "4px",
-                    background: activeDeal.id === d.id ? "#fff2ed" : "#f8fafc",
-                    border: activeDeal.id === d.id ? "1px solid #ff7a59" : "1px solid #eaf0f6",
+                    padding: "7px 9px",
+                    borderRadius: "3px",
+                    background: activeDeal.id === d.id ? "rgba(0, 122, 140, 0.08)" : "#ffffff",
+                    borderLeft: activeDeal.id === d.id ? "3px solid #007a8c" : "3px solid transparent",
+                    borderBottom: "1px solid #f1f4f8",
                     cursor: "pointer",
-                    fontSize: "12px",
+                    fontSize: "11.5px",
                     display: "flex",
                     justifyContent: "space-between",
                     alignItems: "center",
-                    transition: "all 0.15s ease",
+                    transition: "all 0.12s ease",
                   }}
                 >
-                  <div style={{ maxWidth: 170, overflow: "hidden" }}>
+                  <div style={{ maxWidth: 180, overflow: "hidden" }}>
                     <div style={{ fontWeight: activeDeal.id === d.id ? 700 : 600, color: "var(--hs-heading)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                       {d.name}
                     </div>
                     <div style={{ fontSize: "10.5px", color: "var(--hs-text-muted)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                      {d.client}
+                      ${(d.value / 1000).toFixed(0)}k · {d.client}
                     </div>
                   </div>
                   <span
                     style={{
-                      fontWeight: 800,
-                      fontSize: "11px",
-                      padding: "2px 6px",
-                      borderRadius: "10px",
+                      fontWeight: 700,
+                      fontSize: "10.5px",
+                      padding: "1px 5px",
+                      borderRadius: "3px",
                       background: d.score >= 80 ? "var(--risk-healthy-bg)" : d.score < 50 ? "var(--risk-critical-bg)" : "var(--risk-high-bg)",
                       color: d.score >= 80 ? "var(--risk-healthy)" : d.score < 50 ? "var(--danger)" : "var(--risk-high)",
                     }}
@@ -1419,80 +1227,57 @@ export const DealExplorer: React.FC = () => {
             </div>
           </div>
 
-          {/* Core Properties Card */}
-          <div style={{ background: "#ffffff", border: "1px solid #dfe3eb", borderRadius: "var(--radius-md)", padding: "18px", boxShadow: "var(--shadow-xs)" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
-              <h3 style={{ fontSize: "13.5px", fontWeight: 800, color: "var(--hs-heading)", margin: 0 }}>
+          {/* About This Deal Property List */}
+          <div style={{ background: "#ffffff", border: "1px solid #cbd6e2", borderRadius: "4px", padding: "16px" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
+              <span style={{ fontSize: "12px", fontWeight: 700, color: "var(--hs-heading)" }}>
                 About this deal
-              </h3>
+              </span>
               <button
                 onClick={() => setModalType("properties")}
-                style={{ background: "none", border: "none", color: "#007a8c", fontSize: "11.5px", fontWeight: 600, cursor: "pointer", padding: 0 }}
+                style={{ background: "none", border: "none", color: "#007a8c", fontSize: "11px", fontWeight: 600, cursor: "pointer", padding: 0 }}
               >
                 View all properties
               </button>
             </div>
 
-            <div style={{ display: "flex", flexDirection: "column", gap: 12, fontSize: "12px" }}>
-              <div>
-                <div style={{ color: "var(--hs-text-muted)", fontSize: "11px", marginBottom: 2 }}>Deal Name</div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 10, fontSize: "12px" }}>
+              <div style={{ borderBottom: "1px solid #f1f4f8", paddingBottom: 6 }}>
+                <div style={{ color: "var(--hs-text-muted)", fontSize: "11px", marginBottom: 2 }}>Deal name</div>
                 <div style={{ fontWeight: 600, color: "var(--hs-heading)" }}>{activeDeal.name}</div>
               </div>
 
-              <div>
+              <div style={{ borderBottom: "1px solid #f1f4f8", paddingBottom: 6 }}>
                 <div style={{ color: "var(--hs-text-muted)", fontSize: "11px", marginBottom: 2 }}>Amount</div>
-                <div style={{ fontWeight: 800, color: "#ff5c35", fontSize: "15px" }}>
+                <div style={{ fontWeight: 700, color: "var(--hs-heading)" }}>
                   ${activeDeal.value.toLocaleString()} USD
                 </div>
               </div>
 
-              <div>
-                <div style={{ color: "var(--hs-text-muted)", fontSize: "11px", marginBottom: 2 }}>Pipeline</div>
-                <div style={{ fontWeight: 500, color: "var(--hs-heading)" }}>{activeDeal.pipeline}</div>
-              </div>
-
-              <div>
-                <div style={{ color: "var(--hs-text-muted)", fontSize: "11px", marginBottom: 2 }}>Deal Stage</div>
-                <div style={{ fontWeight: 700, color: "#007a8c" }}>
+              <div style={{ borderBottom: "1px solid #f1f4f8", paddingBottom: 6 }}>
+                <div style={{ color: "var(--hs-text-muted)", fontSize: "11px", marginBottom: 2 }}>Deal stage</div>
+                <div style={{ fontWeight: 600, color: "#007a8c" }}>
                   {STAGE_LABELS[activeDeal.stage] || activeDeal.stage}
                 </div>
               </div>
 
-              <div>
-                <div style={{ color: "var(--hs-text-muted)", fontSize: "11px", marginBottom: 2 }}>Close Date</div>
+              <div style={{ borderBottom: "1px solid #f1f4f8", paddingBottom: 6 }}>
+                <div style={{ color: "var(--hs-text-muted)", fontSize: "11px", marginBottom: 2 }}>Pipeline</div>
+                <div style={{ fontWeight: 500, color: "var(--hs-heading)" }}>{activeDeal.pipeline}</div>
+              </div>
+
+              <div style={{ borderBottom: "1px solid #f1f4f8", paddingBottom: 6 }}>
+                <div style={{ color: "var(--hs-text-muted)", fontSize: "11px", marginBottom: 2 }}>Close date</div>
                 <div style={{ fontWeight: 600, color: "var(--hs-heading)" }}>{activeDeal.closeDate}</div>
               </div>
 
-              <div>
-                <div style={{ color: "var(--hs-text-muted)", fontSize: "11px", marginBottom: 2 }}>Deal Owner</div>
-                <div style={{ display: "flex", alignItems: "center", gap: 6, fontWeight: 600, color: "var(--hs-heading)" }}>
-                  <span style={{ width: 20, height: 20, borderRadius: "50%", background: "#2d3e50", color: "#ffffff", fontSize: "9px", fontWeight: 700, display: "inline-flex", alignItems: "center", justifyContent: "center" }}>
-                    PR
-                  </span>
-                  <span>{activeDeal.owner}</span>
-                </div>
+              <div style={{ borderBottom: "1px solid #f1f4f8", paddingBottom: 6 }}>
+                <div style={{ color: "var(--hs-text-muted)", fontSize: "11px", marginBottom: 2 }}>Deal owner</div>
+                <div style={{ fontWeight: 600, color: "var(--hs-heading)" }}>{activeDeal.owner}</div>
               </div>
 
               <div>
-                <div style={{ color: "var(--hs-text-muted)", fontSize: "11px", marginBottom: 2 }}>Priority</div>
-                <span
-                  style={{
-                    fontSize: "11px",
-                    fontWeight: 700,
-                    padding: "2px 8px",
-                    borderRadius: "10px",
-                    background: activeDeal.priority === "High" ? "var(--risk-critical-bg)" : "var(--risk-healthy-bg)",
-                    color: activeDeal.priority === "High" ? "var(--danger)" : "var(--risk-healthy)",
-                    border: `1px solid ${activeDeal.priority === "High" ? "var(--risk-critical-border)" : "var(--risk-healthy-border)"}`,
-                    display: "inline-block",
-                  }}
-                >
-                  {activeDeal.priority} Priority
-                </span>
-              </div>
-
-              <div>
-                <div style={{ color: "var(--hs-text-muted)", fontSize: "11px", marginBottom: 2 }}>Forecast Category</div>
+                <div style={{ color: "var(--hs-text-muted)", fontSize: "11px", marginBottom: 2 }}>Forecast category</div>
                 <div style={{ fontWeight: 600, color: "var(--hs-heading)" }}>{activeDeal.forecastCategory}</div>
               </div>
             </div>

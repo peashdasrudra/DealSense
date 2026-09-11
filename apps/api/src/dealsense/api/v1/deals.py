@@ -160,82 +160,7 @@ async def list_deals_for_dashboard(
     """
     get_settings()
 
-    # 1. Check if this is the Demo Tenant Mock Mode
-    if str(tenant_id) == "00000000-0000-0000-0000-000000000001":
-        if not _DEMO_DEALS:
-            _DEMO_DEALS.extend(
-                [
-                    DealDashboardSchema(
-                        id=uuid4(),
-                        name="Orion Cloud Migration",
-                        client="TechCorp Inc.",
-                        score=23,
-                        band="Critical",
-                        value=150000,
-                        stage="Proposal Sent",
-                        owner="Sarah Miller",
-                        hubspot_id="deal-101",
-                    ),
-                    DealDashboardSchema(
-                        id=uuid4(),
-                        name="Quantum Security Suite",
-                        client="FinanceGo Ltd.",
-                        score=31,
-                        band="Critical",
-                        value=280000,
-                        stage="Negotiation",
-                        owner="James Reynolds",
-                        hubspot_id="deal-102",
-                    ),
-                    DealDashboardSchema(
-                        id=uuid4(),
-                        name="Horizon Data Platform",
-                        client="RetailMax",
-                        score=35,
-                        band="Critical",
-                        value=95000,
-                        stage="Qualification",
-                        owner="Lisa Chen",
-                        hubspot_id="deal-103",
-                    ),
-                    DealDashboardSchema(
-                        id=uuid4(),
-                        name="Apex CRM Integration",
-                        client="LogiPro Solutions",
-                        score=62,
-                        band="Moderate",
-                        value=120000,
-                        stage="Proposal Sent",
-                        owner="Mike Torres",
-                        hubspot_id="deal-104",
-                    ),
-                    DealDashboardSchema(
-                        id=uuid4(),
-                        name="Crown Global Enterprise",
-                        client="LogiPro Solutions",
-                        score=92,
-                        band="Healthy",
-                        value=400000,
-                        stage="Contract",
-                        owner="Mike Torres",
-                        hubspot_id="deal-105",
-                    ),
-                    DealDashboardSchema(
-                        id=uuid4(),
-                        name="Nebula Analytics Engine",
-                        client="HealthFirst Corp.",
-                        score=44,
-                        band="Moderate",
-                        value=210000,
-                        stage="Discovery",
-                        owner="Sarah Miller",
-                        hubspot_id="deal-106",
-                    ),
-                ]
-            )
-        return _DEMO_DEALS
-
-    # 2. Try querying HubSpot live if OAuth token or access token is configured
+    # 1. Try querying HubSpot live first if OAuth token or access token is configured
     hubspot_token = await _get_active_hubspot_token(tenant_id, db)
     if hubspot_token:
         try:
@@ -335,6 +260,83 @@ async def list_deals_for_dashboard(
                 return live_deals
         except Exception as e:
             logger.warning("hubspot_direct_query_failed_falling_back", error=str(e))
+
+    # 2. Check if this is the Demo Tenant Mock Mode
+    if str(tenant_id) == "00000000-0000-0000-0000-000000000001":
+        if not _DEMO_DEALS:
+            _DEMO_DEALS.extend(
+                [
+                    DealDashboardSchema(
+                        id=uuid4(),
+                        name="Orion Cloud Migration",
+                        client="TechCorp Inc.",
+                        score=23,
+                        band="Critical",
+                        value=150000,
+                        stage="Proposal Sent",
+                        owner="Sarah Miller",
+                        hubspot_id="deal-101",
+                    ),
+                    DealDashboardSchema(
+                        id=uuid4(),
+                        name="Quantum Security Suite",
+                        client="FinanceGo Ltd.",
+                        score=31,
+                        band="Critical",
+                        value=280000,
+                        stage="Negotiation",
+                        owner="James Reynolds",
+                        hubspot_id="deal-102",
+                    ),
+                    DealDashboardSchema(
+                        id=uuid4(),
+                        name="Horizon Data Platform",
+                        client="RetailMax",
+                        score=35,
+                        band="Critical",
+                        value=95000,
+                        stage="Qualification",
+                        owner="Lisa Chen",
+                        hubspot_id="deal-103",
+                    ),
+                    DealDashboardSchema(
+                        id=uuid4(),
+                        name="Apex CRM Integration",
+                        client="LogiPro Solutions",
+                        score=62,
+                        band="Moderate",
+                        value=120000,
+                        stage="Proposal Sent",
+                        owner="Mike Torres",
+                        hubspot_id="deal-104",
+                    ),
+                    DealDashboardSchema(
+                        id=uuid4(),
+                        name="Crown Global Enterprise",
+                        client="LogiPro Solutions",
+                        score=92,
+                        band="Healthy",
+                        value=400000,
+                        stage="Contract",
+                        owner="Mike Torres",
+                        hubspot_id="deal-105",
+                    ),
+                    DealDashboardSchema(
+                        id=uuid4(),
+                        name="Nebula Analytics Engine",
+                        client="HealthFirst Corp.",
+                        score=44,
+                        band="Moderate",
+                        value=210000,
+                        stage="Discovery",
+                        owner="Sarah Miller",
+                        hubspot_id="deal-106",
+                    ),
+                ]
+            )
+        return _DEMO_DEALS
+
+
 
     # 3. Try querying local database if available
     if db is not None:

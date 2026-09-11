@@ -98,9 +98,15 @@ class TenantGuardMiddleware(BaseHTTPMiddleware):
             tenant_id_header = jwt_tenant_id
 
         portal_id_header = request.headers.get("X-HubSpot-Portal-Id")
-        if not tenant_id_header and portal_id_header:
+        if portal_id_header and (
+            not tenant_id_header
+            or tenant_id_header == "00000000-0000-0000-0000-000000000001"
+            or str(tenant_id_header).startswith("00000000-0000-0000-0000-")
+        ):
             # Resolve portal ID to tenant ID
-            tenant_id_header = await self._resolve_tenant_by_portal(portal_id_header)
+            resolved_tid = await self._resolve_tenant_by_portal(portal_id_header)
+            if resolved_tid:
+                tenant_id_header = resolved_tid
 
         if not tenant_id_header:
             if is_admin:

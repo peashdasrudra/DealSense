@@ -56,12 +56,15 @@ export const ClientHealth: React.FC = () => {
               nrr: 104 + Math.floor(Math.random() * 15), // Mock NRR for UI
               healthScore: 0,
               status: "Healthy",
-              activeUsers: 50 + Math.floor(Math.random() * 500), // Mock users for UI
+              activeUsers: 50 + Math.floor(Math.random() * 500),
+              seatUtilization: 85 + Math.floor(Math.random() * 12),
+              contractTerm: deal.contractTerm || "1 Year Enterprise",
               csmOwner: deal.owner || deal.owner_name || "Unassigned",
               lastQbr: "2 weeks ago",
               renewalDate: deal.closeDate || deal.close_date || "2027-01-01",
               productAdoption: ["Platform", "Analytics"],
               riskFactors: [],
+              growthOpportunities: [],
               dealCount: 0,
               totalScore: 0
             });
@@ -74,17 +77,24 @@ export const ClientHealth: React.FC = () => {
           if (deal.risks && Array.isArray(deal.risks)) {
             client.riskFactors.push(...deal.risks.map((r: any) => typeof r === 'string' ? r : (r.text || r.description || "Risk detected")));
           }
+          if (deal.recommendation && typeof deal.recommendation === "string") {
+            client.growthOpportunities.push(deal.recommendation);
+          }
         });
 
         const newClients = Array.from(clientMap.values()).map(c => {
-          c.healthScore = Math.round(c.totalScore / c.dealCount);
+          c.healthScore = Math.round(c.totalScore / (c.dealCount || 1));
           if (c.healthScore < 50) c.status = "At Risk";
           else if (c.healthScore > 85) c.status = "Expansion Ready";
           else c.status = "Healthy";
           
-          c.riskFactors = Array.from(new Set(c.riskFactors)).slice(0, 3);
+          c.riskFactors = Array.from(new Set(c.riskFactors || [])).slice(0, 3);
+          c.growthOpportunities = Array.from(new Set(c.growthOpportunities || [])).slice(0, 2);
           if (c.riskFactors.length === 0 && c.status === "At Risk") {
              c.riskFactors = ["Low engagement", "No executive sponsor"];
+          }
+          if (c.growthOpportunities.length === 0 && c.status === "Expansion Ready") {
+             c.growthOpportunities = ["Executive expansion alignment", "Seat tier upgrade"];
           }
           return c as EnterpriseClientHealth;
         });
@@ -441,11 +451,11 @@ export const ClientHealth: React.FC = () => {
                     </div>
 
                     {/* Growth Opportunities or Risk Factors */}
-                    {client.growthOpportunities.length > 0 ? (
+                    {client.growthOpportunities && client.growthOpportunities.length > 0 ? (
                       <div style={{ fontSize: "11.5px", color: "#007a70", background: "rgba(0, 189, 165, 0.08)", padding: "6px 8px", borderRadius: 4, fontWeight: 600 }}>
                         ✦ {client.growthOpportunities[0]}
                       </div>
-                    ) : client.riskFactors.length > 0 ? (
+                    ) : client.riskFactors && client.riskFactors.length > 0 ? (
                       <div style={{ fontSize: "11.5px", color: "#d93843", background: "rgba(242, 84, 91, 0.08)", padding: "6px 8px", borderRadius: 4, fontWeight: 600 }}>
                         ▲ {client.riskFactors[0]}
                       </div>
