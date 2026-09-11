@@ -1,0 +1,3 @@
+Neon Connection String: postgresql://neondb_owner:npg_S1eNEr8ujcWU@ep-fragrant-hat-a5q3qcdn-pooler.us-east-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require
+Upstash Redis: redis://default:AaozAAIgcDFjMjk3MTJhMmZhYzQ0MmFhOGE2NTE1OTE5NGQ5MjEzNw@ace-goldfish-43571.upstash.io:6379
+postgresql+asyncpg://dealsense:dealsense_demo@localhost:5432/dealsense

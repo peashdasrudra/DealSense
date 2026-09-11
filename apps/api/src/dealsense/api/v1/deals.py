@@ -336,8 +336,6 @@ async def list_deals_for_dashboard(
             )
         return _DEMO_DEALS
 
-
-
     # 3. Try querying local database if available
     if db is not None:
         try:
@@ -849,8 +847,8 @@ async def get_deal_snapshot(
     try:
         deal = await _resolve_deal_record(str(deal_id), tenant_id, db)
         hubspot_id = str(deal_id)
-        if deal and deal.hubspot_id:
-            hubspot_id = deal.hubspot_id
+        if deal and deal.hubspot_deal_id:
+            hubspot_id = deal.hubspot_deal_id
 
         hubspot_token = await _get_active_hubspot_token(tenant_id, db)
         if hubspot_token and db:

@@ -159,7 +159,7 @@ async def list_pending_actions(
                         title=p.title,
                         description=p.description,
                         rationale=p.rationale or "",
-                        impact_estimate=p.impact_estimate or "",
+                        impact_estimate=p.payload.get("impact_estimate", "") if isinstance(p.payload, dict) else "",
                         status=p.status,
                         created_at=p.created_at.isoformat() if p.created_at else "",
                         updated_at=p.updated_at.isoformat() if p.updated_at else None,
@@ -259,7 +259,7 @@ async def submit_action_decision(
                     title=proposal.title,
                     description=proposal.description,
                     rationale=proposal.rationale or "",
-                    impact_estimate=proposal.impact_estimate or "",
+                    impact_estimate=proposal.payload.get("impact_estimate", "") if isinstance(proposal.payload, dict) else "",
                     status=proposal.status,
                     created_at=proposal.created_at.isoformat() if proposal.created_at else "",
                 )
@@ -318,7 +318,7 @@ async def execute_write_back(
                         detail="Only Tier 3 (Assist) and Tier 4 (Act) actions support CRM write-back execution",
                     )
 
-                action_type = proposal.action_type or "create_task"
+                action_type = proposal.category or "create_task"
 
                 # Trigger live two-way writeback to HubSpot CRM if connected
                 try:

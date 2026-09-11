@@ -7,6 +7,7 @@ import time
 from contextlib import suppress
 
 import redis.asyncio as redis
+from redis.exceptions import LockNotOwnedError
 
 from dealsense.config import get_settings
 
@@ -117,7 +118,7 @@ async def release_lock(lock: object) -> None:
     if not lock or isinstance(lock, _InMemoryLock):
         return
     try:
-        with suppress(redis.exceptions.LockNotOwnedError, Exception):
+        with suppress(LockNotOwnedError, Exception):
             if hasattr(lock, "release"):
                 await lock.release()  # type: ignore[misc]
     except Exception:

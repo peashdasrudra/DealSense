@@ -6,6 +6,7 @@ for FastAPI endpoints.
 
 from collections.abc import Callable
 from enum import StrEnum
+from typing import Any
 from uuid import UUID
 
 import jwt
@@ -192,7 +193,7 @@ def extract_role_from_jwt(request: Request) -> UserRole:
     return UserRole.SALES_REP
 
 
-def require_permission(permission: Permission) -> Callable[..., UUID]:
+def require_permission(permission: Permission) -> Any:
     """FastAPI dependency that enforces a permission check.
 
     Usage:
@@ -231,7 +232,7 @@ def require_permission(permission: Permission) -> Callable[..., UUID]:
     return Depends(_check)
 
 
-def require_any_permission(*permissions: Permission) -> Callable[..., UUID]:
+def require_any_permission(*permissions: Permission) -> Any:
     """FastAPI dependency that requires any one of the listed permissions.
 
     Usage:

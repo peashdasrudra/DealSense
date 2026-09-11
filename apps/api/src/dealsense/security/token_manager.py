@@ -11,6 +11,7 @@ Manages HubSpot OAuth tokens with:
 import json
 import time
 from datetime import UTC, datetime, timedelta
+from typing import Any
 from uuid import UUID
 
 import httpx
@@ -205,7 +206,7 @@ async def invalidate_tokens(tenant_id: UUID, db: AsyncSession) -> None:
 
 async def get_connection_status(
     tenant_id: UUID, db: AsyncSession | None = None
-) -> dict[str, object]:
+) -> dict[str, Any]:
     """Get the OAuth connection status for a tenant.
 
     Returns:
@@ -360,7 +361,7 @@ async def _call_hubspot_refresh(
     refresh_token: str,
     client_id: str,
     client_secret: str,
-) -> dict[str, object]:
+) -> dict[str, Any]:
     """Call HubSpot's OAuth token endpoint to refresh tokens.
 
     Returns:
