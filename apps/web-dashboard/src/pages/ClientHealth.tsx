@@ -6,6 +6,7 @@
 
 import React, { useState, useMemo } from "react";
 import { motion } from "framer-motion";
+import { fetchDeals } from "../api";
 import { ENTERPRISE_CLIENTS, EnterpriseClientHealth, ENTERPRISE_DEALS } from "../data/enterpriseData";
 import { DealDrawer, DealData } from "../components/DealDrawer";
 
@@ -29,12 +30,69 @@ const getStatusBadge = (status: string) => {
 };
 
 export const ClientHealth: React.FC = () => {
-  const [clients] = useState<EnterpriseClientHealth[]>(ENTERPRISE_CLIENTS);
+  const [clients, setClients] = useState<EnterpriseClientHealth[]>(ENTERPRISE_CLIENTS);
+  const [liveDeals, setLiveDeals] = useState<any[]>(ENTERPRISE_DEALS);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [viewMode, setViewMode] = useState<"cards" | "table">("cards");
   const [selectedDrawerDeal, setSelectedDrawerDeal] = useState<DealData | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  React.useEffect(() => {
+    fetchDeals().then(data => {
+      if (data && data.length > 0) {
+        setLiveDeals(data);
+        const clientMap = new Map<string, any>();
+        
+        data.forEach((deal: any) => {
+          const clientName = deal.client || deal.client_name || deal.clientName || deal.properties?.company || deal.name.split("-")[0].trim() || "Unknown Client";
+          
+          if (!clientMap.has(clientName)) {
+            clientMap.set(clientName, {
+              id: `client-${clientName.toLowerCase().replace(/[^a-z0-9]/g, '')}`,
+              name: clientName,
+              industry: deal.industry || "Enterprise Software",
+              arr: 0,
+              nrr: 104 + Math.floor(Math.random() * 15), // Mock NRR for UI
+              healthScore: 0,
+              status: "Healthy",
+              activeUsers: 50 + Math.floor(Math.random() * 500), // Mock users for UI
+              csmOwner: deal.owner || deal.owner_name || "Unassigned",
+              lastQbr: "2 weeks ago",
+              renewalDate: deal.closeDate || deal.close_date || "2027-01-01",
+              productAdoption: ["Platform", "Analytics"],
+              riskFactors: [],
+              dealCount: 0,
+              totalScore: 0
+            });
+          }
+          
+          const client = clientMap.get(clientName);
+          client.arr += (deal.value || deal.amount || 0);
+          client.dealCount += 1;
+          client.totalScore += (deal.score || deal.health_score || 85);
+          if (deal.risks) {
+            client.riskFactors.push(...deal.risks.map((r: any) => r.text || r.description || r));
+          }
+        });
+
+        const newClients = Array.from(clientMap.values()).map(c => {
+          c.healthScore = Math.round(c.totalScore / c.dealCount);
+          if (c.healthScore < 50) c.status = "At Risk";
+          else if (c.healthScore > 85) c.status = "Expansion Ready";
+          else c.status = "Healthy";
+          
+          c.riskFactors = Array.from(new Set(c.riskFactors)).slice(0, 3);
+          if (c.riskFactors.length === 0 && c.status === "At Risk") {
+             c.riskFactors = ["Low engagement", "No executive sponsor"];
+          }
+          return c as EnterpriseClientHealth;
+        });
+
+        setClients(newClients);
+      }
+    });
+  }, []);
 
   // Compute portfolio metrics
   const totalARR = useMemo(() => clients.reduce((s, c) => s + c.arr, 0), [clients]);
@@ -55,17 +113,20 @@ export const ClientHealth: React.FC = () => {
 
   const handleInspectClient = (client: EnterpriseClientHealth) => {
     // Find matching deal or create mock deal dossier
-    const matchingDeal = ENTERPRISE_DEALS.find(d => d.client.toLowerCase().includes(client.name.toLowerCase()) || client.name.toLowerCase().includes(d.client.toLowerCase()));
+    const matchingDeal = liveDeals.find(d => {
+       const dClient = (d.client || d.client_name || d.clientName || d.properties?.company || d.name).toLowerCase();
+       return dClient.includes(client.name.toLowerCase()) || client.name.toLowerCase().includes(dClient);
+    });
     if (matchingDeal) {
       setSelectedDrawerDeal({
-        id: matchingDeal.id,
+        id: matchingDeal.id || matchingDeal.hubspot_deal_id,
         name: matchingDeal.name,
-        client: matchingDeal.client,
-        score: matchingDeal.score,
-        band: matchingDeal.band,
-        value: matchingDeal.value,
-        stage: matchingDeal.stage,
-        owner: matchingDeal.owner,
+        client: client.name,
+        score: matchingDeal.score || matchingDeal.health_score || client.healthScore,
+        band: matchingDeal.band || (client.healthScore < 50 ? "High" : "Low"),
+        value: matchingDeal.value || matchingDeal.amount || client.arr,
+        stage: matchingDeal.stage || "contractsent",
+        owner: matchingDeal.owner || matchingDeal.owner_name || client.csmOwner,
       });
     } else {
       setSelectedDrawerDeal({
