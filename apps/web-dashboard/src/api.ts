@@ -827,3 +827,45 @@ export function resetAllDemoData(): void {
   window.dispatchEvent(new CustomEvent("dealsense:audit-updated", { detail: INITIAL_AUDIT_LOGS }));
   window.dispatchEvent(new CustomEvent("dealsense:hygiene-updated", { detail: ENTERPRISE_HYGIENE }));
 }
+
+// ── CRM Engagements (HubSpot API Wrappers) ───────────────────────────────────
+
+export async function createHubSpotNote(dealId: string, content: string, tenantId: string = DEFAULT_TENANT_ID) {
+  const res = await fetch(`${API_BASE}/deals/${dealId}/notes`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...getAuthHeaders(tenantId) },
+    body: JSON.stringify({ content })
+  });
+  if (!res.ok) throw new Error("Failed to create note in HubSpot");
+  return res.json();
+}
+
+export async function createHubSpotEmail(dealId: string, subject: string, body: string, toEmail: string, tenantId: string = DEFAULT_TENANT_ID) {
+  const res = await fetch(`${API_BASE}/deals/${dealId}/emails`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...getAuthHeaders(tenantId) },
+    body: JSON.stringify({ subject, body, to_email: toEmail })
+  });
+  if (!res.ok) throw new Error("Failed to log email in HubSpot");
+  return res.json();
+}
+
+export async function createHubSpotTask(dealId: string, subject: string, body: string, dueTimestampMs: number, tenantId: string = DEFAULT_TENANT_ID) {
+  const res = await fetch(`${API_BASE}/deals/${dealId}/tasks`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...getAuthHeaders(tenantId) },
+    body: JSON.stringify({ subject, body, due_timestamp_ms: dueTimestampMs })
+  });
+  if (!res.ok) throw new Error("Failed to create task in HubSpot");
+  return res.json();
+}
+
+export async function createHubSpotMeeting(dealId: string, title: string, body: string, tenantId: string = DEFAULT_TENANT_ID) {
+  const res = await fetch(`${API_BASE}/deals/${dealId}/meetings`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...getAuthHeaders(tenantId) },
+    body: JSON.stringify({ title, body })
+  });
+  if (!res.ok) throw new Error("Failed to create meeting in HubSpot");
+  return res.json();
+}
