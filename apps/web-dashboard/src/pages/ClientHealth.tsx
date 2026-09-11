@@ -45,7 +45,7 @@ export const ClientHealth: React.FC = () => {
         const clientMap = new Map<string, any>();
         
         data.forEach((deal: any) => {
-          const clientName = deal.client || deal.client_name || deal.clientName || deal.properties?.company || deal.name.split("-")[0].trim() || "Unknown Client";
+          const clientName = deal.client || deal.client_name || deal.clientName || deal.properties?.company || (deal.name ? deal.name.split("-")[0].trim() : "Unknown Client");
           
           if (!clientMap.has(clientName)) {
             clientMap.set(clientName, {
@@ -71,8 +71,8 @@ export const ClientHealth: React.FC = () => {
           client.arr += (deal.value || deal.amount || 0);
           client.dealCount += 1;
           client.totalScore += (deal.score || deal.health_score || 85);
-          if (deal.risks) {
-            client.riskFactors.push(...deal.risks.map((r: any) => r.text || r.description || r));
+          if (deal.risks && Array.isArray(deal.risks)) {
+            client.riskFactors.push(...deal.risks.map((r: any) => typeof r === 'string' ? r : (r.text || r.description || "Risk detected")));
           }
         });
 
