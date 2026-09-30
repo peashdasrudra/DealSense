@@ -385,43 +385,7 @@ body{
 .endpoint-path{font-family:'JetBrains Mono',monospace;font-size:12px;color:#124548;font-weight:600}
 .endpoint-desc{color:var(--text-secondary);font-size:12px}
 
-/* ═══════════════════════════════════════════════════════════
-   CTO Q&A
-   ═══════════════════════════════════════════════════════════ */
-.qa-grid{display:flex;flex-direction:column;gap:8px}
-.qa-item{
-  border:1px solid var(--border-subtle);border-radius:var(--radius);
-  overflow:hidden;background:#ffffff;transition:var(--transition);
-}
-.qa-item.open{border-color:#124548}
-.qa-question{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:16px 20px;cursor:pointer;transition:var(--transition);
-  gap:16px;
-}
-.qa-question:hover{background:#f0f7f7}
-.qa-question h4{font-weight:700;font-size:14.5px;color:#124548;flex:1}
-.qa-chevron{
-  width:18px;height:18px;color:#7c98b6;transition:transform 0.25s ease;
-  flex-shrink:0;
-}
-.qa-item.open .qa-chevron{transform:rotate(180deg);color:#124548}
-.qa-answer{
-  padding:0 20px;max-height:0;overflow:hidden;transition:all 0.35s ease;
-  background:#ffffff;border-top:1px solid transparent;
-}
-.qa-item.open .qa-answer{padding:14px 20px 20px;max-height:2000px;border-top-color:#eaf0f6}
-.qa-answer p{font-size:13.5px;color:#33475b;line-height:1.75;margin-bottom:10px}
-.qa-answer code{
-  background:#f0f7f7;color:#124548;border:1px solid #b2e3eb;
-  padding:2px 6px;border-radius:4px;font-family:'JetBrains Mono',monospace;
-  font-size:11.5px;
-}
-.qa-answer .evidence{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
-.qa-answer .evidence-tag{
-  padding:3px 8px;border-radius:4px;font-size:11px;font-weight:600;
-  background:#e5f8f6;color:var(--green);border:1px solid #b2ede5;
-}
+
 
 /* ═══════════════════════════════════════════════════════════
    DATA MODEL
@@ -515,7 +479,6 @@ body{
       <a href="#webhooks" class="nav-link">Webhooks</a>
       <a href="#security" class="nav-link">Security</a>
       <a href="#api" class="nav-link">API</a>
-      <a href="#cto-qa" class="nav-link">CTO Q&A</a>
     </div>
     <div class="nav-status">
       <div class="status-dot green" id="nav-status-dot"></div>
@@ -720,19 +683,7 @@ body{
   </div>
 </section>
 
-<!-- ═══════════ CTO Q&A ═══════════ -->
-<section class="section" id="cto-qa">
-  <div class="container reveal">
-    <div class="section-header">
-      <div class="section-label">Technical Deep-Dive</div>
-      <h2 class="section-title">CTO Evaluation Questions</h2>
-      <p class="section-desc">Pre-answered technical questions a CTO would ask during an architecture review or interview.</p>
-    </div>
-    <div class="qa-grid" id="qa-grid">
-      <!-- Filled by JS -->
-    </div>
-  </div>
-</section>
+
 
 <!-- ═══════════ FOOTER ═══════════ -->
 <footer class="footer">
@@ -1193,85 +1144,7 @@ function renderStack(){
   `).join('');
 }
 
-/* ═══════════════════════════════════════════════════════════
-   CTO Q&A
-   ═══════════════════════════════════════════════════════════ */
-const qaData=[
-  {q:'How do you handle multi-tenancy and prevent data leakage between tenants?',
-   a:`<p>Multi-tenancy is enforced at <b>three levels</b>:</p>
-   <p><b>1. Middleware layer</b> — <code>TenantGuardMiddleware</code> runs on every non-exempt request, extracting and validating tenant_id from JWT sessions, headers, or portal ID resolution. The tenant_id is bound to <code>request.state</code> and structlog context.</p>
-   <p><b>2. Query layer</b> — Every database table includes a <code>tenant_id</code> column. All queries are tenant-scoped. The <code>CrossTenantAccessError</code> exception class exists specifically for cross-tenant access attempts.</p>
-   <p><b>3. Domain layer</b> — Unique constraints like <code>(tenant_id, hubspot_deal_id)</code> prevent data collisions across tenants. All relationships cascade through tenant-scoped foreign keys.</p>`,
-   tags:['TenantGuardMiddleware','UUID5 Determinism','structlog contextvar','CrossTenantAccessError']},
 
-  {q:'How do you secure OAuth tokens at rest, and what happens during token refresh?',
-   a:`<p><b>Encryption at rest:</b> Both access_token and refresh_token are encrypted using <code>Fernet (AES-256-CBC + HMAC-SHA256)</code> before storage in PostgreSQL. The Fernet key is derived deterministically from SECRET_KEY using <code>SHA256 → URL-safe Base64</code>.</p>
-   <p><b>Token refresh:</b> The TokenManager uses a <b>distributed Redis lock</b> (<code>acquire_lock("token_refresh:{tenant_id}")</code>) to prevent thundering herd when multiple concurrent requests hit an expired token. Only one request performs the refresh; others wait and retry from cache.</p>
-   <p><b>Safety buffer:</b> Tokens are proactively refreshed <b>5 minutes before expiry</b> to eliminate race conditions. After 3 consecutive refresh failures, the connection is deactivated to prevent cascading errors.</p>`,
-   tags:['Fernet AES-256','Distributed Lock','5-min Buffer','Circuit Breaker']},
-
-  {q:'How do you verify webhook authenticity and prevent replay attacks?',
-   a:`<p><b>Signature verification:</b> HubSpot v3 webhooks include an HMAC-SHA256 signature computed over <code>requestMethod + requestURI + requestBody + timestamp</code>. We recompute and compare using <code>hmac.compare_digest()</code> (constant-time comparison).</p>
-   <p><b>Replay protection:</b> The delivered timestamp is checked against a <b>300-second (5-minute) window</b>. Events outside this window are rejected with <code>WebhookReplayError</code>.</p>
-   <p><b>Idempotency:</b> Each event gets a Redis key <code>hubspot:event:{portal}:{eventId}</code> with 24-hour TTL. Duplicate events return 200 immediately without re-processing. A PostgreSQL unique constraint on <code>idempotency_key</code> provides a durable second layer.</p>`,
-   tags:['HMAC-SHA256 v3','300s Replay Window','24h Redis Dedup','DB Unique Constraint']},
-
-  {q:'What happens if Redis or PostgreSQL goes down?',
-   a:`<p>The system is designed for <b>graceful degradation</b> at every layer:</p>
-   <p><b>Redis offline:</b> The <code>redis_client.py</code> module includes a complete in-memory fallback — <code>_InMemoryLock</code> for distributed locks, <code>_memory_cache</code> dict with TTL for cache operations. The app continues serving requests with slightly reduced deduplication guarantees.</p>
-   <p><b>PostgreSQL offline:</b> The <code>get_db_optional</code> dependency returns <code>None</code> instead of crashing. Routes check <code>if db is not None</code> before querying. Deals endpoint falls back to an in-memory demo catalog with 5 realistic deals.</p>
-   <p><b>HubSpot API down:</b> The HubSpot client retries with exponential backoff (respecting Retry-After headers). After 3 failures, it surfaces the error to the caller rather than hanging.</p>`,
-   tags:['InMemoryLock','_memory_cache fallback','get_db_optional','Demo Catalog']},
-
-  {q:'How would you scale this to handle 10x traffic?',
-   a:`<p><b>Horizontal scaling:</b> The FastAPI app is stateless — tenant context comes from JWT/headers, not server-side sessions. Deploy N replicas behind a load balancer.</p>
-   <p><b>Database:</b> PostgreSQL connection pool is configured with <code>pool_size=10, max_overflow=5</code>. For 10x: use PgBouncer for connection pooling, read replicas for query offload, and partition webhook_events by tenant_id.</p>
-   <p><b>Redis:</b> Already using Redis Streams with consumer groups — add more consumers for parallel event processing. The distributed lock pattern scales naturally.</p>
-   <p><b>Webhooks:</b> The async queue pattern (persist → publish → ack) means webhook ingestion scales independently from processing. Add workers to the consumer group.</p>`,
-   tags:['Stateless Design','Redis Streams','Consumer Groups','Connection Pooling']},
-
-  {q:'How does the RBAC system work and how extensible is it?',
-   a:`<p>RBAC is implemented with <b>3 components</b>:</p>
-   <p><b>1. Permission enum</b> — 22 granular permissions as <code>StrEnum</code> (e.g., <code>deal:read</code>, <code>action:approve</code>, <code>oauth:manage</code>).</p>
-   <p><b>2. Role → Permission mapping</b> — <code>ROLE_PERMISSIONS: dict[UserRole, frozenset[Permission]]</code>. Agency Owner gets <code>frozenset(Permission)</code> (all). Each role is a curated subset.</p>
-   <p><b>3. FastAPI guards</b> — <code>require_permission(Permission.DEAL_READ)</code> returns a <code>Depends()</code> callable that extracts JWT → role → checks permission → returns tenant_id. Adding a new permission is a 3-line change.</p>`,
-   tags:['StrEnum','frozenset','Depends() injection','3-line extensibility']},
-
-  {q:'What is your action governance model and why does it matter?',
-   a:`<p>DealSense uses a <b>tiered approval model</b> for CRM write-backs — the AI never writes to HubSpot without governance:</p>
-   <p><b>Tier 0 (Read-Only):</b> Observe and surface insights. No CRM mutation.</p>
-   <p><b>Tier 1 (Suggestion):</b> Propose actions. User manually triggers.</p>
-   <p><b>Tier 2 (Draft):</b> AI prepares a draft (note, task). User reviews and confirms.</p>
-   <p><b>Tier 3 (Controlled Write):</b> Explicit approval required. Full audit trail.</p>
-   <p><b>Every execution</b> records <code>pre_action_state</code> and <code>post_action_state</code> in the <code>action_executions</code> table, enabling full rollback. This is critical for enterprise sales teams who need to trust the AI.</p>`,
-   tags:['4-Tier Governance','pre/post State','Rollback','Idempotency Key']},
-
-  {q:'How do you handle HubSpot API rate limits?',
-   a:`<p>The <code>HubSpotClient</code> implements a <b>resilient retry strategy</b>:</p>
-   <p><b>1. Rate limit detection:</b> HTTP 429 responses trigger backoff. We read the <code>Retry-After</code> header (or default to <code>2^attempt</code> seconds).</p>
-   <p><b>2. Server errors:</b> 502/503/504 are also retried (up to 3 attempts) since HubSpot occasionally returns these during deployments.</p>
-   <p><b>3. Batch operations:</b> Bulk updates are chunked into 100-item batches (HubSpot's limit) and executed sequentially to avoid burst rate limits.</p>
-   <p><b>4. Caching:</b> Deal data is cached in Redis with 30-second TTL, reducing HubSpot API calls by ~85% for read-heavy workloads.</p>`,
-   tags:['Retry-After','Exponential Backoff','100-item Chunking','30s Cache TTL']},
-];
-function renderQA(){
-  document.getElementById('qa-grid').innerHTML=qaData.map((q,i)=>`
-    <div class="qa-item" id="qa-${i}">
-      <div class="qa-question" onclick="toggleQA(${i})">
-        <h4>${q.q}</h4>
-        <svg class="qa-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-      </div>
-      <div class="qa-answer">
-        ${q.a}
-        <div class="evidence">${q.tags.map(t=>`<span class="evidence-tag">${t}</span>`).join('')}</div>
-      </div>
-    </div>
-  `).join('');
-}
-function toggleQA(i){
-  const item=document.getElementById(`qa-${i}`);
-  item.classList.toggle('open');
-}
 
 /* ═══════════════════════════════════════════════════════════
    INITIALIZATION
@@ -1284,7 +1157,6 @@ document.addEventListener('DOMContentLoaded',()=>{
   renderDBGrid();
   renderEndpoints();
   renderStack();
-  renderQA();
   loadHealth();
   loadRBAC();
   // Auto-refresh health every 30s

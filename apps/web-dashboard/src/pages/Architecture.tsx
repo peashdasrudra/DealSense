@@ -288,73 +288,7 @@ const API_ENDPOINTS: EndpointItem[] = [
   { method: "GET", path: "/architecture", category: "Health & Proof", desc: "Serves this enterprise system architecture specification." },
 ];
 
-/* ── CTO Evaluation Questions ────────────────────────────────────────────── */
 
-interface CTOQuestion {
-  question: string;
-  category: string;
-  answer: string;
-  tags: string[];
-}
-
-const CTO_QUESTIONS: CTOQuestion[] = [
-  {
-    question: "How do you enforce multi-tenancy and guarantee zero cross-tenant data leakage?",
-    category: "Security & Tenancy",
-    answer:
-      "Multi-tenancy is enforced in depth across 3 layers:\n1. Middleware: TenantGuardMiddleware extracts tenant context from verified JWT sessions or API headers, binds it to request.state.tenant_id, and sets it in structlog contextvars.\n2. Persistence: Every database table contains a tenant_id foreign key. All queries are tenant-filtered. Composite unique constraints such as (tenant_id, hubspot_deal_id) guarantee data separation.\n3. Exception handling: An explicit CrossTenantAccessError exception is raised if any query attempts to reference a record outside the caller's tenant context.",
-    tags: ["TenantGuardMiddleware", "UUID5 Determinism", "Composite Unique Constraints", "CrossTenantAccessError"],
-  },
-  {
-    question: "How do you secure OAuth tokens at rest, and prevent race conditions during token refresh?",
-    category: "Authentication",
-    answer:
-      "OAuth tokens are protected by Fernet (AES-256-CBC with HMAC-SHA256 authentication). Keys are derived using SHA256 from SECRET_KEY. In Postgres, only encrypted ciphertext is stored.\n\nTo prevent race conditions and the 'thundering herd' problem, TokenManager uses an atomic Redis distributed lock (acquire_lock('token_refresh:{tenant_id}', timeout=30)). If multiple requests hit an expired token concurrently, only one performs the HubSpot refresh while others await the lock and consume the fresh cached token. Tokens are refreshed 5 minutes ahead of expiration.",
-    tags: ["Fernet AES-256-CBC", "Redis Distributed Lock", "5-Min Safety Buffer", "Thundering Herd Mitigation"],
-  },
-  {
-    question: "How does the webhook pipeline verify authenticity and protect against replay attacks?",
-    category: "Event Processing",
-    answer:
-      "HubSpot v3 webhooks include an X-HubSpot-Signature-v3 header computed as HMAC-SHA256(client_secret, method + URI + rawBody + timestamp). Verification occurs in constant time using hmac.compare_digest().\n\nReplay protection enforces a strict 300-second (5-minute) freshness window: any webhook with a timestamp older than 300s is rejected. Inbound events are deduplicated in Redis via key hubspot:event:{portalId}:{eventId} with a 24-hour TTL, ensuring idempotency even if HubSpot retries delivery.",
-    tags: ["HMAC-SHA256 v3", "Constant-Time Digest", "300s Replay Window", "24h Redis Idempotency"],
-  },
-  {
-    question: "How does the platform handle high traffic spikes, and what is the horizontal scaling model?",
-    category: "Scalability",
-    answer:
-      "The API tier is completely stateless. Sessions are carried in signed JWT cookies, and tenant resolution relies on Redis caching. Any number of FastAPI/Uvicorn worker replicas can sit behind a round-robin load balancer.\n\nFor database scalability, SQLAlchemy uses asyncpg with connection pooling (pool_size=10, max_overflow=5). Webhook ingestion acknowledges events in <180ms P99 by appending to PostgreSQL and publishing to Redis Streams for background workers to process asynchronously.",
-    tags: ["Stateless ASGI Tier", "asyncpg Connection Pooling", "Redis Streams Asynchronous Queue", "P99 < 180ms Ingestion"],
-  },
-  {
-    question: "What happens if Redis or PostgreSQL experiences a temporary network partition or outage?",
-    category: "Resilience",
-    answer:
-      "The system implements graceful degradation across every component:\n• Redis offline: redis_client.py seamlessly activates an in-memory lock engine (_InMemoryLock) and TTL cache (_memory_cache). The API remains operational with localized locking.\n• PostgreSQL offline: The get_db_optional dependency returns None rather than raising an unhandled 500 error. Read endpoints automatically serve from cached snapshots or an in-memory demonstration catalog.\n• HubSpot API down: httpx client applies exponential backoff across 3 retries. If persistent, CRM mutations queue safely in Redis Streams.",
-    tags: ["InMemoryLock Fallback", "get_db_optional Dependency", "Graceful Degradation", "Exponential Backoff"],
-  },
-  {
-    question: "How does your RBAC implementation work, and how difficult is it to add custom enterprise roles?",
-    category: "Authorization",
-    answer:
-      "RBAC is structured around two pure Python primitives: Permission (StrEnum with 22 permissions) and UserRole (6 hierarchical roles). The ROLE_PERMISSIONS dictionary maps roles to immutable frozenset[Permission] collections.\n\nRoutes enforce authorization via FastAPI dependency injection: require_permission(Permission.DEAL_READ). Adding a new permission is a 3-line modification: add the enum member, assign it to desired roles in ROLE_PERMISSIONS, and apply the dependency to the endpoint. No database migration is required.",
-    tags: ["StrEnum Primitives", "frozenset Permissions", "FastAPI Depends() Guards", "3-Line Extensibility"],
-  },
-  {
-    question: "What governance model prevents the AI from making destructive modifications to HubSpot CRM?",
-    category: "AI Governance",
-    answer:
-      "DealSense implements a 4-tier action governance model:\n• Tier 0 (Read-Only): Passive observation, risk scoring, and dossier compilation.\n• Tier 1 (Suggestion): AI generates recommendations displayed in the rep's queue.\n• Tier 2 (Draft): AI prepares draft notes or tasks; requires 1-click rep confirmation.\n• Tier 3 (Controlled Write): Autonomous write-back with mandatory pre/post state capture.\n\nEvery write-back creates an action_executions record preserving the exact pre-action CRM state, enabling 1-click rollback if unintended changes occur.",
-    tags: ["4-Tier Governance Model", "Pre/Post State Snapshots", "Automated Rollback", "Human-in-the-Loop"],
-  },
-  {
-    question: "How do you prevent HubSpot 429 rate limit errors when synchronizing hundreds of deals?",
-    category: "CRM Integration",
-    answer:
-      "HubSpotClient applies a multi-layered rate-limiting strategy:\n1. Respects HTTP 429 Retry-After headers with exponential backoff and randomized jitter to prevent cluster sync alignment.\n2. Uses HubSpot Batch API (v3/objects/deals/batch/read and batch/update) which processes up to 100 records per HTTP request.\n3. Implements client-side Redis caching with 30-second TTL on read operations, reducing HubSpot API calls by ~85% for active user sessions.",
-    tags: ["Retry-After Compliance", "100-Item Batching", "Jittered Backoff", "30s Redis Read Cache"],
-  },
-];
 
 /* ── Main Component ───────────────────────────────────────────────────────── */
 
@@ -377,8 +311,7 @@ export const Architecture: React.FC = () => {
 
   const [rbacMatrix, setRbacMatrix] = useState<RBACMatrix | null>(null);
 
-  const [openQA, setOpenQA] = useState<number | null>(0);
-  const [qaSearch, setQaSearch] = useState("");
+
 
   /* ── Live Data Fetching ─────────────────────────────────────────────────── */
 
@@ -536,12 +469,7 @@ export const Architecture: React.FC = () => {
     return true;
   });
 
-  const filteredQA = CTO_QUESTIONS.filter(
-    (q) =>
-      q.question.toLowerCase().includes(qaSearch.toLowerCase()) ||
-      q.answer.toLowerCase().includes(qaSearch.toLowerCase()) ||
-      q.tags.some((t) => t.toLowerCase().includes(qaSearch.toLowerCase()))
-  );
+
 
   const activeLayer = ARCH_LAYERS.find((l) => l.id === selectedLayer) || ARCH_LAYERS[0];
 
@@ -760,7 +688,6 @@ export const Architecture: React.FC = () => {
               { href: "#security", label: "RBAC & Security" },
               { href: "#schema", label: "14-Table Domain Model" },
               { href: "#endpoints", label: "API Inventory" },
-              { href: "#cto-qa", label: "CTO Evaluation Q&A" },
             ].map((btn, i) => (
               <a
                 key={i}
@@ -1617,130 +1544,7 @@ export const Architecture: React.FC = () => {
           </div>
         </section>
 
-        {/* ── 8. CTO Evaluation Questions & Answers ────────────────────────── */}
-        <section
-          id="cto-qa"
-          style={{
-            background: "#ffffff",
-            borderRadius: 12,
-            border: "1px solid #eaf0f6",
-            padding: "28px 32px",
-            marginBottom: 36,
-            boxShadow: "0 2px 10px rgba(18, 69, 72, 0.04)",
-          }}
-        >
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20, flexWrap: "wrap", gap: 12 }}>
-            <div>
-              <h2 style={{ fontSize: 19, fontWeight: 800, color: "#124548", margin: 0 }}>
-                Technical Interview & CTO Architecture Review Q&A
-              </h2>
-              <p style={{ fontSize: 13, color: "#516f90", margin: "4px 0 0" }}>
-                Pre-answered senior architect questions covering failovers, security boundaries, rate limiting, and governance.
-              </p>
-            </div>
 
-            <input
-              type="text"
-              placeholder="Search interview questions..."
-              value={qaSearch}
-              onChange={(e) => setQaSearch(e.target.value)}
-              style={{
-                fontSize: 12.5,
-                padding: "6px 14px",
-                borderRadius: 4,
-                border: "1px solid #cbd6e2",
-                width: 240,
-                outline: "none",
-              }}
-            />
-          </div>
-
-          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-            {filteredQA.map((qa, idx) => {
-              const isOpen = openQA === idx;
-              return (
-                <div
-                  key={idx}
-                  style={{
-                    border: isOpen ? "1.5px solid #124548" : "1px solid #eaf0f6",
-                    borderRadius: 8,
-                    overflow: "hidden",
-                    transition: "border 0.15s ease",
-                  }}
-                >
-                  <button
-                    onClick={() => setOpenQA(isOpen ? null : idx)}
-                    style={{
-                      width: "100%",
-                      padding: "16px 20px",
-                      textAlign: "left",
-                      background: isOpen ? "#f0f7f7" : "#ffffff",
-                      border: "none",
-                      cursor: "pointer",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      gap: 12,
-                    }}
-                  >
-                    <div>
-                      <span
-                        style={{
-                          fontSize: 10,
-                          fontWeight: 700,
-                          textTransform: "uppercase",
-                          color: "#ff7a59",
-                          marginRight: 8,
-                        }}
-                      >
-                        [{qa.category}]
-                      </span>
-                      <span style={{ fontSize: 14.5, fontWeight: 700, color: "#124548" }}>{qa.question}</span>
-                    </div>
-                    <span style={{ fontSize: 16, color: "#124548", transform: isOpen ? "rotate(180deg)" : "none", transition: "transform 0.2s" }}>
-                      ▾
-                    </span>
-                  </button>
-
-                  {isOpen && (
-                    <div style={{ padding: "16px 20px 20px", background: "#ffffff", borderTop: "1px solid #eaf0f6" }}>
-                      <div
-                        style={{
-                          fontSize: 13.5,
-                          color: "#33475b",
-                          lineHeight: 1.7,
-                          whiteSpace: "pre-line",
-                          marginBottom: 14,
-                        }}
-                      >
-                        {qa.answer}
-                      </div>
-
-                      <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
-                        {qa.tags.map((t, tidx) => (
-                          <span
-                            key={tidx}
-                            style={{
-                              fontSize: 11,
-                              fontWeight: 600,
-                              color: "#007a70",
-                              background: "#e5f8f6",
-                              border: "1px solid #b2ede5",
-                              borderRadius: 4,
-                              padding: "2px 8px",
-                            }}
-                          >
-                            ✓ {t}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        </section>
 
         {/* ── Bottom Callout ─────────────────────────────────────────────────── */}
         <section
