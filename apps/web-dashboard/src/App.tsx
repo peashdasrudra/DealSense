@@ -24,6 +24,7 @@ import { MutualActionPlan } from "./pages/MutualActionPlan";
 import { CompetitiveIntelligence } from "./pages/CompetitiveIntelligence";
 import { CaseStudy } from "./pages/CaseStudy";
 import { IntegrationProof } from "./pages/IntegrationProof";
+import { Architecture } from "./pages/Architecture";
 import { LandingPage } from "./pages/LandingPage";
 import { AgencyFleet } from "./pages/AgencyFleet";
 import { CheckoutPage } from "./pages/CheckoutPage";
@@ -87,6 +88,7 @@ const PAGE_TITLES: Record<string, { title: string; breadcrumb: string }> = {
   "/marketplace-listing": { title: "Marketplace Directory Preview", breadcrumb: "Marketplace" },
   "/nav-test": { title: "Navigation & CTA Test Suite", breadcrumb: "Dev / QA" },
   "/integration-proof": { title: "Live Integration Proof", breadcrumb: "Integration Proof" },
+  "/architecture": { title: "System Architecture Blueprint", breadcrumb: "Architecture" },
 };
 
 import { getLocalDeals } from "./api";
@@ -253,6 +255,7 @@ export const App: React.FC = () => {
     location.pathname === "/onboarding" ||
     location.pathname === "/marketplace-listing" ||
     location.pathname === "/nav-test" ||
+    location.pathname === "/architecture" ||
     location.pathname.startsWith("/app");
 
   useEffect(() => {
@@ -326,6 +329,8 @@ export const App: React.FC = () => {
           <MarketplaceListingPreview />
         ) : location.pathname === "/nav-test" ? (
           <NavTestPage />
+        ) : location.pathname === "/architecture" ? (
+          <Architecture />
         ) : location.pathname === "/login" || location.pathname === "/signup" ? (
           <AuthPage />
         ) : location.pathname === "/oauth/callback" ? (
@@ -415,6 +420,7 @@ export const App: React.FC = () => {
                 <Route path="/welcome" element={<LandingPage />} />
                 <Route path="/portfolio" element={<CaseStudy />} />
                 <Route path="/integration-proof" element={<IntegrationProof />} />
+                <Route path="/architecture" element={<Architecture />} />
                 <Route path="/audit" element={<AuditLog />} />
                 <Route path="/settings" element={<Settings />} />
                 <Route path="/checkout" element={<CheckoutPage />} />

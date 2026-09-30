@@ -25,6 +25,7 @@ export const APP_ROUTES = {
   LANDING: "/",
   AGENCY_FLEET: "/agency",
   CHECKOUT: "/checkout",
+  ARCHITECTURE: "/architecture",
   CASE_STUDY: "/case-study",
   NAV_TEST: "/nav-test",
 
@@ -292,6 +293,15 @@ export const ALL_NAV_ITEMS: NavLinkItem[] = [
   },
 
   // Architecture & Docs
+  {
+    id: "nav-architecture",
+    label: "System Architecture Blueprint",
+    path: "/architecture",
+    category: "Architecture & Docs",
+    type: "route",
+    badge: "LIVE",
+    description: "Official interactive architecture blueprint with live health matrix, cryptographic HMAC/Fernet runners, and CTO Q&A.",
+  },
   {
     id: "nav-case-study",
     label: "Architecture Case Study",
