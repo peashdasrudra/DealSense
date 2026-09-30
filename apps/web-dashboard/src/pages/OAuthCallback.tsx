@@ -75,6 +75,8 @@ export const OAuthCallback: React.FC = () => {
           tier: "Connected App (Live OAuth)",
           deals: 0,
           latency: "0.14s",
+          tenant_id: responseData.tenant_id,
+          session_jwt: responseData.session_jwt,
         };
 
         if (responseData.tenant_id) {

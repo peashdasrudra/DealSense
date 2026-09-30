@@ -35,7 +35,7 @@ export const ConnectHubSpotModal: React.FC<ConnectHubSpotModalProps> = ({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isOpen, onClose]);
 
-  const handleConnect = async (portal: { id: string; name: string; tier: string; deals: number }) => {
+  const handleConnect = async (portal: { id: string; name: string; tier: string; deals: number; tenant_id?: string; session_jwt?: string }) => {
     setErrorMessage("");
 
     const connectedData = {
@@ -44,14 +44,24 @@ export const ConnectHubSpotModal: React.FC<ConnectHubSpotModalProps> = ({
       tier: portal.tier,
       deals: portal.deals,
       latency: "0.18s",
+      tenant_id: portal.tenant_id,
+      session_jwt: portal.session_jwt,
     };
 
     try {
       localStorage.setItem("dealsense_active_portal", JSON.stringify(connectedData));
-      // Set deterministic tenant ID for this portal
-      localStorage.setItem("dealsense_tenant_id", `00000000-0000-0000-0000-${portal.id.padStart(12, "0")}`);
-      localStorage.removeItem("dealsense_session_jwt");
-      sessionStorage.removeItem("dealsense_oauth_state");
+      if (portal.tenant_id) {
+        localStorage.setItem("dealsense_tenant_id", portal.tenant_id);
+      } else {
+        localStorage.setItem("dealsense_tenant_id", `00000000-0000-0000-0000-${portal.id.padStart(12, "0")}`);
+      }
+      if (portal.session_jwt) {
+        localStorage.setItem("dealsense_session_jwt", portal.session_jwt);
+        sessionStorage.setItem("dealsense_oauth_state", "authenticated");
+      } else {
+        localStorage.removeItem("dealsense_session_jwt");
+        sessionStorage.removeItem("dealsense_oauth_state");
+      }
       localStorage.removeItem("dealsense_crud_deals");
       localStorage.removeItem("dealsense_crud_actions");
 

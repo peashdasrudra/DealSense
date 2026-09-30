@@ -16,6 +16,8 @@ interface PortalItem {
   tier: string;
   deals: number;
   latency: string;
+  tenant_id?: string;
+  session_jwt?: string;
 }
 
 interface TopBarProps {
@@ -135,14 +137,23 @@ export const TopBar: React.FC<TopBarProps> = ({
     localStorage.setItem("dealsense_active_portal", JSON.stringify(p));
     
     if (p.id !== "DISCONNECTED") {
-      localStorage.setItem("dealsense_tenant_id", `00000000-0000-0000-0000-${p.id.padStart(12, "0")}`);
+      if (p.tenant_id) {
+        localStorage.setItem("dealsense_tenant_id", p.tenant_id);
+      } else {
+        localStorage.setItem("dealsense_tenant_id", `00000000-0000-0000-0000-${p.id.padStart(12, "0")}`);
+      }
     } else {
       localStorage.removeItem("dealsense_tenant_id");
     }
     
-    // Clear auth state to prevent data bleeding when switching accounts
-    localStorage.removeItem("dealsense_session_jwt");
-    sessionStorage.removeItem("dealsense_oauth_state");
+    // Restore auth state if available, otherwise clear it to prevent data bleeding
+    if (p.session_jwt) {
+      localStorage.setItem("dealsense_session_jwt", p.session_jwt);
+      sessionStorage.setItem("dealsense_oauth_state", "authenticated");
+    } else {
+      localStorage.removeItem("dealsense_session_jwt");
+      sessionStorage.removeItem("dealsense_oauth_state");
+    }
     
     localStorage.removeItem("dealsense_crud_deals");
     localStorage.removeItem("dealsense_crud_actions");

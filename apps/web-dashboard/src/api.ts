@@ -219,6 +219,7 @@ const getTenantId = (overrideId?: string) => {
     try {
       const p = JSON.parse(activePortalStr);
       if (p.id && p.id !== "DISCONNECTED") {
+        if (p.tenant_id) return p.tenant_id;
         return `00000000-0000-0000-0000-${p.id.padStart(12, "0")}`;
       }
     } catch {}
