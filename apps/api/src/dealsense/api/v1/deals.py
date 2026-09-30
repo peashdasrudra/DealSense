@@ -359,6 +359,7 @@ async def create_deal(
                     "dealname": body.name,
                     "amount": str(body.amount),
                     "dealstage": body.stage,
+                    "pipeline": "default",
                 }
             )
             if "id" in hs_result:
@@ -474,6 +475,7 @@ async def update_deal(
                 hs_update_props["amount"] = str(body.amount)
             if body.stage:
                 hs_update_props["dealstage"] = body.stage
+                hs_update_props["pipeline"] = "default"
 
             if hs_update_props:
                 await client.update_deal_properties(target_hs_id, hs_update_props)
