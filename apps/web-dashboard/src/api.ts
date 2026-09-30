@@ -381,6 +381,14 @@ export function normalizeDeal(item: any, existing?: EnterpriseDeal): EnterpriseD
 }
 
 export async function fetchDeals(tenantId?: string): Promise<EnterpriseDeal[]> {
+  /*
+   * ARCHITECTURE NOTE (Local-First Offline & Multi-Tenant Caching):
+   * This is the master hydration function for the UI. It securely requests the live deal 
+   * state from the Python backend via the X-Tenant-ID & JWT Bearer token headers.
+   * If the fetch succeeds, it normalizes the CRM data to the DealSense UI format.
+   * If offline or API fails, it gracefully falls back to `getLocalDeals()`, which seamlessly 
+   * returns the interactive mock dataset for demo purposes, ensuring zero UI downtime.
+   */
   try {
     const response = await fetch(`${API_BASE}/deals`, {
       headers: getAuthHeaders(tenantId),

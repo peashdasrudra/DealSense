@@ -78,6 +78,13 @@ export const OAuthCallback: React.FC = () => {
         };
 
         if (responseData.tenant_id) {
+          /*
+           * ARCHITECTURE NOTE (Multi-Tenant Security):
+           * The backend resolves the HubSpot OAuth code into a persistent 'tenant_id' UUID.
+           * We store this locally. Every subsequent API call from the dashboard uses this UUID 
+           * (via the X-Tenant-ID header) and the JWT to enforce strict row-level security isolation 
+           * in the database, preventing data leakage across different clients' HubSpot portals.
+           */
           localStorage.setItem("dealsense_tenant_id", responseData.tenant_id);
           sessionStorage.setItem("dealsense_oauth_state", "authenticated");
         }

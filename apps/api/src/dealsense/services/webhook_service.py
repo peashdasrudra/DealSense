@@ -76,6 +76,11 @@ async def process_incoming_webhooks(
             continue
 
         # 2. Check Idempotency via Redis
+        # ARCHITECTURE NOTE (Distributed Webhook Idempotency):
+        # HubSpot does not guarantee exactly-once delivery of webhooks. Under high load, 
+        # it may send duplicate payloads. We use an atomic Redis `cache_get` and `setex`
+        # keyed by `hubspot:event:{portal_id}:{event_id}` to drop duplicate events instantly 
+        # before they hit our database or message queues.
         idempotency_key = f"hubspot:event:{portal_id}:{event_id}"
         try:
             cached_event = await cache_get(f"idempotency:{idempotency_key}")

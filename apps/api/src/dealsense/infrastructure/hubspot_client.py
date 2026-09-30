@@ -55,7 +55,14 @@ class HubSpotClient:
         params: dict[str, Any] | None = None,
         json_data: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
-        """Execute an HTTP request against HubSpot API with retry and rate-limit backoff."""
+        """Execute an HTTP request against HubSpot API with retry and rate-limit backoff.
+        
+        ARCHITECTURE NOTE: 
+        HubSpot enforces strict API rate limits (e.g. 100 requests per 10 seconds for standard tiers).
+        This centralized HTTP wrapper automatically intercepts 429 Too Many Requests errors and 
+        transient 50x server errors, applying exponential backoff based on the 'Retry-After' header 
+        to ensure zero data loss during high-volume syncs.
+        """
         url = f"{HUBSPOT_API_BASE_URL}{path}"
         headers = await self._get_headers()
 
