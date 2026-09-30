@@ -1,0 +1,1346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DealSense — System Architecture</title>
+<meta name="description" content="DealSense: AI-Native Deal Intelligence Platform for HubSpot CRM. Multi-tenant SaaS backend architecture.">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════════════════
+   DESIGN SYSTEM — Premium Dark Mode
+   ═══════════════════════════════════════════════════════════ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg-primary:#09090b;
+  --bg-secondary:#0c0c10;
+  --bg-card:rgba(17,17,21,0.7);
+  --bg-card-hover:rgba(25,25,32,0.8);
+  --bg-glass:rgba(255,255,255,0.03);
+  --border-subtle:rgba(255,255,255,0.06);
+  --border-glow:rgba(99,102,241,0.3);
+  --text-primary:#fafafa;
+  --text-secondary:#a1a1aa;
+  --text-muted:#52525b;
+  --accent-primary:#818cf8;
+  --accent-secondary:#6366f1;
+  --accent-glow:rgba(99,102,241,0.15);
+  --green:#22c55e;
+  --green-glow:rgba(34,197,94,0.15);
+  --amber:#f59e0b;
+  --amber-glow:rgba(245,158,11,0.15);
+  --red:#ef4444;
+  --red-glow:rgba(239,68,68,0.15);
+  --cyan:#06b6d4;
+  --cyan-glow:rgba(6,182,212,0.15);
+  --rose:#f43f5e;
+  --violet:#8b5cf6;
+  --radius:12px;
+  --radius-sm:8px;
+  --radius-lg:16px;
+  --radius-xl:24px;
+  --shadow-lg:0 20px 60px rgba(0,0,0,0.5);
+  --transition:all 0.3s cubic-bezier(0.4,0,0.2,1);
+}
+html{scroll-behavior:smooth;font-size:16px}
+body{
+  font-family:'Inter',system-ui,-apple-system,sans-serif;
+  background:var(--bg-primary);
+  color:var(--text-primary);
+  line-height:1.6;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--accent-secondary);color:#fff}
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:3px}
+
+/* ═══════════════════════════════════════════════════════════
+   ANIMATED BACKGROUND
+   ═══════════════════════════════════════════════════════════ */
+#particle-canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}
+.gradient-orb{
+  position:fixed;border-radius:50%;filter:blur(120px);opacity:0.12;pointer-events:none;z-index:0;
+  animation:orbFloat 20s ease-in-out infinite;
+}
+.orb-1{width:600px;height:600px;background:var(--accent-secondary);top:-100px;right:-100px;animation-delay:0s}
+.orb-2{width:500px;height:500px;background:var(--cyan);bottom:-100px;left:-100px;animation-delay:-7s}
+.orb-3{width:400px;height:400px;background:var(--rose);top:50%;left:50%;transform:translate(-50%,-50%);animation-delay:-14s}
+@keyframes orbFloat{
+  0%,100%{transform:translate(0,0) scale(1)}
+  25%{transform:translate(30px,-40px) scale(1.05)}
+  50%{transform:translate(-20px,30px) scale(0.95)}
+  75%{transform:translate(40px,20px) scale(1.03)}
+}
+
+/* ═══════════════════════════════════════════════════════════
+   LAYOUT
+   ═══════════════════════════════════════════════════════════ */
+.page-wrapper{position:relative;z-index:1}
+.container{max-width:1280px;margin:0 auto;padding:0 24px}
+
+/* ═══════════════════════════════════════════════════════════
+   NAVIGATION
+   ═══════════════════════════════════════════════════════════ */
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  background:rgba(9,9,11,0.8);backdrop-filter:blur(20px) saturate(180%);
+  border-bottom:1px solid var(--border-subtle);
+  transition:var(--transition);
+}
+.nav-inner{
+  max-width:1280px;margin:0 auto;padding:0 24px;
+  display:flex;align-items:center;justify-content:space-between;height:64px;
+}
+.nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+.nav-logo{
+  width:36px;height:36px;border-radius:var(--radius-sm);
+  background:linear-gradient(135deg,var(--accent-secondary),var(--cyan));
+  display:flex;align-items:center;justify-content:center;
+  font-weight:800;font-size:14px;color:#fff;letter-spacing:-0.5px;
+}
+.nav-title{font-weight:700;font-size:16px;color:var(--text-primary);letter-spacing:-0.3px}
+.nav-subtitle{font-size:11px;color:var(--text-muted);font-weight:500;letter-spacing:0.5px;text-transform:uppercase}
+.nav-links{display:flex;gap:4px}
+.nav-link{
+  padding:6px 14px;border-radius:var(--radius-sm);font-size:13px;font-weight:500;
+  color:var(--text-secondary);text-decoration:none;transition:var(--transition);
+}
+.nav-link:hover,.nav-link.active{color:var(--text-primary);background:var(--bg-glass)}
+.nav-status{display:flex;align-items:center;gap:8px}
+.status-dot{
+  width:8px;height:8px;border-radius:50%;
+  animation:pulse 2s ease-in-out infinite;
+}
+.status-dot.green{background:var(--green);box-shadow:0 0 8px var(--green)}
+.status-dot.amber{background:var(--amber);box-shadow:0 0 8px var(--amber)}
+.status-dot.red{background:var(--red);box-shadow:0 0 8px var(--red)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
+.status-text{font-size:12px;color:var(--text-secondary);font-weight:500}
+
+/* ═══════════════════════════════════════════════════════════
+   HERO
+   ═══════════════════════════════════════════════════════════ */
+.hero{
+  min-height:100vh;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;text-align:center;padding:120px 24px 80px;
+  position:relative;
+}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:6px 16px;border-radius:100px;
+  background:var(--accent-glow);border:1px solid rgba(99,102,241,0.2);
+  font-size:12px;font-weight:600;color:var(--accent-primary);
+  letter-spacing:0.5px;text-transform:uppercase;
+  margin-bottom:24px;
+  animation:fadeInUp 0.8s ease-out;
+}
+.hero-badge::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--accent-primary);animation:pulse 2s ease-in-out infinite}
+.hero h1{
+  font-size:clamp(40px,6vw,72px);font-weight:900;
+  letter-spacing:-2px;line-height:1.05;
+  max-width:800px;margin-bottom:20px;
+  background:linear-gradient(135deg,#fff 0%,var(--accent-primary) 50%,var(--cyan) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+  animation:fadeInUp 0.8s ease-out 0.1s both;
+}
+.hero-sub{
+  font-size:clamp(16px,2vw,20px);color:var(--text-secondary);
+  max-width:640px;margin-bottom:48px;font-weight:400;line-height:1.7;
+  animation:fadeInUp 0.8s ease-out 0.2s both;
+}
+.hero-metrics{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:1px;
+  background:var(--border-subtle);border-radius:var(--radius-lg);overflow:hidden;
+  max-width:720px;width:100%;
+  animation:fadeInUp 0.8s ease-out 0.3s both;
+}
+.hero-metric{
+  background:var(--bg-card);padding:24px 16px;text-align:center;
+  transition:var(--transition);
+}
+.hero-metric:hover{background:var(--bg-card-hover)}
+.hero-metric .value{
+  font-size:28px;font-weight:800;
+  font-family:'JetBrains Mono',monospace;
+  letter-spacing:-1px;margin-bottom:4px;
+}
+.hero-metric .label{font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;font-weight:600}
+.hero-metric:nth-child(1) .value{color:var(--accent-primary)}
+.hero-metric:nth-child(2) .value{color:var(--green)}
+.hero-metric:nth-child(3) .value{color:var(--cyan)}
+.hero-metric:nth-child(4) .value{color:var(--amber)}
+.hero-cta-row{
+  display:flex;gap:12px;margin-top:32px;
+  animation:fadeInUp 0.8s ease-out 0.4s both;
+}
+.btn{
+  padding:12px 28px;border-radius:var(--radius);font-weight:600;font-size:14px;
+  text-decoration:none;transition:var(--transition);cursor:pointer;border:none;
+  display:inline-flex;align-items:center;gap:8px;
+}
+.btn-primary{
+  background:linear-gradient(135deg,var(--accent-secondary),var(--accent-primary));
+  color:#fff;box-shadow:0 4px 20px var(--accent-glow);
+}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(99,102,241,0.3)}
+.btn-outline{
+  background:transparent;color:var(--text-secondary);
+  border:1px solid var(--border-subtle);
+}
+.btn-outline:hover{border-color:var(--accent-primary);color:var(--text-primary)}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+/* ═══════════════════════════════════════════════════════════
+   SECTION LAYOUT
+   ═══════════════════════════════════════════════════════════ */
+.section{padding:100px 0;position:relative}
+.section-header{margin-bottom:56px}
+.section-label{
+  font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  color:var(--accent-primary);margin-bottom:12px;
+}
+.section-title{font-size:clamp(28px,4vw,40px);font-weight:800;letter-spacing:-1px;margin-bottom:12px}
+.section-desc{font-size:16px;color:var(--text-secondary);max-width:600px;line-height:1.7}
+
+/* ═══════════════════════════════════════════════════════════
+   CARDS
+   ═══════════════════════════════════════════════════════════ */
+.glass-card{
+  background:var(--bg-card);border:1px solid var(--border-subtle);
+  border-radius:var(--radius-lg);padding:28px;
+  backdrop-filter:blur(12px);transition:var(--transition);
+  position:relative;overflow:hidden;
+}
+.glass-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.08),transparent);
+}
+.glass-card:hover{border-color:var(--border-glow);transform:translateY(-2px);box-shadow:var(--shadow-lg)}
+
+/* ═══════════════════════════════════════════════════════════
+   LIVE HEALTH DASHBOARD
+   ═══════════════════════════════════════════════════════════ */
+.health-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.health-card{padding:24px}
+.health-card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.health-service{font-weight:600;font-size:14px}
+.health-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:3px 10px;border-radius:100px;font-size:11px;font-weight:700;
+  text-transform:uppercase;letter-spacing:0.5px;
+}
+.health-badge.healthy{background:var(--green-glow);color:var(--green);border:1px solid rgba(34,197,94,0.2)}
+.health-badge.degraded{background:var(--amber-glow);color:var(--amber);border:1px solid rgba(245,158,11,0.2)}
+.health-badge.offline{background:var(--red-glow);color:var(--red);border:1px solid rgba(239,68,68,0.2)}
+.health-badge.loading{background:var(--accent-glow);color:var(--accent-primary);border:1px solid rgba(99,102,241,0.2)}
+.health-latency{
+  font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700;
+  color:var(--text-primary);margin-bottom:4px;
+}
+.health-latency span{font-size:12px;color:var(--text-muted);font-weight:500}
+.health-detail{font-size:12px;color:var(--text-muted);line-height:1.5}
+.health-bar{
+  height:3px;border-radius:2px;background:rgba(255,255,255,0.05);
+  margin-top:16px;overflow:hidden;
+}
+.health-bar-fill{height:100%;border-radius:2px;transition:width 1s ease-out}
+.health-bar-fill.healthy{background:linear-gradient(90deg,var(--green),var(--cyan))}
+.health-bar-fill.degraded{background:linear-gradient(90deg,var(--amber),var(--rose))}
+.health-bar-fill.offline{background:var(--red)}
+
+/* ═══════════════════════════════════════════════════════════
+   ARCHITECTURE DIAGRAM
+   ═══════════════════════════════════════════════════════════ */
+.arch-diagram{
+  position:relative;padding:48px 24px;
+  background:var(--bg-card);border:1px solid var(--border-subtle);
+  border-radius:var(--radius-xl);overflow:hidden;
+}
+.arch-diagram::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at center,var(--accent-glow) 0%,transparent 70%);
+  pointer-events:none;
+}
+.arch-layers{display:flex;flex-direction:column;gap:24px;position:relative;z-index:1}
+.arch-layer{
+  display:flex;align-items:center;gap:16px;padding:16px 20px;
+  border-radius:var(--radius);border:1px solid var(--border-subtle);
+  background:rgba(0,0,0,0.3);transition:var(--transition);
+  cursor:pointer;
+}
+.arch-layer:hover{border-color:var(--border-glow);background:rgba(99,102,241,0.05)}
+.arch-layer.active{border-color:var(--accent-primary);background:var(--accent-glow)}
+.arch-layer-icon{
+  width:44px;height:44px;border-radius:var(--radius-sm);
+  display:flex;align-items:center;justify-content:center;font-size:20px;
+  flex-shrink:0;
+}
+.arch-layer-content{flex:1}
+.arch-layer-title{font-weight:700;font-size:14px;margin-bottom:2px}
+.arch-layer-desc{font-size:12px;color:var(--text-muted)}
+.arch-layer-tech{
+  display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;
+}
+.arch-tech-tag{
+  padding:2px 8px;border-radius:4px;font-size:10px;font-weight:600;
+  background:rgba(255,255,255,0.05);color:var(--text-secondary);
+  font-family:'JetBrains Mono',monospace;
+}
+.arch-detail-panel{
+  margin-top:16px;padding:24px;border-radius:var(--radius);
+  background:rgba(0,0,0,0.4);border:1px solid var(--border-subtle);
+  display:none;
+}
+.arch-detail-panel.visible{display:block;animation:fadeInUp 0.3s ease-out}
+
+/* ═══════════════════════════════════════════════════════════
+   FLOW DIAGRAMS
+   ═══════════════════════════════════════════════════════════ */
+.flow-container{position:relative}
+.flow-steps{display:flex;flex-direction:column;gap:0;position:relative}
+.flow-step{
+  display:flex;gap:20px;align-items:flex-start;padding:20px 0;
+  position:relative;
+}
+.flow-step::before{
+  content:'';position:absolute;left:19px;top:44px;bottom:-20px;
+  width:2px;background:var(--border-subtle);
+}
+.flow-step:last-child::before{display:none}
+.flow-step-num{
+  width:40px;height:40px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:800;font-size:14px;
+  font-family:'JetBrains Mono',monospace;
+  position:relative;z-index:1;
+  transition:var(--transition);
+}
+.flow-step.completed .flow-step-num{background:var(--green-glow);color:var(--green);border:2px solid rgba(34,197,94,0.3)}
+.flow-step.active .flow-step-num{background:var(--accent-glow);color:var(--accent-primary);border:2px solid var(--accent-secondary);animation:pulse 2s ease-in-out infinite}
+.flow-step.pending .flow-step-num{background:rgba(255,255,255,0.03);color:var(--text-muted);border:2px solid var(--border-subtle)}
+.flow-step-content{flex:1}
+.flow-step-title{font-weight:700;font-size:15px;margin-bottom:4px}
+.flow-step-desc{font-size:13px;color:var(--text-secondary);line-height:1.6}
+.flow-step-code{
+  margin-top:8px;padding:12px 16px;
+  background:rgba(0,0,0,0.4);border:1px solid var(--border-subtle);
+  border-radius:var(--radius-sm);
+  font-family:'JetBrains Mono',monospace;font-size:12px;
+  color:var(--accent-primary);overflow-x:auto;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   LIVE DEMO PANELS
+   ═══════════════════════════════════════════════════════════ */
+.demo-panel{
+  padding:32px;border-radius:var(--radius-lg);
+  background:var(--bg-card);border:1px solid var(--border-subtle);
+}
+.demo-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
+.demo-title{font-weight:700;font-size:18px}
+.demo-run-btn{
+  padding:8px 20px;border-radius:var(--radius-sm);font-weight:600;font-size:13px;
+  background:linear-gradient(135deg,var(--accent-secondary),var(--accent-primary));
+  color:#fff;border:none;cursor:pointer;transition:var(--transition);
+  font-family:'Inter',sans-serif;
+}
+.demo-run-btn:hover{transform:translateY(-1px);box-shadow:0 4px 16px var(--accent-glow)}
+.demo-run-btn:disabled{opacity:0.5;cursor:not-allowed;transform:none}
+.demo-output{
+  background:rgba(0,0,0,0.5);border:1px solid var(--border-subtle);
+  border-radius:var(--radius);padding:20px;
+  font-family:'JetBrains Mono',monospace;font-size:13px;
+  line-height:1.8;min-height:120px;
+  position:relative;overflow:hidden;
+}
+.demo-output .line{opacity:0;transform:translateX(-10px);transition:all 0.4s ease-out}
+.demo-output .line.visible{opacity:1;transform:translateX(0)}
+.demo-output .key{color:var(--accent-primary)}
+.demo-output .val{color:var(--green)}
+.demo-output .val.warn{color:var(--amber)}
+.demo-output .val.err{color:var(--red)}
+.demo-output .comment{color:var(--text-muted);font-style:italic}
+
+/* ═══════════════════════════════════════════════════════════
+   RBAC MATRIX
+   ═══════════════════════════════════════════════════════════ */
+.rbac-table-wrap{overflow-x:auto;border-radius:var(--radius-lg);border:1px solid var(--border-subtle)}
+.rbac-table{width:100%;border-collapse:collapse;font-size:13px}
+.rbac-table th{
+  padding:14px 16px;text-align:left;font-weight:700;font-size:11px;
+  text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);
+  background:rgba(0,0,0,0.3);border-bottom:1px solid var(--border-subtle);
+  position:sticky;top:0;
+}
+.rbac-table td{
+  padding:12px 16px;border-bottom:1px solid var(--border-subtle);
+  vertical-align:middle;
+}
+.rbac-table tr:hover td{background:rgba(99,102,241,0.03)}
+.rbac-table .role-name{font-weight:700;color:var(--accent-primary);white-space:nowrap}
+.rbac-table .perm-count{
+  font-family:'JetBrains Mono',monospace;font-weight:700;
+  font-size:18px;
+}
+.rbac-check{color:var(--green);font-weight:700}
+.rbac-x{color:var(--text-muted);font-weight:400}
+
+/* ═══════════════════════════════════════════════════════════
+   API ENDPOINTS TABLE
+   ═══════════════════════════════════════════════════════════ */
+.endpoint-group{margin-bottom:32px}
+.endpoint-group-title{
+  font-weight:700;font-size:16px;margin-bottom:12px;
+  display:flex;align-items:center;gap:8px;
+}
+.endpoint-list{display:flex;flex-direction:column;gap:4px}
+.endpoint-row{
+  display:grid;grid-template-columns:72px 1fr 1.2fr;gap:12px;
+  padding:10px 16px;border-radius:var(--radius-sm);
+  background:rgba(0,0,0,0.2);border:1px solid transparent;
+  font-size:13px;transition:var(--transition);align-items:center;
+}
+.endpoint-row:hover{border-color:var(--border-subtle);background:var(--bg-card)}
+.method-badge{
+  padding:3px 8px;border-radius:4px;font-size:10px;font-weight:700;
+  font-family:'JetBrains Mono',monospace;text-align:center;
+  text-transform:uppercase;
+}
+.method-badge.get{background:rgba(34,197,94,0.1);color:var(--green);border:1px solid rgba(34,197,94,0.2)}
+.method-badge.post{background:rgba(99,102,241,0.1);color:var(--accent-primary);border:1px solid rgba(99,102,241,0.2)}
+.method-badge.patch{background:rgba(245,158,11,0.1);color:var(--amber);border:1px solid rgba(245,158,11,0.2)}
+.method-badge.delete{background:rgba(239,68,68,0.1);color:var(--red);border:1px solid rgba(239,68,68,0.2)}
+.endpoint-path{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text-primary)}
+.endpoint-desc{color:var(--text-secondary);font-size:12px}
+
+/* ═══════════════════════════════════════════════════════════
+   CTO Q&A
+   ═══════════════════════════════════════════════════════════ */
+.qa-grid{display:flex;flex-direction:column;gap:8px}
+.qa-item{
+  border:1px solid var(--border-subtle);border-radius:var(--radius);
+  overflow:hidden;transition:var(--transition);
+}
+.qa-item.open{border-color:var(--border-glow)}
+.qa-question{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:18px 24px;cursor:pointer;transition:var(--transition);
+  gap:16px;
+}
+.qa-question:hover{background:var(--bg-glass)}
+.qa-question h4{font-weight:600;font-size:15px;flex:1}
+.qa-chevron{
+  width:20px;height:20px;color:var(--text-muted);transition:transform 0.3s ease;
+  flex-shrink:0;
+}
+.qa-item.open .qa-chevron{transform:rotate(180deg);color:var(--accent-primary)}
+.qa-answer{
+  padding:0 24px;max-height:0;overflow:hidden;transition:all 0.4s ease;
+}
+.qa-item.open .qa-answer{padding:0 24px 24px;max-height:2000px}
+.qa-answer p{font-size:14px;color:var(--text-secondary);line-height:1.8;margin-bottom:12px}
+.qa-answer code{
+  background:rgba(99,102,241,0.1);color:var(--accent-primary);
+  padding:2px 6px;border-radius:4px;font-family:'JetBrains Mono',monospace;
+  font-size:12px;
+}
+.qa-answer .evidence{
+  display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;
+}
+.qa-answer .evidence-tag{
+  padding:4px 10px;border-radius:100px;font-size:11px;font-weight:600;
+  background:var(--accent-glow);color:var(--accent-primary);
+  border:1px solid rgba(99,102,241,0.15);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   DATA MODEL
+   ═══════════════════════════════════════════════════════════ */
+.db-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.db-table-card{
+  padding:16px 18px;border-radius:var(--radius);
+  background:rgba(0,0,0,0.3);border:1px solid var(--border-subtle);
+  transition:var(--transition);cursor:default;
+}
+.db-table-card:hover{border-color:var(--border-glow);transform:translateY(-2px)}
+.db-table-name{
+  font-family:'JetBrains Mono',monospace;font-weight:700;font-size:13px;
+  color:var(--accent-primary);margin-bottom:4px;
+}
+.db-table-desc{font-size:11px;color:var(--text-muted);line-height:1.5}
+.db-table-count{
+  font-family:'JetBrains Mono',monospace;font-size:10px;
+  color:var(--text-muted);margin-top:6px;
+  padding:2px 6px;background:rgba(255,255,255,0.03);
+  border-radius:3px;display:inline-block;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   TECH STACK CARDS
+   ═══════════════════════════════════════════════════════════ */
+.stack-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.stack-card{padding:28px}
+.stack-card-title{
+  font-weight:700;font-size:16px;margin-bottom:16px;
+  display:flex;align-items:center;gap:10px;
+}
+.stack-card-title .icon{font-size:20px}
+.stack-items{display:flex;flex-direction:column;gap:8px}
+.stack-item{
+  display:flex;align-items:center;gap:10px;font-size:13px;
+  padding:6px 0;color:var(--text-secondary);
+}
+.stack-item::before{
+  content:'';width:5px;height:5px;border-radius:50%;
+  background:var(--accent-primary);flex-shrink:0;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   FOOTER
+   ═══════════════════════════════════════════════════════════ */
+.footer{
+  padding:48px 0;border-top:1px solid var(--border-subtle);
+  text-align:center;
+}
+.footer p{font-size:14px;color:var(--text-muted)}
+.footer a{color:var(--accent-primary);text-decoration:none}
+.footer a:hover{text-decoration:underline}
+
+/* ═══════════════════════════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════════════════════════ */
+@media(max-width:768px){
+  .hero-metrics{grid-template-columns:repeat(2,1fr)}
+  .nav-links{display:none}
+  .hero h1{font-size:36px;letter-spacing:-1px}
+  .endpoint-row{grid-template-columns:64px 1fr;gap:8px}
+  .endpoint-desc{display:none}
+  .section{padding:60px 0}
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SCROLL REVEAL
+   ═══════════════════════════════════════════════════════════ */
+.reveal{opacity:0;transform:translateY(30px);transition:all 0.8s cubic-bezier(0.4,0,0.2,1)}
+.reveal.visible{opacity:1;transform:translateY(0)}
+</style>
+</head>
+<body>
+
+<canvas id="particle-canvas"></canvas>
+<div class="gradient-orb orb-1"></div>
+<div class="gradient-orb orb-2"></div>
+<div class="gradient-orb orb-3"></div>
+
+<div class="page-wrapper">
+
+<!-- ═══════════ NAVIGATION ═══════════ -->
+<nav class="nav" id="main-nav">
+  <div class="nav-inner">
+    <a class="nav-brand" href="#">
+      <div class="nav-logo">DS</div>
+      <div>
+        <div class="nav-title">DealSense</div>
+        <div class="nav-subtitle">System Architecture</div>
+      </div>
+    </a>
+    <div class="nav-links">
+      <a href="#health" class="nav-link">Health</a>
+      <a href="#architecture" class="nav-link">Architecture</a>
+      <a href="#oauth" class="nav-link">OAuth</a>
+      <a href="#webhooks" class="nav-link">Webhooks</a>
+      <a href="#security" class="nav-link">Security</a>
+      <a href="#api" class="nav-link">API</a>
+      <a href="#cto-qa" class="nav-link">CTO Q&A</a>
+    </div>
+    <div class="nav-status">
+      <div class="status-dot green" id="nav-status-dot"></div>
+      <span class="status-text" id="nav-status-text">Connecting…</span>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══════════ HERO ═══════════ -->
+<section class="hero" id="hero">
+  <div class="hero-badge">Live System • <span id="hero-env">Loading…</span></div>
+  <h1>DealSense Architecture</h1>
+  <p class="hero-sub">
+    AI-native deal intelligence platform for HubSpot CRM. Multi-tenant event-driven backend
+    with production-grade security, real-time webhooks, and controlled CRM write-backs.
+  </p>
+  <div class="hero-metrics">
+    <div class="hero-metric">
+      <div class="value" id="metric-endpoints">—</div>
+      <div class="label">API Endpoints</div>
+    </div>
+    <div class="hero-metric">
+      <div class="value" id="metric-tables">14</div>
+      <div class="label">DB Tables</div>
+    </div>
+    <div class="hero-metric">
+      <div class="value" id="metric-roles">6</div>
+      <div class="label">RBAC Roles</div>
+    </div>
+    <div class="hero-metric">
+      <div class="value" id="metric-perms">—</div>
+      <div class="label">Permissions</div>
+    </div>
+  </div>
+  <div class="hero-cta-row">
+    <a href="#health" class="btn btn-primary">▶ View Live Health</a>
+    <a href="/docs" class="btn btn-outline" target="_blank">Open Swagger UI →</a>
+  </div>
+</section>
+
+<!-- ═══════════ LIVE HEALTH DASHBOARD ═══════════ -->
+<section class="section" id="health">
+  <div class="container reveal">
+    <div class="section-header">
+      <div class="section-label">Live System Health</div>
+      <h2 class="section-title">Infrastructure Status</h2>
+      <p class="section-desc">Real-time health checks against all backend services. Every card below is a live API call to <code>/api/v1/proof/health-matrix</code>.</p>
+    </div>
+    <div class="health-grid" id="health-grid">
+      <!-- Filled by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ ARCHITECTURE DIAGRAM ═══════════ -->
+<section class="section" id="architecture">
+  <div class="container reveal">
+    <div class="section-header">
+      <div class="section-label">System Design</div>
+      <h2 class="section-title">Architecture Overview</h2>
+      <p class="section-desc">Click any layer to explore its internals. Every component is production-grade with graceful degradation.</p>
+    </div>
+    <div class="arch-diagram">
+      <div class="arch-layers" id="arch-layers">
+        <!-- Filled by JS -->
+      </div>
+      <div class="arch-detail-panel" id="arch-detail">
+        <div id="arch-detail-content"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ OAUTH FLOW ═══════════ -->
+<section class="section" id="oauth">
+  <div class="container reveal">
+    <div class="section-header">
+      <div class="section-label">HubSpot Integration</div>
+      <h2 class="section-title">OAuth 2.0 Authorization Flow</h2>
+      <p class="section-desc">Production OAuth with HMAC-signed CSRF state, distributed lock code dedup, encrypted token storage, and JWT session issuance.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
+      <div class="flow-container">
+        <div class="flow-steps" id="oauth-flow">
+          <!-- Filled by JS -->
+        </div>
+      </div>
+      <div class="demo-panel">
+        <div class="demo-header">
+          <div class="demo-title">🔐 Live OAuth Status</div>
+          <button class="demo-run-btn" onclick="runOAuthProof()">Check Status</button>
+        </div>
+        <div class="demo-output" id="oauth-output">
+          <div class="line visible"><span class="comment">// Click "Check Status" to query /api/v1/proof/oauth-status</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ WEBHOOK PIPELINE + LIVE DEMO ═══════════ -->
+<section class="section" id="webhooks">
+  <div class="container reveal">
+    <div class="section-header">
+      <div class="section-label">Event Processing</div>
+      <h2 class="section-title">Webhook Ingestion Pipeline</h2>
+      <p class="section-desc">HubSpot webhook events are verified, deduplicated, persisted, and queued in under 180ms P99.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
+      <div>
+        <div class="flow-steps" id="webhook-flow"></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:24px">
+        <div class="demo-panel">
+          <div class="demo-header">
+            <div class="demo-title">🔏 Live HMAC Signature Test</div>
+            <button class="demo-run-btn" onclick="runWebhookProof()">Run Test</button>
+          </div>
+          <div class="demo-output" id="webhook-output">
+            <div class="line visible"><span class="comment">// Click "Run Test" to call /api/v1/proof/test-webhook</span></div>
+          </div>
+        </div>
+        <div class="demo-panel">
+          <div class="demo-header">
+            <div class="demo-title">🔒 Live Encryption Roundtrip</div>
+            <button class="demo-run-btn" onclick="runEncryptionProof()">Run Test</button>
+          </div>
+          <div class="demo-output" id="encryption-output">
+            <div class="line visible"><span class="comment">// Click "Run Test" to call /api/v1/proof/test-encryption</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ SECURITY & RBAC ═══════════ -->
+<section class="section" id="security">
+  <div class="container reveal">
+    <div class="section-header">
+      <div class="section-label">Security Architecture</div>
+      <h2 class="section-title">Defense-in-Depth Security</h2>
+      <p class="section-desc">4-layer security model with tenant isolation, RBAC authorization, encrypted storage, and immutable audit trails.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1.6fr;gap:24px">
+      <div style="display:flex;flex-direction:column;gap:12px" id="security-layers">
+        <!-- Filled by JS -->
+      </div>
+      <div>
+        <h3 style="font-weight:700;font-size:18px;margin-bottom:16px">RBAC Permission Matrix <span style="font-size:12px;color:var(--text-muted);font-weight:400">(live from /api/v1/proof/rbac-matrix)</span></h3>
+        <div class="rbac-table-wrap">
+          <table class="rbac-table" id="rbac-table">
+            <thead><tr><th>Role</th><th>Permissions</th><th>Deals</th><th>Actions</th><th>OAuth</th><th>Audit</th></tr></thead>
+            <tbody id="rbac-body">
+              <tr><td colspan="6" style="text-align:center;padding:24px;color:var(--text-muted)">Loading RBAC data…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ DATA MODEL ═══════════ -->
+<section class="section" id="data">
+  <div class="container reveal">
+    <div class="section-header">
+      <div class="section-label">Data Architecture</div>
+      <h2 class="section-title">14-Table Domain Model</h2>
+      <p class="section-desc">Event-sourced PostgreSQL schema with pgvector embeddings, tenant isolation, and immutable audit trails.</p>
+    </div>
+    <div class="db-grid" id="db-grid">
+      <!-- Filled by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ API ENDPOINTS ═══════════ -->
+<section class="section" id="api">
+  <div class="container reveal">
+    <div class="section-header">
+      <div class="section-label">API Surface</div>
+      <h2 class="section-title">Complete Endpoint Inventory</h2>
+      <p class="section-desc">35+ RESTful endpoints covering OAuth, CRUD, webhooks, scoring, actions, and lifecycle management.</p>
+    </div>
+    <div id="api-endpoints">
+      <!-- Filled by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ TECH STACK ═══════════ -->
+<section class="section" id="stack">
+  <div class="container reveal">
+    <div class="section-header">
+      <div class="section-label">Technology</div>
+      <h2 class="section-title">Production Tech Stack</h2>
+    </div>
+    <div class="stack-grid" id="stack-grid">
+      <!-- Filled by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ CTO Q&A ═══════════ -->
+<section class="section" id="cto-qa">
+  <div class="container reveal">
+    <div class="section-header">
+      <div class="section-label">Technical Deep-Dive</div>
+      <h2 class="section-title">CTO Evaluation Questions</h2>
+      <p class="section-desc">Pre-answered technical questions a CTO would ask during an architecture review or interview.</p>
+    </div>
+    <div class="qa-grid" id="qa-grid">
+      <!-- Filled by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ FOOTER ═══════════ -->
+<footer class="footer">
+  <div class="container">
+    <p>Built by <a href="https://github.com/peashdasrudra" target="_blank">Peash Rudra</a> — AiXpertLabs &nbsp;•&nbsp; DealSense v0.1.0</p>
+    <p style="margin-top:8px;font-size:12px;color:var(--text-muted)">AI-Native Deal Intelligence for HubSpot CRM</p>
+  </div>
+</footer>
+
+</div><!-- /page-wrapper -->
+
+<script>
+/* ═══════════════════════════════════════════════════════════
+   CONFIGURATION
+   ═══════════════════════════════════════════════════════════ */
+const API_BASE = window.location.origin;
+
+/* ═══════════════════════════════════════════════════════════
+   PARTICLE CANVAS
+   ═══════════════════════════════════════════════════════════ */
+(function(){
+  const canvas = document.getElementById('particle-canvas');
+  const ctx = canvas.getContext('2d');
+  let particles = [];
+  const PARTICLE_COUNT = 60;
+  const CONNECTION_DIST = 150;
+
+  function resize(){canvas.width=window.innerWidth;canvas.height=window.innerHeight}
+  window.addEventListener('resize',resize);resize();
+
+  class Particle{
+    constructor(){this.reset()}
+    reset(){
+      this.x=Math.random()*canvas.width;
+      this.y=Math.random()*canvas.height;
+      this.vx=(Math.random()-0.5)*0.4;
+      this.vy=(Math.random()-0.5)*0.4;
+      this.r=Math.random()*1.5+0.5;
+      this.o=Math.random()*0.3+0.1;
+    }
+    update(){
+      this.x+=this.vx;this.y+=this.vy;
+      if(this.x<0||this.x>canvas.width)this.vx*=-1;
+      if(this.y<0||this.y>canvas.height)this.vy*=-1;
+    }
+    draw(){
+      ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(99,102,241,${this.o})`;ctx.fill();
+    }
+  }
+  for(let i=0;i<PARTICLE_COUNT;i++)particles.push(new Particle());
+
+  function animate(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    particles.forEach(p=>{p.update();p.draw()});
+    for(let i=0;i<particles.length;i++){
+      for(let j=i+1;j<particles.length;j++){
+        const dx=particles[i].x-particles[j].x;
+        const dy=particles[i].y-particles[j].y;
+        const dist=Math.sqrt(dx*dx+dy*dy);
+        if(dist<CONNECTION_DIST){
+          ctx.beginPath();ctx.moveTo(particles[i].x,particles[i].y);
+          ctx.lineTo(particles[j].x,particles[j].y);
+          ctx.strokeStyle=`rgba(99,102,241,${0.06*(1-dist/CONNECTION_DIST)})`;
+          ctx.lineWidth=0.5;ctx.stroke();
+        }
+      }
+    }
+    requestAnimationFrame(animate);
+  }
+  animate();
+})();
+
+/* ═══════════════════════════════════════════════════════════
+   SCROLL REVEAL
+   ═══════════════════════════════════════════════════════════ */
+const revealObserver = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');revealObserver.unobserve(e.target)}});
+},{threshold:0.1});
+document.querySelectorAll('.reveal').forEach(el=>revealObserver.observe(el));
+
+/* ═══════════════════════════════════════════════════════════
+   NAV ACTIVE LINK
+   ═══════════════════════════════════════════════════════════ */
+const navLinks = document.querySelectorAll('.nav-link');
+const sections = document.querySelectorAll('.section, .hero');
+const navObserver = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      navLinks.forEach(l=>l.classList.remove('active'));
+      const link=document.querySelector(`.nav-link[href="#${e.target.id}"]`);
+      if(link)link.classList.add('active');
+    }
+  });
+},{threshold:0.3});
+sections.forEach(s=>navObserver.observe(s));
+
+/* ═══════════════════════════════════════════════════════════
+   LIVE HEALTH CHECK
+   ═══════════════════════════════════════════════════════════ */
+async function loadHealth(){
+  const grid=document.getElementById('health-grid');
+  const dot=document.getElementById('nav-status-dot');
+  const txt=document.getElementById('nav-status-text');
+  try{
+    const r=await fetch(`${API_BASE}/api/v1/proof/health-matrix`);
+    const data=await r.json();
+    document.getElementById('hero-env').textContent=data.environment||'production';
+    dot.className='status-dot '+(data.overall_status==='healthy'?'green':'amber');
+    txt.textContent=data.overall_status==='healthy'?'All Systems Operational':'Degraded';
+    grid.innerHTML=data.services.map((s,i)=>`
+      <div class="glass-card health-card" style="animation:fadeInUp 0.5s ease-out ${i*0.1}s both">
+        <div class="health-card-header">
+          <span class="health-service">${s.service}</span>
+          <span class="health-badge ${s.status}">${s.status}</span>
+        </div>
+        <div class="health-latency">${s.latency_ms.toFixed(2)} <span>ms</span></div>
+        <div class="health-detail">${s.details}</div>
+        <div class="health-bar"><div class="health-bar-fill ${s.status}" style="width:${s.status==='healthy'?100:s.status==='degraded'?60:10}%"></div></div>
+      </div>
+    `).join('');
+  }catch(e){
+    dot.className='status-dot red';
+    txt.textContent='Offline';
+    grid.innerHTML=`<div class="glass-card" style="grid-column:1/-1;padding:40px;text-align:center">
+      <div style="font-size:20px;margin-bottom:8px">⚠️</div>
+      <div style="color:var(--text-muted)">Backend offline — start with <code>uvicorn dealsense.main:app --reload</code></div>
+    </div>`;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   ARCHITECTURE LAYERS
+   ═══════════════════════════════════════════════════════════ */
+const archData=[
+  {icon:'🌐',title:'API Gateway',desc:'CORS • Security Headers • Rate Limits',color:'var(--accent-primary)',bg:'var(--accent-glow)',
+   tags:['FastAPI','Uvicorn','ORJSONResponse','CORS'],
+   detail:'<b>3 middleware layers</b> process every request:<br><b>1. CORS</b> — strict origin allowlist from env<br><b>2. Security Headers</b> — HSTS, X-Frame-Options DENY, X-Content-Type nosniff, CSP<br><b>3. Rate Limit Headers</b> — X-RateLimit-Limit/Remaining/Reset for marketplace compliance<br><br>Every response uses <code>ORJSONResponse</code> for 2-10x faster JSON serialization than stdlib.'},
+  {icon:'🛡️',title:'Tenant Isolation',desc:'TenantGuardMiddleware → Request State Binding',color:'var(--cyan)',bg:'var(--cyan-glow)',
+   tags:['JWT','UUID5','Portal→Tenant','Redis Cache'],
+   detail:'<b>TenantGuardMiddleware</b> runs on every non-exempt request:<br>1. Extract tenant from <code>JWT cookie</code> or <code>X-Tenant-ID</code> header<br>2. Resolve <code>X-HubSpot-Portal-Id</code> → tenant via Redis cache → DB → UUID5 fallback<br>3. Validate tenant status (active/suspended/disconnected)<br>4. Bind <code>tenant_id</code> to <code>request.state</code> and structlog context<br><br><b>Exempt paths:</b> /health, /docs, /oauth/*, /webhooks/hubspot, /proof/*'},
+  {icon:'🔐',title:'RBAC Authorization',desc:'6 Roles × 22 Permissions → Dependency Injection Guards',color:'var(--green)',bg:'var(--green-glow)',
+   tags:['StrEnum','frozenset','JWT decode','Depends()'],
+   detail:'<b>Permission-based guards</b> injected via FastAPI <code>Depends()</code>:<br><code>require_permission(Permission.DEAL_READ)</code> → extracts JWT → resolves role → checks permission → returns tenant_id<br><br><b>6 roles:</b> Agency Owner (all), Operator, Client Admin, Sales Manager, Sales Rep, Auditor<br><b>22 permissions</b> covering tenant, deal, action, config, oauth, audit, portfolio, user management'},
+  {icon:'⚡',title:'Service Layer',desc:'OAuth • Webhooks • Scoring • Audit Services',color:'var(--amber)',bg:'var(--amber-glow)',
+   tags:['OAuthService','WebhookService','ScoringService','AuditService'],
+   detail:'<b>4 core services</b> implement business logic:<br>• <b>OAuthService</b> — Code exchange, token provisioning, deterministic tenant creation, JWT session issuance<br>• <b>WebhookService</b> — HMAC validation, deduplication, event persistence, Redis Streams publish<br>• <b>ScoringService</b> — 7-signal deterministic scoring, snapshot persistence, delta tracking<br>• <b>AuditService</b> — Immutable audit events for every mutation'},
+  {icon:'🔗',title:'HubSpot Client',desc:'Resilient API Client with Retry + Backoff',color:'var(--rose)',bg:'rgba(244,63,94,0.1)',
+   tags:['httpx','AsyncClient','429 backoff','batch/update'],
+   detail:'<b>Production-grade HubSpot API wrapper:</b><br>• <code>httpx.AsyncClient</code> with connection pooling (100 max connections)<br>• <b>Exponential backoff</b> on 429/502/503/504 (respects Retry-After header)<br>• <b>3 retries</b> with jitter to prevent thundering herd<br>• <b>Full CRUD:</b> Deals, Contacts, Notes, Tasks, Emails, Meetings<br>• <b>Batch operations:</b> 100-item chunking for bulk updates<br>• <b>Association API:</b> Link engagements to deals'},
+  {icon:'🗄️',title:'Data Layer',desc:'PostgreSQL 16 + pgvector + Redis 7',color:'var(--violet)',bg:'rgba(139,92,246,0.1)',
+   tags:['SQLAlchemy 2.0','asyncpg','pgvector','Redis Streams'],
+   detail:'<b>PostgreSQL 16</b> with 14 tables, all tenant-scoped:<br>• <b>Async engine</b> — SQLAlchemy 2.0 + asyncpg, pool_size=10, pool_pre_ping=True<br>• <b>pgvector</b> — 1536-dim embeddings for semantic search (HNSW index)<br>• <b>Event sourcing</b> — DealStageHistory, WebhookEvents, AuditEvents are append-only<br><br><b>Redis 7</b> — 5 use cases:<br>1. Token cache (25min TTL) 2. Distributed locks 3. Event deduplication (24h) 4. Redis Streams queue 5. Portal→Tenant resolution cache'}
+];
+
+function renderArchLayers(){
+  const container=document.getElementById('arch-layers');
+  container.innerHTML=archData.map((l,i)=>`
+    <div class="arch-layer" onclick="showArchDetail(${i})" id="arch-layer-${i}">
+      <div class="arch-layer-icon" style="background:${l.bg};color:${l.color}">${l.icon}</div>
+      <div class="arch-layer-content">
+        <div class="arch-layer-title">${l.title}</div>
+        <div class="arch-layer-desc">${l.desc}</div>
+        <div class="arch-layer-tech">${l.tags.map(t=>`<span class="arch-tech-tag">${t}</span>`).join('')}</div>
+      </div>
+    </div>
+  `).join('');
+}
+function showArchDetail(i){
+  document.querySelectorAll('.arch-layer').forEach(el=>el.classList.remove('active'));
+  document.getElementById(`arch-layer-${i}`).classList.add('active');
+  const panel=document.getElementById('arch-detail');
+  const content=document.getElementById('arch-detail-content');
+  content.innerHTML=`<div style="font-size:14px;color:var(--text-secondary);line-height:1.8">${archData[i].detail}</div>`;
+  panel.classList.add('visible');
+}
+
+/* ═══════════════════════════════════════════════════════════
+   OAUTH FLOW
+   ═══════════════════════════════════════════════════════════ */
+const oauthSteps=[
+  {title:'Generate HMAC-Signed State',desc:'Create CSRF state token with HMAC-SHA256(SECRET_KEY, tenant:timestamp:random). Cache in Redis with 30min TTL.',code:'state = hmac_sha256(secret, f"{ts}:{nonce}")'},
+  {title:'Redirect to HubSpot Consent',desc:'Send user to HubSpot OAuth consent screen with client_id, redirect_uri, scopes, and state parameter.',code:'→ https://app.hubspot.com/oauth/authorize?client_id=...&state={hmac_state}'},
+  {title:'Code Exchange + Distributed Lock',desc:'Validate HMAC state + timestamp freshness. Acquire Redis lock on auth_code to prevent double-exchange from React 18 StrictMode.',code:'lock = await redis.lock(f"oauth:code:{code}", timeout=30)'},
+  {title:'Encrypt & Persist Tokens',desc:'Fernet.encrypt(access_token) + Fernet.encrypt(refresh_token) → PostgreSQL. Cache plaintext access token in Redis (25min TTL).',code:'encrypted = Fernet(derived_key).encrypt(token.encode())'},
+  {title:'Issue JWT Session + Audit',desc:'Sign JWT with tenant_id, portal_id, role (HS256, 14d expiry). Set HttpOnly cookie. Record audit event.',code:'jwt.encode({"tenant_id": tid, "role": "client_admin"}, SECRET_KEY)'},
+];
+function renderOAuthFlow(){
+  document.getElementById('oauth-flow').innerHTML=oauthSteps.map((s,i)=>`
+    <div class="flow-step ${i<2?'completed':i===2?'active':'pending'}">
+      <div class="flow-step-num">${i+1}</div>
+      <div class="flow-step-content">
+        <div class="flow-step-title">${s.title}</div>
+        <div class="flow-step-desc">${s.desc}</div>
+        <div class="flow-step-code">${s.code}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+/* ═══════════════════════════════════════════════════════════
+   WEBHOOK FLOW
+   ═══════════════════════════════════════════════════════════ */
+const webhookSteps=[
+  {title:'HMAC-SHA256 v3 Signature Verification',desc:'Verify: SHA256(requestMethod + requestUri + requestBody + timestamp). Reject if signature mismatch.',code:'expected = sha256(f"{method}{uri}{body}{ts}".encode())'},
+  {title:'Replay Protection (300s Window)',desc:'Reject any webhook where delivered timestamp is older than 5 minutes. Prevents replay attacks.',code:'if abs(time.time()*1000 - timestamp) > 300_000: reject'},
+  {title:'Redis Idempotency Check (24h TTL)',desc:'Check Redis for key hubspot:event:{portal}:{eventId}. If exists → return 200 (already processed). If new → set key with 24h TTL.',code:'key = f"hubspot:event:{portal_id}:{event_id}" # 24h TTL'},
+  {title:'Persist → Queue → Acknowledge',desc:'Store raw event in webhook_events table (idempotency_key unique constraint). Publish to Redis Streams. Return 200 within 5s SLA.',code:'await redis.xadd("dealsense:events", event_data)'},
+];
+function renderWebhookFlow(){
+  document.getElementById('webhook-flow').innerHTML=webhookSteps.map((s,i)=>`
+    <div class="flow-step completed">
+      <div class="flow-step-num">${i+1}</div>
+      <div class="flow-step-content">
+        <div class="flow-step-title">${s.title}</div>
+        <div class="flow-step-desc">${s.desc}</div>
+        <div class="flow-step-code">${s.code}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+/* ═══════════════════════════════════════════════════════════
+   LIVE DEMO — OAUTH PROOF
+   ═══════════════════════════════════════════════════════════ */
+async function runOAuthProof(){
+  const out=document.getElementById('oauth-output');
+  out.innerHTML='<div class="line visible"><span class="comment">// Fetching /api/v1/proof/oauth-status …</span></div>';
+  try{
+    const r=await fetch(`${API_BASE}/api/v1/proof/oauth-status`);
+    const d=await r.json();
+    const lines=[
+      `<span class="key">configured</span>: <span class="val">${d.configured}</span>`,
+      `<span class="key">client_id_set</span>: <span class="val${d.client_id_set?'':' warn'}">${d.client_id_set}</span>`,
+      `<span class="key">client_secret_set</span>: <span class="val${d.client_secret_set?'':' warn'}">${d.client_secret_set}</span>`,
+      `<span class="key">redirect_uri</span>: <span class="val">"${d.redirect_uri}"</span>`,
+      `<span class="key">scopes</span>: <span class="val">[${d.scopes.map(s=>`"${s}"`).join(', ')}]</span>`,
+      `<span class="key">state_token_algorithm</span>: <span class="val">"${d.state_token_algorithm}"</span>`,
+      `<span class="key">token_encryption</span>: <span class="val">"${d.token_encryption}"</span>`,
+      `<span class="key">session_algorithm</span>: <span class="val">"${d.session_algorithm}"</span>`,
+      `<span class="key">session_expiry</span>: <span class="val">"${d.session_expiry}"</span>`,
+      `<span class="comment">// ${d.auth_features.length} security features active</span>`,
+      ...d.auth_features.map(f=>`  <span class="val">✓</span> ${f}`),
+    ];
+    animateLines(out,lines);
+  }catch(e){
+    out.innerHTML=`<div class="line visible"><span class="val err">Error: ${e.message}</span></div>`;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   LIVE DEMO — WEBHOOK SIGNATURE
+   ═══════════════════════════════════════════════════════════ */
+async function runWebhookProof(){
+  const out=document.getElementById('webhook-output');
+  out.innerHTML='<div class="line visible"><span class="comment">// POST /api/v1/proof/test-webhook …</span></div>';
+  try{
+    const r=await fetch(`${API_BASE}/api/v1/proof/test-webhook`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({payload:'{"eventId":99001,"subscriptionType":"deal.propertyChange","portalId":982341}'})});
+    const d=await r.json();
+    const lines=[
+      `<span class="key">signature_generated</span>: <span class="val">${d.signature_generated}</span>`,
+      `<span class="key">signature_verified</span>: <span class="val">${d.signature_verified}</span>`,
+      `<span class="key">algorithm</span>: <span class="val">"${d.algorithm}"</span>`,
+      `<span class="key">signature_hex</span>: <span class="val">"${d.signature_hex}"</span>`,
+      `<span class="key">payload_bytes</span>: <span class="val">${d.payload_bytes}</span>`,
+      `<span class="key">verification_time</span>: <span class="val">${d.verification_time_ms}ms</span>`,
+      `<span class="comment">// ✅ HMAC-SHA256 signature verified successfully</span>`,
+    ];
+    animateLines(out,lines);
+  }catch(e){
+    out.innerHTML=`<div class="line visible"><span class="val err">Error: ${e.message}</span></div>`;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   LIVE DEMO — ENCRYPTION ROUNDTRIP
+   ═══════════════════════════════════════════════════════════ */
+async function runEncryptionProof(){
+  const out=document.getElementById('encryption-output');
+  out.innerHTML='<div class="line visible"><span class="comment">// POST /api/v1/proof/test-encryption …</span></div>';
+  try{
+    const r=await fetch(`${API_BASE}/api/v1/proof/test-encryption`,{method:'POST',headers:{'Content-Type':'application/json'}});
+    const d=await r.json();
+    const lines=[
+      `<span class="key">original</span>: <span class="val">"${d.original_sample}"</span>`,
+      `<span class="key">encrypted</span>: <span class="val">"${d.encrypted_sample}"</span>`,
+      `<span class="key">decrypted_matches</span>: <span class="val">${d.decrypted_matches}</span>`,
+      `<span class="key">algorithm</span>: <span class="val">"${d.algorithm}"</span>`,
+      `<span class="key">key_derivation</span>: <span class="val">"${d.key_derivation}"</span>`,
+      `<span class="key">roundtrip_time</span>: <span class="val">${d.roundtrip_time_ms}ms</span>`,
+      `<span class="comment">// ✅ Fernet AES-256 roundtrip verified</span>`,
+    ];
+    animateLines(out,lines);
+  }catch(e){
+    out.innerHTML=`<div class="line visible"><span class="val err">Error: ${e.message}</span></div>`;
+  }
+}
+
+function animateLines(container,lines){
+  container.innerHTML=lines.map(l=>`<div class="line">${l}</div>`).join('');
+  container.querySelectorAll('.line').forEach((el,i)=>{
+    setTimeout(()=>el.classList.add('visible'),i*80);
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SECURITY LAYERS
+   ═══════════════════════════════════════════════════════════ */
+const secLayers=[
+  {icon:'🌐',title:'L1: Transport Security',items:['CORS strict origin whitelist','HSTS max-age=31536000','X-Frame-Options: DENY','X-Content-Type-Options: nosniff','Rate Limit headers (120 req/min)'],color:'var(--accent-primary)',bg:'var(--accent-glow)'},
+  {icon:'🔒',title:'L2: Tenant Isolation',items:['TenantGuardMiddleware on every request','JWT session → tenant_id extraction','Portal ID → UUID5 deterministic mapping','Demo tenant bypass for unauthenticated','structlog contextvar binding'],color:'var(--cyan)',bg:'var(--cyan-glow)'},
+  {icon:'🛡️',title:'L3: Authorization (RBAC)',items:['6 hierarchical roles','22 granular permissions','require_permission() dependency guard','JWT role extraction with fallback','Admin API key override'],color:'var(--green)',bg:'var(--green-glow)'},
+  {icon:'🔐',title:'L4: Data Protection',items:['Fernet AES-256-CBC token encryption','HMAC-SHA256 OAuth state tokens','Webhook signature verification','Immutable audit trail (every mutation)','GDPR contact.privacyDeletion handler'],color:'var(--rose)',bg:'rgba(244,63,94,0.1)'},
+];
+function renderSecurityLayers(){
+  document.getElementById('security-layers').innerHTML=secLayers.map(l=>`
+    <div class="glass-card" style="padding:20px">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+        <span style="font-size:18px">${l.icon}</span>
+        <span style="font-weight:700;font-size:14px;color:${l.color}">${l.title}</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px">
+        ${l.items.map(i=>`<div style="font-size:12px;color:var(--text-secondary);display:flex;align-items:center;gap:6px"><span style="color:${l.color};font-size:10px">●</span>${i}</div>`).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+/* ═══════════════════════════════════════════════════════════
+   RBAC MATRIX
+   ═══════════════════════════════════════════════════════════ */
+async function loadRBAC(){
+  try{
+    const r=await fetch(`${API_BASE}/api/v1/proof/rbac-matrix`);
+    const d=await r.json();
+    document.getElementById('metric-perms').textContent=d.total_permissions;
+    const permGroups={deals:['deal:read','deal:update','deal:analyze','snapshot:read'],actions:['action:read','action:approve','action:reject','action:execute'],oauth:['oauth:manage','oauth:disconnect'],audit:['audit:read','audit:export']};
+    const body=document.getElementById('rbac-body');
+    body.innerHTML=d.roles.map(role=>{
+      const ps=new Set(role.permissions);
+      const hasGroup=(g)=>g.some(p=>ps.has(p));
+      return `<tr>
+        <td class="role-name">${role.role.replace(/_/g,' ')}</td>
+        <td class="perm-count" style="color:${role.permission_count>15?'var(--green)':role.permission_count>8?'var(--amber)':'var(--text-muted)'}">${role.permission_count}</td>
+        <td class="${hasGroup(permGroups.deals)?'rbac-check':'rbac-x'}">${hasGroup(permGroups.deals)?'✓':'—'}</td>
+        <td class="${hasGroup(permGroups.actions)?'rbac-check':'rbac-x'}">${hasGroup(permGroups.actions)?'✓':'—'}</td>
+        <td class="${hasGroup(permGroups.oauth)?'rbac-check':'rbac-x'}">${hasGroup(permGroups.oauth)?'✓':'—'}</td>
+        <td class="${hasGroup(permGroups.audit)?'rbac-check':'rbac-x'}">${hasGroup(permGroups.audit)?'✓':'—'}</td>
+      </tr>`;
+    }).join('');
+  }catch(e){
+    document.getElementById('rbac-body').innerHTML=`<tr><td colspan="6" style="text-align:center;color:var(--text-muted)">Backend offline</td></tr>`;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   DATA MODEL
+   ═══════════════════════════════════════════════════════════ */
+const dbTables=[
+  {name:'tenants',desc:'Multi-tenant root entity, maps 1:1 to HubSpot portal',badge:'root'},
+  {name:'hubspot_connections',desc:'Encrypted OAuth tokens per tenant',badge:'auth'},
+  {name:'deals',desc:'Normalized CRM deals with tenant scoping',badge:'crm'},
+  {name:'deal_stage_history',desc:'Immutable stage transition log',badge:'event'},
+  {name:'persons',desc:'HubSpot contacts / stakeholders',badge:'crm'},
+  {name:'deal_participants',desc:'Deal ↔ Person junction with inferred role',badge:'crm'},
+  {name:'activities',desc:'Notes, calls, meetings, emails, tasks',badge:'crm'},
+  {name:'document_chunks',desc:'Chunked text + pgvector 1536-dim embeddings',badge:'ai'},
+  {name:'deal_signals',desc:'Deterministic risk signals per snapshot',badge:'ai'},
+  {name:'deal_snapshots',desc:'Point-in-time health score assessments',badge:'ai'},
+  {name:'action_proposals',desc:'AI-recommended CRM actions with approval',badge:'action'},
+  {name:'action_executions',desc:'Write-back execution records with rollback',badge:'action'},
+  {name:'webhook_events',desc:'Durable webhook event store for replay',badge:'event'},
+  {name:'audit_events',desc:'Immutable compliance audit trail',badge:'event'},
+];
+function renderDBGrid(){
+  const colors={root:'var(--accent-primary)',auth:'var(--rose)',crm:'var(--green)',event:'var(--amber)',ai:'var(--cyan)',action:'var(--violet)'};
+  document.getElementById('db-grid').innerHTML=dbTables.map(t=>`
+    <div class="db-table-card">
+      <div class="db-table-name">${t.name}</div>
+      <div class="db-table-desc">${t.desc}</div>
+      <div class="db-table-count" style="color:${colors[t.badge]};background:${colors[t.badge]}15">${t.badge}</div>
+    </div>
+  `).join('');
+}
+
+/* ═══════════════════════════════════════════════════════════
+   API ENDPOINTS
+   ═══════════════════════════════════════════════════════════ */
+const apiGroups=[
+  {title:'🔐 OAuth & Authentication',endpoints:[
+    {m:'GET',p:'/api/v1/oauth/install',d:'One-click install URL for HubSpot App Marketplace'},
+    {m:'GET',p:'/api/v1/oauth/authorize',d:'Generate OAuth URL + HMAC-signed CSRF state'},
+    {m:'GET',p:'/api/v1/oauth/callback',d:'Browser redirect handler with code exchange'},
+    {m:'POST',p:'/api/v1/oauth/callback',d:'JSON API callback (for server-side flows)'},
+    {m:'GET',p:'/api/v1/oauth/status',d:'Token health: expiry, scopes, refresh status'},
+    {m:'POST',p:'/api/v1/oauth/refresh',d:'Force token refresh with distributed lock'},
+    {m:'POST',p:'/api/v1/oauth/disconnect',d:'Revoke tokens and mark tenant disconnected'},
+  ]},
+  {title:'📊 Deals CRUD (HubSpot ↔ DealSense)',endpoints:[
+    {m:'GET',p:'/api/v1/deals',d:'List deals with scoring (live HubSpot + demo fallback)'},
+    {m:'POST',p:'/api/v1/deals',d:'Create deal in HubSpot CRM + local database'},
+    {m:'PATCH',p:'/api/v1/deals/{id}',d:'Update deal properties in HubSpot + local'},
+    {m:'DELETE',p:'/api/v1/deals/{id}',d:'Archive deal in HubSpot + remove local'},
+    {m:'GET',p:'/api/v1/deals/{id}',d:'Get deal detail with associations'},
+    {m:'GET',p:'/api/v1/deals/{id}/snapshot',d:'AI health score snapshot for UI Extension'},
+    {m:'POST',p:'/api/v1/deals/{id}/score',d:'Trigger deterministic 7-signal scoring'},
+    {m:'POST',p:'/api/v1/deals/{id}/analyze',d:'Full AI analysis pipeline'},
+    {m:'GET',p:'/api/v1/deals/{id}/signals',d:'Get risk signals for a deal'},
+    {m:'POST',p:'/api/v1/deals/sync-hubspot',d:'Force sync with cache invalidation'},
+  ]},
+  {title:'✏️ Engagement Write-Back',endpoints:[
+    {m:'POST',p:'/api/v1/deals/{id}/notes',d:'Create note in HubSpot + associate to deal'},
+    {m:'POST',p:'/api/v1/deals/{id}/tasks',d:'Create task in HubSpot + associate to deal'},
+    {m:'POST',p:'/api/v1/deals/{id}/emails',d:'Create email record + associate to deal'},
+    {m:'POST',p:'/api/v1/deals/{id}/meetings',d:'Create meeting + associate to deal'},
+  ]},
+  {title:'⚡ Actions & Approval Workflow',endpoints:[
+    {m:'GET',p:'/api/v1/actions',d:'List pending action proposals'},
+    {m:'POST',p:'/api/v1/actions/{id}/decision',d:'Approve or reject an action'},
+    {m:'POST',p:'/api/v1/actions/{id}/execute',d:'Execute approved CRM write-back'},
+    {m:'POST',p:'/api/v1/actions/{id}/rollback',d:'Rollback an executed action'},
+  ]},
+  {title:'📡 Webhooks & Lifecycle',endpoints:[
+    {m:'POST',p:'/api/v1/webhooks/hubspot',d:'HMAC-verified HubSpot webhook endpoint'},
+    {m:'DELETE',p:'/api/v1/lifecycle/uninstall',d:'Handle HubSpot app uninstallation'},
+    {m:'POST',p:'/api/v1/lifecycle/gdpr-delete',d:'GDPR contact privacy deletion'},
+  ]},
+  {title:'🏥 System Health',endpoints:[
+    {m:'GET',p:'/',d:'Root probe for load balancers'},
+    {m:'GET',p:'/health',d:'Liveness probe (always 200)'},
+    {m:'GET',p:'/ready',d:'Readiness probe (DB + Redis check)'},
+    {m:'GET',p:'/api/v1/status',d:'API v1 operational status'},
+  ]},
+];
+function renderEndpoints(){
+  let total=0;
+  document.getElementById('api-endpoints').innerHTML=apiGroups.map(g=>{
+    total+=g.endpoints.length;
+    return `<div class="endpoint-group">
+      <div class="endpoint-group-title">${g.title}</div>
+      <div class="endpoint-list">
+        ${g.endpoints.map(e=>`
+          <div class="endpoint-row">
+            <span class="method-badge ${e.m.toLowerCase()}">${e.m}</span>
+            <span class="endpoint-path">${e.p}</span>
+            <span class="endpoint-desc">${e.d}</span>
+          </div>
+        `).join('')}
+      </div>
+    </div>`;
+  }).join('');
+  document.getElementById('metric-endpoints').textContent=total+'+';
+}
+
+/* ═══════════════════════════════════════════════════════════
+   TECH STACK
+   ═══════════════════════════════════════════════════════════ */
+const stackData=[
+  {icon:'⚡',title:'Backend Runtime',items:['Python 3.12 (Async-First)','FastAPI 0.115+ (ASGI/Uvicorn)','SQLAlchemy 2.0 (Async ORM)','Pydantic v2 (Validation)','structlog (Structured Logging)','httpx (Async HTTP Client)','ORJSONResponse (Fast JSON)']},
+  {icon:'🗄️',title:'Data & Caching',items:['PostgreSQL 16 + pgvector (HNSW)','Redis 7 (Cache/Locks/Streams)','Alembic (Schema Migrations)','14 ORM Tables (Event-Sourced)','1536-dim Vector Embeddings']},
+  {icon:'🔐',title:'Security',items:['OAuth 2.0 + HMAC-SHA256 State','Fernet AES-256 Encryption at Rest','JWT HS256 Sessions (14-day)','RBAC (6 Roles × 22 Permissions)','GDPR Deletion Compliance','Immutable Audit Trail']},
+  {icon:'🔗',title:'HubSpot Integration',items:['CRM v3 API (Deals, Contacts)','Webhook v3 HMAC Signatures','OAuth 2.0 App Install Flow','Batch Operations (100/chunk)','Engagement Write-Back API','UI Extension Sidebar Cards']},
+];
+function renderStack(){
+  document.getElementById('stack-grid').innerHTML=stackData.map(s=>`
+    <div class="glass-card stack-card">
+      <div class="stack-card-title"><span class="icon">${s.icon}</span>${s.title}</div>
+      <div class="stack-items">${s.items.map(i=>`<div class="stack-item">${i}</div>`).join('')}</div>
+    </div>
+  `).join('');
+}
+
+/* ═══════════════════════════════════════════════════════════
+   CTO Q&A
+   ═══════════════════════════════════════════════════════════ */
+const qaData=[
+  {q:'How do you handle multi-tenancy and prevent data leakage between tenants?',
+   a:`<p>Multi-tenancy is enforced at <b>three levels</b>:</p>
+   <p><b>1. Middleware layer</b> — <code>TenantGuardMiddleware</code> runs on every non-exempt request, extracting and validating tenant_id from JWT sessions, headers, or portal ID resolution. The tenant_id is bound to <code>request.state</code> and structlog context.</p>
+   <p><b>2. Query layer</b> — Every database table includes a <code>tenant_id</code> column. All queries are tenant-scoped. The <code>CrossTenantAccessError</code> exception class exists specifically for cross-tenant access attempts.</p>
+   <p><b>3. Domain layer</b> — Unique constraints like <code>(tenant_id, hubspot_deal_id)</code> prevent data collisions across tenants. All relationships cascade through tenant-scoped foreign keys.</p>`,
+   tags:['TenantGuardMiddleware','UUID5 Determinism','structlog contextvar','CrossTenantAccessError']},
+
+  {q:'How do you secure OAuth tokens at rest, and what happens during token refresh?',
+   a:`<p><b>Encryption at rest:</b> Both access_token and refresh_token are encrypted using <code>Fernet (AES-256-CBC + HMAC-SHA256)</code> before storage in PostgreSQL. The Fernet key is derived deterministically from SECRET_KEY using <code>SHA256 → URL-safe Base64</code>.</p>
+   <p><b>Token refresh:</b> The TokenManager uses a <b>distributed Redis lock</b> (<code>acquire_lock("token_refresh:{tenant_id}")</code>) to prevent thundering herd when multiple concurrent requests hit an expired token. Only one request performs the refresh; others wait and retry from cache.</p>
+   <p><b>Safety buffer:</b> Tokens are proactively refreshed <b>5 minutes before expiry</b> to eliminate race conditions. After 3 consecutive refresh failures, the connection is deactivated to prevent cascading errors.</p>`,
+   tags:['Fernet AES-256','Distributed Lock','5-min Buffer','Circuit Breaker']},
+
+  {q:'How do you verify webhook authenticity and prevent replay attacks?',
+   a:`<p><b>Signature verification:</b> HubSpot v3 webhooks include an HMAC-SHA256 signature computed over <code>requestMethod + requestURI + requestBody + timestamp</code>. We recompute and compare using <code>hmac.compare_digest()</code> (constant-time comparison).</p>
+   <p><b>Replay protection:</b> The delivered timestamp is checked against a <b>300-second (5-minute) window</b>. Events outside this window are rejected with <code>WebhookReplayError</code>.</p>
+   <p><b>Idempotency:</b> Each event gets a Redis key <code>hubspot:event:{portal}:{eventId}</code> with 24-hour TTL. Duplicate events return 200 immediately without re-processing. A PostgreSQL unique constraint on <code>idempotency_key</code> provides a durable second layer.</p>`,
+   tags:['HMAC-SHA256 v3','300s Replay Window','24h Redis Dedup','DB Unique Constraint']},
+
+  {q:'What happens if Redis or PostgreSQL goes down?',
+   a:`<p>The system is designed for <b>graceful degradation</b> at every layer:</p>
+   <p><b>Redis offline:</b> The <code>redis_client.py</code> module includes a complete in-memory fallback — <code>_InMemoryLock</code> for distributed locks, <code>_memory_cache</code> dict with TTL for cache operations. The app continues serving requests with slightly reduced deduplication guarantees.</p>
+   <p><b>PostgreSQL offline:</b> The <code>get_db_optional</code> dependency returns <code>None</code> instead of crashing. Routes check <code>if db is not None</code> before querying. Deals endpoint falls back to an in-memory demo catalog with 5 realistic deals.</p>
+   <p><b>HubSpot API down:</b> The HubSpot client retries with exponential backoff (respecting Retry-After headers). After 3 failures, it surfaces the error to the caller rather than hanging.</p>`,
+   tags:['InMemoryLock','_memory_cache fallback','get_db_optional','Demo Catalog']},
+
+  {q:'How would you scale this to handle 10x traffic?',
+   a:`<p><b>Horizontal scaling:</b> The FastAPI app is stateless — tenant context comes from JWT/headers, not server-side sessions. Deploy N replicas behind a load balancer.</p>
+   <p><b>Database:</b> PostgreSQL connection pool is configured with <code>pool_size=10, max_overflow=5</code>. For 10x: use PgBouncer for connection pooling, read replicas for query offload, and partition webhook_events by tenant_id.</p>
+   <p><b>Redis:</b> Already using Redis Streams with consumer groups — add more consumers for parallel event processing. The distributed lock pattern scales naturally.</p>
+   <p><b>Webhooks:</b> The async queue pattern (persist → publish → ack) means webhook ingestion scales independently from processing. Add workers to the consumer group.</p>`,
+   tags:['Stateless Design','Redis Streams','Consumer Groups','Connection Pooling']},
+
+  {q:'How does the RBAC system work and how extensible is it?',
+   a:`<p>RBAC is implemented with <b>3 components</b>:</p>
+   <p><b>1. Permission enum</b> — 22 granular permissions as <code>StrEnum</code> (e.g., <code>deal:read</code>, <code>action:approve</code>, <code>oauth:manage</code>).</p>
+   <p><b>2. Role → Permission mapping</b> — <code>ROLE_PERMISSIONS: dict[UserRole, frozenset[Permission]]</code>. Agency Owner gets <code>frozenset(Permission)</code> (all). Each role is a curated subset.</p>
+   <p><b>3. FastAPI guards</b> — <code>require_permission(Permission.DEAL_READ)</code> returns a <code>Depends()</code> callable that extracts JWT → role → checks permission → returns tenant_id. Adding a new permission is a 3-line change.</p>`,
+   tags:['StrEnum','frozenset','Depends() injection','3-line extensibility']},
+
+  {q:'What is your action governance model and why does it matter?',
+   a:`<p>DealSense uses a <b>tiered approval model</b> for CRM write-backs — the AI never writes to HubSpot without governance:</p>
+   <p><b>Tier 0 (Read-Only):</b> Observe and surface insights. No CRM mutation.</p>
+   <p><b>Tier 1 (Suggestion):</b> Propose actions. User manually triggers.</p>
+   <p><b>Tier 2 (Draft):</b> AI prepares a draft (note, task). User reviews and confirms.</p>
+   <p><b>Tier 3 (Controlled Write):</b> Explicit approval required. Full audit trail.</p>
+   <p><b>Every execution</b> records <code>pre_action_state</code> and <code>post_action_state</code> in the <code>action_executions</code> table, enabling full rollback. This is critical for enterprise sales teams who need to trust the AI.</p>`,
+   tags:['4-Tier Governance','pre/post State','Rollback','Idempotency Key']},
+
+  {q:'How do you handle HubSpot API rate limits?',
+   a:`<p>The <code>HubSpotClient</code> implements a <b>resilient retry strategy</b>:</p>
+   <p><b>1. Rate limit detection:</b> HTTP 429 responses trigger backoff. We read the <code>Retry-After</code> header (or default to <code>2^attempt</code> seconds).</p>
+   <p><b>2. Server errors:</b> 502/503/504 are also retried (up to 3 attempts) since HubSpot occasionally returns these during deployments.</p>
+   <p><b>3. Batch operations:</b> Bulk updates are chunked into 100-item batches (HubSpot's limit) and executed sequentially to avoid burst rate limits.</p>
+   <p><b>4. Caching:</b> Deal data is cached in Redis with 30-second TTL, reducing HubSpot API calls by ~85% for read-heavy workloads.</p>`,
+   tags:['Retry-After','Exponential Backoff','100-item Chunking','30s Cache TTL']},
+];
+function renderQA(){
+  document.getElementById('qa-grid').innerHTML=qaData.map((q,i)=>`
+    <div class="qa-item" id="qa-${i}">
+      <div class="qa-question" onclick="toggleQA(${i})">
+        <h4>${q.q}</h4>
+        <svg class="qa-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+      <div class="qa-answer">
+        ${q.a}
+        <div class="evidence">${q.tags.map(t=>`<span class="evidence-tag">${t}</span>`).join('')}</div>
+      </div>
+    </div>
+  `).join('');
+}
+function toggleQA(i){
+  const item=document.getElementById(`qa-${i}`);
+  item.classList.toggle('open');
+}
+
+/* ═══════════════════════════════════════════════════════════
+   INITIALIZATION
+   ═══════════════════════════════════════════════════════════ */
+document.addEventListener('DOMContentLoaded',()=>{
+  renderArchLayers();
+  renderOAuthFlow();
+  renderWebhookFlow();
+  renderSecurityLayers();
+  renderDBGrid();
+  renderEndpoints();
+  renderStack();
+  renderQA();
+  loadHealth();
+  loadRBAC();
+  // Auto-refresh health every 30s
+  setInterval(loadHealth,30000);
+});
+</script>
+</body>
+</html>

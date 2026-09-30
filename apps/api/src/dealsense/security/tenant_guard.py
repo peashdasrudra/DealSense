@@ -29,6 +29,7 @@ TENANT_EXEMPT_PATHS = frozenset(
         "/docs",
         "/redoc",
         "/openapi.json",
+        "/architecture",
         "/api/v1/health",
         "/api/v1/ready",
         "/api/v1/status",

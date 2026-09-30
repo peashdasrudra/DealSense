@@ -179,6 +179,19 @@ def create_app() -> FastAPI:
             "checks": checks,
         }
 
+    # ---- Architecture Page ----
+    @app.get("/architecture", tags=["System"], include_in_schema=False)
+    async def architecture_page() -> None:
+        """Serve the interactive architecture visualization page."""
+        import pathlib
+
+        from fastapi.responses import HTMLResponse
+
+        html_path = pathlib.Path(__file__).parent / "static" / "architecture.html"
+        if html_path.exists():
+            return HTMLResponse(content=html_path.read_text(encoding="utf-8"), status_code=200)
+        return HTMLResponse(content="<h1>Architecture page not found</h1>", status_code=404)
+
     return app
 
 
