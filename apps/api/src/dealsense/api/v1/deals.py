@@ -176,47 +176,9 @@ async def list_deals_for_dashboard(
             client = HubSpotClient(tenant_id=tenant_id, db=db)  # type: ignore[arg-type]
             hs_deals = await client.list_deals(limit=50)
 
-            # If connected portal has 0 deals (e.g. fresh sandbox / test portal), seed real deals into the HubSpot CRM!
             if not hs_deals:
-                logger.info("hubspot_portal_empty_seeding_starter_deals", tenant_id=str(tenant_id))
-                default_deals = [
-                    {
-                        "dealname": "Orion Cloud Infrastructure Modernization",
-                        "amount": "450000",
-                        "dealstage": "presentationscheduled",
-                    },
-                    {
-                        "dealname": "Quantum Security Suite Deployment",
-                        "amount": "280000",
-                        "dealstage": "decisionmakerboughtin",
-                    },
-                    {
-                        "dealname": "Horizon Enterprise Data Platform",
-                        "amount": "195000",
-                        "dealstage": "contractsent",
-                    },
-                    {
-                        "dealname": "Apex RevOps Automated Telemetry",
-                        "amount": "120000",
-                        "dealstage": "qualifiedtobuy",
-                    },
-                    {
-                        "dealname": "Crown Global Logistics Platform",
-                        "amount": "520000",
-                        "dealstage": "decisionmakerboughtin",
-                    },
-                    {
-                        "dealname": "Nebula AI Intelligence Engine",
-                        "amount": "340000",
-                        "dealstage": "appointmentscheduled",
-                    },
-                ]
-                for d in default_deals:
-                    try:
-                        await client.create_deal(d)
-                    except Exception as seed_err:
-                        logger.warning("hubspot_seed_deal_failed", error=str(seed_err))
-                hs_deals = await client.list_deals(limit=50)
+                logger.info("hubspot_portal_empty", tenant_id=str(tenant_id))
+
 
             if hs_deals:
                 live_deals: list[DealDashboardSchema] = []

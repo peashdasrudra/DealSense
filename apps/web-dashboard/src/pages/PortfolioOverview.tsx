@@ -247,6 +247,16 @@ export const PortfolioOverview: React.FC = () => {
               <span>📑 Export QBR Brief</span>
             </button>
             <button
+              onClick={() => navigate("/deals", { state: { openCreateModal: true } })}
+              style={{
+                background: "#ffffff",
+                color: "var(--hs-primary)",
+                border: "1px solid var(--hs-border-dark)",
+              }}
+            >
+              <span>+ Create Deal</span>
+            </button>
+            <button
               onClick={() => navigate("/war-room")}
               style={{
                 background: "#2d3e50",

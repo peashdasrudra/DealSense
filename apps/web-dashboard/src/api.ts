@@ -260,7 +260,18 @@ export function getLocalDeals(): EnterpriseDeal[] {
     const raw = localStorage.getItem(STORAGE_KEYS.DEALS);
     if (raw) {
       const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      if (Array.isArray(parsed)) {
+        // If we have an empty array, only fall back to demo data if disconnected
+        if (parsed.length === 0) {
+          const portalStr = localStorage.getItem("dealsense_active_portal");
+          if (portalStr) {
+            const p = JSON.parse(portalStr);
+            if (p.id !== "DISCONNECTED") return parsed;
+          }
+        } else {
+          return parsed;
+        }
+      }
     }
   } catch (e) {
     console.warn("Failed to read deals from local storage", e);

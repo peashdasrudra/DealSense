@@ -133,6 +133,19 @@ export const TopBar: React.FC<TopBarProps> = ({
   const handleSelectPortal = (p: typeof portals[0]) => {
     setSelectedPortal(p);
     localStorage.setItem("dealsense_active_portal", JSON.stringify(p));
+    
+    if (p.id !== "DISCONNECTED") {
+      localStorage.setItem("dealsense_tenant_id", `00000000-0000-0000-0000-${p.id.padStart(12, "0")}`);
+    } else {
+      localStorage.removeItem("dealsense_tenant_id");
+    }
+    
+    // Clear auth state to prevent data bleeding when switching accounts
+    localStorage.removeItem("dealsense_session_jwt");
+    sessionStorage.removeItem("dealsense_oauth_state");
+    
+    localStorage.removeItem("dealsense_crud_deals");
+    localStorage.removeItem("dealsense_crud_actions");
     window.dispatchEvent(new CustomEvent("dealsense:portal-changed", { detail: p }));
     window.dispatchEvent(new CustomEvent("dealsense:deals-updated"));
     setPortalDropdownOpen(false);
@@ -161,6 +174,8 @@ export const TopBar: React.FC<TopBarProps> = ({
     localStorage.removeItem("dealsense_tenant_id");
     localStorage.removeItem("dealsense_session_jwt");
     sessionStorage.removeItem("dealsense_oauth_state");
+    localStorage.removeItem("dealsense_crud_deals");
+    localStorage.removeItem("dealsense_crud_actions");
 
     const disconnectedPortal = {
       id: "DISCONNECTED",

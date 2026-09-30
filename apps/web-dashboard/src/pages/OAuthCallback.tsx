@@ -85,6 +85,8 @@ export const OAuthCallback: React.FC = () => {
           localStorage.setItem("dealsense_session_jwt", responseData.session_jwt);
         }
         localStorage.setItem("dealsense_active_portal", JSON.stringify(activePortalData));
+        localStorage.removeItem("dealsense_crud_deals");
+        localStorage.removeItem("dealsense_crud_actions");
 
         // Update portals list
         const savedList = localStorage.getItem("dealsense_portals_list");

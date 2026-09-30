@@ -14,6 +14,7 @@
  */
 
 import React, { useState, useEffect, useMemo, useCallback } from "react";
+import { useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   fetchDeals,
@@ -139,6 +140,7 @@ const SAMPLE_DEALS: DealDetail[] = ENTERPRISE_DEALS as unknown as DealDetail[];
 // ── DealExplorer Component ───────────────────────────────────────────────────
 
 export const DealExplorer: React.FC = () => {
+  const location = useLocation();
   // State
   const [deals, setDeals] = useState<DealDetail[]>(SAMPLE_DEALS);
   const [activeDeal, setActiveDeal] = useState<DealDetail>(SAMPLE_DEALS[0] || {} as DealDetail);
@@ -249,11 +251,17 @@ export const DealExplorer: React.FC = () => {
 
     window.addEventListener("dealsense:deals-updated", handleDealsUpdated);
     window.addEventListener("dealsense:portal-changed", handlePortalChanged);
+
+    if (location.state?.openCreateModal) {
+      setModalType("create");
+      window.history.replaceState({}, document.title);
+    }
+
     return () => {
       window.removeEventListener("dealsense:deals-updated", handleDealsUpdated);
       window.removeEventListener("dealsense:portal-changed", handlePortalChanged);
     };
-  }, [loadDeals]);
+  }, [loadDeals, location.state]);
 
   // Sync with HubSpot API
   const handleSyncHubSpot = async () => {

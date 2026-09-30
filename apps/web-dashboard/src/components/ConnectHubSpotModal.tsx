@@ -50,6 +50,10 @@ export const ConnectHubSpotModal: React.FC<ConnectHubSpotModalProps> = ({
       localStorage.setItem("dealsense_active_portal", JSON.stringify(connectedData));
       // Set deterministic tenant ID for this portal
       localStorage.setItem("dealsense_tenant_id", `00000000-0000-0000-0000-${portal.id.padStart(12, "0")}`);
+      localStorage.removeItem("dealsense_session_jwt");
+      sessionStorage.removeItem("dealsense_oauth_state");
+      localStorage.removeItem("dealsense_crud_deals");
+      localStorage.removeItem("dealsense_crud_actions");
 
       // Update portals list in localStorage
       const savedPortalsStr = localStorage.getItem("dealsense_portals_list");
