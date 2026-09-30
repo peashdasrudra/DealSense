@@ -584,18 +584,31 @@ async def delete_deal(
 
 
 @router.post("/sync-hubspot")
-async def sync_hubspot_deals_legacy(
+async def sync_hubspot_deals(
     tenant_id: UUID = require_permission(Permission.DEAL_READ),
     db: AsyncSession | None = Depends(get_db_optional),
 ) -> dict[str, Any]:
-    """Manually trigger synchronization of all deals from HubSpot CRM."""
+    """Manually trigger synchronization of all deals from HubSpot CRM.
+
+    Invalidates the Redis deal cache first to force a fresh fetch from HubSpot.
+    """
+    # Invalidate cache to force fresh fetch
+    try:
+        from dealsense.infrastructure.redis_client import get_redis
+
+        r = get_redis()
+        await r.delete(f"deals:{tenant_id}:hubspot_cache")
+    except Exception:
+        pass
+
     deals = await list_deals_for_dashboard(tenant_id=tenant_id, db=db)
     hubspot_token = await _get_active_hubspot_token(tenant_id, db)
     return {
-        "status": "synced",
+        "status": "success",
+        "syncedCount": len(deals),
         "count": len(deals),
         "source": "hubspot_crm" if hubspot_token else "in_memory_catalog",
-        "deals": deals,
+        "deals": [d.model_dump(mode="json") for d in deals],
     }
 
 
@@ -813,37 +826,13 @@ async def get_deal_signals(
     ]
 
 
-@router.post("/sync-hubspot", response_model=dict)
-async def sync_hubspot_deals(
+@router.get("/{deal_id}/hubspot-raw", response_model=dict)
+async def get_deal_hubspot_raw(
+    deal_id: str,
     tenant_id: UUID = require_permission(Permission.DEAL_READ),
     db: AsyncSession | None = Depends(get_db_optional),
 ):
-    """Sync deals from HubSpot and invalidate cache."""
-    try:
-        from dealsense.infrastructure.redis_client import get_redis
-
-        r = get_redis()
-        cache_key = f"deals:{tenant_id}:hubspot_cache"
-        await r.delete(cache_key)
-
-        deals = await list_deals_for_dashboard(tenant_id=tenant_id, db=db)
-        return {
-            "status": "success",
-            "syncedCount": len(deals),
-            "deals": [d.model_dump(mode="json") for d in deals],
-        }
-    except Exception as e:
-        logger.error("sync_hubspot_error", error=str(e))
-        raise HTTPException(status_code=500, detail=str(e)) from e
-
-
-@router.get("/{deal_id}/snapshot", response_model=dict)
-async def get_deal_snapshot(
-    deal_id: UUID,
-    tenant_id: UUID = require_permission(Permission.DEAL_READ),
-    db: AsyncSession | None = Depends(get_db_optional),
-):
-    """Get detailed snapshot for a specific deal from HubSpot."""
+    """Get raw HubSpot CRM data for a specific deal (live API proxy)."""
     try:
         deal = await _resolve_deal_record(str(deal_id), tenant_id, db)
         hubspot_id = str(deal_id)
@@ -862,7 +851,7 @@ async def get_deal_snapshot(
     except HTTPException:
         raise
     except Exception as e:
-        logger.error("get_deal_snapshot_error", error=str(e))
+        logger.error("get_deal_hubspot_raw_error", error=str(e))
         raise HTTPException(status_code=500, detail=str(e)) from e
 
 
