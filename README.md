@@ -395,7 +395,7 @@ Spins up PostgreSQL 16 with pgvector, Redis 7, FastAPI ASGI backend, and the Rea
 
 DealSense is licensed under the [MIT License](./LICENSE).
 
-**Designed & Architected by Peash Das Rudra** — Founder, AiXpertLabs  
+**Designed & Architected by Peash Das Rudra** —  HubAiLabs  
 - Portfolio: [dealsense.peash.tech](https://dealsense.peash.tech)  
 - GitHub: [@peashdasrudra](https://github.com/peashdasrudra)  
 - LinkedIn: [linkedin.com/in/peash-das-rudra](https://linkedin.com/in/peash-das-rudra)
