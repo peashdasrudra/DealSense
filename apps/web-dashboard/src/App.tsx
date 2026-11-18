@@ -6,6 +6,7 @@
 import React, { useState, useEffect } from "react";
 import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
+import { Analytics } from "@vercel/analytics/react";
 
 import { Sidebar } from "./components/Sidebar";
 import { TopBar } from "./components/TopBar";
@@ -338,6 +339,7 @@ export const App: React.FC = () => {
         ) : (
           <LandingPage />
         )}
+        <Analytics />
       </div>
     );
   }
@@ -561,6 +563,7 @@ export const App: React.FC = () => {
 
       {/* ── Mobile Bottom Navigation Bar ──────────────────────────────── */}
       <MobileBottomNav onOpenMenu={() => setSidebarOpen(true)} />
+      <Analytics />
     </div>
   );
 };
