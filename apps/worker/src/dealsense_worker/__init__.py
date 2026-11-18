@@ -1,1 +1,0 @@
-"""DealSense Worker package."""

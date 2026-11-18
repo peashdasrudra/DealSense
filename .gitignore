@@ -87,3 +87,6 @@ scripts/archive/
 apps/web-dashboard/*.js
 scratch_*
 *.scratch.*
+
+# ---- Private Application Source ----
+/apps/
