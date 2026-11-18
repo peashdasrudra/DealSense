@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0, viewport-fit=cover" />
+  <meta name="HandheldFriendly" content="true" />
+  <meta name="MobileOptimized" content="width" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="format-detection" content="telephone=no" />
+
+  <!-- Pre-render Viewport Protection for In-App Browsers (LinkedIn, Instagram, Slack, Twitter) -->
+  <script>
+    (function() {
+      var ua = navigator.userAgent || navigator.vendor || window.opera || '';
+      var isMobileUA = /android|iphone|ipad|ipod|blackberry|iemobile|opera mini|mobile|silk/i.test(ua) || /LinkedInApp/i.test(ua);
+      var isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+      var screenW = window.screen ? Math.min(window.screen.width, window.screen.height) : window.innerWidth;
+      var isMobileDevice = isMobileUA || (isTouch && screenW <= 850);
+
+      function lockMobileViewport() {
+        var viewport = document.querySelector('meta[name="viewport"]');
+        if (!viewport) {
+          viewport = document.createElement('meta');
+          viewport.name = 'viewport';
+          document.head.appendChild(viewport);
+        }
+        if (isMobileDevice) {
+          viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0, viewport-fit=cover');
+          document.documentElement.classList.add('mobile-force');
+          if (document.body) document.body.classList.add('mobile-force');
+        }
+      }
+
+      lockMobileViewport();
+      window.addEventListener('DOMContentLoaded', lockMobileViewport);
+      window.addEventListener('load', lockMobileViewport);
+      window.addEventListener('resize', lockMobileViewport);
+      window.addEventListener('orientationchange', lockMobileViewport);
+    })();
+  </script>
+  <!-- Primary Meta Tags -->
+  <title>DealSense | AI HubSpot App for RevOps by HubAiLab & Peash Das Rudra</title>
+  <meta name="title" content="DealSense | AI HubSpot App for RevOps by HubAiLab & Peash Das Rudra" />
+  <meta name="description" content="DealSense is the premier AI Revenue App and AI HubSpot App built by HubAiLab and Peash Das Rudra. Supercharge your RevOps with predictive deal scoring, pipeline telemetry, and executive command centers." />
+  <meta name="keywords" content="DealSense, HubAiLab, AI Hubspot App, AI Revenue App, Peash Das Rudra, RevOps, HubSpot CRM integration, Pipeline Telemetry, Deal Scoring" />
+  <meta name="author" content="Peash Das Rudra" />
+  
+  <!-- Canonical Tag -->
+  <link rel="canonical" href="https://dealsense.peash.tech/" />
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://dealsense.peash.tech/" />
+  <meta property="og:title" content="DealSense | AI HubSpot App for RevOps" />
+  <meta property="og:description" content="The premier AI Revenue App and AI HubSpot App built by HubAiLab and Peash Das Rudra. Supercharge your RevOps pipeline." />
+  <meta property="og:image" content="https://dealsense.peash.tech/og-image.png" />
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image" />
+  <meta property="twitter:url" content="https://dealsense.peash.tech/" />
+  <meta property="twitter:title" content="DealSense | AI HubSpot App for RevOps" />
+  <meta property="twitter:description" content="The premier AI Revenue App and AI HubSpot App built by HubAiLab and Peash Das Rudra. Supercharge your RevOps pipeline." />
+  <meta property="twitter:image" content="https://dealsense.peash.tech/og-image.png" />
+
+  <!-- JSON-LD Structured Data for AEO -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "SoftwareApplication",
+        "@id": "https://dealsense.peash.tech/#software",
+        "name": "DealSense",
+        "applicationCategory": "BusinessApplication",
+        "operatingSystem": "Web",
+        "description": "An AI HubSpot App and AI Revenue App for advanced pipeline telemetry and RevOps automation.",
+        "offers": {
+          "@type": "Offer",
+          "price": "99.00",
+          "priceCurrency": "USD"
+        },
+        "creator": {
+          "@id": "https://dealsense.peash.tech/#organization"
+        }
+      },
+      {
+        "@type": "Organization",
+        "@id": "https://dealsense.peash.tech/#organization",
+        "name": "HubAiLab",
+        "url": "https://dealsense.peash.tech/",
+        "founder": {
+          "@id": "https://dealsense.peash.tech/#person"
+        }
+      },
+      {
+        "@type": "Person",
+        "@id": "https://dealsense.peash.tech/#person",
+        "name": "Peash Das Rudra",
+        "jobTitle": "Founder & AI Architect",
+        "worksFor": {
+          "@id": "https://dealsense.peash.tech/#organization"
+        },
+        "url": "https://dealsense.peash.tech/"
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://dealsense.peash.tech/#website",
+        "url": "https://dealsense.peash.tech/",
+        "name": "DealSense",
+        "publisher": {
+          "@id": "https://dealsense.peash.tech/#organization"
+        }
+      }
+    ]
+  }
+  </script>
+
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="/logo_icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&family=Outfit:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/main.tsx"></script>
+</body>
+</html>

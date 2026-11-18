@@ -1,0 +1,566 @@
+/**
+ * DealSense Dashboard — App Shell & Global RevOps Navigation.
+ * Official HubSpot Canvas Design System Edition with Quick Search & Drawer Overlays.
+ */
+
+import React, { useState, useEffect } from "react";
+import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
+import { AnimatePresence, motion } from "framer-motion";
+
+import { Sidebar } from "./components/Sidebar";
+import { TopBar } from "./components/TopBar";
+import { MobileBottomNav } from "./components/MobileBottomNav";
+import { PortfolioOverview } from "./pages/PortfolioOverview";
+import { RevenueForecast } from "./pages/RevenueForecast";
+import { DealExplorer } from "./pages/DealExplorer";
+import { ActionQueue } from "./pages/ActionQueue";
+import { CrmHygiene } from "./pages/CrmHygiene";
+import { RepPerformance } from "./pages/RepPerformance";
+import { RiskHeatmap } from "./pages/RiskHeatmap";
+import { ClientHealth } from "./pages/ClientHealth";
+import { AuditLog } from "./pages/AuditLog";
+import { Settings } from "./pages/Settings";
+import { MutualActionPlan } from "./pages/MutualActionPlan";
+import { CompetitiveIntelligence } from "./pages/CompetitiveIntelligence";
+import { CaseStudy } from "./pages/CaseStudy";
+import { IntegrationProof } from "./pages/IntegrationProof";
+import { Architecture } from "./pages/Architecture";
+import { LandingPage } from "./pages/LandingPage";
+import { AgencyFleet } from "./pages/AgencyFleet";
+import { CheckoutPage } from "./pages/CheckoutPage";
+import { NavTestPage } from "./pages/NavTestPage";
+import { ScrollToTop } from "./components/ScrollToTop";
+import { Footer } from "./components/Footer";
+import { DealWarRoom } from "./pages/DealWarRoom";
+import { RevOpsPlaybooks } from "./pages/RevOpsPlaybooks";
+import { PipelineWaterfall } from "./pages/PipelineWaterfall";
+import { StakeholderMatrix } from "./pages/StakeholderMatrix";
+import { DealDrawer, DealData } from "./components/DealDrawer";
+
+import { PrivacyPolicy } from "./pages/PrivacyPolicy";
+import { TermsOfService } from "./pages/TermsOfService";
+import { MarketplaceAudit } from "./pages/MarketplaceAudit";
+import { MarketplaceOnboarding } from "./pages/MarketplaceOnboarding";
+import { MarketplaceListingPreview } from "./pages/MarketplaceListingPreview";
+import { AuthPage } from "./pages/AuthPage";
+import { OAuthCallback } from "./pages/OAuthCallback";
+import { HubSpotNativeLayout } from "./components/HubSpotNativeLayout";
+import { HubSpotNativePipeline } from "./pages/HubSpotNativePipeline";
+import { HubSpotNativeActionQueue } from "./pages/HubSpotNativeActionQueue";
+import { HubSpotNativePlaybooks } from "./pages/HubSpotNativePlaybooks";
+import { DealSenseLoader } from "./components/DealSenseLoader";
+// ── Page Title Mapping ───────────────────────────────────────────────────────
+
+const PAGE_TITLES: Record<string, { title: string; breadcrumb: string }> = {
+  "/": { title: "DealSense Platform", breadcrumb: "Landing" },
+  "/landing": { title: "DealSense Revenue Platform", breadcrumb: "Landing" },
+  "/welcome": { title: "Welcome & Onboarding", breadcrumb: "Welcome" },
+  "/agency": { title: "HubSpot Solutions Partner Fleet", breadcrumb: "Agency Fleet" },
+  "/partners": { title: "HubSpot Solutions Partner Fleet", breadcrumb: "Partners" },
+  "/agents": { title: "HubSpot Solutions Partner Fleet", breadcrumb: "Agents" },
+  "/agency-fleet": { title: "HubSpot Solutions Partner Fleet", breadcrumb: "Agency Fleet" },
+  "/checkout": { title: "Secure Checkout & Software Handover", breadcrumb: "Checkout" },
+  "/payment": { title: "Secure Checkout & Software Handover", breadcrumb: "Payment" },
+  "/pipeline": { title: "Home — Revenue Intelligence", breadcrumb: "Home" },
+  "/overview": { title: "Home — Revenue Intelligence", breadcrumb: "Home" },
+  "/forecast": { title: "Revenue Forecast & Simulation", breadcrumb: "Forecast" },
+  "/deals": { title: "Deal Inspector & Dossiers", breadcrumb: "Deals" },
+  "/waterfall": { title: "Pipeline Waterfall & Velocity", breadcrumb: "Waterfall" },
+  "/war-room": { title: "Deal War Room (QBR)", breadcrumb: "War Room" },
+  "/stakeholders": { title: "Stakeholder Power Matrix", breadcrumb: "Stakeholders" },
+  "/heatmap": { title: "Pipeline Risk Heatmap", breadcrumb: "Heatmap" },
+  "/actions": { title: "Action Approval Queue", breadcrumb: "Actions" },
+  "/map": { title: "Mutual Action Plans (MAP)", breadcrumb: "MAP" },
+  "/battlecards": { title: "Competitive Battlecards & Objections", breadcrumb: "Battlecards" },
+  "/playbooks": { title: "Autonomous RevOps Playbooks", breadcrumb: "Playbooks" },
+  "/hygiene": { title: "CRM Hygiene & Remediation", breadcrumb: "Hygiene" },
+  "/reps": { title: "Rep Risk Profiles & Coaching", breadcrumb: "Reps" },
+  "/clients": { title: "Client Health Scorecards", breadcrumb: "Clients" },
+  "/case-study": { title: "Executive Architecture Case Study", breadcrumb: "Case Study" },
+  "/portfolio": { title: "Executive Architecture Case Study", breadcrumb: "Portfolio" },
+  "/audit": { title: "Audit & Compliance Trail", breadcrumb: "Audit" },
+  "/settings": { title: "Settings & Scoring Weights", breadcrumb: "Settings" },
+  "/privacy": { title: "Privacy Policy & GDPR", breadcrumb: "Privacy" },
+  "/terms": { title: "Terms of Service", breadcrumb: "Terms" },
+  "/compliance": { title: "Security & Compliance Console", breadcrumb: "Security" },
+  "/certification": { title: "Security & Compliance Console", breadcrumb: "Security" },
+  "/onboarding": { title: "Marketplace Setup Flow", breadcrumb: "Onboarding" },
+  "/marketplace-listing": { title: "Marketplace Directory Preview", breadcrumb: "Marketplace" },
+  "/nav-test": { title: "Navigation & CTA Test Suite", breadcrumb: "Dev / QA" },
+  "/integration-proof": { title: "Live Integration Proof", breadcrumb: "Integration Proof" },
+  "/architecture": { title: "System Architecture Blueprint", breadcrumb: "Architecture" },
+};
+
+import { getLocalDeals } from "./api";
+
+export const App: React.FC = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState<boolean>(() => {
+    return localStorage.getItem("dealsense_sidebar_collapsed") === "true";
+  });
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedDeal, setSelectedDeal] = useState<DealData | null>(null);
+  const [allDeals, setAllDeals] = useState(getLocalDeals);
+
+  const toggleSidebarCollapse = () => {
+    setSidebarCollapsed((prev) => {
+      const next = !prev;
+      localStorage.setItem("dealsense_sidebar_collapsed", String(next));
+      return next;
+    });
+  };
+
+  useEffect(() => {
+    const handleDealsUpdated = (e: any) => {
+      if (e.detail && Array.isArray(e.detail)) {
+        setAllDeals(e.detail);
+      } else {
+        setAllDeals(getLocalDeals());
+      }
+    };
+    window.addEventListener("dealsense:deals-updated", handleDealsUpdated);
+    return () => window.removeEventListener("dealsense:deals-updated", handleDealsUpdated);
+  }, []);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault();
+        setIsSearchOpen((prev) => !prev);
+      }
+      if ((e.metaKey || e.ctrlKey) && (e.key === "\\" || e.code === "Backslash")) {
+        e.preventDefault();
+        toggleSidebarCollapse();
+      }
+      if (e.key === "Escape") {
+        setIsSearchOpen(false);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
+  const filteredSearchDeals = allDeals.filter(
+    (d) =>
+      d.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      d.client.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      d.owner.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+
+  useEffect(() => {
+    if (sidebarOpen || isSearchOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [sidebarOpen, isSearchOpen]);
+
+  // ── Initial Cold-Boot & Route Transition Telemetry ────────────────────────
+  const [isInitialLoad, setIsInitialLoad] = useState(() => {
+    // Strictly show initial cold-boot splash once per browser session
+    return !sessionStorage.getItem("dealsense_booted");
+  });
+  const [isNavigating, setIsNavigating] = useState(false);
+  const prevPathRef = React.useRef(location.pathname);
+
+  useEffect(() => {
+    if (isInitialLoad) {
+      const timer = setTimeout(() => {
+        sessionStorage.setItem("dealsense_booted", "true");
+        setIsInitialLoad(false);
+      }, 550);
+      return () => clearTimeout(timer);
+    }
+  }, [isInitialLoad]);
+
+  useEffect(() => {
+    // Only fire navigation laser when user actively changes route and initial boot is complete
+    if (prevPathRef.current !== location.pathname) {
+      prevPathRef.current = location.pathname;
+      if (!isInitialLoad) {
+        setIsNavigating(true);
+        const timer = setTimeout(() => setIsNavigating(false), 240);
+        return () => clearTimeout(timer);
+      }
+    }
+  }, [location.pathname, isInitialLoad]);
+
+  const renderGlobalTelemetryLoaders = () => (
+    <>
+      {/* 1. Initial Cold-Boot Live Animated Gyroscopic Loader (Strictly once per session) */}
+      <AnimatePresence>
+        {isInitialLoad && (
+          <DealSenseLoader
+            variant="fullscreen"
+            message="Initializing Revenue Intelligence..."
+            subMessage="Connecting HubSpot Telemetry & 7-Vector Engine"
+          />
+        )}
+      </AnimatePresence>
+
+      {/* 2. Sleek Non-Blocking Enterprise Viewport Laser Bar (Linear/Stripe Standard) */}
+      <AnimatePresence>
+        {isNavigating && !isInitialLoad && (
+          <motion.div
+            initial={{ scaleX: 0, opacity: 1 }}
+            animate={{ scaleX: 1, opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.22, ease: "easeInOut" }}
+            style={{
+              position: "fixed",
+              top: 0,
+              left: 0,
+              right: 0,
+              height: 3,
+              background:
+                "linear-gradient(90deg, #ff5c35 0%, #ff7a59 35%, #00bda5 70%, #00e5c9 100%)",
+              transformOrigin: "left",
+              zIndex: 999999,
+              boxShadow: "0 0 14px rgba(255, 92, 53, 0.8), 0 0 4px #00bda5",
+              pointerEvents: "none",
+            }}
+          />
+        )}
+      </AnimatePresence>
+    </>
+  );
+
+  // Auth & Guest Mode Check
+  const isAuthenticated = sessionStorage.getItem("dealsense_oauth_state") || localStorage.getItem("dealsense_guest_mode");
+
+  const isStandalonePage =
+    location.pathname === "/" ||
+    location.pathname === "/landing" ||
+    location.pathname === "/welcome" ||
+    location.pathname === "/login" ||
+    location.pathname === "/signup" ||
+    location.pathname === "/oauth/callback" ||
+    location.pathname === "/agency" ||
+    location.pathname === "/partners" ||
+    location.pathname === "/agents" ||
+    location.pathname === "/agency-fleet" ||
+    location.pathname === "/checkout" ||
+    location.pathname === "/payment" ||
+    location.pathname === "/privacy" ||
+    location.pathname === "/terms" ||
+    location.pathname === "/compliance" ||
+    location.pathname === "/certification" ||
+    location.pathname === "/onboarding" ||
+    location.pathname === "/marketplace-listing" ||
+    location.pathname === "/nav-test" ||
+    location.pathname === "/architecture" ||
+    location.pathname.startsWith("/app");
+
+  useEffect(() => {
+    if (!isAuthenticated && !isStandalonePage) {
+      navigate("/login");
+    }
+  }, [isAuthenticated, isStandalonePage, location.pathname, navigate]);
+
+  const pageMeta = PAGE_TITLES[location.pathname] || {
+    title: "DealSense Intelligence",
+    breadcrumb: "Dashboard",
+  };
+
+  const handleSelectDealFromSearch = (deal: any) => {
+    setSelectedDeal({
+      id: deal.id,
+      name: deal.name,
+      client: deal.client,
+      score: deal.score,
+      band: deal.band as any,
+      value: deal.value,
+      stage: deal.stage,
+      owner: deal.owner,
+      closeDate: deal.closeDate || "Dec 15, 2026",
+      daysInStage: deal.daysInStage || 18,
+      risks: deal.risks?.map((r: any) => typeof r === "string" ? r : r.text) || ["Economic buyer silent for 14d", "Close date pushed 2x"],
+      recommendation: deal.recommendation || "Auto-trigger executive alignment sequence to CFO.",
+    });
+    setIsSearchOpen(false);
+    setSearchQuery("");
+  };
+
+  const handleNavigateHome = () => {
+    navigate("/pipeline");
+    setSidebarOpen(false);
+  };
+
+  const isCheckoutPage = location.pathname === "/checkout" || location.pathname === "/payment";
+  const isAgencyPage = location.pathname === "/agency" || location.pathname === "/partners" || location.pathname === "/agents" || location.pathname === "/agency-fleet";
+
+  if (isStandalonePage) {
+    return (
+      <div className="landing-layout" style={{ minHeight: "100vh", background: "#ffffff" }}>
+        <ScrollToTop />
+        {renderGlobalTelemetryLoaders()}
+        
+        {location.pathname.startsWith("/app") ? (
+          <HubSpotNativeLayout>
+            <Routes>
+              <Route path="/app/pipeline" element={<HubSpotNativePipeline />} />
+              <Route path="/app/upgrade" element={<AgencyFleet />} />
+              <Route path="/app/action-queue" element={<HubSpotNativeActionQueue />} />
+              <Route path="/app/playbooks" element={<HubSpotNativePlaybooks />} />
+              <Route path="/app/hygiene" element={<CrmHygiene />} />
+              <Route path="/app/*" element={<HubSpotNativePipeline />} />
+            </Routes>
+          </HubSpotNativeLayout>
+        ) : isCheckoutPage ? (
+          <CheckoutPage />
+        ) : isAgencyPage ? (
+          <AgencyFleet />
+        ) : location.pathname === "/privacy" ? (
+          <PrivacyPolicy />
+        ) : location.pathname === "/terms" ? (
+          <TermsOfService />
+        ) : location.pathname === "/compliance" || location.pathname === "/certification" ? (
+          <MarketplaceAudit />
+        ) : location.pathname === "/onboarding" ? (
+          <MarketplaceOnboarding />
+        ) : location.pathname === "/marketplace-listing" ? (
+          <MarketplaceListingPreview />
+        ) : location.pathname === "/nav-test" ? (
+          <NavTestPage />
+        ) : location.pathname === "/architecture" ? (
+          <Architecture />
+        ) : location.pathname === "/login" || location.pathname === "/signup" ? (
+          <AuthPage />
+        ) : location.pathname === "/oauth/callback" ? (
+          <OAuthCallback />
+        ) : (
+          <LandingPage />
+        )}
+      </div>
+    );
+  }
+
+  return (
+    <div className="layout">
+      <ScrollToTop />
+      {/* Loading Screen Overlay removed per user request */}
+
+      {/* Mobile Sidebar Backdrop */}
+      {sidebarOpen && (
+        <div
+          style={{
+            position: "fixed",
+            inset: 0,
+            background: "rgba(18, 69, 72, 0.45)",
+            backdropFilter: "blur(4px)",
+            zIndex: 1999,
+          }}
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
+      {/* Sidebar Container */}
+      <div className={`sidebar ${sidebarOpen ? "open" : ""} ${sidebarCollapsed ? "collapsed" : ""}`}>
+        <Sidebar 
+          onClose={() => setSidebarOpen(false)}
+          onNavigateHome={handleNavigateHome}
+          isCollapsed={sidebarCollapsed}
+          onToggleCollapse={toggleSidebarCollapse}
+        />
+      </div>
+
+      {/* Main Content */}
+      <main className="main-content" style={{ position: "relative" }}>
+
+        {renderGlobalTelemetryLoaders()}
+        <TopBar
+          breadcrumb={pageMeta.breadcrumb}
+          title={pageMeta.title}
+          onOpenSidebar={() => setSidebarOpen(true)}
+          onOpenSearch={() => setIsSearchOpen(true)}
+          onNavigateHome={handleNavigateHome}
+          isSidebarCollapsed={sidebarCollapsed}
+          onToggleSidebarCollapse={toggleSidebarCollapse}
+        />
+
+        <div className="page-content">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={location.pathname}
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -6 }}
+              transition={{ duration: 0.15 }}
+            >
+              <Routes location={location}>
+                <Route path="/" element={<LandingPage />} />
+                <Route path="/pipeline" element={<PortfolioOverview />} />
+                <Route path="/overview" element={<PortfolioOverview />} />
+                <Route path="/forecast" element={<RevenueForecast />} />
+                <Route path="/deals" element={<DealExplorer />} />
+                <Route path="/waterfall" element={<PipelineWaterfall />} />
+                <Route path="/war-room" element={<DealWarRoom />} />
+                <Route path="/stakeholders" element={<StakeholderMatrix />} />
+                <Route path="/heatmap" element={<RiskHeatmap />} />
+                <Route path="/actions" element={<ActionQueue />} />
+                <Route path="/map" element={<MutualActionPlan />} />
+                <Route path="/battlecards" element={<CompetitiveIntelligence />} />
+                <Route path="/playbooks" element={<RevOpsPlaybooks />} />
+                <Route path="/hygiene" element={<CrmHygiene />} />
+                <Route path="/reps" element={<RepPerformance />} />
+                <Route path="/clients" element={<ClientHealth />} />
+                <Route path="/case-study" element={<CaseStudy />} />
+                <Route path="/agency" element={<AgencyFleet />} />
+                <Route path="/partners" element={<AgencyFleet />} />
+                <Route path="/agents" element={<AgencyFleet />} />
+                <Route path="/agency-fleet" element={<AgencyFleet />} />
+                <Route path="/landing" element={<LandingPage />} />
+                <Route path="/welcome" element={<LandingPage />} />
+                <Route path="/portfolio" element={<CaseStudy />} />
+                <Route path="/integration-proof" element={<IntegrationProof />} />
+                <Route path="/architecture" element={<Architecture />} />
+                <Route path="/audit" element={<AuditLog />} />
+                <Route path="/settings" element={<Settings />} />
+                <Route path="/checkout" element={<CheckoutPage />} />
+                <Route path="/payment" element={<CheckoutPage />} />
+                 <Route path="/privacy" element={<PrivacyPolicy />} />
+                <Route path="/terms" element={<TermsOfService />} />
+                <Route path="/compliance" element={<MarketplaceAudit />} />
+                <Route path="/certification" element={<MarketplaceAudit />} />
+                <Route path="/onboarding" element={<MarketplaceOnboarding />} />
+                <Route path="/marketplace-listing" element={<MarketplaceListingPreview />} />
+                <Route path="/nav-test" element={<NavTestPage />} />
+                <Route path="/login" element={<AuthPage />} />
+                <Route path="/signup" element={<AuthPage />} />
+                <Route path="/oauth/callback" element={<OAuthCallback />} />
+              </Routes>
+            </motion.div>
+          </AnimatePresence>
+
+          {(location.pathname === "/landing" || location.pathname === "/welcome" || location.pathname === "/" || location.pathname === "/case-study") && (
+            <div style={{ marginTop: "64px", marginInline: "-24px", marginBottom: "-24px" }}>
+              <Footer />
+            </div>
+          )}
+        </div>
+      </main>
+
+      <AnimatePresence>
+        {isSearchOpen && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsSearchOpen(false)}
+              style={{
+                position: "fixed",
+                inset: 0,
+                background: "rgba(18, 69, 72, 0.4)",
+                backdropFilter: "blur(4px)",
+                zIndex: 300,
+              }}
+            />
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              style={{
+                position: "fixed",
+                top: "20%",
+                left: "50%",
+                transform: "translateX(-50%)",
+                width: "90%",
+                maxWidth: "540px",
+                background: "#ffffff",
+                borderRadius: "var(--radius-md)",
+                boxShadow: "var(--shadow-lg)",
+                zIndex: 310,
+                overflow: "hidden",
+                border: "1px solid var(--hs-border-dark)",
+              }}
+            >
+              <div style={{ padding: "14px 18px", borderBottom: "1px solid var(--hs-border-dark)", display: "flex", alignItems: "center", gap: 10 }}>
+                <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="var(--hs-primary)" strokeWidth={2}>
+                  <circle cx={11} cy={11} r={8} />
+                  <line x1={21} y1={21} x2={16.65} y2={16.65} />
+                </svg>
+                <input
+                  autoFocus
+                  type="text"
+                  placeholder="Search deals, accounts, reps, or risk signals..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  style={{
+                    flex: 1,
+                    border: "none",
+                    outline: "none",
+                    fontSize: "14px",
+                    color: "var(--hs-text)",
+                  }}
+                />
+                <button
+                  className="btn btn-secondary btn-sm"
+                  onClick={() => setIsSearchOpen(false)}
+                  style={{ padding: "2px 8px" }}
+                >
+                  ESC
+                </button>
+              </div>
+
+              <div style={{ maxHeight: "320px", overflowY: "auto", padding: "8px" }}>
+                {filteredSearchDeals.map((deal) => (
+                  <div
+                    key={deal.id}
+                    onClick={() => handleSelectDealFromSearch(deal)}
+                    style={{
+                      padding: "10px 14px",
+                      borderRadius: "var(--radius-sm)",
+                      cursor: "pointer",
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      transition: "background 0.15s",
+                    }}
+                    onMouseEnter={(e) => (e.currentTarget.style.background = "var(--hs-surface)")}
+                    onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
+                  >
+                    <div>
+                      <div style={{ fontWeight: 600, color: "var(--hs-primary)", fontSize: "13.5px" }}>
+                        {deal.name}
+                      </div>
+                      <div style={{ fontSize: "12px", color: "var(--hs-text-muted)" }}>
+                        {deal.client} · Rep: {deal.owner} · ${(deal.value / 1000).toFixed(0)}K
+                      </div>
+                    </div>
+                    <span className="risk-pill" data-band={deal.band} style={{ fontSize: "10.5px" }}>
+                      Score: {deal.score}
+                    </span>
+                  </div>
+                ))}
+
+                {filteredSearchDeals.length === 0 && (
+                  <div style={{ textAlign: "center", padding: "24px", color: "var(--hs-text-muted)", fontSize: "13px" }}>
+                    No matching pipeline records found.
+                  </div>
+                )}
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
+      {/* ── Global Deal Inspection Drawer ─────────────────────────────── */}
+      <DealDrawer
+        deal={selectedDeal}
+        isOpen={!!selectedDeal}
+        onClose={() => setSelectedDeal(null)}
+      />
+
+      {/* ── Mobile Bottom Navigation Bar ──────────────────────────────── */}
+      <MobileBottomNav onOpenMenu={() => setSidebarOpen(true)} />
+    </div>
+  );
+};

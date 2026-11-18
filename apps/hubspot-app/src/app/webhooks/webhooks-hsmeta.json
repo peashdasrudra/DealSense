@@ -1,0 +1,44 @@
+{
+  "uid": "dealsense_revenue_intelligence_webhooks",
+  "type": "webhooks",
+  "config": {
+    "settings": {
+      "targetUrl": "https://dealsense-api-6o2h.onrender.com/api/v1/webhooks/hubspot",
+      "maxConcurrentRequests": 10
+    },
+    "subscriptions": {
+      "crmObjects": [],
+      "legacyCrmObjects": [
+        {
+          "subscriptionType": "deal.creation",
+          "active": true
+        },
+        {
+          "subscriptionType": "deal.propertyChange",
+          "propertyName": "dealstage",
+          "active": true
+        },
+        {
+          "subscriptionType": "deal.propertyChange",
+          "propertyName": "amount",
+          "active": true
+        },
+        {
+          "subscriptionType": "deal.propertyChange",
+          "propertyName": "closedate",
+          "active": true
+        },
+        {
+          "subscriptionType": "deal.deletion",
+          "active": true
+        }
+      ],
+      "hubEvents": [
+        {
+          "subscriptionType": "contact.privacyDeletion",
+          "active": true
+        }
+      ]
+    }
+  }
+}

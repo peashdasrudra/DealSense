@@ -1,0 +1,12 @@
+{
+  "uid": "dealsense_health_summary_card",
+  "type": "card",
+  "config": {
+    "name": "DealSense Health",
+    "location": "crm.record.sidebar",
+    "entrypoint": "/app/cards/DealSidebarCard.tsx",
+    "objectTypes": [
+      "deals"
+    ]
+  }
+}
